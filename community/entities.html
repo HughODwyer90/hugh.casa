@@ -43,29 +43,45 @@
                 }
             </style>
             <script>
+                let entities = []; // Store the initial entities
                 let sortOrder = { column: 0, ascending: true }; // Set default sort order to ascending
 
+                // Function to handle search and update the displayed table
                 function searchEntities() {
                     var input, filter, table, tr, td, i, txtValue;
                     input = document.getElementById("searchBox");
-                    filter = input.value.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();  // Normalize input and remove diacritics
+                    filter = input.value.toLowerCase(); // Normalize to lower case for case-insensitive matching
                     table = document.getElementById("entitiesTable");
                     tr = table.getElementsByTagName("tr");
 
-                    for (i = 1; i < tr.length; i++) {
-                        td = tr[i].getElementsByTagName("td")[0]; // Entity name column
-                        if (td) {
-                            txtValue = td.textContent || td.innerText;
-                            txtValue = txtValue.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();  // Normalize text content
-                            if (txtValue.indexOf(filter) > -1) {
-                                tr[i].style.display = "";
-                            } else {
-                                tr[i].style.display = "none";
-                            }
-                        }
-                    }
+                    // Filter entities and update the table
+                    let filteredEntities = entities.filter(entity => {
+                        let entityName = entity.entity_id.toLowerCase();
+                        return entityName.indexOf(filter) > -1;
+                    });
+
+                    // Update the total count of filtered entities
+                    document.getElementById("totalEntities").innerText = `${filteredEntities.length}/736`;
+
+                    // Create rows based on filtered entities
+                    let htmlRows = "";
+                    filteredEntities.forEach(entity => {
+                        htmlRows += `
+                        <tr>
+                            <td>${entity.entity_id}</td>
+                            <td>${entity.state}</td>
+                            <td>${entity.attributes.friendly_name || 'N/A'}</td>
+                            <td>${entity.attributes.unit_of_measurement || 'N/A'}</td>
+                            <td>${entity.state === 'on' || entity.state === 'off' ? 'on, off' : 'N/A'}</td>
+                        </tr>
+                        `;
+                    });
+
+                    // Replace rows in the table
+                    table.innerHTML = "<tr><th onclick='sortTable(0)'>Entity</th><th onclick='sortTable(1)'>Current State</th><th onclick='sortTable(2)'>Friendly Name</th><th onclick='sortTable(3)'>Unit of Measurement</th><th onclick='sortTable(4)'>Acceptable Values</th></tr>" + htmlRows;
                 }
 
+                // Function to handle table sorting
                 function sortTable(columnIndex) {
                     const table = document.getElementById("entitiesTable");
                     const rows = Array.from(table.rows).slice(1);
@@ -82,12 +98,27 @@
                     rows.forEach(row => table.appendChild(row));
                     sortOrder = { column: columnIndex, ascending: isAscending };
                 }
+
+                // Initialize the table with all entities and set the total count
+                function initEntities() {
+                    // Load initial entities from Python
+                    entities = ${entities};  // Passing entities from Python to JavaScript
+
+                    // Update the total entities label
+                    document.getElementById("totalEntities").innerText = `${entities.length}/736`;
+
+                    // Render the table
+                    searchEntities();  // Initial rendering of the table
+                }
+
+                window.onload = initEntities;
             </script>
         </head>
         <body>
             <h1>Home Assistant Entities</h1>
             <input type="text" id="searchBox" onkeyup="searchEntities()" placeholder="Search for entities..." />
-        <p>Total Entities: 736</p><table id='entitiesTable'><tr><th onclick='sortTable(0)'>Entity</th><th onclick='sortTable(1)'>Current State</th><th onclick='sortTable(2)'>Friendly Name</th><th onclick='sortTable(3)'>Unit of Measurement</th><th onclick='sortTable(4)'>Acceptable Values</th></tr>
+            <p>Total Entities: <span id="totalEntities">0/736</span></p>
+        <table id='entitiesTable'><tr><th onclick='sortTable(0)'>Entity</th><th onclick='sortTable(1)'>Current State</th><th onclick='sortTable(2)'>Friendly Name</th><th onclick='sortTable(3)'>Unit of Measurement</th><th onclick='sortTable(4)'>Acceptable Values</th></tr>
             <tr>
                 <td>automation.add_fuel_amount</td>
                 <td>on</td>
@@ -3154,7 +3185,7 @@
             
             <tr>
                 <td>sensor.bathroom_motion_illuminance_lux</td>
-                <td>54</td>
+                <td>55</td>
                 <td>Hue Illuminance</td>
                 <td>lx</td>
                 <td>N/A</td>
@@ -3410,7 +3441,7 @@
             
             <tr>
                 <td>sensor.datamars_activewindow</td>
-                <td>Studio Code Server – Home Assistant - Brave</td>
+                <td>ChatGPT - Brave</td>
                 <td>Datamars Screen</td>
                 <td>N/A</td>
                 <td>N/A</td>
@@ -3418,7 +3449,7 @@
             
             <tr>
                 <td>sensor.datamars_activewindow_filtered</td>
-                <td>Studio Code Server – Home Assistant - Brave</td>
+                <td>ChatGPT - Brave</td>
                 <td>Datamars Active Window</td>
                 <td>N/A</td>
                 <td>N/A</td>
@@ -4674,7 +4705,7 @@
             
             <tr>
                 <td>sensor.living_room_epone_humidity</td>
-                <td>56.5</td>
+                <td>56.4</td>
                 <td>EPOne Humidity</td>
                 <td>%</td>
                 <td>N/A</td>
@@ -4682,7 +4713,7 @@
             
             <tr>
                 <td>sensor.living_room_epone_illuminance</td>
-                <td>6.8</td>
+                <td>7.8</td>
                 <td>EPOne Illuminance</td>
                 <td>lx</td>
                 <td>N/A</td>
@@ -4986,7 +5017,7 @@
             
             <tr>
                 <td>sensor.snake_plant_conductivity</td>
-                <td>189</td>
+                <td>188</td>
                 <td>Snake Plant Conductivity</td>
                 <td>µS/cm</td>
                 <td>N/A</td>
@@ -5002,7 +5033,7 @@
             
             <tr>
                 <td>sensor.snake_plant_illuminance</td>
-                <td>4217</td>
+                <td>4313</td>
                 <td>Snake Plant Illuminance</td>
                 <td>lx</td>
                 <td>N/A</td>
@@ -5026,7 +5057,7 @@
             
             <tr>
                 <td>sensor.snake_plant_temperature</td>
-                <td>20.3</td>
+                <td>20.5</td>
                 <td>Snake Plant Temperature</td>
                 <td>°C</td>
                 <td>N/A</td>
