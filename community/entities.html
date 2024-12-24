@@ -23,6 +23,7 @@
                     border: 1px solid #ccc;
                     padding: 8px;
                     text-align: left;
+                    cursor: pointer;
                 }
                 th {
                     background-color: #f4f4f4;
@@ -42,6 +43,8 @@
                 }
             </style>
             <script>
+                let sortOrder = { column: 0, ascending: true };
+
                 function searchEntities() {
                     var input, filter, table, tr, td, i, txtValue;
                     input = document.getElementById("searchBox");
@@ -61,12 +64,34 @@
                         }
                     }
                 }
+
+                function sortTable(columnIndex) {
+                    const table = document.getElementById("entitiesTable");
+                    const rows = Array.from(table.rows).slice(1);
+                    const isAscending = sortOrder.column === columnIndex ? !sortOrder.ascending : true;
+
+                    rows.sort((a, b) => {
+                        const cellA = a.cells[columnIndex].innerText;
+                        const cellB = b.cells[columnIndex].innerText;
+                        return isAscending
+                            ? cellA.localeCompare(cellB, undefined, { numeric: true, sensitivity: 'base' })
+                            : cellB.localeCompare(cellA, undefined, { numeric: true, sensitivity: 'base' });
+                    });
+
+                    rows.forEach(row => table.appendChild(row));
+                    sortOrder = { column: columnIndex, ascending: isAscending };
+                }
+
+                // Default sort by entity column (A-Z)
+                window.onload = function() {
+                    sortTable(0);
+                }
             </script>
         </head>
         <body>
             <h1>Home Assistant Entities</h1>
             <input type="text" id="searchBox" onkeyup="searchEntities()" placeholder="Search for entities..." />
-        <p>Total Entities: 736</p><table id='entitiesTable'><tr><th>Entity</th><th>Current State</th><th>Friendly Name</th><th>Unit of Measurement</th><th>Acceptable Values</th></tr>
+        <p>Total Entities: 736</p><table id='entitiesTable'><tr><th onclick='sortTable(0)'>Entity</th><th onclick='sortTable(1)'>Current State</th><th onclick='sortTable(2)'>Friendly Name</th><th onclick='sortTable(3)'>Unit of Measurement</th><th onclick='sortTable(4)'>Acceptable Values</th></tr>
             <tr>
                 <td>automation.add_fuel_amount</td>
                 <td>on</td>
@@ -3389,7 +3414,7 @@
             
             <tr>
                 <td>sensor.datamars_activewindow</td>
-                <td>Studio Code Server – Home Assistant - Brave</td>
+                <td>ChatGPT - Brave</td>
                 <td>Datamars Screen</td>
                 <td>N/A</td>
                 <td>N/A</td>
@@ -3397,7 +3422,7 @@
             
             <tr>
                 <td>sensor.datamars_activewindow_filtered</td>
-                <td>Studio Code Server – Home Assistant - Brave</td>
+                <td>ChatGPT - Brave</td>
                 <td>Datamars Active Window</td>
                 <td>N/A</td>
                 <td>N/A</td>
@@ -3525,7 +3550,7 @@
             
             <tr>
                 <td>sensor.hall_motion_illuminance_lux</td>
-                <td>149</td>
+                <td>186</td>
                 <td>Hue Illuminance</td>
                 <td>lx</td>
                 <td>N/A</td>
@@ -4661,7 +4686,7 @@
             
             <tr>
                 <td>sensor.living_room_epone_illuminance</td>
-                <td>4.6</td>
+                <td>8.2</td>
                 <td>EPOne Illuminance</td>
                 <td>lx</td>
                 <td>N/A</td>
@@ -4829,7 +4854,7 @@
             
             <tr>
                 <td>sensor.pc_plug_power</td>
-                <td>2</td>
+                <td>1</td>
                 <td>PC Plug Power</td>
                 <td>W</td>
                 <td>N/A</td>
@@ -4981,7 +5006,7 @@
             
             <tr>
                 <td>sensor.snake_plant_illuminance</td>
-                <td>842</td>
+                <td>2474</td>
                 <td>Snake Plant Illuminance</td>
                 <td>lx</td>
                 <td>N/A</td>
