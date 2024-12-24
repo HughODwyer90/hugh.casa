@@ -54,7 +54,7 @@
                     table = document.getElementById("entitiesTable");
                     tr = table.getElementsByTagName("tr");
 
-                    // Filter entities and update the table
+                    // Filter entities based on entity_id
                     let filteredEntities = entities.filter(entity => {
                         let entityName = entity.entity_id.toLowerCase();
                         return entityName.indexOf(filter) > -1;
