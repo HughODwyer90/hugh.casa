@@ -48,7 +48,7 @@
                 function searchEntities() {
                     var input, filter, table, tr, td, i, txtValue;
                     input = document.getElementById("searchBox");
-                    filter = input.value.toLowerCase();
+                    filter = input.value.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();  // Normalize input and remove diacritics
                     table = document.getElementById("entitiesTable");
                     tr = table.getElementsByTagName("tr");
 
@@ -56,7 +56,8 @@
                         td = tr[i].getElementsByTagName("td")[0]; // Entity name column
                         if (td) {
                             txtValue = td.textContent || td.innerText;
-                            if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                            txtValue = txtValue.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();  // Normalize text content
+                            if (txtValue.indexOf(filter) > -1) {
                                 tr[i].style.display = "";
                             } else {
                                 tr[i].style.display = "none";
@@ -81,7 +82,6 @@
                     rows.forEach(row => table.appendChild(row));
                     sortOrder = { column: columnIndex, ascending: isAscending };
                 }
-
             </script>
         </head>
         <body>
@@ -3410,7 +3410,7 @@
             
             <tr>
                 <td>sensor.datamars_activewindow</td>
-                <td>ChatGPT - Brave</td>
+                <td>Studio Code Server – Home Assistant - Brave</td>
                 <td>Datamars Screen</td>
                 <td>N/A</td>
                 <td>N/A</td>
@@ -3418,7 +3418,7 @@
             
             <tr>
                 <td>sensor.datamars_activewindow_filtered</td>
-                <td>ChatGPT - Brave</td>
+                <td>Studio Code Server – Home Assistant - Brave</td>
                 <td>Datamars Active Window</td>
                 <td>N/A</td>
                 <td>N/A</td>
@@ -3546,7 +3546,7 @@
             
             <tr>
                 <td>sensor.hall_motion_illuminance_lux</td>
-                <td>181</td>
+                <td>231</td>
                 <td>Hue Illuminance</td>
                 <td>lx</td>
                 <td>N/A</td>
@@ -4282,7 +4282,7 @@
             
             <tr>
                 <td>sensor.hugh_room_desk_aqara_button_battery</td>
-                <td>100</td>
+                <td>97</td>
                 <td>Hugh Room Desk Aqara Button Battery</td>
                 <td>%</td>
                 <td>N/A</td>
@@ -4298,7 +4298,7 @@
             
             <tr>
                 <td>sensor.hugh_room_desk_aqara_button_battery_plus</td>
-                <td>100.0</td>
+                <td>97.0</td>
                 <td>Hugh Room Desk Aqara Button Battery+</td>
                 <td>%</td>
                 <td>N/A</td>
@@ -4314,7 +4314,7 @@
             
             <tr>
                 <td>sensor.hugh_room_desk_aqara_button_device_temperature</td>
-                <td>28</td>
+                <td>30</td>
                 <td>Hugh Room Desk Aqara Button Temperature</td>
                 <td>°C</td>
                 <td>N/A</td>
@@ -4674,7 +4674,7 @@
             
             <tr>
                 <td>sensor.living_room_epone_humidity</td>
-                <td>56.6</td>
+                <td>56.5</td>
                 <td>EPOne Humidity</td>
                 <td>%</td>
                 <td>N/A</td>
@@ -4682,7 +4682,7 @@
             
             <tr>
                 <td>sensor.living_room_epone_illuminance</td>
-                <td>7.8</td>
+                <td>6.8</td>
                 <td>EPOne Illuminance</td>
                 <td>lx</td>
                 <td>N/A</td>
@@ -5002,7 +5002,7 @@
             
             <tr>
                 <td>sensor.snake_plant_illuminance</td>
-                <td>3052</td>
+                <td>4217</td>
                 <td>Snake Plant Illuminance</td>
                 <td>lx</td>
                 <td>N/A</td>
@@ -5010,7 +5010,7 @@
             
             <tr>
                 <td>sensor.snake_plant_moisture</td>
-                <td>12</td>
+                <td>11</td>
                 <td>Snake Plant Moisture</td>
                 <td>%</td>
                 <td>N/A</td>
@@ -5026,7 +5026,7 @@
             
             <tr>
                 <td>sensor.snake_plant_temperature</td>
-                <td>20.1</td>
+                <td>20.3</td>
                 <td>Snake Plant Temperature</td>
                 <td>°C</td>
                 <td>N/A</td>
