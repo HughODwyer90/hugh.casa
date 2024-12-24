@@ -33,11 +33,40 @@
                 tr:hover {
                     background-color: #f1f1f1;
                 }
+                #searchBox {
+                    width: 100%;
+                    padding: 12px;
+                    margin-bottom: 12px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                }
             </style>
+            <script>
+                function searchEntities() {
+                    var input, filter, table, tr, td, i, txtValue;
+                    input = document.getElementById("searchBox");
+                    filter = input.value.toLowerCase();
+                    table = document.getElementById("entitiesTable");
+                    tr = table.getElementsByTagName("tr");
+
+                    for (i = 1; i < tr.length; i++) {
+                        td = tr[i].getElementsByTagName("td")[0]; // Entity name column
+                        if (td) {
+                            txtValue = td.textContent || td.innerText;
+                            if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                                tr[i].style.display = "";
+                            } else {
+                                tr[i].style.display = "none";
+                            }
+                        }
+                    }
+                }
+            </script>
         </head>
         <body>
             <h1>Home Assistant Entities</h1>
-        <p>Total Entities: 736</p><table><tr><th>Entity</th><th>Current State</th></tr>
+            <input type="text" id="searchBox" onkeyup="searchEntities()" placeholder="Search for entities..." />
+        <p>Total Entities: 736</p><table id='entitiesTable'><tr><th>Entity</th><th>Current State</th></tr>
             <tr>
                 <td>automation.add_fuel_amount</td>
                 <td>on</td>
@@ -1960,7 +1989,7 @@
             
             <tr>
                 <td>sensor.bathroom_motion_temperature</td>
-                <td>16</td>
+                <td>15.49</td>
             </tr>
             
             <tr>
@@ -2115,12 +2144,12 @@
             
             <tr>
                 <td>sensor.datamars_activewindow</td>
-                <td>Studio Code Server – Home Assistant - Brave</td>
+                <td>ChatGPT - Brave</td>
             </tr>
             
             <tr>
                 <td>sensor.datamars_activewindow_filtered</td>
-                <td>Studio Code Server – Home Assistant - Brave</td>
+                <td>ChatGPT - Brave</td>
             </tr>
             
             <tr>
@@ -2200,7 +2229,7 @@
             
             <tr>
                 <td>sensor.hall_motion_illuminance_lux</td>
-                <td>121</td>
+                <td>164</td>
             </tr>
             
             <tr>
@@ -2905,12 +2934,12 @@
             
             <tr>
                 <td>sensor.living_room_epone_humidity</td>
-                <td>56.5</td>
+                <td>56.4</td>
             </tr>
             
             <tr>
                 <td>sensor.living_room_epone_illuminance</td>
-                <td>9.0</td>
+                <td>5.9</td>
             </tr>
             
             <tr>
@@ -3015,7 +3044,7 @@
             
             <tr>
                 <td>sensor.pc_plug_power</td>
-                <td>2</td>
+                <td>1</td>
             </tr>
             
             <tr>
@@ -3100,7 +3129,7 @@
             
             <tr>
                 <td>sensor.snake_plant_conductivity</td>
-                <td>191</td>
+                <td>189</td>
             </tr>
             
             <tr>
@@ -3110,7 +3139,7 @@
             
             <tr>
                 <td>sensor.snake_plant_illuminance</td>
-                <td>1851</td>
+                <td>1896</td>
             </tr>
             
             <tr>
@@ -3125,7 +3154,7 @@
             
             <tr>
                 <td>sensor.snake_plant_temperature</td>
-                <td>19.7</td>
+                <td>19.8</td>
             </tr>
             
             <tr>
