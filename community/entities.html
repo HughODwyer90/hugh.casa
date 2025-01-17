@@ -70,7 +70,10 @@
                     });
                     // Update active filter button
                     document.querySelectorAll('.filter').forEach(f => f.classList.remove('active'));
-                    document.querySelector(`#filter-$<class 'filter'>`).classList.add('active');
+                    const selectedFilter = document.querySelector(`#filter-$<class 'filter'>`);
+                    if (selectedFilter) {
+                        selectedFilter.classList.add('active');
+                    }
                 }
 
                 function searchTable() {
@@ -82,13 +85,20 @@
                         const match = cells.some(cell => cell.textContent.toLowerCase().includes(query));
                         row.style.display = match ? '' : 'none';
                     });
+
+                    // Reset filter buttons when searching
+                    document.querySelectorAll('.filter').forEach(f => f.classList.remove('active'));
+                    const allFilter = document.querySelector('#filter-All');
+                    if (allFilter) {
+                        allFilter.classList.add('active');
+                    }
                 }
             </script>
         </head>
         <body>
             <h1>Home Assistant Entities</h1>
             <p>Total Entities: 735</p>
-            <p>Version: 2025-01-17-160612</p>
+            <p>Version: 2025-01-17-161338</p>
             <input type="text" id="searchBox" oninput="searchTable()" placeholder="Search entities..." />
             <div class="filters">
                 <div id="filter-All" class="filter active" onclick="filterTable('All')">All</div>
