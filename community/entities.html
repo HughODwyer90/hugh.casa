@@ -68,11 +68,15 @@
                         const showRow = filter === 'All' || entity.startsWith(filter.toLowerCase());
                         row.style.display = showRow ? '' : 'none';
                     });
+
                     // Update active filter button
-                    document.querySelectorAll('.filter').forEach(f => f.classList.remove('active'));
+                    const filterButtons = document.querySelectorAll('.filter');
+                    filterButtons.forEach((button) => {
+                        button.classList.remove('active'); // Remove active class from all buttons
+                    });
                     const selectedFilter = document.querySelector(`#filter-$<class 'filter'>`);
                     if (selectedFilter) {
-                        selectedFilter.classList.add('active');
+                        selectedFilter.classList.add('active'); // Add active class to the selected filter button
                     }
                 }
 
@@ -82,23 +86,28 @@
                     rows.forEach((row, index) => {
                         if (index === 0) return; // Skip header row
                         const cells = Array.from(row.cells);
-                        const match = cells.some(cell => cell.textContent.toLowerCase().includes(query));
+                        const match = cells.some((cell) => cell.textContent.toLowerCase().includes(query));
                         row.style.display = match ? '' : 'none';
                     });
 
                     // Reset filter buttons when searching
-                    document.querySelectorAll('.filter').forEach(f => f.classList.remove('active'));
+                    const filterButtons = document.querySelectorAll('.filter');
+                    filterButtons.forEach((button) => {
+                        button.classList.remove('active');
+                    });
                     const allFilter = document.querySelector('#filter-All');
                     if (allFilter) {
-                        allFilter.classList.add('active');
+                        allFilter.classList.add('active'); // Highlight "All" when searching
                     }
                 }
             </script>
+
+
         </head>
         <body>
             <h1>Home Assistant Entities</h1>
             <p>Total Entities: 735</p>
-            <p>Version: 2025-01-17-161338</p>
+            <p>Version: 2025-01-17-162026</p>
             <input type="text" id="searchBox" oninput="searchTable()" placeholder="Search entities..." />
             <div class="filters">
                 <div id="filter-All" class="filter active" onclick="filterTable('All')">All</div>
