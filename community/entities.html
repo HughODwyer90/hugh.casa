@@ -61,15 +61,16 @@
             </style>
             <script>
                 function filterTable(filter) {
+                    // Filter the table rows based on the selected filter
                     const rows = document.querySelectorAll('#entitiesTable tr');
                     rows.forEach((row, index) => {
-                        if (index === 0) return; // Skip header row
+                        if (index === 0) { return; } // Skip the header row
                         const entity = row.cells[0].textContent.toLowerCase();
-                        const showRow = filter === 'All' || entity.startsWith(filter.toLowerCase());
+                        const showRow = (filter === 'All' || entity.startsWith(filter.toLowerCase()));
                         row.style.display = showRow ? '' : 'none';
                     });
 
-                    // Update active filter button
+                    // Highlight the selected filter button
                     const filterButtons = document.querySelectorAll('.filter');
                     filterButtons.forEach((button) => {
                         button.classList.remove('active'); // Remove active class from all buttons
@@ -81,16 +82,17 @@
                 }
 
                 function searchTable() {
+                    // Search the table rows based on the input query
                     const query = document.getElementById('searchBox').value.toLowerCase();
                     const rows = document.querySelectorAll('#entitiesTable tr');
                     rows.forEach((row, index) => {
-                        if (index === 0) return; // Skip header row
+                        if (index === 0) { return; } // Skip the header row
                         const cells = Array.from(row.cells);
                         const match = cells.some((cell) => cell.textContent.toLowerCase().includes(query));
                         row.style.display = match ? '' : 'none';
                     });
 
-                    // Reset filter buttons when searching
+                    // Reset the filter buttons and highlight the "All" button
                     const filterButtons = document.querySelectorAll('.filter');
                     filterButtons.forEach((button) => {
                         button.classList.remove('active');
@@ -103,11 +105,12 @@
             </script>
 
 
+
         </head>
         <body>
             <h1>Home Assistant Entities</h1>
             <p>Total Entities: 735</p>
-            <p>Version: 2025-01-17-162026</p>
+            <p>Version: 2025-01-17-162244</p>
             <input type="text" id="searchBox" oninput="searchTable()" placeholder="Search entities..." />
             <div class="filters">
                 <div id="filter-All" class="filter active" onclick="filterTable('All')">All</div>
