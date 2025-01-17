@@ -60,49 +60,52 @@
                 }
             </style>
             <script>
-                function filterTable(filter) {
-                    // Filter the table rows based on the selected filter
-                    const rows = document.querySelectorAll('#entitiesTable tr');
-                    rows.forEach((row, index) => {
-                        if (index === 0) { return; } // Skip the header row
-                        const entity = row.cells[0].textContent.toLowerCase();
-                        const showRow = (filter === 'All' || entity.startsWith(filter.toLowerCase()));
-                        row.style.display = showRow ? '' : 'none';
-                    });
+    function filterTable(filter) {
+        // Select all table rows
+        const rows = document.querySelectorAll('#entitiesTable tr');
+        rows.forEach((row, index) => {
+            if (index === 0) { return; } // Skip the header row
+            const entity = row.cells[0].textContent.toLowerCase();
+            const showRow = (filter === 'All' || entity.startsWith(filter.toLowerCase()));
+            row.style.display = showRow ? '' : 'none';
+        });
 
-                    // Highlight the selected filter button
-                    const filterButtons = document.querySelectorAll('.filter');
-                    filterButtons.forEach((button) => {
-                        button.classList.remove('active'); // Remove active class from all buttons
-                    });
-                    const selectedFilter = document.querySelector(`#filter-$<class 'filter'>`);
-                    if (selectedFilter) {
-                        selectedFilter.classList.add('active'); // Add active class to the selected filter button
-                    }
-                }
+        // Update the active class on the filter buttons
+        const filterButtons = document.querySelectorAll('.filter');
+        filterButtons.forEach((button) => {
+            button.classList.remove('active'); // Remove active class from all buttons
+        });
 
-                function searchTable() {
-                    // Search the table rows based on the input query
-                    const query = document.getElementById('searchBox').value.toLowerCase();
-                    const rows = document.querySelectorAll('#entitiesTable tr');
-                    rows.forEach((row, index) => {
-                        if (index === 0) { return; } // Skip the header row
-                        const cells = Array.from(row.cells);
-                        const match = cells.some((cell) => cell.textContent.toLowerCase().includes(query));
-                        row.style.display = match ? '' : 'none';
-                    });
+        // Add the active class to the selected button
+        const selectedFilter = document.querySelector(`#filter-$<class 'filter'>`);
+        if (selectedFilter) {
+            selectedFilter.classList.add('active');
+        }
+    }
 
-                    // Reset the filter buttons and highlight the "All" button
-                    const filterButtons = document.querySelectorAll('.filter');
-                    filterButtons.forEach((button) => {
-                        button.classList.remove('active');
-                    });
-                    const allFilter = document.querySelector('#filter-All');
-                    if (allFilter) {
-                        allFilter.classList.add('active'); // Highlight "All" when searching
-                    }
-                }
-            </script>
+    function searchTable() {
+        // Get the search query
+        const query = document.getElementById('searchBox').value.toLowerCase();
+        const rows = document.querySelectorAll('#entitiesTable tr');
+        rows.forEach((row, index) => {
+            if (index === 0) { return; } // Skip the header row
+            const cells = Array.from(row.cells);
+            const match = cells.some((cell) => cell.textContent.toLowerCase().includes(query));
+            row.style.display = match ? '' : 'none';
+        });
+
+        // Reset the active filter buttons and highlight "All"
+        const filterButtons = document.querySelectorAll('.filter');
+        filterButtons.forEach((button) => {
+            button.classList.remove('active');
+        });
+        const allFilter = document.querySelector('#filter-All');
+        if (allFilter) {
+            allFilter.classList.add('active');
+        }
+    }
+</script>
+
 
 
 
@@ -110,7 +113,7 @@
         <body>
             <h1>Home Assistant Entities</h1>
             <p>Total Entities: 735</p>
-            <p>Version: 2025-01-17-162244</p>
+            <p>Version: 2025-01-17-162448</p>
             <input type="text" id="searchBox" oninput="searchTable()" placeholder="Search entities..." />
             <div class="filters">
                 <div id="filter-All" class="filter active" onclick="filterTable('All')">All</div>
