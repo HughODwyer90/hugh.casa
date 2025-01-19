@@ -63,13 +63,19 @@
             </style>
             <script>
                 let currentFilter = 'All';
-                let sortDirection = 1;
 
                 function filterTable(filter) {
-                    const sanitizedFilter = filter.replace(/[^a-zA-Z0-9]/g, '').toLowerCase(); // Sanitize filter ID
-                    currentFilter = sanitizedFilter;
+                    currentFilter = filter.toLowerCase();
                     const query = document.getElementById('searchBox').value.toLowerCase();
-                    applyFiltersAndSearch(query, sanitizedFilter);
+                    applyFiltersAndSearch(query, currentFilter);
+
+                    // Highlight the active filter
+                    const filterButtons = document.querySelectorAll(".filter");
+                    filterButtons.forEach((button) => button.classList.remove("active"));
+                    const selectedFilter = document.getElementById(`filter-$<class 'filter'>`);
+                    if (selectedFilter) {
+                        selectedFilter.classList.add("active");
+                    }
                 }
 
                 function searchTable() {
@@ -86,25 +92,16 @@
                         const matchSearch = query === "" || entity.includes(query) || Array.from(row.cells).some((cell) => cell.textContent.toLowerCase().includes(query));
                         row.style.display = matchFilter && matchSearch ? "" : "none";
                     });
-
-                    // Highlight the active filter
-                    const filterButtons = document.querySelectorAll(".filter");
-                    filterButtons.forEach((button) => button.classList.remove("active"));
-                    const selectedFilter = document.querySelector(`#filter-$<class 'filter'>`);
-                    if (selectedFilter) {
-                        selectedFilter.classList.add("active");
-                    }
                 }
             </script>
         </head>
         <body>
             <h1>Home Assistant Entities</h1>
             <p>Total Entities: 735</p>
-            <p>Version: 2025-01-19-132902</p>
+            <p>Version: 2025-01-19-133537</p>
             <input type="text" id="searchBox" oninput="searchTable()" placeholder="Search entities..." />
             <div class="filters">
-                <div id="filter-All" class="filter active" onclick="filterTable('All')">All</div>
-        <div id="filter-automation" class="filter" onclick="filterTable('automation')">automation</div><div id="filter-binarysensor" class="filter" onclick="filterTable('binary_sensor')">binary_sensor</div><div id="filter-button" class="filter" onclick="filterTable('button')">button</div><div id="filter-calendar" class="filter" onclick="filterTable('calendar')">calendar</div><div id="filter-conversation" class="filter" onclick="filterTable('conversation')">conversation</div><div id="filter-counter" class="filter" onclick="filterTable('counter')">counter</div><div id="filter-cover" class="filter" onclick="filterTable('cover')">cover</div><div id="filter-devicetracker" class="filter" onclick="filterTable('device_tracker')">device_tracker</div><div id="filter-event" class="filter" onclick="filterTable('event')">event</div><div id="filter-fan" class="filter" onclick="filterTable('fan')">fan</div><div id="filter-inputboolean" class="filter" onclick="filterTable('input_boolean')">input_boolean</div><div id="filter-inputbutton" class="filter" onclick="filterTable('input_button')">input_button</div><div id="filter-inputdatetime" class="filter" onclick="filterTable('input_datetime')">input_datetime</div><div id="filter-inputnumber" class="filter" onclick="filterTable('input_number')">input_number</div><div id="filter-inputtext" class="filter" onclick="filterTable('input_text')">input_text</div><div id="filter-light" class="filter" onclick="filterTable('light')">light</div><div id="filter-mediaplayer" class="filter" onclick="filterTable('media_player')">media_player</div><div id="filter-notify" class="filter" onclick="filterTable('notify')">notify</div><div id="filter-number" class="filter" onclick="filterTable('number')">number</div><div id="filter-person" class="filter" onclick="filterTable('person')">person</div><div id="filter-remote" class="filter" onclick="filterTable('remote')">remote</div><div id="filter-scene" class="filter" onclick="filterTable('scene')">scene</div><div id="filter-script" class="filter" onclick="filterTable('script')">script</div><div id="filter-select" class="filter" onclick="filterTable('select')">select</div><div id="filter-sensor" class="filter" onclick="filterTable('sensor')">sensor</div><div id="filter-stt" class="filter" onclick="filterTable('stt')">stt</div><div id="filter-sun" class="filter" onclick="filterTable('sun')">sun</div><div id="filter-switch" class="filter" onclick="filterTable('switch')">switch</div><div id="filter-tag" class="filter" onclick="filterTable('tag')">tag</div><div id="filter-timer" class="filter" onclick="filterTable('timer')">timer</div><div id="filter-todo" class="filter" onclick="filterTable('todo')">todo</div><div id="filter-tts" class="filter" onclick="filterTable('tts')">tts</div><div id="filter-update" class="filter" onclick="filterTable('update')">update</div><div id="filter-weather" class="filter" onclick="filterTable('weather')">weather</div><div id="filter-zone" class="filter" onclick="filterTable('zone')">zone</div>
+        <div id="filter-All" class="filter active" onclick="filterTable('All')">All</div><div id="filter-automation" class="filter" onclick="filterTable('automation')">automation</div><div id="filter-binary_sensor" class="filter" onclick="filterTable('binary_sensor')">binary_sensor</div><div id="filter-button" class="filter" onclick="filterTable('button')">button</div><div id="filter-calendar" class="filter" onclick="filterTable('calendar')">calendar</div><div id="filter-conversation" class="filter" onclick="filterTable('conversation')">conversation</div><div id="filter-counter" class="filter" onclick="filterTable('counter')">counter</div><div id="filter-cover" class="filter" onclick="filterTable('cover')">cover</div><div id="filter-device_tracker" class="filter" onclick="filterTable('device_tracker')">device_tracker</div><div id="filter-event" class="filter" onclick="filterTable('event')">event</div><div id="filter-fan" class="filter" onclick="filterTable('fan')">fan</div><div id="filter-input_boolean" class="filter" onclick="filterTable('input_boolean')">input_boolean</div><div id="filter-input_button" class="filter" onclick="filterTable('input_button')">input_button</div><div id="filter-input_datetime" class="filter" onclick="filterTable('input_datetime')">input_datetime</div><div id="filter-input_number" class="filter" onclick="filterTable('input_number')">input_number</div><div id="filter-input_text" class="filter" onclick="filterTable('input_text')">input_text</div><div id="filter-light" class="filter" onclick="filterTable('light')">light</div><div id="filter-media_player" class="filter" onclick="filterTable('media_player')">media_player</div><div id="filter-notify" class="filter" onclick="filterTable('notify')">notify</div><div id="filter-number" class="filter" onclick="filterTable('number')">number</div><div id="filter-person" class="filter" onclick="filterTable('person')">person</div><div id="filter-remote" class="filter" onclick="filterTable('remote')">remote</div><div id="filter-scene" class="filter" onclick="filterTable('scene')">scene</div><div id="filter-script" class="filter" onclick="filterTable('script')">script</div><div id="filter-select" class="filter" onclick="filterTable('select')">select</div><div id="filter-sensor" class="filter" onclick="filterTable('sensor')">sensor</div><div id="filter-stt" class="filter" onclick="filterTable('stt')">stt</div><div id="filter-sun" class="filter" onclick="filterTable('sun')">sun</div><div id="filter-switch" class="filter" onclick="filterTable('switch')">switch</div><div id="filter-tag" class="filter" onclick="filterTable('tag')">tag</div><div id="filter-timer" class="filter" onclick="filterTable('timer')">timer</div><div id="filter-todo" class="filter" onclick="filterTable('todo')">todo</div><div id="filter-tts" class="filter" onclick="filterTable('tts')">tts</div><div id="filter-update" class="filter" onclick="filterTable('update')">update</div><div id="filter-weather" class="filter" onclick="filterTable('weather')">weather</div><div id="filter-zone" class="filter" onclick="filterTable('zone')">zone</div>
             </div>
             <table id="entitiesTable">
                 <tr>
