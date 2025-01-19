@@ -72,12 +72,12 @@
                     // Highlight the active filter
                     const filterButtons = document.querySelectorAll(".filter");
                     filterButtons.forEach((button) => {
-                        button.classList.remove("active"); // Remove active class from all buttons
+                        button.classList.remove("active");
                     });
 
                     const selectedFilter = document.getElementById(`filter-$<class 'filter'>`);
                     if (selectedFilter) {
-                        selectedFilter.classList.add("active"); // Add active class to the clicked button
+                        selectedFilter.classList.add("active");
                     }
                 }
 
@@ -92,7 +92,12 @@
                         if (index === 0) return; // Skip the header row
                         const entity = row.cells[0].textContent.toLowerCase();
                         const matchFilter = filter === "all" || entity.startsWith(filter);
-                        const matchSearch = query === "" || entity.includes(query) || Array.from(row.cells).some((cell) => cell.textContent.toLowerCase().includes(query));
+                        const matchSearch =
+                            query === "" ||
+                            entity.includes(query) ||
+                            Array.from(row.cells).some((cell) =>
+                                cell.textContent.toLowerCase().includes(query)
+                            );
                         row.style.display = matchFilter && matchSearch ? "" : "none";
                     });
                 }
@@ -101,7 +106,7 @@
         <body>
             <h1>Home Assistant Entities</h1>
             <p>Total Entities: 735</p>
-            <p>Version: 2025-01-19-133833</p>
+            <p>Version: 2025-01-19-134303</p>
             <input type="text" id="searchBox" oninput="searchTable()" placeholder="Search entities..." />
             <div class="filters">
                 <div id="filter-All" class="filter active" onclick="filterTable('All')">All</div>
