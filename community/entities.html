@@ -68,6 +68,7 @@
                     const filterContainer = document.querySelector('.filters');
                     const filterButtons = filterContainer.getElementsByClassName('filter');
 
+                    // Add click event listeners to filter buttons
                     for (let i = 0; i < filterButtons.length; i++) {
                         filterButtons[i].addEventListener('click', function () {
                             const current = document.getElementsByClassName('active');
@@ -80,6 +81,12 @@
                             currentFilter = filter.toLowerCase(); // Update global filter state
                             searchTable(); // Apply search with the active filter
                         });
+                    }
+
+                    // Initialize by applying the 'All' filter on page load
+                    const allFilter = document.getElementById('filter-All');
+                    if (allFilter) {
+                        allFilter.click(); // Simulate click on the 'All' filter button
                     }
                 });
 
@@ -110,7 +117,7 @@
         <body>
             <h1>Home Assistant Entities</h1>
             <p>Total Entities: 735</p>
-            <p>Version: 2025-01-19-143233</p>
+            <p>Version: 2025-01-19-143553</p>
             <input type="text" id="searchBox" oninput="searchTable()" placeholder="Search entities..." />
             <div class="filters">
                 <div id="filter-All" class="filter active">All</div>
