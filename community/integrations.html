@@ -61,72 +61,39 @@
                 background-color: #f1f1f1;
             }
         </style>
-        <script>
-            let currentFilter = 'All';
-            let sortDirection = true;
-
-            document.addEventListener('DOMContentLoaded', () => {
-                const filterContainer = document.querySelector('.filters');
-                const filterButtons = filterContainer.getElementsByClassName('filter');
-
-                for (let i = 0; i < filterButtons.length; i++) {
-                    filterButtons[i].addEventListener('click', function () {
-                        const current = document.getElementsByClassName('active');
-                        if (current.length > 0) {
-                            current[0].classList.remove('active');
-                        }
-                        this.classList.add('active');
-
-                        const filter = this.id.replace('filter-', '');
-                        currentFilter = filter.toLowerCase();
-                        searchTable();
-                    });
-                }
-
-                const allFilter = document.getElementById('filter-All');
-                if (allFilter) {
-                    allFilter.click();
-                }
-
-                const headers = document.querySelectorAll('#integrationsTable th');
-                headers.forEach((header, index) => {
-                    header.addEventListener('click', () => {
-                        sortTable(index);
-                    });
-                });
-            });
-
-            function searchTable() {
-                const query = document.getElementById('searchBox').value.toLowerCase();
-                const rows = document.querySelectorAll('#integrationsTable tr');
-                rows.forEach((row, index) => {
-                    if (index === 0) return;
-                    const cells = Array.from(row.cells);
-                    const match = cells.some(cell => cell.textContent.toLowerCase().includes(query));
-                    const integration = row.cells[0].textContent.toLowerCase();
-                    const matchFilter = currentFilter === 'all' || integration.startsWith(currentFilter);
-                    row.style.display = match && matchFilter ? '' : 'none';
-                });
-            }
-
-            function sortTable(columnIndex) {
-                const rows = Array.from(document.querySelectorAll('#integrationsTable tr')).slice(1);
-                rows.sort((a, b) => {
-                    const aText = a.cells[columnIndex].textContent.trim().toLowerCase();
-                    const bText = b.cells[columnIndex].textContent.trim().toLowerCase();
-                    return sortDirection ? aText.localeCompare(bText) : bText.localeCompare(aText);
-                });
-                sortDirection = !sortDirection;
-
-                const table = document.querySelector('#integrationsTable tbody');
-                rows.forEach(row => table.appendChild(row));
-            }
-        </script>
     </head>
     <body>
+        
+    <div class="nav-menu">
+        <a href="entities.html" class="nav-link">Entities</a>
+<a href="integrations.html" class="nav-link">Integrations</a>
+
+    </div>
+    <style>
+        .nav-menu {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border-radius: 5px;
+        }
+        .nav-link {
+            text-decoration: none;
+            color: #333;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .nav-link:hover {
+            background-color: #2B2B40;
+            color: white;
+        }
+    </style>
+    
         <h1>Home Assistant Integrations</h1>
         <p>Total Integrations: 74</p>
-        <p>Version: 2025-01-22-135756</p>
+        <p>Version: 2025-01-22-153910</p>
         <input type="text" id="searchBox" oninput="searchTable()" placeholder="Search integrations..." />
         <div class="filters">
             <div id="filter-All" class="filter active">All</div>
