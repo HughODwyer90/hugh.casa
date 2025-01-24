@@ -77,11 +77,75 @@
                         newScript.text = script.innerText; // Get the script content
                         document.body.appendChild(newScript); // Append the script to the body to execute
                     });
+
+                    // Re-initialize any JavaScript functionality (like event listeners)
+                    initializePageFunctions();
                 } else {
                     contentDiv.innerHTML = 'Failed to load content.';
                 }
             };
             xhr.send();
+        }
+
+        // Function to re-initialize page-specific functionality (filters, sorting, etc.)
+        function initializePageFunctions() {
+            // Ensure the filter functionality and sorting work by re-binding event listeners.
+            const filterContainer = document.querySelector('.filters');
+            if (filterContainer) {
+                const filterButtons = filterContainer.getElementsByClassName('filter');
+                for (let i = 0; i < filterButtons.length; i++) {
+                    filterButtons[i].addEventListener('click', function () {
+                        const current = document.getElementsByClassName('active');
+                        if (current.length > 0) {
+                            current[0].classList.remove('active');
+                        }
+                        this.classList.add('active');
+                        const filter = this.id.replace('filter-', '');
+                        currentFilter = filter.toLowerCase();
+                        searchTable();
+                    });
+                }
+
+                const allFilter = document.getElementById('filter-All');
+                if (allFilter) {
+                    allFilter.click();
+                }
+            }
+
+            const headers = document.querySelectorAll('#integrationsTable th');
+            headers.forEach((header, index) => {
+                header.addEventListener('click', () => {
+                    sortTable(index);
+                });
+            });
+        }
+
+        // Function to search table contents based on the filter
+        function searchTable() {
+            const query = document.getElementById('searchBox').value.toLowerCase();
+            const rows = document.querySelectorAll('#integrationsTable tr');
+            rows.forEach((row, index) => {
+                if (index === 0) return;
+                const cells = Array.from(row.cells);
+                const match = cells.some(cell => cell.textContent.toLowerCase().includes(query));
+                const integration = row.cells[0].textContent.toLowerCase();
+                const matchFilter = currentFilter === 'all' || integration.startsWith(currentFilter);
+                row.style.display = match && matchFilter ? '' : 'none';
+            });
+        }
+
+        // Function to sort the table
+        function sortTable(columnIndex) {
+            const rows = Array.from(document.querySelectorAll('#integrationsTable tr')).slice(1);
+            rows.sort((a, b) => {
+                const aText = a.cells[columnIndex].textContent.trim().toLowerCase();
+                const bText = b.cells[columnIndex].textContent.trim().toLowerCase();
+                return sortDirection ? aText.localeCompare(bText) : bText.localeCompare(aText);
+            });
+            sortDirection = !sortDirection;
+
+            const table = document.querySelector('#integrationsTable tbody');
+            rows.forEach(row => table.appendChild(row));
         }
     </script>
 </body>
