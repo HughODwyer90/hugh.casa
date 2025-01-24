@@ -378,7 +378,23 @@ update_entities_html:
   sequence:
   - action: shell_command.update_home_assistant_entities
     data: {}
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
   - action: shell_command.update_home_assistant_integrations
     data: {}
-  alias: Update github html
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+  - action: shell_command.update_home_assistant_yaml
+    data: {}
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+  - action: shell_command.generate_home_assistant_index
+    data: {}
+  alias: Github Backup
   description: ''
