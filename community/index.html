@@ -13,6 +13,9 @@
                 background-color: #333;
                 color: white;
                 padding: 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
             }
             nav ul {
                 list-style: none;
@@ -33,10 +36,22 @@
                 height: calc(100vh - 50px);
                 border: none;
             }
+            .download-btn {
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                cursor: pointer;
+                border-radius: 5px;
+            }
         </style>
         <script>
             function loadContent(file) {
                 document.getElementById('content-frame').src = file;
+                // Set the download button link
+                const jsonFile = file.replace('.html', '.json');
+                document.getElementById('download-btn').href = jsonFile;
+                document.getElementById('download-btn').download = jsonFile;
             }
             document.addEventListener('DOMContentLoaded', () => {
                 loadContent('entities.html'); // Default content
@@ -48,6 +63,7 @@
             <ul>
                 <li><a href="#" onclick="loadContent('entities.html')">Entities</a></li><li><a href="#" onclick="loadContent('integrations.html')">Integrations</a></li>
             </ul>
+            <a id="download-btn" class="download-btn" href="#" download="">Download JSON</a>
         </nav>
         <iframe id="content-frame" src=""></iframe>
     </body>
