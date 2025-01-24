@@ -79,7 +79,7 @@
                     });
 
                     // Re-initialize any JavaScript functionality (like event listeners)
-                    initializePageFunctions();
+                    initializePageFunctions(file);
                 } else {
                     contentDiv.innerHTML = 'Failed to load content.';
                 }
@@ -88,36 +88,45 @@
         }
 
         // Function to re-initialize page-specific functionality (filters, sorting, etc.)
-        function initializePageFunctions() {
-            // Ensure the filter functionality and sorting work by re-binding event listeners.
-            const filterContainer = document.querySelector('.filters');
-            if (filterContainer) {
-                const filterButtons = filterContainer.getElementsByClassName('filter');
-                for (let i = 0; i < filterButtons.length; i++) {
-                    filterButtons[i].addEventListener('click', function () {
-                        const current = document.getElementsByClassName('active');
-                        if (current.length > 0) {
-                            current[0].classList.remove('active');
-                        }
-                        this.classList.add('active');
-                        const filter = this.id.replace('filter-', '');
-                        currentFilter = filter.toLowerCase();
-                        searchTable();
-                    });
+        function initializePageFunctions(file) {
+            // If we're loading 'entities.html', re-initialize the JavaScript for it
+            if (file === 'entities.html') {
+                // Re-bind events for filter buttons
+                const filterContainer = document.querySelector('.filters');
+                if (filterContainer) {
+                    const filterButtons = filterContainer.getElementsByClassName('filter');
+                    for (let i = 0; i < filterButtons.length; i++) {
+                        filterButtons[i].addEventListener('click', function () {
+                            const current = document.getElementsByClassName('active');
+                            if (current.length > 0) {
+                                current[0].classList.remove('active');
+                            }
+                            this.classList.add('active');
+                            const filter = this.id.replace('filter-', '');
+                            currentFilter = filter.toLowerCase();
+                            searchTable();
+                        });
+                    }
+
+                    const allFilter = document.getElementById('filter-All');
+                    if (allFilter) {
+                        allFilter.click();
+                    }
                 }
 
-                const allFilter = document.getElementById('filter-All');
-                if (allFilter) {
-                    allFilter.click();
-                }
+                const headers = document.querySelectorAll('#integrationsTable th');
+                headers.forEach((header, index) => {
+                    header.addEventListener('click', () => {
+                        sortTable(index);
+                    });
+                });
             }
 
-            const headers = document.querySelectorAll('#integrationsTable th');
-            headers.forEach((header, index) => {
-                header.addEventListener('click', () => {
-                    sortTable(index);
-                });
-            });
+            // Add similar condition for other pages like 'integrations.html'
+            if (file === 'integrations.html') {
+                // Re-initialize integration-specific JS functions
+                // You can add similar logic here for other JavaScript functionalities specific to 'integrations.html'.
+            }
         }
 
         // Function to search table contents based on the filter
