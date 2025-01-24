@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Page Loader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        nav {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+        }
+        nav a {
+            color: white;
+            margin-right: 10px;
+            text-decoration: none;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        #content {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar Section -->
+    <nav id="navbar">
+        <!-- Links will be dynamically populated -->
+    </nav>
+
+    <!-- Content Section -->
+    <div id="content">
+        <!-- Default content will be loaded here (e.g., entities.html) -->
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // List of available HTML files to display in the content area
+            const files = ['integrations.html', 'entities.html']; // Add more files if needed
+
+            // Navbar generation
+            const navbar = document.getElementById('navbar');
+            files.forEach(file => {
+                const link = document.createElement('a');
+                link.href = '#';
+                link.textContent = file.replace('.html', '').replace(/_/g, ' ').toUpperCase();
+                link.addEventListener('click', function () {
+                    loadContent(file);
+                });
+                navbar.appendChild(link);
+            });
+
+            // Default load the content of entities.html (or leave empty if no default)
+            loadContent('entities.html');
+        });
+
+        // Function to load content dynamically via AJAX
+        function loadContent(file) {
+            const contentDiv = document.getElementById('content');
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', file, true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    contentDiv.innerHTML = xhr.responseText;
+
+                    // After content is loaded, execute any JavaScript in that content
+                    const scripts = contentDiv.querySelectorAll('script');
+                    scripts.forEach((script) => {
+                        const newScript = document.createElement('script');
+                        newScript.text = script.innerText; // Get the script content
+                        document.body.appendChild(newScript); // Append the script to the body to execute
+                    });
+                } else {
+                    contentDiv.innerHTML = 'Failed to load content.';
+                }
+            };
+            xhr.send();
+        }
+    </script>
+</body>
+</html>
