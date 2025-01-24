@@ -125,7 +125,7 @@
             }
         </script>
     </head>
-    <body><nav><ul><li><a href="entities.html" class="nav-link">Entities</a></li><li><a href="integrations.html" class="nav-link">Integrations</a></li></ul></nav><nav><ul><li><a href="entities.html" class="nav-link">Entities</a></li><li><a href="integrations.html" class="nav-link">Integrations</a></li></ul></nav><nav><ul><li><a href="entities.html" class="nav-link">Entities</a></li><li><a href="integrations.html" class="nav-link">Integrations</a></li></ul></nav>
+    <body><nav><ul><li><a href="entities.html" class="nav-link">Entities</a></li><li><a href="integrations.html" class="nav-link">Integrations</a></li></ul></nav><nav><ul><li><a href="entities.html" class="nav-link">Entities</a></li><li><a href="integrations.html" class="nav-link">Integrations</a></li></ul></nav><nav><ul><li><a href="entities.html" class="nav-link">Entities</a></li><li><a href="integrations.html" class="nav-link">Integrations</a></li></ul></nav><nav><ul><li><a href="entities.html" class="nav-link">Entities</a></li><li><a href="integrations.html" class="nav-link">Integrations</a></li></ul></nav><nav><ul><li><a href="entities.html" class="nav-link">Entities</a></li><li><a href="integrations.html" class="nav-link">Integrations</a></li></ul></nav><nav><ul><li><a href="entities.html" class="nav-link">Entities</a></li><li><a href="integrations.html" class="nav-link">Integrations</a></li></ul></nav><nav><ul><li><a href="entities.html" class="nav-link">Entities</a></li><li><a href="integrations.html" class="nav-link">Integrations</a></li></ul></nav><nav><ul><li><a href="entities.html" class="nav-link">Entities</a></li><li><a href="integrations.html" class="nav-link">Integrations</a></li></ul></nav>
         <h1>Home Assistant Dynamic Content</h1>
         <p>Total Integrations: 0 | Total Entities: 0</p>
         <p>Version: 2025-01-24-103819</p>
@@ -156,6 +156,631 @@
     </body>
     </html>
     <script>
+                let currentFilter = 'All';
+                let sortDirection = true; // true = ascending, false = descending
+
+                document.addEventListener('DOMContentLoaded', () => {
+                    const filterContainer = document.querySelector('.filters');
+                    const filterButtons = filterContainer.getElementsByClassName('filter');
+
+                    // Add click event listeners to filter buttons
+                    for (let i = 0; i < filterButtons.length; i++) {
+                        filterButtons[i].addEventListener('click', function () {
+                            const current = document.getElementsByClassName('active');
+                            if (current.length > 0) {
+                                current[0].classList.remove('active');
+                            }
+                            this.classList.add('active');
+
+                            const filter = this.id.replace('filter-', ''); // Extract filter name
+                            currentFilter = filter.toLowerCase(); // Update global filter state
+                            searchTable(); // Apply search with the active filter
+                        });
+                    }
+
+                    // Initialize by applying the 'All' filter on page load
+                    const allFilter = document.getElementById('filter-All');
+                    if (allFilter) {
+                        allFilter.click(); // Simulate click on the 'All' filter button
+                    }
+
+                    // Add sorting functionality to column headers
+                    const headers = document.querySelectorAll('#entitiesTable th');
+                    headers.forEach((header, index) => {
+                        header.addEventListener('click', () => {
+                            sortTable(index);
+                        });
+                    });
+                });
+
+                function searchTable() {
+                    const query = document.getElementById('searchBox').value.toLowerCase();
+                    const rows = document.querySelectorAll('#entitiesTable tr');
+                    rows.forEach((row, index) => {
+                        if (index === 0) return; // Skip the header row
+                        const cells = Array.from(row.cells);
+                        const match = cells.some(cell => cell.textContent.toLowerCase().includes(query));
+                        const entity = row.cells[0].textContent.toLowerCase();
+                        const matchFilter = currentFilter === 'all' || entity.startsWith(currentFilter);
+                        row.style.display = match && matchFilter ? '' : 'none';
+                    });
+                }
+
+                function sortTable(columnIndex) {
+                    const rows = Array.from(document.querySelectorAll('#entitiesTable tr')).slice(1);
+                    rows.sort((a, b) => {
+                        const aText = a.cells[columnIndex].textContent.trim().toLowerCase();
+                        const bText = b.cells[columnIndex].textContent.trim().toLowerCase();
+                        return sortDirection ? aText.localeCompare(bText) : bText.localeCompare(aText);
+                    });
+                    sortDirection = !sortDirection;
+
+                    const table = document.querySelector('#entitiesTable tbody');
+                    rows.forEach(row => table.appendChild(row)); // Append rows in sorted order
+                }
+            </script>
+<script>
+            let currentFilter = 'All';
+            let sortDirection = true;
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const filterContainer = document.querySelector('.filters');
+                const filterButtons = filterContainer.getElementsByClassName('filter');
+
+                for (let i = 0; i < filterButtons.length; i++) {
+                    filterButtons[i].addEventListener('click', function () {
+                        const current = document.getElementsByClassName('active');
+                        if (current.length > 0) {
+                            current[0].classList.remove('active');
+                        }
+                        this.classList.add('active');
+
+                        const filter = this.id.replace('filter-', '');
+                        currentFilter = filter.toLowerCase();
+                        searchTable();
+                    });
+                }
+
+                const allFilter = document.getElementById('filter-All');
+                if (allFilter) {
+                    allFilter.click();
+                }
+
+                const headers = document.querySelectorAll('#integrationsTable th');
+                headers.forEach((header, index) => {
+                    header.addEventListener('click', () => {
+                        sortTable(index);
+                    });
+                });
+            });
+
+            function searchTable() {
+                const query = document.getElementById('searchBox').value.toLowerCase();
+                const rows = document.querySelectorAll('#integrationsTable tr');
+                rows.forEach((row, index) => {
+                    if (index === 0) return;
+                    const cells = Array.from(row.cells);
+                    const match = cells.some(cell => cell.textContent.toLowerCase().includes(query));
+                    const integration = row.cells[0].textContent.toLowerCase();
+                    const matchFilter = currentFilter === 'all' || integration.startsWith(currentFilter);
+                    row.style.display = match && matchFilter ? '' : 'none';
+                });
+            }
+
+            function sortTable(columnIndex) {
+                const rows = Array.from(document.querySelectorAll('#integrationsTable tr')).slice(1);
+                rows.sort((a, b) => {
+                    const aText = a.cells[columnIndex].textContent.trim().toLowerCase();
+                    const bText = b.cells[columnIndex].textContent.trim().toLowerCase();
+                    return sortDirection ? aText.localeCompare(bText) : bText.localeCompare(aText);
+                });
+                sortDirection = !sortDirection;
+
+                const table = document.querySelector('#integrationsTable tbody');
+                rows.forEach(row => table.appendChild(row));
+            }
+        </script>
+<script>
+                let currentFilter = 'All';
+                let sortDirection = true; // true = ascending, false = descending
+
+                document.addEventListener('DOMContentLoaded', () => {
+                    const filterContainer = document.querySelector('.filters');
+                    const filterButtons = filterContainer.getElementsByClassName('filter');
+
+                    // Add click event listeners to filter buttons
+                    for (let i = 0; i < filterButtons.length; i++) {
+                        filterButtons[i].addEventListener('click', function () {
+                            const current = document.getElementsByClassName('active');
+                            if (current.length > 0) {
+                                current[0].classList.remove('active');
+                            }
+                            this.classList.add('active');
+
+                            const filter = this.id.replace('filter-', ''); // Extract filter name
+                            currentFilter = filter.toLowerCase(); // Update global filter state
+                            searchTable(); // Apply search with the active filter
+                        });
+                    }
+
+                    // Initialize by applying the 'All' filter on page load
+                    const allFilter = document.getElementById('filter-All');
+                    if (allFilter) {
+                        allFilter.click(); // Simulate click on the 'All' filter button
+                    }
+
+                    // Add sorting functionality to column headers
+                    const headers = document.querySelectorAll('#entitiesTable th');
+                    headers.forEach((header, index) => {
+                        header.addEventListener('click', () => {
+                            sortTable(index);
+                        });
+                    });
+                });
+
+                function searchTable() {
+                    const query = document.getElementById('searchBox').value.toLowerCase();
+                    const rows = document.querySelectorAll('#entitiesTable tr');
+                    rows.forEach((row, index) => {
+                        if (index === 0) return; // Skip the header row
+                        const cells = Array.from(row.cells);
+                        const match = cells.some(cell => cell.textContent.toLowerCase().includes(query));
+                        const entity = row.cells[0].textContent.toLowerCase();
+                        const matchFilter = currentFilter === 'all' || entity.startsWith(currentFilter);
+                        row.style.display = match && matchFilter ? '' : 'none';
+                    });
+                }
+
+                function sortTable(columnIndex) {
+                    const rows = Array.from(document.querySelectorAll('#entitiesTable tr')).slice(1);
+                    rows.sort((a, b) => {
+                        const aText = a.cells[columnIndex].textContent.trim().toLowerCase();
+                        const bText = b.cells[columnIndex].textContent.trim().toLowerCase();
+                        return sortDirection ? aText.localeCompare(bText) : bText.localeCompare(aText);
+                    });
+                    sortDirection = !sortDirection;
+
+                    const table = document.querySelector('#entitiesTable tbody');
+                    rows.forEach(row => table.appendChild(row)); // Append rows in sorted order
+                }
+            </script>
+<script>
+            let currentFilter = 'All';
+            let sortDirection = true;
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const filterContainer = document.querySelector('.filters');
+                const filterButtons = filterContainer.getElementsByClassName('filter');
+
+                for (let i = 0; i < filterButtons.length; i++) {
+                    filterButtons[i].addEventListener('click', function () {
+                        const current = document.getElementsByClassName('active');
+                        if (current.length > 0) {
+                            current[0].classList.remove('active');
+                        }
+                        this.classList.add('active');
+
+                        const filter = this.id.replace('filter-', '');
+                        currentFilter = filter.toLowerCase();
+                        searchTable();
+                    });
+                }
+
+                const allFilter = document.getElementById('filter-All');
+                if (allFilter) {
+                    allFilter.click();
+                }
+
+                const headers = document.querySelectorAll('#integrationsTable th');
+                headers.forEach((header, index) => {
+                    header.addEventListener('click', () => {
+                        sortTable(index);
+                    });
+                });
+            });
+
+            function searchTable() {
+                const query = document.getElementById('searchBox').value.toLowerCase();
+                const rows = document.querySelectorAll('#integrationsTable tr');
+                rows.forEach((row, index) => {
+                    if (index === 0) return;
+                    const cells = Array.from(row.cells);
+                    const match = cells.some(cell => cell.textContent.toLowerCase().includes(query));
+                    const integration = row.cells[0].textContent.toLowerCase();
+                    const matchFilter = currentFilter === 'all' || integration.startsWith(currentFilter);
+                    row.style.display = match && matchFilter ? '' : 'none';
+                });
+            }
+
+            function sortTable(columnIndex) {
+                const rows = Array.from(document.querySelectorAll('#integrationsTable tr')).slice(1);
+                rows.sort((a, b) => {
+                    const aText = a.cells[columnIndex].textContent.trim().toLowerCase();
+                    const bText = b.cells[columnIndex].textContent.trim().toLowerCase();
+                    return sortDirection ? aText.localeCompare(bText) : bText.localeCompare(aText);
+                });
+                sortDirection = !sortDirection;
+
+                const table = document.querySelector('#integrationsTable tbody');
+                rows.forEach(row => table.appendChild(row));
+            }
+        </script>
+<script>
+                let currentFilter = 'All';
+                let sortDirection = true; // true = ascending, false = descending
+
+                document.addEventListener('DOMContentLoaded', () => {
+                    const filterContainer = document.querySelector('.filters');
+                    const filterButtons = filterContainer.getElementsByClassName('filter');
+
+                    // Add click event listeners to filter buttons
+                    for (let i = 0; i < filterButtons.length; i++) {
+                        filterButtons[i].addEventListener('click', function () {
+                            const current = document.getElementsByClassName('active');
+                            if (current.length > 0) {
+                                current[0].classList.remove('active');
+                            }
+                            this.classList.add('active');
+
+                            const filter = this.id.replace('filter-', ''); // Extract filter name
+                            currentFilter = filter.toLowerCase(); // Update global filter state
+                            searchTable(); // Apply search with the active filter
+                        });
+                    }
+
+                    // Initialize by applying the 'All' filter on page load
+                    const allFilter = document.getElementById('filter-All');
+                    if (allFilter) {
+                        allFilter.click(); // Simulate click on the 'All' filter button
+                    }
+
+                    // Add sorting functionality to column headers
+                    const headers = document.querySelectorAll('#entitiesTable th');
+                    headers.forEach((header, index) => {
+                        header.addEventListener('click', () => {
+                            sortTable(index);
+                        });
+                    });
+                });
+
+                function searchTable() {
+                    const query = document.getElementById('searchBox').value.toLowerCase();
+                    const rows = document.querySelectorAll('#entitiesTable tr');
+                    rows.forEach((row, index) => {
+                        if (index === 0) return; // Skip the header row
+                        const cells = Array.from(row.cells);
+                        const match = cells.some(cell => cell.textContent.toLowerCase().includes(query));
+                        const entity = row.cells[0].textContent.toLowerCase();
+                        const matchFilter = currentFilter === 'all' || entity.startsWith(currentFilter);
+                        row.style.display = match && matchFilter ? '' : 'none';
+                    });
+                }
+
+                function sortTable(columnIndex) {
+                    const rows = Array.from(document.querySelectorAll('#entitiesTable tr')).slice(1);
+                    rows.sort((a, b) => {
+                        const aText = a.cells[columnIndex].textContent.trim().toLowerCase();
+                        const bText = b.cells[columnIndex].textContent.trim().toLowerCase();
+                        return sortDirection ? aText.localeCompare(bText) : bText.localeCompare(aText);
+                    });
+                    sortDirection = !sortDirection;
+
+                    const table = document.querySelector('#entitiesTable tbody');
+                    rows.forEach(row => table.appendChild(row)); // Append rows in sorted order
+                }
+            </script>
+<script>
+            let currentFilter = 'All';
+            let sortDirection = true;
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const filterContainer = document.querySelector('.filters');
+                const filterButtons = filterContainer.getElementsByClassName('filter');
+
+                for (let i = 0; i < filterButtons.length; i++) {
+                    filterButtons[i].addEventListener('click', function () {
+                        const current = document.getElementsByClassName('active');
+                        if (current.length > 0) {
+                            current[0].classList.remove('active');
+                        }
+                        this.classList.add('active');
+
+                        const filter = this.id.replace('filter-', '');
+                        currentFilter = filter.toLowerCase();
+                        searchTable();
+                    });
+                }
+
+                const allFilter = document.getElementById('filter-All');
+                if (allFilter) {
+                    allFilter.click();
+                }
+
+                const headers = document.querySelectorAll('#integrationsTable th');
+                headers.forEach((header, index) => {
+                    header.addEventListener('click', () => {
+                        sortTable(index);
+                    });
+                });
+            });
+
+            function searchTable() {
+                const query = document.getElementById('searchBox').value.toLowerCase();
+                const rows = document.querySelectorAll('#integrationsTable tr');
+                rows.forEach((row, index) => {
+                    if (index === 0) return;
+                    const cells = Array.from(row.cells);
+                    const match = cells.some(cell => cell.textContent.toLowerCase().includes(query));
+                    const integration = row.cells[0].textContent.toLowerCase();
+                    const matchFilter = currentFilter === 'all' || integration.startsWith(currentFilter);
+                    row.style.display = match && matchFilter ? '' : 'none';
+                });
+            }
+
+            function sortTable(columnIndex) {
+                const rows = Array.from(document.querySelectorAll('#integrationsTable tr')).slice(1);
+                rows.sort((a, b) => {
+                    const aText = a.cells[columnIndex].textContent.trim().toLowerCase();
+                    const bText = b.cells[columnIndex].textContent.trim().toLowerCase();
+                    return sortDirection ? aText.localeCompare(bText) : bText.localeCompare(aText);
+                });
+                sortDirection = !sortDirection;
+
+                const table = document.querySelector('#integrationsTable tbody');
+                rows.forEach(row => table.appendChild(row));
+            }
+        </script>
+<script>
+                let currentFilter = 'All';
+                let sortDirection = true; // true = ascending, false = descending
+
+                document.addEventListener('DOMContentLoaded', () => {
+                    const filterContainer = document.querySelector('.filters');
+                    const filterButtons = filterContainer.getElementsByClassName('filter');
+
+                    // Add click event listeners to filter buttons
+                    for (let i = 0; i < filterButtons.length; i++) {
+                        filterButtons[i].addEventListener('click', function () {
+                            const current = document.getElementsByClassName('active');
+                            if (current.length > 0) {
+                                current[0].classList.remove('active');
+                            }
+                            this.classList.add('active');
+
+                            const filter = this.id.replace('filter-', ''); // Extract filter name
+                            currentFilter = filter.toLowerCase(); // Update global filter state
+                            searchTable(); // Apply search with the active filter
+                        });
+                    }
+
+                    // Initialize by applying the 'All' filter on page load
+                    const allFilter = document.getElementById('filter-All');
+                    if (allFilter) {
+                        allFilter.click(); // Simulate click on the 'All' filter button
+                    }
+
+                    // Add sorting functionality to column headers
+                    const headers = document.querySelectorAll('#entitiesTable th');
+                    headers.forEach((header, index) => {
+                        header.addEventListener('click', () => {
+                            sortTable(index);
+                        });
+                    });
+                });
+
+                function searchTable() {
+                    const query = document.getElementById('searchBox').value.toLowerCase();
+                    const rows = document.querySelectorAll('#entitiesTable tr');
+                    rows.forEach((row, index) => {
+                        if (index === 0) return; // Skip the header row
+                        const cells = Array.from(row.cells);
+                        const match = cells.some(cell => cell.textContent.toLowerCase().includes(query));
+                        const entity = row.cells[0].textContent.toLowerCase();
+                        const matchFilter = currentFilter === 'all' || entity.startsWith(currentFilter);
+                        row.style.display = match && matchFilter ? '' : 'none';
+                    });
+                }
+
+                function sortTable(columnIndex) {
+                    const rows = Array.from(document.querySelectorAll('#entitiesTable tr')).slice(1);
+                    rows.sort((a, b) => {
+                        const aText = a.cells[columnIndex].textContent.trim().toLowerCase();
+                        const bText = b.cells[columnIndex].textContent.trim().toLowerCase();
+                        return sortDirection ? aText.localeCompare(bText) : bText.localeCompare(aText);
+                    });
+                    sortDirection = !sortDirection;
+
+                    const table = document.querySelector('#entitiesTable tbody');
+                    rows.forEach(row => table.appendChild(row)); // Append rows in sorted order
+                }
+            </script>
+<script>
+            let currentFilter = 'All';
+            let sortDirection = true;
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const filterContainer = document.querySelector('.filters');
+                const filterButtons = filterContainer.getElementsByClassName('filter');
+
+                for (let i = 0; i < filterButtons.length; i++) {
+                    filterButtons[i].addEventListener('click', function () {
+                        const current = document.getElementsByClassName('active');
+                        if (current.length > 0) {
+                            current[0].classList.remove('active');
+                        }
+                        this.classList.add('active');
+
+                        const filter = this.id.replace('filter-', '');
+                        currentFilter = filter.toLowerCase();
+                        searchTable();
+                    });
+                }
+
+                const allFilter = document.getElementById('filter-All');
+                if (allFilter) {
+                    allFilter.click();
+                }
+
+                const headers = document.querySelectorAll('#integrationsTable th');
+                headers.forEach((header, index) => {
+                    header.addEventListener('click', () => {
+                        sortTable(index);
+                    });
+                });
+            });
+
+            function searchTable() {
+                const query = document.getElementById('searchBox').value.toLowerCase();
+                const rows = document.querySelectorAll('#integrationsTable tr');
+                rows.forEach((row, index) => {
+                    if (index === 0) return;
+                    const cells = Array.from(row.cells);
+                    const match = cells.some(cell => cell.textContent.toLowerCase().includes(query));
+                    const integration = row.cells[0].textContent.toLowerCase();
+                    const matchFilter = currentFilter === 'all' || integration.startsWith(currentFilter);
+                    row.style.display = match && matchFilter ? '' : 'none';
+                });
+            }
+
+            function sortTable(columnIndex) {
+                const rows = Array.from(document.querySelectorAll('#integrationsTable tr')).slice(1);
+                rows.sort((a, b) => {
+                    const aText = a.cells[columnIndex].textContent.trim().toLowerCase();
+                    const bText = b.cells[columnIndex].textContent.trim().toLowerCase();
+                    return sortDirection ? aText.localeCompare(bText) : bText.localeCompare(aText);
+                });
+                sortDirection = !sortDirection;
+
+                const table = document.querySelector('#integrationsTable tbody');
+                rows.forEach(row => table.appendChild(row));
+            }
+        </script>
+<script>
+                let currentFilter = 'All';
+                let sortDirection = true; // true = ascending, false = descending
+
+                document.addEventListener('DOMContentLoaded', () => {
+                    const filterContainer = document.querySelector('.filters');
+                    const filterButtons = filterContainer.getElementsByClassName('filter');
+
+                    // Add click event listeners to filter buttons
+                    for (let i = 0; i < filterButtons.length; i++) {
+                        filterButtons[i].addEventListener('click', function () {
+                            const current = document.getElementsByClassName('active');
+                            if (current.length > 0) {
+                                current[0].classList.remove('active');
+                            }
+                            this.classList.add('active');
+
+                            const filter = this.id.replace('filter-', ''); // Extract filter name
+                            currentFilter = filter.toLowerCase(); // Update global filter state
+                            searchTable(); // Apply search with the active filter
+                        });
+                    }
+
+                    // Initialize by applying the 'All' filter on page load
+                    const allFilter = document.getElementById('filter-All');
+                    if (allFilter) {
+                        allFilter.click(); // Simulate click on the 'All' filter button
+                    }
+
+                    // Add sorting functionality to column headers
+                    const headers = document.querySelectorAll('#entitiesTable th');
+                    headers.forEach((header, index) => {
+                        header.addEventListener('click', () => {
+                            sortTable(index);
+                        });
+                    });
+                });
+
+                function searchTable() {
+                    const query = document.getElementById('searchBox').value.toLowerCase();
+                    const rows = document.querySelectorAll('#entitiesTable tr');
+                    rows.forEach((row, index) => {
+                        if (index === 0) return; // Skip the header row
+                        const cells = Array.from(row.cells);
+                        const match = cells.some(cell => cell.textContent.toLowerCase().includes(query));
+                        const entity = row.cells[0].textContent.toLowerCase();
+                        const matchFilter = currentFilter === 'all' || entity.startsWith(currentFilter);
+                        row.style.display = match && matchFilter ? '' : 'none';
+                    });
+                }
+
+                function sortTable(columnIndex) {
+                    const rows = Array.from(document.querySelectorAll('#entitiesTable tr')).slice(1);
+                    rows.sort((a, b) => {
+                        const aText = a.cells[columnIndex].textContent.trim().toLowerCase();
+                        const bText = b.cells[columnIndex].textContent.trim().toLowerCase();
+                        return sortDirection ? aText.localeCompare(bText) : bText.localeCompare(aText);
+                    });
+                    sortDirection = !sortDirection;
+
+                    const table = document.querySelector('#entitiesTable tbody');
+                    rows.forEach(row => table.appendChild(row)); // Append rows in sorted order
+                }
+            </script>
+<script>
+            let currentFilter = 'All';
+            let sortDirection = true;
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const filterContainer = document.querySelector('.filters');
+                const filterButtons = filterContainer.getElementsByClassName('filter');
+
+                for (let i = 0; i < filterButtons.length; i++) {
+                    filterButtons[i].addEventListener('click', function () {
+                        const current = document.getElementsByClassName('active');
+                        if (current.length > 0) {
+                            current[0].classList.remove('active');
+                        }
+                        this.classList.add('active');
+
+                        const filter = this.id.replace('filter-', '');
+                        currentFilter = filter.toLowerCase();
+                        searchTable();
+                    });
+                }
+
+                const allFilter = document.getElementById('filter-All');
+                if (allFilter) {
+                    allFilter.click();
+                }
+
+                const headers = document.querySelectorAll('#integrationsTable th');
+                headers.forEach((header, index) => {
+                    header.addEventListener('click', () => {
+                        sortTable(index);
+                    });
+                });
+            });
+
+            function searchTable() {
+                const query = document.getElementById('searchBox').value.toLowerCase();
+                const rows = document.querySelectorAll('#integrationsTable tr');
+                rows.forEach((row, index) => {
+                    if (index === 0) return;
+                    const cells = Array.from(row.cells);
+                    const match = cells.some(cell => cell.textContent.toLowerCase().includes(query));
+                    const integration = row.cells[0].textContent.toLowerCase();
+                    const matchFilter = currentFilter === 'all' || integration.startsWith(currentFilter);
+                    row.style.display = match && matchFilter ? '' : 'none';
+                });
+            }
+
+            function sortTable(columnIndex) {
+                const rows = Array.from(document.querySelectorAll('#integrationsTable tr')).slice(1);
+                rows.sort((a, b) => {
+                    const aText = a.cells[columnIndex].textContent.trim().toLowerCase();
+                    const bText = b.cells[columnIndex].textContent.trim().toLowerCase();
+                    return sortDirection ? aText.localeCompare(bText) : bText.localeCompare(aText);
+                });
+                sortDirection = !sortDirection;
+
+                const table = document.querySelector('#integrationsTable tbody');
+                rows.forEach(row => table.appendChild(row));
+            }
+        </script>
+<script>
                 let currentFilter = 'All';
                 let sortDirection = true; // true = ascending, false = descending
 
