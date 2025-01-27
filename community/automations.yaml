@@ -3084,12 +3084,6 @@
     data:
       value: '{{ states(''sensor.car_fuel_quantity'') }}'
     action: input_number.set_value
-  - data:
-      value: 0
-    action: input_number.set_value
-    target:
-      entity_id:
-      - input_number.yearly_fuel_added
   mode: single
 - id: '1722698935828'
   alias: Start Car Moving on Bluetooth Connect
