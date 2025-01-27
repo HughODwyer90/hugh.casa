@@ -2836,25 +2836,6 @@
           entity_id: input_boolean.remote_work_logged_today
         data: {}
   mode: restart
-- id: '1719837864202'
-  alias: Update Total Fuel Cost
-  triggers:
-  - entity_id: input_number.fuel_cost_input
-    trigger: state
-  conditions:
-  - condition: template
-    value_template: '{{ states(''input_number.fuel_cost_input'') | float != 0 }}'
-  actions:
-  - data_template:
-      entity_id: input_number.yearly_fuel_cost
-      value: '{{states(''input_number.fuel_cost_input'') | float }}'
-    action: input_number.set_value
-  - data:
-      value: 0
-    action: input_number.set_value
-    target:
-      entity_id:
-      - input_number.fuel_cost_input
 - id: '1720953328203'
   alias: Redirect Display Audio to Stereo Group
   description: Redirect audio to hugh_room_stereo if it plays only on the display
@@ -3663,31 +3644,6 @@
           entity_id: fan.air_purifier
         action: fan.set_percentage
   mode: single
-- id: '1729078705562'
-  alias: Add fuel amount
-  triggers:
-  - entity_id: input_number.fuel_amount_input
-    trigger: state
-  conditions:
-  - condition: template
-    value_template: '{{ states(''input_number.fuel_amount_input'') | float != 0 }}'
-  actions:
-  - data_template:
-      entity_id: input_number.yearly_fuel_added
-      value: '{{ states(''input_number.yearly_fuel_added'') | float + states(''input_number.fuel_amount_input'')
-        | float }}'
-    action: input_number.set_value
-  - data_template:
-      entity_id: input_number.total_fuel_added
-      value: '{{ states(''input_number.total_fuel_added'') | float + states(''input_number.fuel_amount_input'')
-        | float }}'
-    action: input_number.set_value
-  - action: input_number.set_value
-    metadata: {}
-    data:
-      value: 0
-    target:
-      entity_id: input_number.fuel_amount_input
 - id: '1729417096269'
   alias: Adjust Air Purifier Speed Based on Ollny Sensors
   description: 'Adjusts air purifier fan speed based on Ollny Twinkle and Comb sensors.  Decreases
