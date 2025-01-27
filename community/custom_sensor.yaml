@@ -274,22 +274,6 @@
       icon_template: "{{ 'mdi:fuel' }}"
       unique_id: "car_fuel_tank_remaining_sensor"
 
-    yearly_fuel_consumption:
-      friendly_name: "Car YTD Fuel Used"
-      unit_of_measurement: "L"
-      value_template: >
-        {% set start_fuel = states('input_number.start_of_year_fuel_level') | float(0) %}
-        {% set added_fuel = states('input_number.yearly_fuel_added') | float(0) %}
-        {% set current_fuel = states('sensor.car_fuel_quantity') | float(0) %}
-        {% set consumed = start_fuel + added_fuel - current_fuel %}
-        {% if consumed < 0 %}
-          0
-        {% else %}
-          {{ consumed | round(2) }}
-        {% endif %}
-      icon_template: "{{ 'mdi:fuel' }}"
-      unique_id: "car_yearly_fuel_consumed_sensor"
-
     yearly_distance_traveled:
       friendly_name: "Car YTD Distance"
       unit_of_measurement: "km"
