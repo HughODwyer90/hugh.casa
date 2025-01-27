@@ -223,76 +223,7 @@
         {% endif %}
       icon_template: "{{ 'mdi:map' }}"
 
-    year_fuel_efficiency_km_per_l:
-      friendly_name: "Car YTD Fuel Efficiency/L"
-      unit_of_measurement: "km"
-      unique_id: "car_ytd_fuel_efficiency_sensor"
-      value_template: >
-        {% set current_mileage = states('sensor.car_mileage') %}
-        {% set previous_year_mileage = states('input_number.previous_year_mileage') %}
-        {% set yearly_fuel_consumption = states('sensor.car_yearly_fuel_consumption') %}
-        {% if current_mileage not in ['unknown', 'unavailable'] and previous_year_mileage not in ['unknown', 'unavailable'] and yearly_fuel_consumption not in ['unknown', 'unavailable'] %}
-          {% set current_mileage = current_mileage | float %}
-          {% set previous_year_mileage = previous_year_mileage | float %}
-          {% set yearly_fuel_consumption = yearly_fuel_consumption | float %}
-          {% set distance = current_mileage - previous_year_mileage %}
-          {% if yearly_fuel_consumption > 0 %}
-            {{ "{:.2f}".format(distance / yearly_fuel_consumption) }}
-          {% else %}
-            0
-          {% endif %}
-        {% else %}
-          0
-        {% endif %}
-      icon_template: "{{ 'mdi:gas-station' }}"
-
-    year_fuel_efficiency_l_per_100km:
-      friendly_name: "Car YTD Fuel Efficiency/100km"
-      unit_of_measurement: "L"
-      unique_id: "car_ytd_fuel_efficiency_l_per_100km_sensor"
-      value_template: >
-        {% set current_mileage = states('sensor.car_mileage') %}
-        {% set previous_year_mileage = states('input_number.previous_year_mileage') %}
-        {% set yearly_fuel_consumption = states('sensor.car_yearly_fuel_consumption') %}
-        {% if current_mileage not in ['unknown', 'unavailable'] and previous_year_mileage not in ['unknown', 'unavailable'] and yearly_fuel_consumption not in ['unknown', 'unavailable'] %}
-          {% set current_mileage = current_mileage | float %}
-          {% set previous_year_mileage = previous_year_mileage | float %}
-          {% set yearly_fuel_consumption = yearly_fuel_consumption | float %}
-          {% set distance = current_mileage - previous_year_mileage %}
-          {% if distance > 0 %}
-            {{ "{:.2f}".format(yearly_fuel_consumption / distance * 100) }}
-          {% else %}
-            0
-          {% endif %}
-        {% else %}
-          0
-        {% endif %}
-      icon_template: "{{ 'mdi:gas-station' }}"
-
-    daily_fuel_consumption:
-      friendly_name: "Car Today Fuel Used"
-      unit_of_measurement: "L"
-      value_template: >
-        {% set previous_fuel_quantity = states('input_number.previous_fuel_quantity') %}
-        {% set car_fuel_quantity = states('sensor.car_fuel_quantity') %}
-        {% set daily_fuel_used = states('input_number.daily_fuel_used') %}
-        {% if previous_fuel_quantity not in ['unknown', 'unavailable'] and car_fuel_quantity not in ['unknown', 'unavailable'] %}
-          {% set previous_fuel_quantity = previous_fuel_quantity | float %}
-          {% set car_fuel_quantity = car_fuel_quantity | float %}
-          {% set daily_fuel_used = daily_fuel_used | float %}
-          {% if previous_fuel_quantity >= car_fuel_quantity %}
-            {% set fuel_consumed = previous_fuel_quantity - car_fuel_quantity %}
-            {% set new_daily_total = daily_fuel_used + fuel_consumed %}
-          {% else %}
-            {% set new_daily_total = daily_fuel_used %}
-          {% endif %}
-          {{ new_daily_total | round(2) }}
-        {% else %}
-          0
-        {% endif %}
-      icon_template: "{{ 'mdi:fuel' }}"
-      unique_id: "car_daily_fuel_consumption_sensor"
-
+    
     daily_distance_traveled:
       friendly_name: "Car Today Distance"
       unit_of_measurement: "km"
@@ -379,58 +310,6 @@
         {% else %}
           0
         {% endif %}
-
-    average_fuel_cost_per_litre:
-      friendly_name: "Car YTD Fuel Cost/L"
-      unique_id: "car_average_fuel_cost_per_litre_sensor"
-      icon_template: "{{ 'mdi:currency-eur' }}"
-      unit_of_measurement: "c"
-      value_template: >
-        {% set total_fuel_cost = states('input_number.yearly_fuel_cost') %}
-        {% set total_fuel_added = states('input_number.yearly_fuel_added') %}
-        {% if total_fuel_cost not in ['unknown', 'unavailable'] and total_fuel_added not in ['unknown', 'unavailable'] %}
-          {% set total_fuel_cost = total_fuel_cost | float %}
-          {% set total_fuel_added = total_fuel_added | float %}
-          {% if total_fuel_added > 0 %}
-            {{ "{:.1f}".format((total_fuel_cost / total_fuel_added) * 100) }}
-          {% else %}
-            0
-          {% endif %}
-        {% else %}
-          0
-        {% endif %}
-
-    cost_per_kilometer:
-      friendly_name: "Car YTD Fuel Cost/km"
-      unique_id: "car_ytd_cost_per_kilometer_sensor"
-      unit_of_measurement: "€"
-      value_template: >
-        {% set total_fuel_cost = states('input_number.yearly_fuel_cost') %}
-        {% set current_mileage = states('sensor.car_mileage') %}
-        {% set previous_year_mileage = states('input_number.previous_year_mileage') %}
-        {% if total_fuel_cost not in ['unknown', 'unavailable'] and current_mileage not in ['unknown', 'unavailable'] and previous_year_mileage not in ['unknown', 'unavailable'] %}
-          {% set total_fuel_cost = total_fuel_cost | float %}
-          {% set current_mileage = current_mileage | float %}
-          {% set previous_year_mileage = previous_year_mileage | float %}
-          {% set distance = current_mileage - previous_year_mileage %}
-          {% if distance > 0 %}
-            {{"{:.2f}".format(total_fuel_cost / distance) }}
-          {% else %}
-            0
-          {% endif %}
-        {% else %}
-          0
-        {% endif %}
-      icon_template: "{{ 'mdi:currency-eur' }}"
-
-    yearly_fuel_cost_sensor:
-      friendly_name: "Car YTD Fuel Cost Total"
-      unit_of_measurement: "€"
-      value_template: >
-        {% set fuel_cost = states('input_number.yearly_fuel_cost') | float %}
-        {{"{:.2f}".format(fuel_cost) }}
-      icon_template: "{{ 'mdi:currency-eur' }}"
-      unique_id: "car_yearly_fuel_cost_sensor"
 
     yearly_co2_emissions_fuel_based_sensor:
       friendly_name: "Car YTD CO₂ Emissions"
