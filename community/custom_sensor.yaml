@@ -295,20 +295,7 @@
           0
         {% endif %}
 
-    yearly_co2_emissions_fuel_based_sensor:
-      friendly_name: "Car YTD CO₂ Emissions"
-      unit_of_measurement: "kg"
-      value_template: >
-        {% set yearly_fuel_consumption = states('sensor.car_yearly_fuel_consumption') | float %}
-        {% set emissions_per_litre = 2.3035 %}
-        {% if yearly_fuel_consumption > 0 %}
-          {{ "{:.2f}".format(yearly_fuel_consumption * emissions_per_litre) }}
-        {% else %}
-          0
-        {% endif %}
-      icon_template: "{{ 'mdi:leaf' }}"
-      unique_id: "car_yearly_co2_emissions_fuel_based_sensor"
-
+    
     daily_driving_time:
       friendly_name: "Car Today Driving Time"
       unique_id: "car_daily_driving_time_sensor"
