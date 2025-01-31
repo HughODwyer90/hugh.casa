@@ -3885,7 +3885,9 @@
   - entity_id: sensor.air_purifier_lifetime
     below: 50
     trigger: numeric_state
-  conditions: []
+  conditions:
+  - condition: template
+    value_template: '{{ trigger.from_state.state | float > 50 }}'
   actions:
   - data:
       title: Air Purifier Maintenance
