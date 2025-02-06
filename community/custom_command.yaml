@@ -1,5 +1,5 @@
 toggle_work_plug:
-  url: "https://eu-wap.tplinkcloud.com/?token=1d47f954-BTWUCsXaZjQJdGCy0a7BW7g"
+  url: "https://eu-wap.tplinkcloud.com/?token={{ states('input_text.kasa_token') }}"
   method: POST
   headers:
     Content-Type: application/json
