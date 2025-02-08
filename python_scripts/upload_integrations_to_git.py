@@ -59,15 +59,15 @@ try:
             json.dump(integrations_data, json_file, indent=4)
 
         # Debug: Print timestamp before writing the file
-print(f"Generating integrations.html with timestamp: {version}")
+        print(f"Generating integrations.html with timestamp: {version}")
 
-# Save HTML file
-html_file_path = "/config/www/community/integrations.html"
-with open(html_file_path, "w", encoding="utf-8") as html_file:
-    html_file.write(html_content)
+        # Save HTML file
+        html_file_path = "/config/www/community/integrations.html"
+        with open(html_file_path, "w", encoding="utf-8") as html_file:
+            html_file.write(html_content)
 
-# Debug: Confirm file was written successfully
-print(f"File saved: {html_file_path}")
+        # Debug: Confirm file was written successfully
+        print(f"File saved: {html_file_path}")
 
 
         # Upload files to GitHub
