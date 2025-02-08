@@ -1,7 +1,7 @@
 hugh_room_stereo_volume_up:
   alias: Hugh Room Stereo Volume Up
   sequence:
-  - service: media_player.volume_up
+  - action: media_player.volume_up
     target:
       entity_id:
       - media_player.hugh_room_display
@@ -11,7 +11,7 @@ hugh_room_stereo_volume_up:
 hugh_room_stereo_volume_down:
   alias: Hugh Room Stereo Volume Down
   sequence:
-  - service: media_player.volume_down
+  - action: media_player.volume_down
     data: {}
     target:
       entity_id: media_player.hugh_room_display
@@ -20,7 +20,7 @@ hugh_room_stereo_volume_down:
 play_spotify_playlist:
   alias: Play Spotify Playlist
   sequence:
-  - service: spotcast.start
+  - action: spotcast.start
     metadata: {}
     data:
       force_playback: true
@@ -122,7 +122,7 @@ execute_alarm_actions:
 calculate_last_day_of_month:
   alias: Calculate Last Day of Month
   sequence:
-  - service: input_datetime.set_datetime
+  - action: input_datetime.set_datetime
     target:
       entity_id: input_datetime.last_day_of_month
     data:
@@ -135,7 +135,7 @@ calculate_last_day_of_month:
 update_tuya_expiration:
   alias: Update Tuya Account Expiration
   sequence:
-  - service: input_datetime.set_datetime
+  - action: input_datetime.set_datetime
     data_template:
       entity_id: input_datetime.tuya_account_expiration
       date: "{% set current_date = as_datetime(now()) %}\n        {% set new_month
@@ -144,7 +144,7 @@ update_tuya_expiration:
         - 12 if new_month > 12 else new_month %}\n        {{ current_date.replace(year=new_year,
         month=final_month).strftime('%Y-%m-%d') }}"
       time: '{{ now().strftime(''%H:%M:%S'') }}'
-  - service: notify.notifications
+  - action: notify.notifications
     data:
       message: Tuya account expiration date updated.
       data:
@@ -154,25 +154,25 @@ update_tuya_expiration:
 water_patrick:
   alias: Water Patrick
   sequence:
-  - service: shell_command.water_patrick_message
+  - action: shell_command.water_patrick_message
     data: {}
     response_variable: message
-  - service: notify.notifications
+  - action: notify.notifications
     data_template:
       message: '{{ message[''stdout''] }}'
       title: Patrick the Plant
       data:
         notification_icon: mdi:water
-  - service: input_boolean.turn_on
+  - action: input_boolean.turn_on
     entity_id: input_boolean.patrick_needs_water
   mode: single
 feed_patrick:
   alias: Feed Patrick
   sequence:
-  - service: shell_command.feed_patrick_message
+  - action: shell_command.feed_patrick_message
     data: {}
     response_variable: message
-  - service: notify.notifications
+  - action: notify.notifications
     data_template:
       message: '{{ message[''stdout''] }}'
       title: Patrick the Plant
@@ -182,10 +182,10 @@ feed_patrick:
 find_car:
   alias: Find Car
   sequence:
-  - service: shell_command.find_car
+  - action: shell_command.find_car
     data: {}
     response_variable: message
-  - service: input_text.set_value
+  - action: input_text.set_value
     target:
       entity_id: input_text.car_gps_map_url
     data:
@@ -194,7 +194,7 @@ find_car:
         'unavailable', 'None'] and longitude not in ['unknown', 'unavailable', 'None']
         %}\n  https://www.google.com/maps?q={{ latitude }},{{ longitude }}\n{% else
         %}\n  https://www.google.com/maps\n{% endif %}\n"
-  - service: notify.notifications
+  - action: notify.notifications
     data_template:
       message: '{{ message[''stdout''] }}'
       title: Clio the Car
@@ -209,7 +209,7 @@ find_car:
 update_umail_expiration:
   alias: Update Umail Expiration
   sequence:
-  - service: input_datetime.set_datetime
+  - action: input_datetime.set_datetime
     data_template:
       entity_id: input_datetime.umail_account_expiration
       date: "{% set current_date = as_datetime(now()) %}\n        {% set new_month
@@ -218,7 +218,7 @@ update_umail_expiration:
         - 12 if new_month > 12 else new_month %}\n        {{ current_date.replace(year=new_year,
         month=final_month).strftime('%Y-%m-%d') }}"
       time: '{{ now().strftime(''%H:%M:%S'') }}'
-  - service: notify.notifications
+  - action: notify.notifications
     data:
       message: Umail account expiration date updated.
       data:
@@ -229,19 +229,19 @@ update_umail_expiration:
 reload_vesync:
   alias: Reload VeSync Integration
   sequence:
-  - service: homeassistant.reload_config_entry
+  - action: homeassistant.reload_config_entry
     data:
       entry_id: af0e7105f5eb1d6df46598f6d4a7adc6
 reload_spotify:
   alias: Reload Spotify Integration
   sequence:
-  - service: homeassistant.reload_config_entry
+  - action: homeassistant.reload_config_entry
     data:
       entry_id: 51cc8b5d71654625b84481b41649a6b8
 reload_tuya:
   alias: Reload Tuya Integration
   sequence:
-  - service: homeassistant.reload_config_entry
+  - action: homeassistant.reload_config_entry
     data:
       entry_id: e06b3aef84633bb3473c18d9cc2976c6
 update_car_data_expiration:
