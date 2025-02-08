@@ -42,15 +42,12 @@ try:
         ]
         integrations_data.sort(key=lambda x: x["Integration ID"])
 
-        # Generate prefixes dynamically from Integration IDs
-        prefixes = sorted(set(integration['Integration ID'][0].upper() for integration in integrations_data if integration['Integration ID']))
-
         # Generate version timestamp
         version = datetime.utcnow().strftime("%Y-%m-%d-%H%M%S")
 
         # Generate HTML using HTMLGenerator
         html_content = HTMLGenerator.generate_integrations_html(
-            integrations_data, len(integrations_data), version, prefixes
+            integrations_data, len(integrations_data), version
         )
 
         # Save JSON file
