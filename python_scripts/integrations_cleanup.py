@@ -53,7 +53,7 @@ def get_confirmation(prompt):
 if __name__ == "__main__":
     # Load secrets
     secrets = SecretsManager()
-    HA_TOKEN = secrets["long_live_lucifer"]
+    HA_TOKEN = secrets["ha_access_token"]
     HA_URL = "http://homeassistant.local:8123"  # Update with your Home Assistant URL
 
     if not HA_TOKEN:
