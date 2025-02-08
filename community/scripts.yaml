@@ -376,25 +376,31 @@ update_liverpool_sensors:
   description: ''
 update_entities_html:
   sequence:
-  - action: shell_command.update_home_assistant_entities
+  - action: shell_command.upload_entities_to_git
     data: {}
   - delay:
       hours: 0
       minutes: 0
       seconds: 10
-  - action: shell_command.update_home_assistant_integrations
+  - action: shell_command.upload_integrations_to_git
     data: {}
   - delay:
       hours: 0
       minutes: 0
       seconds: 10
-  - action: shell_command.update_home_assistant_yaml
+  - action: shell_command.upload_yaml_to_git
     data: {}
   - delay:
       hours: 0
       minutes: 1
       seconds: 0
-  - action: shell_command.generate_home_assistant_index
+  - action: shell_command.upload_py_to_git
+    data: {}
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 0
+  - action: shell_command.upload_index_to_git
     data: {}
   alias: Github Backup
   description: ''
