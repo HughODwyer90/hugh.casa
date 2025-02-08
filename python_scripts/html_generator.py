@@ -146,17 +146,24 @@ class HTMLGenerator:
     @staticmethod
     def generate_integrations_html(integrations_data, total_entries, version, prefixes):
         """Generate HTML for Home Assistant integrations."""
-        filters = ''.join(f'<div id="filter-{prefix}" class="filter">{prefix}</div>' for prefix in prefixes)
+        
+        # Create filters dynamically
+        filters = ''.join(
+            f'<div id="filter-{prefix}" class="filter">{prefix}</div>' for prefix in prefixes
+        )
+
+        # Create table rows dynamically, ensuring missing data is replaced with "N/A"
         rows = ''.join(f"""
             <tr>
-                <td>{integration['Integration ID']}</td>
-                <td>{integration['Config Entry ID']}</td>
-                <td>{integration['Title']}</td>
-                <td>{integration['State']}</td>
-                <td>{integration['Source']}</td>
+                <td>{integration.get('Integration ID', 'N/A')}</td>
+                <td>{integration.get('Config Entry ID', 'N/A')}</td>
+                <td>{integration.get('Title', 'N/A')}</td>
+                <td>{integration.get('State', 'N/A')}</td>
+                <td>{integration.get('Source', 'N/A')}</td>
             </tr>
         """ for integration in integrations_data)
 
+        # HTML Content
         return f"""
         <!DOCTYPE html>
         <html lang="en">
@@ -165,16 +172,104 @@ class HTMLGenerator:
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Home Assistant Integrations</title>
             <style>
-                /* Add your CSS styles */
+                body {{
+                    font-family: Arial, sans-serif;
+                    margin: 20px;
+                    background-color: #f9f9f9;
+                }}
+                h1 {{
+                    text-align: center;
+                    color: #333;
+                }}
+                #searchBox {{
+                    width: 100%;
+                    padding: 10px;
+                    margin: 12px 0;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    font-size: 16px;
+                }}
+                .filters {{
+                    display: flex;
+                    flex-wrap: wrap;
+                    margin-bottom: 12px;
+                }}
+                .filter {{
+                    margin: 4px;
+                    padding: 6px 12px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    background-color: #f4f4f4;
+                    cursor: pointer;
+                }}
+                .filter.active {{
+                    background-color: #0056b3;
+                    color: white;
+                    font-weight: bold;
+                }}
+                table {{
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 20px;
+                    background-color: white;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                }}
+                th, td {{
+                    border: 1px solid #ccc;
+                    padding: 10px;
+                    text-align: left;
+                }}
+                th {{
+                    background-color: #f8f9fa;
+                    color: #333;
+                    cursor: pointer;
+                }}
+                tr:nth-child(even) {{
+                    background-color: #f9f9f9;
+                }}
+                tr:hover {{
+                    background-color: #e9ecef !important;
+                }}
             </style>
             <script>
-                /* Add your JavaScript functions */
+                document.addEventListener('DOMContentLoaded', () => {{
+                    // Activate filtering
+                    const filters = document.querySelectorAll('.filter');
+                    filters.forEach(filter => {{
+                        filter.addEventListener('click', () => {{
+                            document.querySelectorAll('.filter.active').forEach(f => f.classList.remove('active'));
+                            filter.classList.add('active');
+                            filterTable(filter.id.replace('filter-', ''));
+                        }});
+                    }});
+
+                    // Search functionality
+                    const searchBox = document.getElementById('searchBox');
+                    searchBox.addEventListener('input', () => filterTable());
+
+                    function filterTable(filter = '') {{
+                        const query = searchBox.value.toLowerCase();
+                        const rows = document.querySelectorAll('#integrationsTable tbody tr');
+                        rows.forEach(row => {{
+                            const cells = Array.from(row.cells);
+                            const matchesFilter = filter === 'All' || !filter || cells[0].textContent.startsWith(filter);
+                            const matchesQuery = cells.some(cell => cell.textContent.toLowerCase().includes(query));
+                            const shouldDisplay = matchesFilter && matchesQuery;
+                            console.log({{ row: row.cells[0].textContent, matchesFilter, matchesQuery, shouldDisplay }});
+                            row.style.display = shouldDisplay ? '' : 'none';
+                        }});
+                    }}
+
+                    // Default filter behavior
+                    filterTable('All');
+                }});
             </script>
         </head>
         <body>
             <h1>Home Assistant Integrations</h1>
             <p>Total Integrations: {total_entries}</p>
             <p>Version: {version}</p>
+            <input type="text" id="searchBox" placeholder="Search integrations..." />
             <div class="filters">
                 <div id="filter-All" class="filter active">All</div>
                 {filters}
@@ -194,3 +289,5 @@ class HTMLGenerator:
         </body>
         </html>
         """
+
+
