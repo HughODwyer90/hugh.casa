@@ -89,9 +89,9 @@
                         const query = searchBox.value.toLowerCase();
                         const rows = document.querySelectorAll('#integrationsTable tbody tr');
                         rows.forEach(row => {
-                            const cells = Array.from(row.cells);
-                            const matchesFilter = filter === 'All' || cells[0].textContent.startsWith(filter);
-                            const matchesQuery = cells.some(cell => cell.textContent.toLowerCase().includes(query));
+                            const integrationID = row.cells[0].textContent;  // Get Integration ID
+                            const matchesFilter = filter === 'All' || integrationID.startsWith(filter);
+                            const matchesQuery = Array.from(row.cells).some(cell => cell.textContent.toLowerCase().includes(query));
                             row.style.display = matchesFilter && matchesQuery ? '' : 'none';
                         });
                     }
@@ -104,7 +104,7 @@
         <body>
             <h1>Home Assistant Integrations</h1>
             <p>Total Integrations: 64</p>
-            <p>Version: 2025-02-08-223111</p>
+            <p>Version: 2025-02-08-223243</p>
             <input type="text" id="searchBox" placeholder="Search integrations..." />
             <div class="filters">
                 <div id="filter-All" class="filter active">All</div>
