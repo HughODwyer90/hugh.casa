@@ -144,12 +144,14 @@ class HTMLGenerator:
         """
 
     @staticmethod
-    def generate_integrations_html(integrations_data, total_entries, version, prefixes):
+    def generate_integrations_html(integrations_data, total_entries, version):
         """Generate HTML for Home Assistant integrations."""
-        
+        # Generate a list of unique first characters (prefixes) from Integration IDs
+        prefixes = sorted({integration.get('Integration ID', '')[0].upper() for integration in integrations_data if integration.get('Integration ID', '')})
+
         # Create filters dynamically
         filters = ''.join(
-            f'<div id="filter-{prefix}" class="filter">{prefix}</div>' for prefix in prefixes
+            f'<button id="filter-{prefix}" class="filter">{prefix}</button>' for prefix in prefixes
         )
 
         # Create table rows dynamically, ensuring missing data is replaced with "N/A"
@@ -222,7 +224,6 @@ class HTMLGenerator:
                 th {{
                     background-color: #f8f9fa;
                     color: #333;
-                    cursor: pointer;
                 }}
                 tr:nth-child(even) {{
                     background-color: #f9f9f9;
@@ -233,34 +234,36 @@ class HTMLGenerator:
             </style>
             <script>
                 document.addEventListener('DOMContentLoaded', () => {{
-                    // Activate filtering
+                    let currentFilter = 'All';
+
+                    // Handle filter button clicks
                     const filters = document.querySelectorAll('.filter');
                     filters.forEach(filter => {{
                         filter.addEventListener('click', () => {{
                             document.querySelectorAll('.filter.active').forEach(f => f.classList.remove('active'));
                             filter.classList.add('active');
-                            filterTable(filter.id.replace('filter-', ''));
+                            currentFilter = filter.textContent.trim();  // Update current filter
+                            filterTable(currentFilter);
                         }});
                     }});
 
-                    // Search functionality
+                    // Handle search input
                     const searchBox = document.getElementById('searchBox');
-                    searchBox.addEventListener('input', () => filterTable());
+                    searchBox.addEventListener('input', () => filterTable(currentFilter));
 
-                    function filterTable(filter = '') {{
+                    // Function to filter the table
+                    function filterTable(filter = 'All') {{
                         const query = searchBox.value.toLowerCase();
                         const rows = document.querySelectorAll('#integrationsTable tbody tr');
                         rows.forEach(row => {{
-                            const cells = Array.from(row.cells);
-                            const matchesFilter = filter === 'All' || !filter || cells[0].textContent.startsWith(filter);
-                            const matchesQuery = cells.some(cell => cell.textContent.toLowerCase().includes(query));
-                            const shouldDisplay = matchesFilter && matchesQuery;
-                            console.log({{ row: row.cells[0].textContent, matchesFilter, matchesQuery, shouldDisplay }});
-                            row.style.display = shouldDisplay ? '' : 'none';
+                            const integrationID = row.cells[0].textContent.trim();  // Get Integration ID
+                            const matchesFilter = filter === 'All' || integrationID.charAt(0).toUpperCase() === filter;
+                            const matchesQuery = Array.from(row.cells).some(cell => cell.textContent.toLowerCase().includes(query));
+                            row.style.display = matchesFilter && matchesQuery ? '' : 'none';
                         }});
                     }}
 
-                    // Default filter behavior
+                    // Default: Show all rows
                     filterTable('All');
                 }});
             </script>
@@ -271,7 +274,7 @@ class HTMLGenerator:
             <p>Version: {version}</p>
             <input type="text" id="searchBox" placeholder="Search integrations..." />
             <div class="filters">
-                <div id="filter-All" class="filter active">All</div>
+                <button id="filter-All" class="filter active">All</button>
                 {filters}
             </div>
             <table id="integrationsTable">
@@ -289,5 +292,3 @@ class HTMLGenerator:
         </body>
         </html>
         """
-
-
