@@ -58,7 +58,7 @@
   alias: Living Room Dim
   description: Dim down any on lights in the living room.
   trigger:
-  - platform: device
+  - trigger: device
     domain: mqtt
     device_id: 9f98b882a412e95e16f1addf1f9e8e27
     type: action
@@ -104,7 +104,7 @@
   alias: Living Room Brighten
   description: Brighten up any on lights in the living room.
   trigger:
-  - platform: device
+  - trigger: device
     domain: mqtt
     device_id: 9f98b882a412e95e16f1addf1f9e8e27
     type: action
@@ -176,7 +176,7 @@
   description: Toggles between 'lamp' and 'all Hugh lights' scenes upon button press,
     activates 'lamp' scene if both lights are off.
   trigger:
-  - platform: device
+  - trigger: device
     domain: mqtt
     device_id: 105dad18f2a2a0ceab0b94b61060ee0d
     type: action
@@ -251,7 +251,7 @@
   alias: Admin Backup Warning
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - sensor.backups_stale_fallback
     to: Problem
@@ -339,7 +339,7 @@
   alias: Admin on Start
   description: Executes actions when Home Assistant starts.
   trigger:
-  - platform: homeassistant
+  - trigger: homeassistant
     event: start
   action:
   - target:
@@ -569,7 +569,7 @@
   alias: Hugh Room Door Button Single
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - sensor.hugh_room_aqara_door_button_action
     to: single
@@ -600,7 +600,7 @@
   alias: Hugh Room Bed Button Double
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - sensor.hugh_room_aqara_bed_button_action
     to: double
@@ -647,7 +647,7 @@
   alias: Hugh Room Blanket Timer Off
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - switch.hugh_room_plug_blanket
     from: 'off'
@@ -666,7 +666,7 @@
   alias: Hugh Room Diffuser Empty Warning
   description: Sends a notification when the diffuser is empty.
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - binary_sensor.diffuser_moisture
     to: 'off'
@@ -681,9 +681,9 @@
   alias: Hugh Room Diffuser On
   description: ''
   trigger:
-  - platform: time
+  - trigger: time
     at: '21:00:00'
-  - platform: state
+  - trigger: state
     entity_id:
     - switch.diffuser_power
     to: 'on'
@@ -725,7 +725,7 @@
   alias: Living Room Aqara Button Single
   description: Toggle between scenes.
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - sensor.living_room_aqara_button_action
     to: single
@@ -751,12 +751,12 @@
   alias: Hugh Room Fan Bed Indicator
   description: Updates the indicator state based on the power state of the switch
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - switch.hugh_room_plug_fan_bed
     from: 'off'
     to: 'on'
-  - platform: state
+  - trigger: state
     entity_id:
     - switch.hugh_room_plug_fan_bed
     from: 'on'
@@ -789,7 +789,7 @@
   alias: Hugh Room Bed Button Hold
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - sensor.hugh_room_aqara_bed_button_action
     to: hold
@@ -804,12 +804,12 @@
   alias: Hugh Room Blanket Indicator
   description: Updates the indicator state based on the power state of the switch
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - switch.hugh_room_plug_blanket
     from: 'off'
     to: 'on'
-  - platform: state
+  - trigger: state
     entity_id:
     - switch.hugh_room_plug_blanket
     from: 'on'
@@ -891,12 +891,12 @@
   alias: Hugh Room Fan Desk Indicator
   description: Updates the indicator state based on the power state of the switch
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - switch.hugh_room_plug_fan_desk
     from: 'off'
     to: 'on'
-  - platform: state
+  - trigger: state
     entity_id:
     - switch.hugh_room_plug_fan_desk
     from: 'on'
@@ -929,7 +929,7 @@
   alias: Hugh Room Desk Fan On
   description: Turn on Desk Fan
   trigger:
-  - platform: device
+  - trigger: device
     domain: mqtt
     device_id: 105dad18f2a2a0ceab0b94b61060ee0d
     type: action
@@ -946,7 +946,7 @@
   alias: Hugh Phone Charging
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - sensor.hugh_phone_charger_type
     to: ac
@@ -980,11 +980,11 @@
   alias: Hugh Phone Charged
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - sensor.hugh_phone_battery_state
     to: not_charging
-  - platform: numeric_state
+  - trigger: numeric_state
     entity_id:
     - sensor.hugh_phone_battery_level
     above: 83
@@ -1023,11 +1023,11 @@
 
     '
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: switch.diffuser_power
     to: 'off'
     from: 'on'
-  - platform: state
+  - trigger: state
     entity_id:
     - switch.diffuser_power
     to: 'on'
@@ -1036,7 +1036,7 @@
       minutes: 30
       seconds: 0
     from: 'off'
-  - platform: state
+  - trigger: state
     entity_id: switch.diffuser_power
     from: unavailable
   condition: []
@@ -1063,7 +1063,7 @@
   description: Turns off the diffuser lights if they are on between midnight and 8
     AM.
   trigger:
-  - platform: time
+  - trigger: time
     at: 00:00:00
   condition:
   - condition: state
@@ -1084,7 +1084,7 @@
   alias: Hugh Room Stereo Vol Up
   description: ''
   trigger:
-  - platform: device
+  - trigger: device
     domain: mqtt
     device_id: 105dad18f2a2a0ceab0b94b61060ee0d
     type: action
@@ -1100,7 +1100,7 @@
   alias: Hugh Room Stereo Vol Down
   description: ''
   trigger:
-  - platform: device
+  - trigger: device
     domain: mqtt
     device_id: 105dad18f2a2a0ceab0b94b61060ee0d
     type: action
@@ -1115,13 +1115,13 @@
   alias: Hugh Room Stereo Play Toggle
   description: ''
   trigger:
-  - platform: device
+  - trigger: device
     domain: mqtt
     device_id: 105dad18f2a2a0ceab0b94b61060ee0d
     type: action
     subtype: up_hold
     discovery_id: 0x001788010b72e620 action_up_hold
-  - platform: state
+  - trigger: state
     entity_id:
     - sensor.hugh_room_aqara_door_button_action
     to: hold
@@ -1155,11 +1155,11 @@
   description: Activates the 'dimmers' scene based on the living room occupancy and
     the state of the TV.
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: remote.living_room_tv
     from: 'on'
     to: 'off'
-  - platform: state
+  - trigger: state
     entity_id: remote.living_room_tv
     from: 'off'
     to: 'on'
@@ -1203,7 +1203,7 @@
   description: Sends a notification when devices are unavailable or unknown for 5
     minutes.
   trigger:
-  - platform: time_pattern
+  - trigger: time_pattern
     minutes: /5
   condition:
   - condition: or
@@ -1301,11 +1301,12 @@
 - id: '1707620611866'
   alias: Admin Ignore Alert
   description: Does nothing, simply triggered by the Ignore action.
-  trigger:
-  - platform: event
-    event_type: mobile_app_notification_action
+  triggers:
+  - event_type: mobile_app_notification_action
     event_data:
       action: IGNORE_ALERT
+    trigger: event
+  actions: []
   mode: single
 - id: '1707919629305'
   alias: PC boolean toggle
@@ -1358,7 +1359,7 @@
   alias: Water Snake Plant
   description: ''
   trigger:
-  - platform: numeric_state
+  - trigger: numeric_state
     entity_id:
     - sensor.snake_plant_moisture
     below: 10
@@ -1386,11 +1387,11 @@
 
     '
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - sensor.hugh_phone_battery_state
     to: discharging
-  - platform: state
+  - trigger: state
     entity_id:
     - input_boolean.pc_on
   condition:
@@ -1448,10 +1449,10 @@
   alias: Diffuser Light Mode Check
   description: Triggered when diffuser light is manually turned on
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: switch.diffuser_light
     to: 'on'
-  - platform: state
+  - trigger: state
     entity_id:
     - switch.diffuser_power
     to: 'on'
@@ -1559,7 +1560,7 @@
   alias: Hugh Room Air Purifier On
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - fan.air_purifier
     to: 'on'
@@ -1591,7 +1592,7 @@
   alias: Hugh Room Monitor Turned On
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: remote.monitor
     to: 'on'
   condition:
@@ -1611,7 +1612,7 @@
   alias: Hugh Room Monitor Turned Off
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: remote.monitor
     to: 'off'
   action:
@@ -1648,7 +1649,7 @@
   description: Adds different types of flour to the shopping list based on scanned
     tag.
   trigger:
-  - platform: tag
+  - trigger: tag
     tag_id:
     - d9f4e28a-1761-4e6f-ac2c-da0a7b18fb9f
     - 67d13460-bda2-469a-b86c-1ce393e52463
@@ -1761,13 +1762,13 @@
 
     '
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.bathroom_motion_occupancy
     to: 'on'
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.bathroom_motion_occupancy
     to: 'off'
-  - platform: state
+  - trigger: state
     entity_id:
     - input_boolean.shower_in_progress
     enabled: true
@@ -1948,7 +1949,7 @@
 - id: '1712869374188'
   alias: Bathroom Humidity and Vibration Monitoring
   trigger:
-  - platform: template
+  - trigger: template
     value_template: '{% set current_humidity = states(''sensor.bathroom_aqara_humidity'')
       | float %} {% set previous_humidity = states(''input_number.previous_bathroom_humidity'')
       | float %} {% set increase = current_humidity >= previous_humidity + 4 %} {%
@@ -1956,16 +1957,16 @@
       }}
 
       '
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.bathroom_motion_occupancy
     to: 'off'
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.bathroom_vibration
     to: 'on'
-  - platform: state
+  - trigger: state
     entity_id: input_boolean.shower_in_progress
     to: 'on'
-  - platform: event
+  - trigger: event
     event_type: timer.finished
     event_data:
       entity_id: timer.shower_check
@@ -1973,12 +1974,12 @@
   - condition: or
     conditions:
     - condition: template
-      value_template: '{{ trigger.platform == ''state'' and trigger.entity_id == ''binary_sensor.bathroom_motion_occupancy''
+      value_template: '{{ trigger.trigger == ''state'' and trigger.entity_id == ''binary_sensor.bathroom_motion_occupancy''
         }}
 
         '
     - condition: template
-      value_template: "{{ trigger.platform == 'template' and (\n   states('sensor.bathroom_aqara_humidity')
+      value_template: "{{ trigger.trigger == 'template' and (\n   states('sensor.bathroom_aqara_humidity')
         | float >= states('input_number.previous_bathroom_humidity') | float + 4 or\n
         \  states('sensor.bathroom_aqara_humidity') | float < states('input_number.previous_bathroom_humidity')
         | float - 2) }}\n"
@@ -1986,7 +1987,7 @@
       entity_id: binary_sensor.bathroom_vibration
       state: 'on'
     - condition: template
-      value_template: '{{ trigger.platform == ''event'' and trigger.event.data.entity_id
+      value_template: '{{ trigger.trigger == ''event'' and trigger.event.data.entity_id
         == ''timer.shower_check'' }}
 
         '
@@ -2041,7 +2042,7 @@
         action: timer.cancel
     - conditions:
       - condition: template
-        value_template: '{{ trigger.platform == ''event'' and trigger.event.data.entity_id
+        value_template: '{{ trigger.trigger == ''event'' and trigger.event.data.entity_id
           == ''timer.shower_check'' }}
 
           '
@@ -2064,7 +2065,7 @@
   alias: Living Room Floor Lamps
   description: ''
   trigger:
-  - platform: device
+  - trigger: device
     domain: mqtt
     device_id: 9f98b882a412e95e16f1addf1f9e8e27
     type: action
@@ -2112,9 +2113,9 @@
   alias: Bathroom Previous Humidity
   description: Updates the previous humidity level after a change or every 30 minutes.
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: sensor.bathroom_aqara_humidity
-  - platform: time_pattern
+  - trigger: time_pattern
     minutes: /20
   action:
   - delay: 00:00:10
@@ -2133,7 +2134,7 @@
 
     '
   trigger:
-  - platform: time
+  - trigger: time
     at: '22:00:00'
   condition:
   - condition: or
@@ -2177,7 +2178,7 @@
   alias: Navigate Home from Work
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.hugh_phone_android_auto
     to: 'on'
   condition:
@@ -2248,7 +2249,7 @@
   description: Updates the helper with the date of the next bank holiday based on
     the countdown.
   trigger:
-  - platform: time
+  - trigger: time
     at: 00:01:00
   condition: []
   action:
@@ -2323,7 +2324,7 @@
 - id: '1715822596053'
   alias: Pay Day Notification
   trigger:
-  - platform: template
+  - trigger: template
     value_template: '{{ (states(''input_datetime.next_pay_day'') | as_datetime).date()
       == now().date() and now().time().hour == 8 and now().time().minute == 0 }}
 
@@ -2404,7 +2405,7 @@
   alias: Shopping List Open
   description: ''
   trigger:
-  - platform: zone
+  - trigger: zone
     entity_id: device_tracker.hugh_phone
     zone: zone.aldi
     event: enter
@@ -2423,7 +2424,7 @@
   alias: Shopping List Clear Notification
   description: ''
   trigger:
-  - platform: zone
+  - trigger: zone
     entity_id: device_tracker.hugh_phone
     zone: zone.home
     event: enter
@@ -2450,7 +2451,7 @@
   description: Clear the shopping list when the clear button in the notification is
     pressed.
   trigger:
-  - platform: event
+  - trigger: event
     event_type: mobile_app_notification_action
     event_data:
       action: CLEAR_SHOPPING_LIST
@@ -2466,7 +2467,7 @@
 
     '
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: binary_sensor.hugh_phone_android_auto
     to: 'on'
   condition:
@@ -2489,7 +2490,7 @@
   alias: Air Purifier Filter Warning
   description: ''
   trigger:
-  - platform: numeric_state
+  - trigger: numeric_state
     entity_id:
     - sensor.air_purifier_filter_lifetime
     below: 15
@@ -2506,12 +2507,12 @@
   alias: Hugh Room Pressure Bed Room Occupancy
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - binary_sensor.bed_sensor
     to: 'on'
     from: 'off'
-  - platform: state
+  - trigger: state
     entity_id:
     - binary_sensor.bed_sensor
     to: 'off'
@@ -2552,7 +2553,7 @@
   alias: Handle Tuya Account Renewed
   description: ''
   trigger:
-  - platform: event
+  - trigger: event
     event_type: mobile_app_notification_action
     event_data:
       action: RENEWED
@@ -2564,7 +2565,7 @@
   description: Updates the Next Bin Collection sensor at midday the day after the
     bin has been collected
   trigger:
-  - platform: time
+  - trigger: time
     at: 09:00:00
   condition:
   - condition: or
@@ -2597,7 +2598,7 @@
   alias: Sync Google Mini Volumes
   description: Adjust all Google Minis to have the same volume when one changes
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - media_player.battery_speaker
     - media_player.hugh_room_speaker
@@ -2627,7 +2628,7 @@
   alias: Reset Plant Water Notification
   description: ''
   trigger:
-  - platform: numeric_state
+  - trigger: numeric_state
     entity_id:
     - sensor.snake_plant_moisture
     above: 25
@@ -2651,7 +2652,7 @@
   alias: Update Hugh Room Blinds Position
   description: Update the cover position based on the slider value.
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: input_number.hugh_room_blinds_position
   condition:
   - condition: template
@@ -2668,7 +2669,7 @@
   alias: Sync Blinds Position with Slider
   description: Update the slider value whenever the blinds position changes.
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: cover.hugh_room_blinds
     attribute: current_position
   condition:
@@ -2691,7 +2692,7 @@
   alias: Universal Player Volume Up
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: input_button.universal_player_volume_up
   action:
   - action: input_number.set_value
@@ -2705,7 +2706,7 @@
   alias: Universal Player Volume Down
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: input_button.universal_player_volume_down
   action:
   - action: input_number.set_value
@@ -2719,7 +2720,7 @@
   alias: Adjust Media Player Volume
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: input_number.universal_player_volume
   action:
   - action: media_player.volume_set
@@ -2732,7 +2733,7 @@
   alias: Control Playback Based on Volume
   description: Pause playback when volume is 0 or below 1, resume when volume increases
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: input_number.universal_player_volume
   action:
   - choose:
@@ -2773,17 +2774,17 @@
 
     '
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: counter.remote_work_days_count
     id: increment_counter
-  - platform: time
+  - trigger: time
     at: 00:00:00
     id: reset_boolean
-  - platform: state
+  - trigger: state
     entity_id: calendar.new_year
     to: 'on'
     id: reset_counter
-  - platform: template
+  - trigger: template
     value_template: '{{ ''Teams'' in states(''sensor.datamars_activewindow'') }}'
     id: laptop
   condition: []
@@ -2839,7 +2840,7 @@
   alias: Redirect Display Audio to Stereo Group
   description: Redirect audio to hugh_room_stereo if it plays only on the display
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: media_player.hugh_room_display
     attribute: state
     to: playing
@@ -2904,7 +2905,7 @@
 - id: '1721393948523'
   alias: Initialize Previous Odometer and Fuel Quantity
   trigger:
-  - platform: time
+  - trigger: time
     at: 00:00:00
   condition: []
   action:
@@ -2921,7 +2922,7 @@
   alias: Daily Reset Automation
   description: Resets daily values at midnight.
   trigger:
-  - platform: time
+  - trigger: time
     at: 00:00:00
   action:
   - entity_id: input_number.daily_driving_seconds
@@ -2974,11 +2975,11 @@
   alias: PC Turn On
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - sensor.hugh_room_desk_aqara_button_action
     to: single
-  - platform: state
+  - trigger: state
     entity_id:
     - binary_sensor.ollny_steady
     to: 'on'
@@ -3007,7 +3008,7 @@
   alias: Umail Account Renewal Notification
   description: Sends a notification to renew umail account every 11 months.
   trigger:
-  - platform: template
+  - trigger: template
     value_template: '{{ (states(''input_datetime.umail_account_expiration'') | as_datetime
       - timedelta(days=1)).strftime(''%Y-%m-%d %H:%M:%S'') == now().strftime(''%Y-%m-%d
       %H:%M:%S'') }}'
@@ -3025,7 +3026,7 @@
   alias: Handle Umail renew
   description: ''
   trigger:
-  - platform: event
+  - trigger: event
     event_type: mobile_app_notification_action
     event_data:
       action: RENEWED_UMAIL
@@ -3038,10 +3039,10 @@
   alias: Reload VeSync Integration on State Change
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id: fan.air_purifier
     to: unknown
-  - platform: state
+  - trigger: state
     entity_id: fan.air_purifier
     to: unavailable
   condition:
@@ -3087,7 +3088,7 @@
 - id: '1722698935828'
   alias: Start Car Moving on Bluetooth Connect
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - binary_sensor.hugh_phone_android_auto
     to: 'on'
@@ -3105,7 +3106,7 @@
 - id: '1722698947568'
   alias: Stop Car Moving on Bluetooth Disconnect
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - binary_sensor.hugh_phone_android_auto
     from: 'on'
@@ -3163,7 +3164,7 @@
   alias: Renew Car data
   description: Sends a notification to renew car data every 11 months.
   trigger:
-  - platform: template
+  - trigger: template
     value_template: '{{ (states(''input_datetime.car_data_expiration'') | as_datetime
       - timedelta(days=1)).strftime(''%Y-%m-%d %H:%M:%S'') == now().strftime(''%Y-%m-%d
       %H:%M:%S'') }}'
@@ -3181,7 +3182,7 @@
   alias: Handle Car Data renew
   description: ''
   trigger:
-  - platform: event
+  - trigger: event
     event_type: mobile_app_notification_action
     event_data:
       action: RENEWED_CAR
@@ -3223,7 +3224,7 @@
   alias: IR Remote Button Off
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - binary_sensor.ollny_off
     to: 'on'
@@ -3236,7 +3237,7 @@
   alias: IR Remote Button On
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - binary_sensor.ollny_on
     to: 'on'
@@ -3249,7 +3250,7 @@
   alias: IR Remote Button Timer
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - binary_sensor.ollny_timer
     to: 'on'
@@ -3266,7 +3267,7 @@
   alias: IR Remote Button 6639H
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - binary_sensor.ollny_6639h
     to: 'on'
@@ -3282,7 +3283,7 @@
   alias: IR Remote Button 6H
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - binary_sensor.ollny_6h
     to: 'on'
@@ -3298,7 +3299,7 @@
   alias: IR Remote Button 8H
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - binary_sensor.ollny_8h
     to: 'on'
@@ -3437,7 +3438,7 @@
   alias: Reset Car Stats Button
   description: ''
   trigger:
-  - platform: state
+  - trigger: state
     entity_id:
     - input_button.reset_car
   condition: []
@@ -3456,7 +3457,7 @@
   description: Trigger the shell command to manage backups when a new .tmb file is
     added
   trigger:
-  - platform: event
+  - trigger: event
     event_type: folder_watcher
     event_data:
       event_type: created
@@ -3470,7 +3471,7 @@
   alias: Battery Low Notification
   description: Battery Low Notification for devices
   trigger:
-  - platform: event
+  - trigger: event
     event_type: battery_notes_battery_threshold
     event_data:
       battery_low: true
