@@ -56,7 +56,6 @@
                 th {
                     background-color: #f8f9fa;
                     color: #333;
-                    cursor: pointer;
                 }
                 tr:nth-child(even) {
                     background-color: #f9f9f9;
@@ -90,7 +89,7 @@
                         const rows = document.querySelectorAll('#integrationsTable tbody tr');
                         rows.forEach(row => {
                             const integrationID = row.cells[0].textContent.trim();  // Get Integration ID
-                            const matchesFilter = filter === 'All' || integrationID.startsWith(filter);
+                            const matchesFilter = filter === 'All' || integrationID.charAt(0).toUpperCase() === filter;
                             const matchesQuery = Array.from(row.cells).some(cell => cell.textContent.toLowerCase().includes(query));
                             row.style.display = matchesFilter && matchesQuery ? '' : 'none';
                         });
@@ -104,11 +103,11 @@
         <body>
             <h1>Home Assistant Integrations</h1>
             <p>Total Integrations: 64</p>
-            <p>Version: 2025-02-08-223453</p>
+            <p>Version: 2025-02-08-223720</p>
             <input type="text" id="searchBox" placeholder="Search integrations..." />
             <div class="filters">
-                <div id="filter-All" class="filter active">All</div>
-                <div id="filter-A" class="filter">A</div><div id="filter-B" class="filter">B</div><div id="filter-C" class="filter">C</div><div id="filter-D" class="filter">D</div><div id="filter-E" class="filter">E</div><div id="filter-F" class="filter">F</div><div id="filter-G" class="filter">G</div><div id="filter-H" class="filter">H</div><div id="filter-I" class="filter">I</div><div id="filter-L" class="filter">L</div><div id="filter-M" class="filter">M</div><div id="filter-O" class="filter">O</div><div id="filter-R" class="filter">R</div><div id="filter-S" class="filter">S</div><div id="filter-T" class="filter">T</div><div id="filter-U" class="filter">U</div><div id="filter-V" class="filter">V</div><div id="filter-W" class="filter">W</div><div id="filter-X" class="filter">X</div><div id="filter-Z" class="filter">Z</div>
+                <button id="filter-All" class="filter active">All</button>
+                <button id="filter-A" class="filter">A</button><button id="filter-B" class="filter">B</button><button id="filter-C" class="filter">C</button><button id="filter-D" class="filter">D</button><button id="filter-E" class="filter">E</button><button id="filter-F" class="filter">F</button><button id="filter-G" class="filter">G</button><button id="filter-H" class="filter">H</button><button id="filter-I" class="filter">I</button><button id="filter-L" class="filter">L</button><button id="filter-M" class="filter">M</button><button id="filter-O" class="filter">O</button><button id="filter-R" class="filter">R</button><button id="filter-S" class="filter">S</button><button id="filter-T" class="filter">T</button><button id="filter-U" class="filter">U</button><button id="filter-V" class="filter">V</button><button id="filter-W" class="filter">W</button><button id="filter-X" class="filter">X</button><button id="filter-Z" class="filter">Z</button>
             </div>
             <table id="integrationsTable">
                 <thead>
