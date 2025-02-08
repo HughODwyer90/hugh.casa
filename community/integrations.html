@@ -1,149 +1,36 @@
 
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Home Assistant Integrations</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                margin: 20px;
-            }
-            h1 {
-                text-align: center;
-                color: #333;
-            }
-            #searchBox {
-                width: 100%;
-                padding: 8px;
-                margin-bottom: 12px;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-            }
-            .filters {
-                display: flex;
-                flex-wrap: wrap;
-                margin-bottom: 12px;
-            }
-            .filter {
-                margin: 4px;
-                padding: 6px 12px;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-                background-color: #f4f4f4;
-                cursor: pointer;
-                font-size: 14px;
-                color: black;
-            }
-            .filter.active {
-                background-color: #333333;
-                color: white;
-            }
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 20px;
-            }
-            th, td {
-                border: 1px solid #ccc;
-                padding: 8px;
-                text-align: left;
-            }
-            th {
-                background-color: #f4f4f4;
-                cursor: pointer;
-            }
-            tr:nth-child(even) {
-                background-color: #f9f9f9;
-            }
-            tr:hover {
-                background-color: #f1f1f1;
-            }
-        </style>
-        <script>
-            let currentFilter = 'All';
-            let sortDirection = true;
-
-            document.addEventListener('DOMContentLoaded', () => {
-                const filterContainer = document.querySelector('.filters');
-                const filterButtons = filterContainer.getElementsByClassName('filter');
-
-                for (let i = 0; i < filterButtons.length; i++) {
-                    filterButtons[i].addEventListener('click', function () {
-                        const current = document.getElementsByClassName('active');
-                        if (current.length > 0) {
-                            current[0].classList.remove('active');
-                        }
-                        this.classList.add('active');
-
-                        const filter = this.id.replace('filter-', '');
-                        currentFilter = filter.toLowerCase();
-                        searchTable();
-                    });
-                }
-
-                const allFilter = document.getElementById('filter-All');
-                if (allFilter) {
-                    allFilter.click();
-                }
-
-                const headers = document.querySelectorAll('#integrationsTable th');
-                headers.forEach((header, index) => {
-                    header.addEventListener('click', () => {
-                        sortTable(index);
-                    });
-                });
-            });
-
-            function searchTable() {
-                const query = document.getElementById('searchBox').value.toLowerCase();
-                const rows = document.querySelectorAll('#integrationsTable tr');
-                rows.forEach((row, index) => {
-                    if (index === 0) return;
-                    const cells = Array.from(row.cells);
-                    const match = cells.some(cell => cell.textContent.toLowerCase().includes(query));
-                    const integration = row.cells[0].textContent.toLowerCase();
-                    const matchFilter = currentFilter === 'all' || integration.startsWith(currentFilter);
-                    row.style.display = match && matchFilter ? '' : 'none';
-                });
-            }
-
-            function sortTable(columnIndex) {
-                const rows = Array.from(document.querySelectorAll('#integrationsTable tr')).slice(1);
-                rows.sort((a, b) => {
-                    const aText = a.cells[columnIndex].textContent.trim().toLowerCase();
-                    const bText = b.cells[columnIndex].textContent.trim().toLowerCase();
-                    return sortDirection ? aText.localeCompare(bText) : bText.localeCompare(aText);
-                });
-                sortDirection = !sortDirection;
-
-                const table = document.querySelector('#integrationsTable tbody');
-                rows.forEach(row => table.appendChild(row));
-            }
-        </script>
-    </head>
-    <body>
-        <h1>Home Assistant Integrations</h1>
-        <p>Total Integrations: 64</p>
-        <p>Version: 2025-02-08-183551</p>
-        <input type="text" id="searchBox" oninput="searchTable()" placeholder="Search integrations..." />
-        <div class="filters">
-            <div id="filter-All" class="filter active">All</div>
-    <div id="filter-A" class="filter">A</div><div id="filter-B" class="filter">B</div><div id="filter-C" class="filter">C</div><div id="filter-D" class="filter">D</div><div id="filter-E" class="filter">E</div><div id="filter-F" class="filter">F</div><div id="filter-G" class="filter">G</div><div id="filter-H" class="filter">H</div><div id="filter-I" class="filter">I</div><div id="filter-L" class="filter">L</div><div id="filter-M" class="filter">M</div><div id="filter-O" class="filter">O</div><div id="filter-R" class="filter">R</div><div id="filter-S" class="filter">S</div><div id="filter-T" class="filter">T</div><div id="filter-U" class="filter">U</div><div id="filter-V" class="filter">V</div><div id="filter-W" class="filter">W</div><div id="filter-X" class="filter">X</div><div id="filter-Z" class="filter">Z</div>
-        </div>
-        <table id="integrationsTable">
-            <thead>
-                <tr>
-                    <th>Integration ID</th>
-                    <th>Config Entry ID</th>
-                    <th>Title</th>
-                    <th>State</th>
-                    <th>Source</th>
-                </tr>
-            </thead>
-            <tbody>
-    
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Home Assistant Integrations</title>
+            <style>
+                /* Add your CSS styles */
+            </style>
+            <script>
+                /* Add your JavaScript functions */
+            </script>
+        </head>
+        <body>
+            <h1>Home Assistant Integrations</h1>
+            <p>Total Integrations: 64</p>
+            <p>Version: 2025-02-08-190127</p>
+            <div class="filters">
+                <div id="filter-All" class="filter active">All</div>
+                <div id="filter-A" class="filter">A</div><div id="filter-B" class="filter">B</div><div id="filter-C" class="filter">C</div><div id="filter-D" class="filter">D</div><div id="filter-E" class="filter">E</div><div id="filter-F" class="filter">F</div><div id="filter-G" class="filter">G</div><div id="filter-H" class="filter">H</div><div id="filter-I" class="filter">I</div><div id="filter-L" class="filter">L</div><div id="filter-M" class="filter">M</div><div id="filter-O" class="filter">O</div><div id="filter-R" class="filter">R</div><div id="filter-S" class="filter">S</div><div id="filter-T" class="filter">T</div><div id="filter-U" class="filter">U</div><div id="filter-V" class="filter">V</div><div id="filter-W" class="filter">W</div><div id="filter-X" class="filter">X</div><div id="filter-Z" class="filter">Z</div>
+            </div>
+            <table id="integrationsTable">
+                <thead>
+                    <tr>
+                        <th>Integration ID</th>
+                        <th>Config Entry ID</th>
+                        <th>Title</th>
+                        <th>State</th>
+                        <th>Source</th>
+                    </tr>
+                </thead>
+                <tbody>
             <tr>
                 <td>accuweather</td>
                 <td>01JDR2WY7F3Q7X6REFXG0WZGE8</td>
@@ -655,9 +542,8 @@
                 <td>not_loaded</td>
                 <td>ignore</td>
             </tr>
+        </tbody>
+            </table>
+        </body>
+        </html>
         
-            </tbody>
-        </table>
-    </body>
-    </html>
-    
