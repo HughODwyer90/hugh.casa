@@ -24,14 +24,20 @@ class GitHubUploader:
         """Retrieve the SHA of the file in the repository (if it exists)."""
         try:
             response = requests.get(f"{self.base_api_url}/{github_file_path}", headers=self.headers)
+            print(f"Checking SHA for {github_file_path}, Status Code: {response.status_code}")
             if response.status_code == 200:
-                return response.json().get("sha")
+                sha = response.json().get("sha")
+                print(f"Existing SHA: {sha}")  # Debugging
+                return sha
             elif response.status_code == 404:
+                print(f"No existing file found at {github_file_path}")
                 return None  # File does not exist
             else:
                 response.raise_for_status()
         except requests.RequestException as e:
-            raise ConnectionError(f"Failed to fetch SHA for {github_file_path}: {e}")
+            print(f"Failed to fetch SHA for {github_file_path}: {e}")
+            return None  # Treat as a missing file
+
 
     def upload_file(self, local_file_path, github_file_path, commit_message=None):
         """
