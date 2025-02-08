@@ -11,7 +11,7 @@ try:
     secrets = SecretsManager()
 
     # Retrieve secrets from the SecretsManager
-    ha_token = secrets["long_live_lucifer"]
+    ha_token = secrets["ha_access_token"]
     github_token = secrets["github_token"]
     github_repo = secrets["github_repro"]
 
