@@ -72,7 +72,7 @@
         entity_id: light.living_room_floor_back
         state: 'on'
       sequence:
-      - service: light.turn_on
+      - action: light.turn_on
         data:
           brightness_step_pct: -10
         target:
@@ -83,7 +83,7 @@
         entity_id: light.living_room_floor_front
         state: 'on'
       sequence:
-      - service: light.turn_on
+      - action: light.turn_on
         data:
           brightness_step_pct: -10
         target:
@@ -94,7 +94,7 @@
         entity_id: light.living_room_ceiling
         state: 'on'
       sequence:
-      - service: light.turn_on
+      - action: light.turn_on
         data:
           brightness_step_pct: -10
         target:
@@ -118,7 +118,7 @@
         entity_id: light.living_room_floor_back
         state: 'on'
       sequence:
-      - service: light.turn_on
+      - action: light.turn_on
         data:
           brightness_step_pct: 10
         target:
@@ -129,7 +129,7 @@
         entity_id: light.living_room_floor_front
         state: 'on'
       sequence:
-      - service: light.turn_on
+      - action: light.turn_on
         data:
           brightness_step_pct: 10
         target:
@@ -140,7 +140,7 @@
         entity_id: light.living_room_ceiling
         state: 'on'
       sequence:
-      - service: light.turn_on
+      - action: light.turn_on
         data:
           brightness_step_pct: 10
         target:
@@ -192,21 +192,21 @@
         entity_id: light.hugh_room_lamp
         state: 'off'
       sequence:
-      - service: scene.turn_on
+      - action: scene.turn_on
         entity_id: scene.lamp
     - conditions:
       - condition: state
         entity_id: light.hugh_room_ceiling
         state: 'on'
       sequence:
-      - service: scene.turn_on
+      - action: scene.turn_on
         entity_id: scene.lamp
     - conditions:
       - condition: state
         entity_id: light.hugh_room_ceiling
         state: 'off'
       sequence:
-      - service: scene.turn_on
+      - action: scene.turn_on
         entity_id: scene.hugh_room_all_lights_on
   mode: single
 - id: '1701347846017'
@@ -586,12 +586,12 @@
           entity_id: light.hugh_room_lamp
           state: 'on'
       sequence:
-      - service: scene.turn_on
+      - action: scene.turn_on
         target:
           entity_id: scene.hugh_room_all_lights_off
         data: {}
     default:
-    - service: scene.turn_on
+    - action: scene.turn_on
       target:
         entity_id: scene.hugh_room_all_lights_on
       data: {}
@@ -606,7 +606,7 @@
     to: double
   condition: []
   action:
-  - service: switch.toggle
+  - action: switch.toggle
     target:
       entity_id: switch.hugh_room_plug_blanket
     data: {}
@@ -657,7 +657,7 @@
       minutes: 30
       seconds: 0
   action:
-  - service: switch.turn_off
+  - action: switch.turn_off
     target:
       entity_id: switch.hugh_room_plug_blanket
     data: {}
@@ -672,7 +672,7 @@
     to: 'off'
   condition: []
   action:
-  - service: notify.notifications
+  - action: notify.notifications
     data:
       title: Diffuser Warning
       message: Add Water
@@ -693,30 +693,30 @@
     entity_id: binary_sensor.diffuser_moisture
     state: 'on'
   action:
-  - service: switch.turn_on
+  - action: switch.turn_on
     data: {}
     target:
       entity_id:
       - switch.diffuser_power
-  - service: switch.turn_on
+  - action: switch.turn_on
     entity_id: switch.diffuser_light
-  - service: select.select_option
+  - action: select.select_option
     target:
       entity_id: select.diffuser_colors
     data:
       option: Red100
-  - service: select.select_option
+  - action: select.select_option
     target:
       entity_id:
       - select.diffuser_light_mode
     data:
       option: Solid
-  - service: select.select_option
+  - action: select.select_option
     target:
       entity_id: select.diffuser_mist
     data:
       option: Weak
-  - service: fan.turn_off
+  - action: fan.turn_off
     target:
       entity_id: fan.air_purifier
     data: {}
@@ -737,12 +737,12 @@
         entity_id: light.living_room_ceiling
         state: 'on'
       sequence:
-      - service: scene.turn_on
+      - action: scene.turn_on
         target:
           entity_id: scene.dimmers
         data: {}
     default:
-    - service: scene.turn_on
+    - action: scene.turn_on
       data: {}
       target:
         entity_id: scene.living_room_all_lights_on
@@ -769,7 +769,7 @@
         state: 'on'
         entity_id: switch.hugh_room_plug_fan_bed
       sequence:
-      - service: select.select_option
+      - action: select.select_option
         data:
           option: 'on'
         target:
@@ -779,7 +779,7 @@
         state: 'off'
         entity_id: switch.hugh_room_plug_fan_bed
       sequence:
-      - service: select.select_option
+      - action: select.select_option
         data:
           option: 'off'
         target:
@@ -795,7 +795,7 @@
     to: hold
   condition: []
   action:
-  - service: switch.toggle
+  - action: switch.toggle
     target:
       entity_id: switch.hugh_room_plug_fan_bed
     data: {}
@@ -822,7 +822,7 @@
         state: 'on'
         entity_id: switch.hugh_room_plug_blanket
       sequence:
-      - service: select.select_option
+      - action: select.select_option
         data:
           option: 'on'
         target:
@@ -832,7 +832,7 @@
         state: 'off'
         entity_id: switch.hugh_room_plug_blanket
       sequence:
-      - service: select.select_option
+      - action: select.select_option
         data:
           option: 'off'
         target:
@@ -909,7 +909,7 @@
         state: 'on'
         entity_id: switch.hugh_room_plug_fan_desk
       sequence:
-      - service: select.select_option
+      - action: select.select_option
         data:
           option: 'on'
         target:
@@ -919,7 +919,7 @@
         state: 'off'
         entity_id: switch.hugh_room_plug_fan_desk
       sequence:
-      - service: select.select_option
+      - action: select.select_option
         data:
           option: 'off'
         target:
@@ -961,16 +961,16 @@
     entity_id: input_boolean.hugh_room_occupied
     state: 'on'
   action:
-  - service: switch.turn_on
+  - action: switch.turn_on
     data: {}
     target:
       entity_id: switch.diffuser_light
-  - service: select.select_option
+  - action: select.select_option
     target:
       entity_id: select.diffuser_light_mode
     data:
       option: Solid
-  - service: select.select_option
+  - action: select.select_option
     target:
       entity_id: select.diffuser_colors
     data:
@@ -999,16 +999,16 @@
     entity_id: input_boolean.hugh_room_occupied
     state: 'on'
   action:
-  - service: switch.turn_on
+  - action: switch.turn_on
     data: {}
     target:
       entity_id: switch.diffuser_light
-  - service: select.select_option
+  - action: select.select_option
     target:
       entity_id: select.diffuser_light_mode
     data:
       option: Solid
-  - service: select.select_option
+  - action: select.select_option
     target:
       entity_id: select.diffuser_colors
     data:
@@ -1041,17 +1041,17 @@
     from: unavailable
   condition: []
   action:
-  - service: switch.turn_off
+  - action: switch.turn_off
     target:
       entity_id: switch.diffuser_power
     data: {}
-  - service: automation.trigger
+  - action: automation.trigger
     metadata: {}
     data:
       skip_condition: false
     target:
       entity_id: automation.hugh_room_air_purifier_on
-  - service: automation.trigger
+  - action: automation.trigger
     metadata: {}
     data:
       skip_condition: false
@@ -1070,11 +1070,11 @@
     entity_id: switch.diffuser_light
     state: 'on'
   action:
-  - service: switch.turn_off
+  - action: switch.turn_off
     target:
       entity_id: switch.diffuser_light
     data: {}
-  - service: select.select_option
+  - action: select.select_option
     target:
       entity_id: select.diffuser_colors
     data:
@@ -1092,7 +1092,7 @@
     discovery_id: 0x001788010b72e620 action_up_press_release
   condition: []
   action:
-  - service: script.hugh_room_stereo_volume_up
+  - action: script.hugh_room_stereo_volume_up
     metadata: {}
     data: {}
   mode: single
@@ -1108,7 +1108,7 @@
     discovery_id: 0x001788010b72e620 action_down_press_release
   condition: []
   action:
-  - service: script.hugh_room_stereo_volume_down
+  - action: script.hugh_room_stereo_volume_down
     data: {}
   mode: single
 - id: '1707173529009'
@@ -1133,7 +1133,7 @@
         entity_id: media_player.universal_player
         state: playing
       sequence:
-      - service: media_player.media_pause
+      - action: media_player.media_pause
         target:
           entity_id: media_player.universal_player
         data: {}
@@ -1142,12 +1142,12 @@
         entity_id: media_player.universal_player
         state: paused
       sequence:
-      - service: media_player.media_play
+      - action: media_player.media_play
         target:
           entity_id: media_player.universal_player
         data: {}
     default:
-    - service: script.play_spotify_playlist
+    - action: script.play_spotify_playlist
       data: {}
   mode: single
 - id: '1707218902478'
@@ -1185,7 +1185,7 @@
         - condition: state
           entity_id: light.living_room_floor_back
           state: 'off'
-      - service: scene.turn_on
+      - action: scene.turn_on
         target:
           entity_id: scene.dimmers
     - conditions:
@@ -1193,7 +1193,7 @@
         entity_id: remote.living_room_tv
         state: 'on'
       sequence:
-      - service: scene.turn_on
+      - action: scene.turn_on
         target:
           entity_id: scene.dimmers
     default: []
@@ -1374,11 +1374,11 @@
         value_template: '{{ is_state(''sensor.snake_plant_growing_season'', ''True'')
           }}'
       sequence:
-      - service: script.feed_patrick
+      - action: script.feed_patrick
         data: {}
     - conditions: []
       sequence:
-      - service: script.water_patrick
+      - action: script.water_patrick
         data: {}
   mode: single
 - id: '1708033575791'
@@ -1399,7 +1399,7 @@
     entity_id: input_boolean.hugh_room_occupied
     state: 'on'
   action:
-  - service: select.select_option
+  - action: select.select_option
     target:
       entity_id: select.diffuser_light_mode
     data:
@@ -1410,7 +1410,7 @@
         state: 'off'
         entity_id: input_boolean.pc_on
       sequence:
-      - service: switch.turn_off
+      - action: switch.turn_off
         target:
           entity_id: switch.diffuser_light
         data: {}
@@ -1419,7 +1419,7 @@
         entity_id: input_boolean.pc_on
         state: 'on'
       sequence:
-      - service: select.select_option
+      - action: select.select_option
         target:
           entity_id: select.diffuser_colors
         data:
@@ -1434,13 +1434,13 @@
           entity_id: select.diffuser_mist
           state: Strong
       sequence:
-      - service: select.select_option
+      - action: select.select_option
         target:
           entity_id: select.diffuser_colors
         data:
           option: Red100
     default:
-    - service: switch.turn_off
+    - action: switch.turn_off
       target:
         entity_id: switch.diffuser_light
       data: {}
@@ -1457,7 +1457,7 @@
     - switch.diffuser_power
     to: 'on'
   action:
-  - service: select.select_option
+  - action: select.select_option
     target:
       entity_id: select.diffuser_light_mode
     data:
@@ -1571,7 +1571,7 @@
         entity_id: remote.monitor
         state: 'off'
       sequence:
-      - service: fan.set_percentage
+      - action: fan.set_percentage
         data:
           percentage: 66
         target:
@@ -1581,7 +1581,7 @@
         entity_id: remote.monitor
         state: 'on'
       sequence:
-      - service: fan.set_percentage
+      - action: fan.set_percentage
         data:
           percentage: 33
         target:
@@ -1602,7 +1602,7 @@
     entity_id: fan.air_purifier
     state: 'on'
   action:
-  - service: fan.set_percentage
+  - action: fan.set_percentage
     data:
       percentage: 33
     target:
@@ -1622,7 +1622,7 @@
         entity_id: binary_sensor.bed_sensor
         state: 'on'
       sequence:
-      - service: scene.turn_on
+      - action: scene.turn_on
         target:
           entity_id: scene.hugh_room_all_lights_off
         data:
@@ -1630,7 +1630,7 @@
       - condition: template
         value_template: '{{ state_attr(''fan.air_purifier'', ''percentage'') != 66
           }}'
-      - service: fan.set_percentage
+      - action: fan.set_percentage
         data:
           percentage: 66
         target:
@@ -1638,7 +1638,7 @@
     default:
     - condition: template
       value_template: '{{ state_attr(''fan.air_purifier'', ''percentage'') != 66 }}'
-    - service: fan.set_percentage
+    - action: fan.set_percentage
       data:
         percentage: 66
       target:
@@ -1663,7 +1663,7 @@
         value_template: '{{ trigger.event.data.tag_id == ''d9f4e28a-1761-4e6f-ac2c-da0a7b18fb9f''
           }}'
       sequence:
-      - service: shopping_list.add_item
+      - action: shopping_list.add_item
         data:
           name: Strong Flour
     - conditions:
@@ -1671,7 +1671,7 @@
         value_template: '{{ trigger.event.data.tag_id == ''67d13460-bda2-469a-b86c-1ce393e52463''
           }}'
       sequence:
-      - service: shopping_list.add_item
+      - action: shopping_list.add_item
         data:
           name: Plain Flour
     - conditions:
@@ -1679,7 +1679,7 @@
         value_template: '{{ trigger.event.data.tag_id == ''8f840629-5642-477e-a3c5-e183bcb42611''
           }}'
       sequence:
-      - service: shopping_list.add_item
+      - action: shopping_list.add_item
         data:
           name: 00 Flour
     - conditions:
@@ -1687,7 +1687,7 @@
         value_template: '{{ trigger.event.data.tag_id == ''7cdb4894-6e0e-4397-baa5-a1d8e88a50b9''
           }}'
       sequence:
-      - service: shopping_list.add_item
+      - action: shopping_list.add_item
         data:
           name: Self Raising Flour
     - conditions:
@@ -1695,7 +1695,7 @@
         value_template: '{{ trigger.event.data.tag_id == ''a4a48045-54d7-4310-80eb-327aa0d85bec''
           }}'
       sequence:
-      - service: shopping_list.add_item
+      - action: shopping_list.add_item
         data:
           name: Whole Wheat Flour
   mode: single
@@ -1785,12 +1785,12 @@
           state: 'on'
           entity_id: input_boolean.shower_in_progress
       sequence:
-      - service: light.turn_on
+      - action: light.turn_on
         target:
           entity_id:
           - light.bathroom_ceiling
         data: {}
-      - service: scene.turn_on
+      - action: scene.turn_on
         data: {}
         target:
           entity_id: scene.bathroom_color_strip_1_red
@@ -1802,17 +1802,17 @@
         entity_id: input_boolean.shower_in_progress
         state: 'off'
       sequence:
-      - service: light.turn_off
+      - action: light.turn_off
         target:
           entity_id:
           - light.bathroom_ceiling
         data: {}
-      - service: scene.turn_on
+      - action: scene.turn_on
         data: {}
         target:
           entity_id:
           - scene.bathroom_color_strip_2_off
-      - service: homeassistant.update_entity
+      - action: homeassistant.update_entity
         target:
           entity_id: sensor.bathroom_aqara_humidity
         data: {}
@@ -2072,7 +2072,7 @@
     subtype: off_hold
   condition: []
   action:
-  - service: light.toggle
+  - action: light.toggle
     target:
       entity_id:
       - light.living_room_floor_front
@@ -2160,14 +2160,14 @@
       - condition: template
         value_template: '{{ now().isocalendar()[1] % 2 == 1 }}'
       sequence:
-      - service: notify.notifications
+      - action: notify.notifications
         data:
           message: Put out the general waste bin.
           title: Bin Night Reminder
           data:
             notification_icon: mdi:trash-can
     default:
-    - service: notify.notifications
+    - action: notify.notifications
       data:
         message: Put out the recycling bin.
         title: Bin Night Reminder
@@ -2186,7 +2186,7 @@
     entity_id: device_tracker.hugh_phone
     zone: zone.work
   action:
-  - service: notify.notifications
+  - action: notify.notifications
     data:
       title: Navigate
       message: https://waze.com/ul?ll=51.89205914117974,-8.485000580549242&navigate=yes
@@ -2253,7 +2253,7 @@
     at: 00:01:00
   condition: []
   action:
-  - service: input_datetime.set_datetime
+  - action: input_datetime.set_datetime
     target:
       entity_id: input_datetime.next_public_holiday
     data:
@@ -2330,14 +2330,14 @@
 
       '
   action:
-  - service: notify.notifications
+  - action: notify.notifications
     data:
       title: Pay Day
       message: Today is pay day! Click to view your payslip.
       data:
         clickAction: https://osc.vistra.com/hr/Employees.html#/payslips
         notification_icon: mdi:currency-eur
-  - service: input_datetime.set_datetime
+  - action: input_datetime.set_datetime
     data:
       entity_id: input_datetime.last_day_of_month
       date: '{% set today = now() %} {% set next_month = (today.month % 12) + 1 %}
@@ -2414,7 +2414,7 @@
     entity_id: todo.shopping_list
     above: 0
   action:
-  - service: notify.notifications
+  - action: notify.notifications
     data:
       title: Arrived at Shop
       message: https://hugh.casa/todo?entity_id=todo.shopping_list
@@ -2435,7 +2435,7 @@
 
       '
   action:
-  - service: notify.notifications
+  - action: notify.notifications
     data:
       title: Shopping List
       message: You've left the shopping zone. Do you want to clear the shopping list?
@@ -2456,9 +2456,9 @@
     event_data:
       action: CLEAR_SHOPPING_LIST
   action:
-  - service: shopping_list.complete_all
+  - action: shopping_list.complete_all
     data: {}
-  - service: shopping_list.clear_completed_items
+  - action: shopping_list.clear_completed_items
     data: {}
 - id: '1716378487561'
   alias: Navigate to Work
@@ -2482,7 +2482,7 @@
     - thu
     - fri
   action:
-  - service: notify.notifications
+  - action: notify.notifications
     data:
       title: Navigate
       message: https://waze.com/ul?ll=51.901507743453344,-8.351508378982546&navigate=yes
@@ -2496,7 +2496,7 @@
     below: 15
   condition: []
   action:
-  - service: notify.notifications
+  - action: notify.notifications
     data:
       title: Filter Below 15%
       message: Get a new filter
@@ -2527,7 +2527,7 @@
       after: 03:20:00
       before: 03:40:00
   action:
-  - service: input_boolean.turn_on
+  - action: input_boolean.turn_on
     target:
       entity_id: input_boolean.hugh_room_occupied
     data: {}
@@ -2587,7 +2587,7 @@
         value_template: '{{ states(''calendar.ireland_bank_holidays'') | int != 0
           }}'
   action:
-  - service: input_text.set_value
+  - action: input_text.set_value
     target:
       entity_id: input_text.bin_collection_type
     data:
@@ -2611,7 +2611,7 @@
       states(''input_number.universal_player_volume'') | float / 10 }}
 
       '
-  - service: media_player.volume_set
+  - action: media_player.volume_set
     data_template:
       entity_id: '{% set changed_entity = trigger.entity_id %} {% set entities = [''media_player.battery_speaker'',
         ''media_player.hugh_room_speaker'', ''media_player.hugh_room_speaker_2'',
@@ -2620,7 +2620,7 @@
 
         '
       volume_level: '{{ state_attr(trigger.entity_id, ''volume_level'') }}'
-  - service: input_number.set_value
+  - action: input_number.set_value
     data_template:
       entity_id: input_number.universal_player_volume
       value: '{{ (state_attr(trigger.entity_id, ''volume_level'') * 10) | int }}'
@@ -2634,7 +2634,7 @@
     above: 25
   condition: []
   action:
-  - service: input_boolean.turn_off
+  - action: input_boolean.turn_off
     entity_id: input_boolean.patrick_needs_water
   mode: single
 - id: '1717703405900'
@@ -2659,7 +2659,7 @@
     value_template: '{{ states(''input_number.hugh_room_blinds_position'') | int !=
       state_attr(''cover.hugh_room_blinds'', ''current_position'') }}'
   action:
-  - service: cover.set_cover_position
+  - action: cover.set_cover_position
     target:
       entity_id: cover.hugh_room_blinds
     data:
@@ -2682,7 +2682,7 @@
       minutes: 0
       seconds: 5
       milliseconds: 0
-  - service: input_number.set_value
+  - action: input_number.set_value
     target:
       entity_id: input_number.hugh_room_blinds_position
     data:
@@ -2695,7 +2695,7 @@
   - platform: state
     entity_id: input_button.universal_player_volume_up
   action:
-  - service: input_number.set_value
+  - action: input_number.set_value
     data_template:
       entity_id: input_number.universal_player_volume
       value: '{{ [states(''input_number.universal_player_volume'') | float + 1.0,
@@ -2709,7 +2709,7 @@
   - platform: state
     entity_id: input_button.universal_player_volume_down
   action:
-  - service: input_number.set_value
+  - action: input_number.set_value
     data_template:
       entity_id: input_number.universal_player_volume
       value: '{{ [states(''input_number.universal_player_volume'') | float - 1.0,
@@ -2723,7 +2723,7 @@
   - platform: state
     entity_id: input_number.universal_player_volume
   action:
-  - service: media_player.volume_set
+  - action: media_player.volume_set
     data:
       volume_level: '{{ states(''input_number.universal_player_volume'') | float /
         10 }}'
@@ -2749,7 +2749,7 @@
           }}
 
           '
-      - service: media_player.media_pause
+      - action: media_player.media_pause
         target:
           entity_id: media_player.hugh_room_stereo
     - conditions:
@@ -2764,7 +2764,7 @@
           }}
 
           '
-      - service: media_player.media_play
+      - action: media_player.media_play
         target:
           entity_id: media_player.hugh_room_stereo
 - id: '1718016208552'
@@ -2799,7 +2799,7 @@
         entity_id: input_boolean.remote_work_logged_today
         state: 'off'
       sequence:
-      - service: counter.increment
+      - action: counter.increment
         target:
           entity_id: counter.remote_work_days_count
         data: {}
@@ -2807,7 +2807,7 @@
       - condition: trigger
         id: reset_counter
       sequence:
-      - service: counter.reset
+      - action: counter.reset
         target:
           entity_id: counter.remote_work_days_count
         data: {}
@@ -2815,7 +2815,7 @@
       - condition: trigger
         id: reset_boolean
       sequence:
-      - service: input_boolean.turn_off
+      - action: input_boolean.turn_off
         target:
           entity_id: input_boolean.remote_work_logged_today
         data: {}
@@ -2829,9 +2829,9 @@
         entity_id: input_boolean.remote_work_logged_today
         state: 'off'
       sequence:
-      - service: shell_command.log_work_from_home
+      - action: shell_command.log_work_from_home
         data: {}
-      - service: input_boolean.turn_on
+      - action: input_boolean.turn_on
         target:
           entity_id: input_boolean.remote_work_logged_today
         data: {}
@@ -2854,11 +2854,11 @@
 
       '
   action:
-  - service: media_player.media_stop
+  - action: media_player.media_stop
     data_template:
       entity_id: media_player.hugh_room_display
   - delay: 00:00:03
-  - service: media_player.play_media
+  - action: media_player.play_media
     data_template:
       entity_id: media_player.hugh_room_stereo
       media_content_id: '{{ state_attr(''media_player.hugh_room_display'', ''media_content_id'')
@@ -2866,7 +2866,7 @@
       media_content_type: '{{ state_attr(''media_player.hugh_room_display'', ''media_content_type'')
         }}'
   - delay: 00:00:05
-  - service: media_player.volume_set
+  - action: media_player.volume_set
     data_template:
       entity_id: media_player.hugh_room_stereo
       volume_level: '{{ state_attr(''media_player.hugh_room_display'', ''volume_level'')
@@ -2909,11 +2909,11 @@
     at: 00:00:00
   condition: []
   action:
-  - service: input_number.set_value
+  - action: input_number.set_value
     data_template:
       entity_id: input_number.previous_odometer_reading
       value: '{{ states(''sensor.car_mileage'') | float }}'
-  - service: input_number.set_value
+  - action: input_number.set_value
     data_template:
       entity_id: input_number.previous_fuel_quantity
       value: '{{ states(''sensor.car_fuel_quantity'') | float }}'
@@ -3014,7 +3014,7 @@
       %H:%M:%S'') }}'
   condition: []
   action:
-  - service: notify.notifications
+  - action: notify.notifications
     data:
       message: It's time to renew your umail account.
       data:
@@ -3032,7 +3032,7 @@
       action: RENEWED_UMAIL
   condition: []
   action:
-  - service: script.update_umail_expiration
+  - action: script.update_umail_expiration
     data: {}
   mode: single
 - id: '1722258094912'
@@ -3050,7 +3050,7 @@
     after: 05:00:00
     before: 03:00:00
   action:
-  - service: script.reload_vesync
+  - action: script.reload_vesync
 - id: '1722419260080'
   alias: Yearly Reset Automation
   description: Resets yearly values on New Year's Day.
@@ -3097,9 +3097,9 @@
     entity_id: input_boolean.car_moving
     state: 'off'
   action:
-  - service: input_boolean.turn_on
+  - action: input_boolean.turn_on
     entity_id: input_boolean.car_moving
-  - service: input_datetime.set_datetime
+  - action: input_datetime.set_datetime
     entity_id: input_datetime.driving_start_time
     data:
       timestamp: '{{ now().timestamp() }}'
@@ -3115,16 +3115,16 @@
     entity_id: input_boolean.car_moving
     state: 'on'
   action:
-  - service: input_boolean.turn_off
+  - action: input_boolean.turn_off
     entity_id: input_boolean.car_moving
-  - service: input_number.set_value
+  - action: input_number.set_value
     target:
       entity_id: input_number.daily_driving_seconds
     data:
       value: "{{ states('input_number.daily_driving_seconds') | float +\n   (as_timestamp(now())
         - as_timestamp(states('input_datetime.driving_start_time') | default(0)))
         }}"
-  - service: input_number.set_value
+  - action: input_number.set_value
     target:
       entity_id: input_number.yearly_driving_seconds
     data:
