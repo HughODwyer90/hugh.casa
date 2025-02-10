@@ -628,7 +628,7 @@
       entity_id: sensor.snake_plant_temperature
       below: 15
     - condition: template
-      value_template: '{{ now().month in [11, 12, 1] }}'
+      value_template: '{{ now().month in [11, 12, 1, 2] }}'
   - condition: time
     after: 08:30:00
     before: 03:00:00
