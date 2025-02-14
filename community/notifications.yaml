@@ -16,9 +16,9 @@
   name: hugh_email
   server: smtp.gmail.com
   port: 587
-  sender: hughhomeassistant90@gmail.com
+  sender: !secret ha_email_backend
   encryption: starttls
-  username: hughhomeassistant90@gmail.com
-  password: qltf insk pzyn ggto
-  recipient: hughodwyer90@gmail.com
+  username: !secret ha_email_backend
+  password: !secret ha_pass_backend
+  recipient: !secret ha_email
   sender_name: "Home Assistant"
