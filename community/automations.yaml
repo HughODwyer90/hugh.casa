@@ -1761,7 +1761,7 @@
     and turns them off based on the helper and motion status.
 
     '
-  trigger:
+  triggers:
   - trigger: state
     entity_id: binary_sensor.bathroom_motion_occupancy
     to: 'on'
@@ -1772,8 +1772,8 @@
     entity_id:
     - input_boolean.shower_in_progress
     enabled: true
-  condition: []
-  action:
+  conditions: []
+  actions:
   - choose:
     - conditions:
       - condition: or
@@ -1816,6 +1816,12 @@
         target:
           entity_id: sensor.bathroom_aqara_humidity
         data: {}
+      - action: homeassistant.update_entity
+        target:
+          entity_id: sensor.bathroom_aqara_humidity
+        data:
+          entity_id:
+          - sensor.bathroom_aqara_temperature
   mode: single
 - id: '1711198817481'
   alias: Hugh Room Occupied On
@@ -1947,64 +1953,73 @@
     action: switch.turn_off
   mode: restart
 - id: '1712869374188'
-  alias: Bathroom Humidity and Vibration Monitoring
-  trigger:
-  - trigger: template
-    value_template: '{% set current_humidity = states(''sensor.bathroom_aqara_humidity'')
+  alias: Bathroom Humidity, Temperature, and Vibration Monitoring
+  triggers:
+  - value_template: '{% set current_humidity = states(''sensor.bathroom_aqara_humidity'')
       | float %} {% set previous_humidity = states(''input_number.previous_bathroom_humidity'')
-      | float %} {% set increase = current_humidity >= previous_humidity + 4 %} {%
-      set decrease = current_humidity < previous_humidity - 2 %} {{ increase or decrease
-      }}
+      | float %} {% set current_temperature = states(''sensor.bathroom_aqara_temperature'')
+      | float %} {% set previous_temperature = states(''input_number.previous_bathroom_temperature'')
+      | float %} {% set humidity_increase = current_humidity >= previous_humidity
+      + 4 %} {% set humidity_decrease = current_humidity < previous_humidity - 2 %}
+      {% set temp_increase = current_temperature >= previous_temperature + 2 %} {%
+      set temp_decrease = current_temperature < previous_temperature - 1 %} {{ humidity_increase
+      or humidity_decrease or temp_increase or temp_decrease }}
 
       '
-  - trigger: state
-    entity_id: binary_sensor.bathroom_motion_occupancy
+    trigger: template
+  - entity_id: binary_sensor.bathroom_motion_occupancy
     to: 'off'
-  - trigger: state
-    entity_id: binary_sensor.bathroom_vibration
+    trigger: state
+  - entity_id: binary_sensor.bathroom_vibration
     to: 'on'
-  - trigger: state
-    entity_id: input_boolean.shower_in_progress
+    trigger: state
+  - entity_id: input_boolean.shower_in_progress
     to: 'on'
-  - trigger: event
-    event_type: timer.finished
+    trigger: state
+  - event_type: timer.finished
     event_data:
       entity_id: timer.shower_check
-  condition:
+    trigger: event
+  conditions:
   - condition: or
     conditions:
     - condition: template
-      value_template: '{{ trigger.trigger == ''state'' and trigger.entity_id == ''binary_sensor.bathroom_motion_occupancy''
+      value_template: '{{ trigger.platform == ''state'' and trigger.entity_id == ''binary_sensor.bathroom_motion_occupancy''
         }}
 
         '
     - condition: template
-      value_template: "{{ trigger.trigger == 'template' and (\n   states('sensor.bathroom_aqara_humidity')
-        | float >= states('input_number.previous_bathroom_humidity') | float + 4 or\n
-        \  states('sensor.bathroom_aqara_humidity') | float < states('input_number.previous_bathroom_humidity')
-        | float - 2) }}\n"
+      value_template: "{% set current_humidity = states('sensor.bathroom_aqara_humidity')
+        | float %} {% set previous_humidity = states('input_number.previous_bathroom_humidity')
+        | float %} {% set current_temperature = states('sensor.bathroom_aqara_temperature')
+        | float %} {% set previous_temperature = states('input_number.previous_bathroom_temperature')
+        | float %} {{ current_humidity >= previous_humidity + 4 or current_humidity
+        < previous_humidity - 2 or\n   current_temperature >= previous_temperature
+        + 2 or current_temperature < previous_temperature - 1 }}\n"
     - condition: state
       entity_id: binary_sensor.bathroom_vibration
       state: 'on'
     - condition: template
-      value_template: '{{ trigger.trigger == ''event'' and trigger.event.data.entity_id
+      value_template: '{{ trigger.platform == ''event'' and trigger.event.data.entity_id
         == ''timer.shower_check'' }}
 
         '
-  action:
+  actions:
   - choose:
     - conditions:
       - condition: template
         value_template: '{% set current_humidity = states(''sensor.bathroom_aqara_humidity'')
           | float %} {% set previous_humidity = states(''input_number.previous_bathroom_humidity'')
-          | float %} {{ current_humidity >= previous_humidity + 4 }}
+          | float %} {% set current_temperature = states(''sensor.bathroom_aqara_temperature'')
+          | float %} {% set previous_temperature = states(''input_number.previous_bathroom_temperature'')
+          | float %} {{ current_humidity >= previous_humidity + 4 or current_temperature
+          >= previous_temperature + 2 }}
 
           '
       sequence:
       - target:
           entity_id: input_boolean.shower_in_progress
         action: input_boolean.turn_on
-        data: {}
       - data:
           entity_id: timer.shower_check
           duration: 00:15:00
@@ -2017,7 +2032,6 @@
       - target:
           entity_id: input_boolean.shower_in_progress
         action: input_boolean.turn_on
-        data: {}
       - data:
           entity_id: timer.shower_check
           duration: 00:15:00
@@ -2026,7 +2040,10 @@
       - condition: template
         value_template: '{% set current_humidity = states(''sensor.bathroom_aqara_humidity'')
           | float %} {% set previous_humidity = states(''input_number.previous_bathroom_humidity'')
-          | float %} {{ current_humidity < previous_humidity - 2 }}
+          | float %} {% set current_temperature = states(''sensor.bathroom_aqara_temperature'')
+          | float %} {% set previous_temperature = states(''input_number.previous_bathroom_temperature'')
+          | float %} {{ current_humidity < previous_humidity - 2 or current_temperature
+          < previous_temperature - 1 }}
 
           '
       - condition: state
@@ -2036,13 +2053,12 @@
       - target:
           entity_id: input_boolean.shower_in_progress
         action: input_boolean.turn_off
-        data: {}
       - data:
           entity_id: timer.shower_check
         action: timer.cancel
     - conditions:
       - condition: template
-        value_template: '{{ trigger.trigger == ''event'' and trigger.event.data.entity_id
+        value_template: '{{ trigger.platform == ''event'' and trigger.event.data.entity_id
           == ''timer.shower_check'' }}
 
           '
@@ -2050,7 +2066,6 @@
       - target:
           entity_id: input_boolean.shower_in_progress
         action: input_boolean.turn_off
-        data: {}
     - conditions:
       - condition: state
         entity_id: input_boolean.shower_in_progress
@@ -2110,19 +2125,28 @@
     action: homeassistant.restart
   mode: single
 - id: '1713039340245'
-  alias: Bathroom Previous Humidity
+  alias: Bathroom Previous Readings
   description: Updates the previous humidity level after a change or every 30 minutes.
-  trigger:
+  triggers:
   - trigger: state
     entity_id: sensor.bathroom_aqara_humidity
+  - trigger: state
+    entity_id:
+    - sensor.bathroom_aqara_temperature
   - trigger: time_pattern
     minutes: /20
-  action:
+  actions:
   - delay: 00:00:10
   - target:
       entity_id: input_number.previous_bathroom_humidity
     data:
       value: '{{ states(''sensor.bathroom_aqara_humidity'') | replace(''unknown'',
+        ''0'') | float }}'
+    action: input_number.set_value
+  - target:
+      entity_id: input_number.previous_bathroom_temperature
+    data:
+      value: '{{ states(''sensor.bathroom_aqara_temperature'') | replace(''unknown'',
         ''0'') | float }}'
     action: input_number.set_value
   mode: single
