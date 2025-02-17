@@ -1963,7 +1963,7 @@
       + 4 %} {% set humidity_decrease = current_humidity < previous_humidity - 2 %}
       {% set temp_increase = current_temperature >= previous_temperature + 2 %} {%
       set temp_decrease = current_temperature < previous_temperature - 1 %} {{ humidity_increase
-      or humidity_decrease or temp_increase or temp_decrease }}
+      or temp_increase or (humidity_decrease and temp_decrease) }}
 
       '
     trigger: template
@@ -1993,9 +1993,9 @@
         | float %} {% set previous_humidity = states('input_number.previous_bathroom_humidity')
         | float %} {% set current_temperature = states('sensor.bathroom_aqara_temperature')
         | float %} {% set previous_temperature = states('input_number.previous_bathroom_temperature')
-        | float %} {{ current_humidity >= previous_humidity + 4 or current_humidity
-        < previous_humidity - 2 or\n   current_temperature >= previous_temperature
-        + 2 or current_temperature < previous_temperature - 1 }}\n"
+        | float %} {{ current_humidity >= previous_humidity + 4 or current_temperature
+        >= previous_temperature + 2 or \n   (current_humidity < previous_humidity
+        - 2 and current_temperature < previous_temperature - 1) }}\n"
     - condition: state
       entity_id: binary_sensor.bathroom_vibration
       state: 'on'
@@ -2042,7 +2042,7 @@
           | float %} {% set previous_humidity = states(''input_number.previous_bathroom_humidity'')
           | float %} {% set current_temperature = states(''sensor.bathroom_aqara_temperature'')
           | float %} {% set previous_temperature = states(''input_number.previous_bathroom_temperature'')
-          | float %} {{ current_humidity < previous_humidity - 2 or current_temperature
+          | float %} {{ current_humidity < previous_humidity - 2 and current_temperature
           < previous_temperature - 1 }}
 
           '
