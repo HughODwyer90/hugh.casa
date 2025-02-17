@@ -1,0 +1,955 @@
+- platform: template
+  sensors:
+    air_purifier_lifetime:
+      friendly_name: "Air Purifier Filter Life"
+      unique_id: "air_purifier_filter_life_sensor"
+      value_template: "{{ states('sensor.air_purifier_filter_lifetime') }}"
+      unit_of_measurement: "%"
+      icon_template: "{{ 'mdi:air-filter' }}"
+
+    air_purifier_speed:
+      friendly_name: "Air Purifier Fan Speed"
+      unique_id: "air_purifier_fan_speed_sensor"
+      value_template: >
+        {% set state = states('fan.air_purifier') %}
+        {% set speed = state_attr('fan.air_purifier', 'percentage') %}
+        {% if speed in ['unknown', 'unavailable'] %}
+          Offline
+        {% elif state == 'off' %}
+          Off
+        {% else %}
+          {{ speed }}%
+        {% endif %}
+      icon_template: >
+        {% set state = states('fan.air_purifier') %}
+        {% if state == 'off' or state_attr('fan.air_purifier', 'percentage') in ['unknown', 'unavailable'] %}
+          mdi:fan-off
+        {% else %}
+          mdi:fan
+        {% endif %}
+
+    living_room_occupancy_scene:
+      friendly_name: "Living Room Occupancy Scene Saved"
+      unique_id: "living_room_occupancy_scene_saved_sensor"
+      value_template: "{{ is_state('input_boolean.living_room_occupancy_scene_saved', 'on') }}"
+      icon_template: >
+        {% if is_state('input_boolean.living_room_occupancy_scene_saved', 'on') %}
+          mdi:check-circle
+        {% else %}
+          mdi:close-circle
+        {% endif %}
+
+    previous_bathroom_humidity:
+      friendly_name: "Previous Bathroom Humidity"
+      unique_id: "previous_bathroom_humidity_sensor"
+      icon_template: "{{ 'mdi:water-percent' }}"
+      value_template: >
+        {% set previous_humidity = states('input_number.previous_bathroom_humidity') %}
+        {% if previous_humidity not in ['unknown', 'unavailable'] %}
+          {{ "{:.2f}".format(previous_humidity | float) }}%
+        {% else %}
+          Unknown
+        {% endif %}
+
+    next_bin_collection:
+      friendly_name: "Next Bin Collection"
+      unique_id: "next_bin_collection_sensor"
+      icon_template: "{{ 'mdi:trash-can' }}"
+      value_template: >
+        {% set bin = states('input_text.bin_collection_type') %}
+        {% if bin not in ['unknown', 'unavailable'] %}
+          {{ bin }}
+        {% else %}
+          Unknown
+        {% endif %}
+
+    next_pay_day:
+      friendly_name: "Next Pay Day"
+      unique_id: "next_pay_day_sensor"
+      icon_template: "{{ 'mdi:currency-usd' }}"
+      value_template: >
+        {% set next_pay_day = states('input_datetime.next_pay_day') %}
+        {% if next_pay_day not in ['unknown', 'unavailable'] %}
+          {% set next_pay_date = as_timestamp(next_pay_day) %}
+          {% set current_date = as_timestamp(now().strftime('%Y-%m-%d')) %}
+          {% set days_until_pay = ((next_pay_date - current_date) / 86400) | float | round(0, 'floor') %}
+          {% if days_until_pay == 0 %}
+            Today
+          {% elif days_until_pay == 1 %}
+            Tomorrow
+          {% elif days_until_pay <= 7 %}
+            {{ next_pay_date | timestamp_custom('%A') }}
+          {% else %}
+            {{ next_pay_date | timestamp_custom('%d/%m/%Y') }}
+          {% endif %}
+        {% else %}
+          Unknown
+        {% endif %}
+
+    next_public_holiday:
+      friendly_name: "Next Public Holiday"
+      unique_id: "next_public_holiday_sensor"
+      icon_template: "{{ 'mdi:beach' }}"
+      value_template: >
+        {% set next_public_holiday = states('input_datetime.next_public_holiday') %}
+        {% if next_public_holiday not in ['unknown', 'unavailable'] %}
+          {% set next_holiday_date = as_timestamp(next_public_holiday) %}
+          {% set current_date = as_timestamp(now().strftime('%Y-%m-%d')) %}
+          {% set days_until_holiday = ((next_holiday_date - current_date) / 86400) %}
+          {% if days_until_holiday == 0 %}
+            Today
+          {% elif days_until_holiday == 1 %}
+            Tomorrow
+          {% elif days_until_holiday <= 7 %}
+            {{ next_holiday_date | timestamp_custom('%A') }}
+          {% else %}
+            {{ next_holiday_date | timestamp_custom('%d/%m/%Y') }}
+          {% endif %}
+        {% else %}
+          Unknown
+        {% endif %}
+
+    tuya_account_expiration:
+      friendly_name: "Tuya Account Expiration"
+      unique_id: "tuya_account_expiration_sensor"
+      icon_template: "{{ 'mdi:calendar-clock' }}"
+      value_template: >
+        {% set expiration_date = states('input_datetime.tuya_account_expiration') %}
+        {% if expiration_date not in ['unknown', 'unavailable'] %}
+          {% set expiration_timestamp = as_timestamp(expiration_date) %}
+          {% set seconds_until_expiration = expiration_timestamp - now().timestamp() %}
+          {% set days_until_expiration = seconds_until_expiration / 86400 %}
+          {% if seconds_until_expiration < 0 %}
+            Expired
+          {% elif days_until_expiration < 1 %}
+            {% set hours_until_expiration = (seconds_until_expiration / 3600) | float | round(0, 'floor') %}
+            Expires in {{ hours_until_expiration }} hours
+          {% elif days_until_expiration <= 7 %}
+            {% set days_until_expiration_floor = days_until_expiration | float | round(0, 'floor') %}
+            Expires in {{ days_until_expiration_floor }} days
+          {% else %}
+            {{ expiration_timestamp | timestamp_custom('%d/%m/%Y', true) }}
+          {% endif %}
+        {% else %}
+          Unknown
+        {% endif %}
+
+    umail_account_expiration:
+      friendly_name: "Umail Account Expiration"
+      unique_id: "umail_account_expiration_sensor"
+      icon_template: "{{ 'mdi:calendar-clock' }}"
+      value_template: >
+        {% set expiration_date = states('input_datetime.umail_account_expiration') %}
+        {% if expiration_date not in ['unknown', 'unavailable'] %}
+          {% set expiration_timestamp = as_timestamp(expiration_date) %}
+          {% set days_until_expiration = ((expiration_timestamp - now().timestamp()) / 86400) %}
+          {% if days_until_expiration < 0 %}
+            Expired
+          {% else %}
+            {% set days_until_expiration_floor = days_until_expiration | float | round(0, 'floor') %}
+            {% if days_until_expiration_floor <= 7 %}
+              Expires in {{ days_until_expiration_floor }} days
+            {% else %}
+              {{ expiration_timestamp | timestamp_custom('%d/%m/%Y', true) }}
+            {% endif %}
+          {% endif %}
+        {% else %}
+          Unknown
+        {% endif %}
+
+    car_data_expiration:
+      friendly_name: "Car Data Expiration"
+      unique_id: "car_data_expiration_sensor"
+      icon_template: "{{ 'mdi:calendar-clock' }}"
+      value_template: >
+        {% set expiration_date = states('input_datetime.car_data_expiration') %}
+        {% if expiration_date not in ['unknown', 'unavailable'] %}
+          {% set expiration_timestamp = as_timestamp(expiration_date) %}
+          {% set days_until_expiration = ((expiration_timestamp - now().timestamp()) / 86400) %}
+          {% if days_until_expiration < 0 %}
+            Expired
+          {% else %}
+            {% set days_until_expiration_floor = days_until_expiration | float | round(0, 'floor') %}
+            {% if days_until_expiration_floor <= 7 %}
+              Expires in {{ days_until_expiration_floor }} days
+            {% else %}
+              {{ expiration_timestamp | timestamp_custom('%d/%m/%Y', true) }}
+            {% endif %}
+          {% endif %}
+        {% else %}
+          Unknown
+        {% endif %}
+
+    snake_plant_growing_season:
+      friendly_name: "Snake Plant Growing Season"
+      unique_id: "snake_plant_growing_season_sensor"
+      value_template: >
+        {% if now().month >= 3 and now().month <= 9 %}
+          Yes
+        {% else %}
+          No
+        {% endif %}
+      icon_template: >
+        {% if now().month >= 3 and now().month <= 9 %}
+          mdi:leaf
+        {% else %}
+          mdi:snowflake
+        {% endif %}
+
+    car_gps_latitude:
+      friendly_name: "Car GPS Latitude"
+      unique_id: "car_gps_latitude_sensor"
+      value_template: "{{ state_attr('device_tracker.car_location', 'latitude') | string }}"
+      unit_of_measurement: "degrees"
+      icon_template: "{{ 'mdi:map-marker' }}"
+
+    car_gps_longitude:
+      friendly_name: "Car GPS Longitude"
+      unique_id: "car_gps_longitude_sensor"
+      value_template: "{{ state_attr('device_tracker.car_location', 'longitude') | string }}"
+      unit_of_measurement: "degrees"
+      icon_template: "{{ 'mdi:map-marker' }}"
+
+    car_gps_map_url:
+      friendly_name: "Car GPS Map URL"
+      unique_id: "car_gps_map_url_sensor"
+      value_template: >
+        {% set latitude = states('sensor.car_gps_latitude') %}
+        {% set longitude = states('sensor.car_gps_longitude') %}
+        {% if latitude not in ['unknown', 'unavailable', 'None'] and longitude not in ['unknown', 'unavailable', 'None'] %}
+          "https://www.google.com/maps?q={{ latitude }},{{ longitude }}"
+        {% else %}
+          "Coordinates not available"
+        {% endif %}
+      icon_template: "{{ 'mdi:map' }}"
+
+    
+    daily_distance_traveled:
+      friendly_name: "Car Today Distance"
+      unit_of_measurement: "km"
+      value_template: >
+        {% set car_mileage = states('sensor.car_mileage') %}
+        {% set previous_odometer_reading = states('input_number.previous_odometer_reading') %}
+        {% if car_mileage not in ['unknown', 'unavailable'] and previous_odometer_reading not in ['unknown', 'unavailable'] %}
+          {% set car_mileage = car_mileage | float %}
+          {% set previous_odometer_reading = previous_odometer_reading | float %}
+          {% set distance_traveled = car_mileage - previous_odometer_reading %}
+          {% if distance_traveled == distance_traveled | round(0) %}
+            {{ distance_traveled | int }}
+          {% else %}
+            {{ distance_traveled | round(2) }}
+          {% endif %}
+        {% else %}
+          0
+        {% endif %}
+      icon_template: "{{ 'mdi:map-marker-distance' }}"
+      unique_id: "car_daily_distance_traveled_sensor"
+
+    fuel_tank_remaining:
+      friendly_name: "Car Fuel Remaining"
+      value_template: >
+        {% set current_fuel_quantity = states('sensor.car_fuel_quantity') %}
+        {% set max_fuel_capacity = 42 %}
+        {% if current_fuel_quantity not in ['unknown', 'unavailable'] %}
+          {% set current_fuel_quantity = current_fuel_quantity | float %}
+          {% set percent_remaining = (current_fuel_quantity / max_fuel_capacity) * 100 %}
+          
+          {% if current_fuel_quantity == current_fuel_quantity | round(0) %}
+            {% set fuel_display = current_fuel_quantity | round(0) | int %}
+          {% else %}
+            {% set fuel_display = current_fuel_quantity %}
+          {% endif %}
+          
+          {% if percent_remaining == percent_remaining | round(0) %}
+            {% set percent_display = percent_remaining | round(0) | int %}
+          {% else %}
+            {% set percent_display = percent_remaining | round(2) %}
+          {% endif %}
+          
+          {{ fuel_display }}L ({{ percent_display }}%)
+          
+        {% else %}
+          "Unknown"
+        {% endif %}
+      icon_template: "{{ 'mdi:fuel' }}"
+      unique_id: "car_fuel_tank_remaining_sensor"
+
+    yearly_distance_traveled:
+      friendly_name: "Car YTD Distance"
+      unit_of_measurement: "km"
+      unique_id: "car_yearly_distance_traveled_sensor"
+      icon_template: "{{ 'mdi:map-marker-distance' }}"
+      value_template: >
+        {% set previous_year_mileage = states('input_number.previous_year_mileage') %}
+        {% set current_mileage = states('sensor.car_mileage') %}
+        {% if previous_year_mileage not in ['unknown', 'unavailable'] and current_mileage not in ['unknown', 'unavailable'] %}
+          {% set previous_year_mileage = previous_year_mileage | float %}
+          {% set current_mileage = current_mileage | float %}
+          {% set distance_traveled = current_mileage - previous_year_mileage %}
+          {% if distance_traveled == distance_traveled | round(0) %}
+            {{ distance_traveled | int }}
+          {% else %}
+            {{ distance_traveled | round(2) }}
+          {% endif %}
+        {% else %}
+          0
+        {% endif %}
+
+    
+    daily_driving_time:
+      friendly_name: "Car Today Driving Time"
+      unique_id: "car_daily_driving_time_sensor"
+      icon_template: "mdi:car-clock"
+      value_template: >
+        {% set total_seconds = states('input_number.daily_driving_seconds') | float(default=0) %}
+        {% if total_seconds == 0 %}
+          0
+        {% else %}
+          {% set hours = (total_seconds // 3600) %}
+          {% set minutes = ((total_seconds % 3600) // 60) %}
+          {% set seconds = (total_seconds % 60) %}
+          {{ "%02d:%02d:%02d" | format(hours, minutes, seconds) }}
+        {% endif %}
+
+    year_driving_time:
+      friendly_name: "Car YTD Driving Time"
+      unique_id: "car_yearly_driving_time_sensor"
+      icon_template: "mdi:car-clock"
+      value_template: >
+        {% set total_seconds = states('input_number.yearly_driving_seconds') | float(default=0) %}
+        {% set days = (total_seconds // 86400) %}
+        {% set hours = ((total_seconds % 86400) // 3600) %}
+        {% set minutes = ((total_seconds % 3600) // 60) %}
+        {% set seconds = (total_seconds % 60) %}
+        {% if total_seconds == 0 %}
+          0
+        {% else%}
+          {{ "%d:%02d:%02d:%02d" | format(days, hours, minutes, seconds) }}
+        {% endif %}
+
+    windscreen_freeze_risk:
+      friendly_name: "Windscreen Freeze Risk"
+      unique_id: "windscreen_freeze_risk_sensor"
+      value_template: >
+        {% set real_feel = states('sensor.home_realfeel_temperature') | float %}
+        {% set temperature = states('sensor.home_temperature') | float %}
+        {% set humidity = states('sensor.home_humidity') | float %}
+        {% set cloud_cover = states('sensor.home_cloud_cover') | float %}
+        {% set wind_speed = states('sensor.home_wind_speed') | float %}
+
+        {# Get current time as a datetime.time object #}
+        {% set current_time = now().time() %}
+
+        {# Convert sunrise and sunset to datetime.time objects #}
+        {% set sunrise = as_timestamp(state_attr('sun.sun', 'next_rising')) | timestamp_custom('%H:%M:%S', false) %}
+        {% set sunset = as_timestamp(state_attr('sun.sun', 'next_setting')) | timestamp_custom('%H:%M:%S', false) %}
+        {% set sunrise_time = strptime(sunrise, '%H:%M:%S').time() %}
+        {% set sunset_time = strptime(sunset, '%H:%M:%S').time() %}
+
+        {# Determine if it's night #}
+        {% set is_night = current_time < sunrise_time or current_time >= sunset_time %}
+
+        {# Select the appropriate condition sensor for day_0 or night_0 #}
+        {% set condition = states('sensor.home_condition_night_0') if is_night else states('sensor.home_condition_day_0') %}
+
+        {# Use real feel temperature if available, otherwise fallback to regular temperature #}
+        {% set temp_to_use = real_feel if real_feel not in [None, 'unavailable'] else temperature %}
+
+        {# Define keywords and check if any are in the condition #}
+        {% set keywords = ['rain', 'snow', 'sleet', 'mist', 'drizzle', 'shower'] %}
+        {% set has_precipitation = false %}
+        {% for keyword in keywords %}
+          {% if keyword in condition.lower() %}
+            {% set has_precipitation = true %}
+          {% endif %}
+        {% endfor %}
+
+        {# Evaluate freeze risk #}
+        {% if temp_to_use <= 0 and humidity > 80 and cloud_cover < 40 and wind_speed < 20 %}
+          Likely Frozen
+        {% elif temp_to_use <= 0 and has_precipitation %}
+          Likely Frozen
+        {% else %}
+          Not Frozen
+        {% endif %}
+      icon_template: >
+        {% set state = states('sensor.windscreen_freeze_risk') %}
+        {% if state == 'Likely Frozen' %}
+          mdi:snowflake
+        {% else %}
+          mdi:weather-sunny
+        {% endif %}
+
+    pc_status:
+      friendly_name: "PC status"
+      unique_id: "pc_status_sensor"
+      value_template: >
+        {% if is_state('input_boolean.pc_on', 'on') %}
+          On
+        {% else %}
+          Off
+        {% endif %}
+      icon_template: >
+        {% if is_state('input_boolean.pc_on', 'on') %}
+          mdi:television-ambient-light
+        {% else %}
+          mdi:television
+        {% endif %}
+
+    sunrise_time:
+      friendly_name: "Sunrise"
+      unique_id: "sunrise_time_sensor"
+      icon_template: "mdi:weather-sunset-up"
+      value_template: >
+        {% set sunrise = as_timestamp(state_attr('sun.sun', 'next_rising')) %}
+        {% if sunrise | timestamp_custom('%Y-%m-%d') == now().strftime('%Y-%m-%d') %}
+          Today at {{ sunrise | timestamp_custom('%H:%M') }}
+        {% else %}
+          Tomorrow at {{ sunrise | timestamp_custom('%H:%M') }}
+        {% endif %}
+
+    sunset_time:
+      friendly_name: "Sunset"
+      unique_id: "sunset_time_sensor"
+      icon_template: "mdi:weather-sunset-down"
+      value_template: >
+        {% set sunset = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
+        {% if sunset | timestamp_custom('%Y-%m-%d') == now().strftime('%Y-%m-%d') %}
+          Today at {{ sunset | timestamp_custom('%H:%M') }}
+        {% else %}
+          Tomorrow at {{ sunset | timestamp_custom('%H:%M') }}
+        {% endif %}
+
+    backups_stale_fallback:
+      friendly_name: "Backups Stale Fallback"
+      unique_id: "backups_stale_fallback_sensor"
+      value_template: >
+        {% if states('binary_sensor.backups_stale') != 'OK' %}
+          Problem
+        {% else %}
+          OK
+        {% endif %}
+
+    lucifer_activewindow_filtered:
+      friendly_name: "Active Window"
+      unique_id: "lucifer_activewindow_filtered_sensor"
+      icon_template: "mdi:monitor-eye"
+      value_template: >
+        {% set value = states('sensor.lucifer_activewindow') %}
+        {% if 'Brave' in value %}
+          Brave
+        {% elif 'Chrome' in value %}
+          Chrome
+        {% elif 'Edge' in value %}
+          Edge
+        {% elif 'Firefox' in value %}
+          Firefox
+        {% elif value in ['unknown', 'unavailable'] %}
+          Off
+        {% else %}
+          {{ value }}
+        {% endif %}
+
+    datamars_activewindow_filtered:
+      friendly_name: "Datamars Active Window"
+      unique_id: "datamars_activewindow_filtered_sensor"
+      icon_template: "mdi:monitor-eye"
+      value_template: >
+        {% set value = states('sensor.datamars_activewindow') %}
+        {% if value in ['unknown', 'unavailable'] %}
+          Off
+        {% else %}
+          {{ value }}
+        {% endif %}
+
+    activewindow_filtered:
+      friendly_name: "Active Window"
+      unique_id: "activewindow_filtered_sensor"
+      icon_template: "mdi:monitor-eye"
+      value_template: >
+        {% set lucifer_value = states('sensor.lucifer_activewindow') %}
+        {% set datamars_value = states('sensor.datamars_activewindow') %}
+
+        {% if lucifer_value not in ['unknown', 'unavailable'] %}
+          {% if 'Brave' in lucifer_value %}
+            Brave (Lucifer)
+          {% elif 'Chrome' in lucifer_value %}
+            Chrome (Lucifer)
+          {% elif 'Edge' in lucifer_value %}
+            Edge (Lucifer)
+          {% elif 'Firefox' in lucifer_value %}
+            Firefox (Lucifer)
+          {% else %}
+            {{ lucifer_value }} (Lucifer)
+          {% endif %}
+        {% elif datamars_value not in ['unknown', 'unavailable'] %}
+          {% if 'Brave' in datamars_value %}
+            Brave (Datamars)
+          {% elif 'Chrome' in datamars_value %}
+            Chrome (Datamars)
+          {% elif 'Edge' in datamars_value %}
+            Edge (Datamars)
+          {% elif 'Firefox' in datamars_value %}
+            Firefox (Datamars)
+          {% else %}
+            {{ datamars_value }} (Datamars)
+          {% endif %}
+        {% else %}
+          Off
+        {% endif %}
+
+    philips_sonicare_toothbrush:
+      friendly_name: "Toothbrush"
+      unique_id: "philips_sonicare_toothbrush_sensor"
+      value_template: >
+        {% set state = states('device_tracker.ble_tracker_toothbrush') %}
+        {% if state == 'home' %}
+          On
+        {% else %}
+          Off
+        {% endif %}
+      icon_template: >
+        {% if states('device_tracker.ble_tracker_toothbrush') == 'home' %}
+          mdi:tooth
+        {% else %}
+          mdi:tooth-outline
+        {% endif %}
+
+    liverpool_tv_channel:
+      friendly_name: "Liverpool (TV)"
+      unique_id: "liverpool_tv_channel_sensor"
+      icon_template: "{{ 'mdi:television-classic' }}"
+      value_template: >
+        {% set channel = states('input_text.liverpool_tv_channel') %}
+        {% if channel %}
+          {{ channel }}
+        {% else %}
+          "No TV channel information"
+        {% endif %}
+
+    liverpool_score:
+      friendly_name: "Liverpool Score"
+      unique_id: "liverpool_score_sensor"
+      icon_template: "mdi:soccer"
+      value_template: >
+        {% set home = states('sensor.home_team_score') | float | int if states('sensor.home_team_score') not in ['unknown', 'unavailable', 'N/A'] else 'N/A' %}
+        {% set away = states('sensor.away_team_score') | float | int if states('sensor.away_team_score') not in ['unknown', 'unavailable', 'N/A'] else 'N/A' %}
+        {% set minutes = states('sensor.minutes_played') if states('sensor.minutes_played') not in ['unknown', 'unavailable', 'N/A'] else 'N/A' %}
+
+        {% if home != 'N/A' and away != 'N/A' and minutes != 'N/A' %}
+          {{ home }} - {{ away }} ({{ minutes }})
+        {% elif home != 'N/A' and away != 'N/A' %}
+          {{ home }} - {{ away }}
+        {% else %}
+          Scores unavailable
+        {% endif %}
+
+    liverpool_time:
+      friendly_name: "Liverpool (time)"
+      unique_id: "liverpool_time_sensor"
+      value_template: >
+        {% set game_time = states('sensor.liverpool_utc') %}
+        {% if game_time not in ['API unavailable', 'No valid date for next game', 'No upcoming games found'] %}
+          {% set game_timestamp = as_timestamp(game_time) %}
+
+          {% set today_start = as_timestamp(utcnow().replace(hour=0, minute=0, second=0, microsecond=0)) %}
+          {% set tomorrow_start = today_start + 86400 %}
+
+          {% if game_timestamp >= today_start and game_timestamp < tomorrow_start %}
+            Today at {{ game_timestamp | timestamp_custom('%H:%M', true) }}
+          {% elif game_timestamp >= tomorrow_start and game_timestamp < (tomorrow_start + 86400) %}
+            Tomorrow at {{ game_timestamp | timestamp_custom('%H:%M', true) }}
+          {% elif (game_timestamp - as_timestamp(now())) <= 604800 %}
+            {{ game_timestamp | timestamp_custom('%A', true) }} at {{ game_timestamp | timestamp_custom('%H:%M', true) }}
+          {% else %}
+            {{ game_timestamp | timestamp_custom('%a, %-d/%-m', true) }} at {{ game_timestamp | timestamp_custom('%H:%M', true) }}
+          {% endif %}
+        {% else %}
+          {{ game_time }}
+        {% endif %}
+
+    total_sensors_count:
+      friendly_name: "Total Sensors"
+      unique_id: "total_sensors_count_sensor"
+      icon_template: "mdi:counter"
+      value_template: >
+        {{ states | length }}
+
+    work_plug_state_sensor:
+      friendly_name: "Work Plug State"
+      value_template: >
+        {{ states('input_text.work_plug_state') }}
+      icon_template: >
+        {% if states('input_text.work_plug_state') == "On" %}
+          mdi:power-plug
+        {% elif states('input_text.work_plug_state') == "Off" %}
+          mdi:power-plug-off
+        {% else %}
+          mdi:alert
+        {% endif %}
+
+- platform: rest
+  name: "Liverpool (vs)"
+  unique_id: "liverpool_vs_sensor"
+  resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
+  value_template: >
+    {% if value_json is not none and 'events' in value_json %}
+      {% set events = value_json['events'] %}
+      {% if events %}
+        {% set game = events[0] %}
+        {% if 'competitions' in game and game['competitions'] and 'competitors' in game['competitions'][0] %}
+          {% set competitors = game['competitions'][0]['competitors'] %}
+          {% if competitors | length > 1 and
+                'team' in competitors[0] and 'displayName' in competitors[0]['team'] and
+                'team' in competitors[1] and 'displayName' in competitors[1]['team'] %}
+            {% set home_team = competitors[0]['team']['displayName'] %}
+            {% set away_team = competitors[1]['team']['displayName'] %}
+            {% if home_team == 'Liverpool' %}
+              {{ away_team }}
+            {% else %}
+              {{ home_team }}
+            {% endif %}
+          {% else %}
+            Invalid competitors data
+          {% endif %}
+        {% else %}
+          Invalid competition data
+        {% endif %}
+      {% else %}
+        No upcoming games found
+      {% endif %}
+    {% else %}
+      API unavailable
+    {% endif %}
+  scan_interval: 9000
+  timeout: 10
+
+- platform: rest
+  name: "Liverpool (venue)"
+  unique_id: "liverpool_venue_sensor"
+  resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
+  value_template: >
+    {% if value_json is not none and 'events' in value_json %}
+      {% set events = value_json['events'] %}
+      {% if events %}
+        {% set game = events[0] %}
+        {% if 'competitions' in game and game['competitions'] and 'venue' in game['competitions'][0] and 'fullName' in game['competitions'][0]['venue'] %}
+          {% set venue = game['competitions'][0]['venue']['fullName'] %}
+          {% if 'competitors' in game['competitions'][0] and 
+                game['competitions'][0]['competitors'] and 
+                'team' in game['competitions'][0]['competitors'][0] and 
+                'displayName' in game['competitions'][0]['competitors'][0]['team'] %}
+            {% if game['competitions'][0]['competitors'][0]['team']['displayName'] == 'Liverpool' %}
+              Home - {{ venue }}
+            {% else %}
+              Away - {{ venue }}
+            {% endif %}
+          {% else %}
+            Invalid competitors data
+          {% endif %}
+        {% else %}
+          Invalid venue data
+        {% endif %}
+      {% else %}
+        No upcoming games found
+      {% endif %}
+    {% else %}
+      API unavailable
+    {% endif %}
+  scan_interval: 9000
+  timeout: 10
+
+- platform: rest
+  name: "Liverpool (comp)"
+  unique_id: "liverpool_comp_sensor"
+  resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
+  value_template: >
+    {% if value_json is not none and 'events' in value_json %}
+      {% set events = value_json['events'] %}
+      {% if events %}
+        {% set game = events[0] %}
+        {% if 'league' in game and 'name' in game['league'] %}
+          {% set comp_name = game['league']['name'] %}
+          {{ comp_name.replace('English', '').replace('UEFA', '').strip() }}
+        {% else %}
+          Invalid competition data
+        {% endif %}
+      {% else %}
+        No upcoming games found
+      {% endif %}
+    {% else %}
+      API unavailable
+    {% endif %}
+  scan_interval: 9000
+  timeout: 10
+
+- platform: rest
+  name: "Liverpool (Premier League Position)"
+  unique_id: "liverpool_premier_league_position_sensor"
+  resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
+  value_template: >
+    {% if value_json is not none and 'events' in value_json and 'team' in value_json %}
+      {% set events = value_json['events'] %}
+      {% if events %}
+        {% set game = events[0] %}
+        {% if 'season' in game and 'displayName' in game['season'] %}
+          {% set competition = game['season']['displayName'] %}
+          {% if 'Premier League' in competition and 'standingSummary' in value_json['team'] %}
+            {{ value_json['team']['standingSummary'].split(' ')[0] if value_json['team']['standingSummary'] else '-' }}
+          {% else %}
+            Not in Premier League
+          {% endif %}
+        {% else %}
+          Invalid competition data
+        {% endif %}
+      {% else %}
+        No events available
+      {% endif %}
+    {% else %}
+      API unavailable
+    {% endif %}
+  scan_interval: 9000
+  timeout: 10
+
+- platform: rest
+  name: "Liverpool (Champions League Position)"
+  unique_id: "liverpool_champions_league_position_sensor"
+  resource: "https://prod-cdn-public-api.livescore.com/v1/api/app/stage/soccer/champions-league/league-stage/0?countryCode=IE&locale=en&MD=1"
+  value_template: >
+    {% if value_json is not none and 'Stages' in value_json %}
+      {% set stages = value_json['Stages'] %}
+      {% if stages and 'LeagueTable' in stages[0] and 'L' in stages[0]['LeagueTable'] and 'Tables' in stages[0]['LeagueTable']['L'][0] and 'team' in stages[0]['LeagueTable']['L'][0]['Tables'][0] %}
+        {% set teams = stages[0]['LeagueTable']['L'][0]['Tables'][0]['team'] %}
+        {% set liverpool = teams | selectattr('Tnm', 'equalto', 'Liverpool') | list | first %}
+        {% if liverpool and 'rnk' in liverpool %}
+          {% set rank = liverpool['rnk'] | int %}
+          {% if rank in [11, 12, 13] %}
+            {{ rank }}th
+          {% elif rank % 10 == 1 %}
+            {{ rank }}st
+          {% elif rank % 10 == 2 %}
+            {{ rank }}nd
+          {% elif rank % 10 == 3 %}
+            {{ rank }}rd
+          {% else %}
+            {{ rank }}th
+          {% endif %}
+        {% else %}
+          Liverpool not ranked
+        {% endif %}
+      {% else %}
+        No team data available
+      {% endif %}
+    {% else %}
+      API unavailable
+    {% endif %}
+  scan_interval: 9000
+  timeout: 10
+
+- platform: rest
+  name: "Liverpool (Generic Stage)"
+  unique_id: "liverpool_stage_only_sensor"
+  resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
+  value_template: >
+    {% if value_json is not none and 'events' in value_json %}
+      {% set events = value_json['events'] %}
+      {% if events %}
+        {% set game = events[0] %}
+        {% if 'seasonType' in game and 'name' in game['seasonType'] %}
+          {{ game['seasonType']['name'] }}
+        {% else %}
+          Invalid game data
+        {% endif %}
+      {% else %}
+        No upcoming games
+      {% endif %}
+    {% else %}
+      API unavailable
+    {% endif %}
+  scan_interval: 9000
+  timeout: 10
+
+- platform: rest
+  name: "Liverpool (Premier League Stage)"
+  unique_id: "liverpool_premier_league_stage_sensor"
+  resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
+  value_template: >
+    {% if value_json is not none and 'team' in value_json and 'recordSummary' in value_json['team'] %}
+      {% set record = value_json['team']['recordSummary'] %}
+      {% if record %}
+        {% set wins, draws, losses = record.split('-') | map('int') | list %}
+        {% set games_played = 1 + wins + draws + losses %}
+        {% if games_played > 38 %}
+          Game 1 of 38
+        {% else %}
+          Game {{ games_played }} of 38
+        {% endif %}
+      {% else %}
+        No record available
+      {% endif %}
+    {% else %}
+      API unavailable or invalid response
+    {% endif %}
+  scan_interval: 9000
+  timeout: 10
+
+- platform: rest
+  name: "Liverpool (European Stage)"
+  unique_id: "liverpool_europe_stage_sensor"
+  resource: "https://prod-cdn-public-api.livescore.com/v1/api/app/stage/soccer/champions-league/league-stage/0?countryCode=IE&locale=en&MD=1"
+  value_template: >
+    {% if value_json is not none and 'Stages' in value_json %}
+      {% set stages = value_json['Stages'] %}
+      {% if stages and stages[0]['LeagueTable']['L'][0]['Tables'][0]['team'] %}
+        {% set teams = stages[0]['LeagueTable']['L'][0]['Tables'][0]['team'] %}
+        {% set liverpool = teams | selectattr('Tnm', 'equalto', 'Liverpool') | list | first %}
+        {% if liverpool %}
+          {% set wins = liverpool['win'] | int %}
+          {% set draws = liverpool['drw'] | int %}
+          {% set losses = liverpool['lst'] | int %}
+          {% set games_played = 1 + wins + draws + losses %}
+          {% if games_played > 8 %}
+            Game 1 of 8
+          {% else %}
+            Game {{ games_played }} of 8
+          {% endif %}
+        {% else %}
+          Liverpool not found in current standings
+        {% endif %}
+      {% else %}
+        No teams data available
+      {% endif %}
+    {% else %}
+      API unavailable
+    {% endif %}
+  scan_interval: 9000
+  timeout: 10
+
+- platform: rest
+  name: "Liverpool (Premier League Record)"
+  unique_id: "liverpool_premier_league_record_sensor"
+  resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
+  value_template: >
+    {% if value_json is not none and 'events' in value_json %}
+      {% set response = value_json %}
+      {% if response['events'] %}
+        {% set game_index = 0 %}
+        {% set game = response['events'][game_index] %}
+        {% set competition = game['season']['displayName'] %}
+        
+        {% if 'Premier League' in competition %}
+          {{ response['team']['recordSummary'] if 'team' in response and response['team']['recordSummary'] else 'No record available' }}
+        {% else %}
+          -
+        {% endif %}
+      {% else %}
+        No record available
+      {% endif %}
+    {% else %}
+      API unavailable
+    {% endif %}
+  scan_interval: 9000
+  timeout: 10
+
+- platform: rest
+  name: "Liverpool (Champions League Record)"
+  unique_id: "liverpool_champions_league_record_sensor"
+  resource: "https://prod-cdn-public-api.livescore.com/v1/api/app/stage/soccer/champions-league/league-stage/0?countryCode=IE&locale=en&MD=1"
+  value_template: >
+    {% if value_json is not none and 'Stages' in value_json %}
+      {% set teams = value_json['Stages'][0]['LeagueTable']['L'][0]['Tables'][0]['team'] %}
+      {% set liverpool = teams | selectattr('Tnm', 'equalto', 'Liverpool') | list | first %}
+      {% if liverpool %}
+        {{ liverpool['win'] }}-{{ liverpool['drw'] }}-{{ liverpool['lst'] }}
+      {% else %}
+        No record available
+      {% endif %}
+    {% else %}
+      API unavailable
+    {% endif %}
+  scan_interval: 9000
+  timeout: 10
+
+- platform: rest
+  name: "Liverpool (UTC)"
+  unique_id: "liverpool_utc_sensor"
+  resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
+  value_template: >
+    {% if value_json is not none and 'events' in value_json %}
+      {% set events = value_json['events'] %}
+      {% if events %}
+        {% set game = events[0] %}
+        {% if 'date' in game %}
+          {{ game['date'] }}
+        {% else %}
+          No valid date for next game
+        {% endif %}
+      {% else %}
+        No upcoming games found
+      {% endif %}
+    {% else %}
+      API unavailable
+    {% endif %}
+  scan_interval: 9000
+  timeout: 10
+
+- platform: rest
+  name: "Home Team Score"
+  unique_id: "home_team_score_sensor"
+  resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
+  value_template: >
+    {% if value_json is not none and 'events' in value_json %}
+      {% set events = value_json['events'] %}
+      {% if events %}
+        {% set competitors = events[0]['competitions'][0]['competitors'] %}
+        {% for competitor in competitors %}
+          {% if competitor['homeAway'] == 'home' %}
+            {{ competitor['score']['value'] if 'score' in competitor and 'value' in competitor['score'] else 'N/A' }}
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        No home team score
+      {% endif %}
+    {% else %}
+      API unavailable
+    {% endif %}
+  scan_interval: 10
+  timeout: 10
+
+- platform: rest
+  name: "Away Team Score"
+  unique_id: "away_team_score_sensor"
+  resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
+  value_template: >
+    {% if value_json is not none and 'events' in value_json %}
+      {% set events = value_json['events'] %}
+      {% if events %}
+        {% set competitors = events[0]['competitions'][0]['competitors'] %}
+        {% for competitor in competitors %}
+          {% if competitor['homeAway'] == 'away' %}
+            {{ competitor['score']['value'] if 'score' in competitor and 'value' in competitor['score'] else 'N/A' }}
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        No away team score
+      {% endif %}
+    {% else %}
+      API unavailable
+    {% endif %}
+  scan_interval: 10
+  timeout: 10
+
+- platform: rest
+  name: "Minutes Played"
+  unique_id: "minutes_played_sensor"
+  resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
+  value_template: >
+    {% if value_json is not none and 'events' in value_json %}
+      {% set event = value_json['events'][0] %}
+      {% set status = event['competitions'][0]['status'] %}
+      {{ status['type']['shortDetail'] if 'type' in status and 'shortDetail' in status['type'] else "No status available" }}
+    {% else %}
+      API unavailable
+    {% endif %}
+  scan_interval: 10
+  timeout: 10
