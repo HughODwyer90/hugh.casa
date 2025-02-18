@@ -300,7 +300,7 @@
       friendly_name: "Car Today Driving Time"
       unique_id: "car_daily_driving_time_sensor"
       icon_template: "mdi:car-clock"
-      unit_of_measurement: "hms"
+      unit_of_measurement: "s"
       value_template: >
         {% set total_seconds = states('input_number.daily_driving_seconds') | float(default=0) %}
         {% if total_seconds == 0 %}
@@ -316,7 +316,7 @@
       friendly_name: "Car YTD Driving Time"
       unique_id: "car_yearly_driving_time_sensor"
       icon_template: "mdi:car-clock"
-      unit_of_measurement: "dhms"
+      unit_of_measurement: "s"
       value_template: >
         {% set total_seconds = states('input_number.yearly_driving_seconds') | float(default=0) %}
         {% set days = (total_seconds // 86400) %}
