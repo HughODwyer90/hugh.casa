@@ -40,14 +40,10 @@ try:
         # Exclude input_text helpers with mode: password, anything containing "GPS", and all device_tracker entities
         filtered_entities = [
             entity for entity in entities 
-            if not (
-                (entity["entity_id"].startswith("input_text.") and 
-                 entity.get("attributes", {}).get("mode") == "password") 
-                or "gps" in entity["entity_id"].lower()
-                or entity["entity_id"].startswith("device_tracker.")
-            )
+            if not entity["entity_id"].startswith("input_text.") or entity.get("attributes", {}).get("mode") != "password"
+            and "gps" not in entity["entity_id"].lower()
+            and not entity["entity_id"].startswith("device_tracker.")
         ]
-
         filtered_total = len(filtered_entities)
 
         print(f"Total entities fetched: {total_entities}")
