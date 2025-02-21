@@ -60,7 +60,7 @@ class HTMLGenerator:
         """
 
     @staticmethod
-    def generate_entities_html(entities, total_entities, version, prefixes):
+    def generate_entities_html(entities, total_entities, version, prefixes, hidden_entities):
         """Generate HTML for Home Assistant entities."""
         filters = ''.join(f'<div id="filter-{prefix}" class="filter">{prefix}</div>' for prefix in prefixes)
         rows = ''.join(f"""
@@ -120,7 +120,7 @@ class HTMLGenerator:
         </head>
         <body>
             <h1>Home Assistant Entities</h1>
-            <p>Total Entities: {total_entities}</p>
+            <p>Total Entities: {total_entities} (Hidden: {hidden_entities})</p>
             <p>Version: {version}</p>
             <input type="text" id="searchBox" placeholder="Search entities..." />
             <div class="filters">
