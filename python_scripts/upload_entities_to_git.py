@@ -31,7 +31,7 @@ try:
 
     # Fetch entities from Home Assistant
     print("Sending request to Home Assistant API...")
-    response = requests.get(ha_url, h   eaders=ha_headers, timeout=30)
+    response = requests.get(ha_url, headers=ha_headers, timeout=30)
     print("Response received.")
 
     if response.status_code == 200:
