@@ -81,17 +81,63 @@ class HTMLGenerator:
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Home Assistant Entities</title>
             <style>
-                body {{ font-family: Arial, sans-serif; margin: 20px; }}
-                h1 {{ text-align: center; color: #333; }}
-                #searchBox {{ width: 100%; padding: 8px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 4px; }}
-                .filters {{ display: flex; flex-wrap: wrap; margin-bottom: 12px; }}
-                .filter {{ margin: 4px; padding: 6px 12px; border: 1px solid #ccc; border-radius: 4px; background-color: #f4f4f4; cursor: pointer; }}
-                .filter.active {{ background-color: #333333; color: white; }}
-                table {{ width: 100%; border-collapse: collapse; margin-top: 20px; }}
-                th, td {{ border: 1px solid #ccc; padding: 8px; text-align: left; }}
-                th {{ background-color: #f4f4f4; cursor: pointer; }}
-                tr:nth-child(even) {{ background-color: #f9f9f9; }}
-                tr:hover {{ background-color: #f1f1f1; }}
+                body {{
+                    font-family: Arial, sans-serif;
+                    margin: 20px;
+                    background-color: #f9f9f9;
+                }}
+                h1 {{
+                    text-align: center;
+                    color: #333;
+                }}
+                #searchBox {{
+                    width: 100%;
+                    padding: 10px;
+                    margin: 12px 0;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    font-size: 16px;
+                }}
+                .filters {{
+                    display: flex;
+                    flex-wrap: wrap;
+                    margin-bottom: 12px;
+                }}
+                .filter {{
+                    margin: 4px;
+                    padding: 6px 12px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    background-color: #f4f4f4;
+                    cursor: pointer;
+                }}
+                .filter.active {{
+                    background-color: #0056b3;
+                    color: white;
+                    font-weight: bold;
+                }}
+                table {{
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 20px;
+                    background-color: white;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                }}
+                th, td {{
+                    border: 1px solid #ccc;
+                    padding: 10px;
+                    text-align: left;
+                }}
+                th {{
+                    background-color: #f8f9fa;
+                    color: #333;
+                }}
+                tr:nth-child(even) {{
+                    background-color: #f9f9f9;
+                }}
+                tr:hover {{
+                    background-color: #e9ecef !important;
+                }}
             </style>
             <script>
                 let currentFilter = 'All';
