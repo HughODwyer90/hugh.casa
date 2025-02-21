@@ -57,6 +57,7 @@ try:
 
         print(f"Total entities fetched: {total_entities}")
         print(f"Total entities after filtering: {filtered_total}")
+        hidden_entities = (total_entities - filtered_total)
 
         # Generate prefixes dynamically from filtered entities
         prefixes = sorted(set(entity['entity_id'].split('.')[0] for entity in filtered_entities))
@@ -64,7 +65,7 @@ try:
         version = datetime.utcnow().strftime('%Y-%m-%d-%H%M%S')
 
         # Generate HTML using HTMLGenerator
-        html_content = HTMLGenerator.generate_entities_html(filtered_entities, filtered_total, version, prefixes)
+        html_content = HTMLGenerator.generate_entities_html(filtered_entities, total_entities, version, prefixes, hidden_entities)
 
         # Save the filtered HTML content
         local_html_path = "/config/www/community/entities.html"
@@ -95,7 +96,6 @@ try:
             )
         except Exception as e:
             print(f"Error uploading JSON to GitHub: {e}")
-        print(filtered_entities)
     else:
         print(f"Error retrieving data from Home Assistant: {response.status_code}")
 
