@@ -38,12 +38,29 @@ try:
         entities = response.json()
         total_entities = len(entities)
         # Exclude input_text helpers with mode: password, anything containing "GPS", and all device_tracker entities
-        filtered_entities = [
-            entity for entity in entities 
-            if not entity["entity_id"].startswith("input_text.") or entity.get("attributes", {}).get("mode") != "password"
-            and "gps" not in entity["entity_id"].lower()
-            and not entity["entity_id"].startswith("device_tracker.")
-        ]
+        
+        filtered_entities = []
+
+        for entity in entities:
+            entity_id = entity["entity_id"]
+            attributes = entity.get("attributes", {})
+        
+            # Independent filtering conditions
+            if entity_id.startswith("device_tracker."):
+                continue  # Skip device tracker entities
+            if any("device_tracker." in str(value) for value in attributes.values()):
+                continue  # Skip entities referencing device_tracker
+            if "gps" in entity_id.lower():
+                continue  # Skip GPS-related entities
+            if entity_id.startswith("input_text.") and attributes.get("mode") == "password":
+                continue  # Skip password-protected input_text
+        
+            # If it passed all filters, add it to the list
+            filtered_entities.append(entity)
+
+# Print or process the filtered entities
+        print(json.dumps(filtered_entities, indent=4))
+        
         filtered_total = len(filtered_entities)
 
         print(f"Total entities fetched: {total_entities}")
