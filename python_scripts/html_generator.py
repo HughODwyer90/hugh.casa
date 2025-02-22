@@ -1,4 +1,4 @@
-ASSET_PATH = "/assets"  # Change to "/local/assets" if needed for Home Assistant
+ASSET_PATH = "assets"  # Change to "/local/assets" if needed for Home Assistant
 
 class HTMLGenerator:
     """A class to generate various types of HTML content."""
