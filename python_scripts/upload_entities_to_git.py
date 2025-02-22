@@ -37,45 +37,59 @@ try:
     if response.status_code == 200:
         entities = response.json()
         total_entities = len(entities)
-        # Exclude input_text helpers with mode: password, anything containing "GPS", and all device_tracker entities
-        filtered_entities = [
-            entity for entity in entities 
-            if not entity["entity_id"].startswith("device_tracker.")  # Exclude device_tracker entities
-            and not any("device_tracker." in str(value) for value in entity.get("attributes", {}).values())  # Exclude references to device_tracker
-            and "gps" not in entity["entity_id"].lower()  # Exclude GPS-related entities
-            and not (
-                entity["entity_id"].startswith("input_text.") 
-                and entity.get("attributes", {}).get("mode", "").lower() == "password"
-            )  # Exclude input_text with mode=password
-            and not entity["entity_id"].startswith("zone.")  # Exclude zone entities
-        ]
-        
-        # Print filtered entities for debugging
-        print(json.dumps(filtered_entities, indent=4))
-        
-        filtered_total = len(filtered_entities)
+        redacted_count = 0  # Counter for redacted entities
+
+        # Process entities: Keep full data for some, redact attributes for others
+        processed_entities = []
+        for entity in entities:
+            entity_id = entity["entity_id"]
+            attributes = entity.get("attributes", {})
+
+            # Check if the entity falls into the redacted category
+            if (
+                entity_id.startswith("device_tracker.")  # Previously excluded device_tracker entities
+                or any("device_tracker." in str(value) for value in attributes.values())  # References to device_tracker
+                or "gps" in entity_id.lower()  # Previously excluded GPS-related entities
+                or entity_id.startswith("zone.")  # Previously excluded zone entities
+                or (
+                    entity_id.startswith("input_text.") 
+                    and attributes.get("mode", "").lower() == "password"
+                )  # Previously excluded input_text with mode=password
+            ):
+                # Keep only entity_id, redact state, and use empty attributes dictionary
+                processed_entities.append({
+                    "entity_id": entity_id, 
+                    "state": "REDACTED", 
+                    "attributes": {}
+                })
+                redacted_count += 1  # Increment redacted counter
+            else:
+                # Keep full entity data
+                processed_entities.append(entity)
 
         print(f"Total entities fetched: {total_entities}")
-        print(f"Total entities after filtering: {filtered_total}")
-        hidden_entities = (total_entities - filtered_total)
+        print(f"Total entities after processing: {len(processed_entities)}")
+        print(f"Total entities redacted: {redacted_count}")  # Display redacted count
 
-        # Generate prefixes dynamically from filtered entities
-        prefixes = sorted(set(entity['entity_id'].split('.')[0] for entity in filtered_entities))
+        # Generate prefixes dynamically from processed entities
+        prefixes = sorted(set(entity['entity_id'].split('.')[0] for entity in processed_entities))
 
         version = datetime.utcnow().strftime('%Y-%m-%d-%H%M%S')
 
         # Generate HTML using HTMLGenerator
-        html_content = HTMLGenerator.generate_entities_html(filtered_entities, total_entities, version, prefixes, hidden_entities)
+        html_content = HTMLGenerator.generate_entities_html(
+            processed_entities, total_entities, version, prefixes, redacted_count
+        )
 
-        # Save the filtered HTML content
+        # Save the processed HTML content
         local_html_path = "/config/www/community/entities.html"
         with open(local_html_path, "w", encoding="utf-8") as file:
             file.write(html_content)
 
-        # Save the filtered JSON file
+        # Save the processed JSON file
         local_json_path = "/config/www/community/entities.json"
         with open(local_json_path, "w", encoding="utf-8") as json_file:
-            json.dump(filtered_entities, json_file, indent=4)
+            json.dump(processed_entities, json_file, indent=4)
 
         # Upload HTML to GitHub
         try:
@@ -96,6 +110,7 @@ try:
             )
         except Exception as e:
             print(f"Error uploading JSON to GitHub: {e}")
+
     else:
         print(f"Error retrieving data from Home Assistant: {response.status_code}")
 
