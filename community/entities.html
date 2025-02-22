@@ -92,7 +92,7 @@
         <body>
             <h1>Home Assistant Entities</h1>
             <p>Total Entities: 725 (Hidden: 17)</p>
-            <p>Version: 2025-02-22-152200</p>
+            <p>Version: 2025-02-22-153958</p>
             <input type="text" id="searchBox" placeholder="Search entities..." />
             <div class="filters">
                 <div id="filter-All" class="filter active">All</div>
@@ -1137,40 +1137,8 @@
                 <td>binary_sensor.diffuser_moisture</td>
                 <td>Diffuser Moisture</td>
                 <td>N/A</td>
-                <td>on, off</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>binary_sensor.everything_presence_one_d719b0_mmwave</td>
-                <td>Everything Presence One d719b0 mmWave</td>
                 <td>N/A</td>
-                <td>on, off</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>binary_sensor.everything_presence_one_d719b0_occupancy</td>
-                <td>Everything Presence One d719b0 Occupancy</td>
-                <td>N/A</td>
-                <td>on, off</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>binary_sensor.everything_presence_one_d719b0_pir</td>
-                <td>Everything Presence One d719b0 PIR</td>
-                <td>N/A</td>
-                <td>on, off</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>binary_sensor.everything_presence_one_d719b0_target_1_active</td>
-                <td>Everything Presence One d719b0 Target 1 Active</td>
-                <td>N/A</td>
-                <td>on, off</td>
-                <td>Yes</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -1248,6 +1216,38 @@
             <tr>
                 <td>binary_sensor.living_room_aqara_button_battery_plus_low</td>
                 <td>Living Room Aqara Button Battery low</td>
+                <td>N/A</td>
+                <td>on, off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>binary_sensor.living_room_epone_mmwave</td>
+                <td>Living Room EPOne mmWave</td>
+                <td>N/A</td>
+                <td>on, off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>binary_sensor.living_room_epone_occupancy</td>
+                <td>Living Room EPOne Occupancy</td>
+                <td>N/A</td>
+                <td>on, off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>binary_sensor.living_room_epone_pir</td>
+                <td>Living Room EPOne PIR</td>
+                <td>N/A</td>
+                <td>on, off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>binary_sensor.living_room_epone_target_1_active</td>
+                <td>Living Room EPOne Target 1 Active</td>
                 <td>N/A</td>
                 <td>on, off</td>
                 <td>Yes</td>
@@ -1454,14 +1454,6 @@
             </tr>
         
             <tr>
-                <td>button.everything_presence_one_d719b0_mmwave_set_distance</td>
-                <td>Everything Presence One d719b0 mmWave Set Distance</td>
-                <td>N/A</td>
-                <td>N/A</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>button.hall_motion_battery_replaced</td>
                 <td>Hall Motion Battery replaced</td>
                 <td>N/A</td>
@@ -1568,6 +1560,14 @@
             <tr>
                 <td>button.living_room_aqara_button_battery_replaced</td>
                 <td>Living Room Aqara Button Battery replaced</td>
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>button.living_room_epone_mmwave_set_distance</td>
+                <td>Living Room EPOne mmWave Set Distance</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>Yes</td>
@@ -2126,22 +2126,6 @@
             </tr>
         
             <tr>
-                <td>light.everything_presence_one_d719b0_esp32_status_led</td>
-                <td>Everything Presence One d719b0 ESP32 status LED</td>
-                <td>N/A</td>
-                <td>on, off</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>light.everything_presence_one_d719b0_mmwave_led</td>
-                <td>Everything Presence One d719b0 mmWave LED</td>
-                <td>N/A</td>
-                <td>on, off</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>light.hall_downstairs_ceiling</td>
                 <td>Light Downstairs Ceiling</td>
                 <td>N/A</td>
@@ -2176,6 +2160,22 @@
             <tr>
                 <td>light.living_room_ceiling</td>
                 <td>Light Ceiling</td>
+                <td>N/A</td>
+                <td>on, off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>light.living_room_epone_esp32_status_led</td>
+                <td>Living Room EPOne ESP32 status LED</td>
+                <td>N/A</td>
+                <td>on, off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>light.living_room_epone_mmwave_led</td>
+                <td>Living Room EPOne mmWave LED</td>
                 <td>N/A</td>
                 <td>on, off</td>
                 <td>Yes</td>
@@ -2346,87 +2346,7 @@
                 <td>Select Diffuser Brightness</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>number.everything_presence_one_d719b0_humidity_offset</td>
-                <td>Everything Presence One d719b0 Humidity Offset</td>
-                <td>%</td>
-                <td>N/A</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>number.everything_presence_one_d719b0_illuminance_offset</td>
-                <td>Everything Presence One d719b0 Illuminance Offset</td>
-                <td>lx</td>
-                <td>N/A</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>number.everything_presence_one_d719b0_mmwave_off_latency</td>
-                <td>Everything Presence One d719b0 mmWave off latency</td>
-                <td>seconds</td>
-                <td>N/A</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>number.everything_presence_one_d719b0_mmwave_on_latency</td>
-                <td>Everything Presence One d719b0 mmWave on latency</td>
-                <td>seconds</td>
-                <td>N/A</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>number.everything_presence_one_d719b0_mmwave_sensitivity</td>
-                <td>Everything Presence One d719b0 mmWave sensitivity</td>
-                <td>N/A</td>
-                <td>N/A</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>number.everything_presence_one_d719b0_mmwave_zone_1_end</td>
-                <td>Everything Presence One d719b0 mmWave Zone 1 End</td>
-                <td>cm</td>
-                <td>N/A</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>number.everything_presence_one_d719b0_mmwave_zone_1_start</td>
-                <td>Everything Presence One d719b0 mmWave Zone 1 Start</td>
-                <td>cm</td>
-                <td>N/A</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>number.everything_presence_one_d719b0_occupancy_off_latency</td>
-                <td>Everything Presence One d719b0 Occupancy off latency</td>
-                <td>seconds</td>
-                <td>N/A</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>number.everything_presence_one_d719b0_pir_off_latency</td>
-                <td>Everything Presence One d719b0 PIR off latency</td>
-                <td>seconds</td>
-                <td>N/A</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>number.everything_presence_one_d719b0_temperature_offset</td>
-                <td>Everything Presence One d719b0 Temperature Offset</td>
-                <td>°C</td>
-                <td>N/A</td>
-                <td>Yes</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -2441,6 +2361,86 @@
                 <td>number.hugh_room_blinds_motor_speed</td>
                 <td>Hugh Room Blinds Motor speed</td>
                 <td>rpm</td>
+                <td>N/A</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.living_room_epone_humidity_offset</td>
+                <td>Living Room EPOne Humidity Offset</td>
+                <td>%</td>
+                <td>N/A</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.living_room_epone_illuminance_offset</td>
+                <td>Living Room EPOne Illuminance Offset</td>
+                <td>lx</td>
+                <td>N/A</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.living_room_epone_mmwave_off_latency</td>
+                <td>Living Room EPOne mmWave off latency</td>
+                <td>seconds</td>
+                <td>N/A</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.living_room_epone_mmwave_on_latency</td>
+                <td>Living Room EPOne mmWave on latency</td>
+                <td>seconds</td>
+                <td>N/A</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.living_room_epone_mmwave_sensitivity</td>
+                <td>Living Room EPOne mmWave sensitivity</td>
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.living_room_epone_mmwave_zone_1_end</td>
+                <td>Living Room EPOne mmWave Zone 1 End</td>
+                <td>cm</td>
+                <td>N/A</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.living_room_epone_mmwave_zone_1_start</td>
+                <td>Living Room EPOne mmWave Zone 1 Start</td>
+                <td>cm</td>
+                <td>N/A</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.living_room_epone_occupancy_off_latency</td>
+                <td>Living Room EPOne Occupancy off latency</td>
+                <td>seconds</td>
+                <td>N/A</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.living_room_epone_pir_off_latency</td>
+                <td>Living Room EPOne PIR off latency</td>
+                <td>seconds</td>
+                <td>N/A</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.living_room_epone_temperature_offset</td>
+                <td>Living Room EPOne Temperature Offset</td>
+                <td>°C</td>
                 <td>N/A</td>
                 <td>Yes</td>
             </tr>
@@ -2722,7 +2722,7 @@
                 <td>Select Diffuser Color</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>Yes</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -2730,7 +2730,7 @@
                 <td>Select Diffuser Light Mode</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>Yes</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -2738,7 +2738,7 @@
                 <td>Select Diffuser Mist</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>Yes</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -3393,46 +3393,6 @@
                 <td>sensor.entities</td>
                 <td>Home Assistant Entities</td>
                 <td>N/A</td>
-                <td>N/A</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>sensor.everything_presence_one_d719b0_distance_zones_status</td>
-                <td>Everything Presence One d719b0 Distance Zones Status</td>
-                <td>N/A</td>
-                <td>N/A</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>sensor.everything_presence_one_d719b0_humidity</td>
-                <td>Everything Presence One d719b0 Humidity</td>
-                <td>%</td>
-                <td>N/A</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>sensor.everything_presence_one_d719b0_illuminance</td>
-                <td>Everything Presence One d719b0 Illuminance</td>
-                <td>lx</td>
-                <td>N/A</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>sensor.everything_presence_one_d719b0_target_1_distance</td>
-                <td>Everything Presence One d719b0 Target 1 Distance</td>
-                <td>m</td>
-                <td>N/A</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>sensor.everything_presence_one_d719b0_temperature</td>
-                <td>Everything Presence One d719b0 Temperature</td>
-                <td>°C</td>
                 <td>N/A</td>
                 <td>Yes</td>
             </tr>
@@ -4434,7 +4394,7 @@
                 <td>Position</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>Yes</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -4442,7 +4402,7 @@
                 <td>Record</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>Yes</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -4450,7 +4410,7 @@
                 <td>Competition</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>Yes</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -4458,7 +4418,7 @@
                 <td>Competition Stage</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>Yes</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -4466,7 +4426,7 @@
                 <td>Competition Stage</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>Yes</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -4474,7 +4434,7 @@
                 <td>Position</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>Yes</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -4482,7 +4442,7 @@
                 <td>Record</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>Yes</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -4490,7 +4450,7 @@
                 <td>Competition Stage</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>Yes</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -4506,7 +4466,7 @@
                 <td>Kick off</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>Yes</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -4522,7 +4482,7 @@
                 <td>Liverpool (UTC)</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>Yes</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -4530,7 +4490,7 @@
                 <td>Location</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>Yes</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -4538,7 +4498,7 @@
                 <td>Game vs</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>Yes</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -4584,6 +4544,46 @@
             <tr>
                 <td>sensor.living_room_aqara_button_device_temperature</td>
                 <td>Living Room Aqara Button Temperature</td>
+                <td>°C</td>
+                <td>N/A</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.living_room_epone_distance_zones_status</td>
+                <td>Living Room EPOne Distance Zones Status</td>
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.living_room_epone_humidity</td>
+                <td>Living Room EPOne Humidity</td>
+                <td>%</td>
+                <td>N/A</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.living_room_epone_illuminance</td>
+                <td>Living Room EPOne Illuminance</td>
+                <td>lx</td>
+                <td>N/A</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.living_room_epone_target_1_distance</td>
+                <td>Living Room EPOne Target 1 Distance</td>
+                <td>m</td>
+                <td>N/A</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.living_room_epone_temperature</td>
+                <td>Living Room EPOne Temperature</td>
                 <td>°C</td>
                 <td>N/A</td>
                 <td>Yes</td>
@@ -5257,16 +5257,16 @@
                 <td>switch.diffuser_light</td>
                 <td>Light Diffuser</td>
                 <td>N/A</td>
-                <td>on, off</td>
-                <td>Yes</td>
+                <td>N/A</td>
+                <td>No</td>
             </tr>
         
             <tr>
                 <td>switch.diffuser_power</td>
                 <td>Power Diffuser</td>
                 <td>N/A</td>
-                <td>on, off</td>
-                <td>Yes</td>
+                <td>N/A</td>
+                <td>No</td>
             </tr>
         
             <tr>
