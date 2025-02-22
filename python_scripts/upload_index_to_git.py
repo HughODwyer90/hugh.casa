@@ -8,7 +8,7 @@ def get_files_from_directory(directory, file_type, exclude=("index.html", "secre
     """Retrieve all files of a given type from a directory, excluding specified files."""
     return [f for f in os.listdir(directory) if f.endswith(file_type) and f not in exclude]
 
-# Main function to generate and upload index.html
+# Main function to generate and upload index.html, JS, and CSS files
 def main():
     try:
         # Load secrets
@@ -25,12 +25,12 @@ def main():
         # Define directories
         html_directory = "/config/www/community/"
         yaml_directory = "/config/"
+        assets_directory = "/config/www/community/assets/"
 
         # Ensure directories exist
-        if not os.path.exists(html_directory):
-            raise FileNotFoundError(f"The directory {html_directory} does not exist.")
-        if not os.path.exists(yaml_directory):
-            raise FileNotFoundError(f"The directory {yaml_directory} does not exist.")
+        for directory in [html_directory, yaml_directory, assets_directory]:
+            if not os.path.exists(directory):
+                raise FileNotFoundError(f"The directory {directory} does not exist.")
 
         # Retrieve files
         html_files = get_files_from_directory(html_directory, ".html")
@@ -38,33 +38,32 @@ def main():
 
         if not html_files:
             print("No HTML files found, skipping index.html generation.")
-            return
+        else:
+            print(f"Processing HTML files: {', '.join(html_files)}")
+            print(f"Processing YAML files: {', '.join(yaml_files)}")
 
-        print(f"Processing HTML files: {', '.join(html_files)}")
-        print(f"Processing YAML files: {', '.join(yaml_files)}")
+            # Generate index.html using HTMLGenerator class
+            index_html_content = HTMLGenerator.generate_index_html(html_files, yaml_files)
 
-        # Generate index.html using HTMLGenerator class
-        index_html_content = HTMLGenerator.generate_index_html(html_files, yaml_files)
+            # Save index.html locally
+            index_file_path = os.path.join(html_directory, "index.html")
+            with open(index_file_path, "w", encoding="utf-8") as file:
+                file.write(index_html_content)
 
-        # Save index.html locally
-        index_file_path = os.path.join(html_directory, "index.html")
-        with open(index_file_path, "w", encoding="utf-8") as file:
-            file.write(index_html_content)
+            # Upload index.html to GitHub
+            try:
+                uploader.upload_file(
+                    local_file_path=index_file_path,
+                    github_file_path="community/index.html",
+                    commit_message="Update index.html with latest file listings"
+                )
+                print("index.html has been updated and uploaded successfully.")
+            except Exception as e:
+                print(f"Error uploading index.html to GitHub: {e}")
 
-        # Upload index.html to GitHub
-        try:
-            uploader.upload_file(
-                local_file_path=index_file_path,
-                github_file_path="community/index.html",
-                commit_message="Update index.html with latest file listings"
-            )
-            print("index.html has been updated and uploaded successfully.")
-        except Exception as e:
-            print(f"Error uploading index.html to GitHub: {e}")
-
-    # Upload JavaScript and CSS files
-        js_file_path = os.path.join(html_directory, "table-functions.js")
-        css_file_path = os.path.join(html_directory, "table-styles.css")
+        # Upload JavaScript and CSS files (moved outside to ensure execution)
+        js_file_path = os.path.join(assets_directory, "table-functions.js")
+        css_file_path = os.path.join(assets_directory, "table-styles.css")
 
         for file_path, github_path, description in [
             (js_file_path, "community/table-functions.js", "Update table-functions.js"),
