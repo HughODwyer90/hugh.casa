@@ -3,9 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let integrationFilter = 'All';
 
     function updateTableCount() {
-        const entityTable = document.getElementById('entitiesTable');
-        if (entityTable) {
-            let visibleRows = entityTable.querySelectorAll("tbody tr:not([style*='display: none'])").length;
+        // Find the currently visible table
+        let visibleTable = document.querySelector("table:not([style*='display: none'])");
+        
+        if (visibleTable) {
+            let visibleRows = visibleTable.querySelectorAll("tbody tr:not([style*='display: none'])").length;
             document.getElementById("table-count").textContent = `Search total: ${visibleRows}`;
         }
     }
