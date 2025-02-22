@@ -27,7 +27,7 @@ class HTMLGenerator:
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Living Backup</title>
             <link rel="stylesheet" href="{ASSET_PATH}/index-styles.css">
-            <link rel="icon" type="image/x-icon" href="{ASSET_PATH}/favicon.png">
+            <link rel="icon" type="image/x-icon" href="{ASSET_PATH}/favicon.ico">
             <script defer src="{ASSET_PATH}/index-functions.js"></script>
         </head>
         <body>
@@ -62,7 +62,7 @@ class HTMLGenerator:
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Home Assistant Entities</title>
             <link rel="stylesheet" href="{ASSET_PATH}/table-styles.css">
-            <link rel="icon" type="image/x-icon" href="{ASSET_PATH}/favicon.png">
+            <link rel="icon" type="image/x-icon" href="{ASSET_PATH}/favicon.ico">
             <script defer src="{ASSET_PATH}/table-functions.js"></script>
         </head>
         <body>
@@ -115,7 +115,7 @@ class HTMLGenerator:
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Home Assistant Integrations</title>
             <link rel="stylesheet" href="{ASSET_PATH}/table-styles.css">
-            <link rel="icon" type="image/x-icon" href="{ASSET_PATH}/favicon.png">
+            <link rel="icon" type="image/x-icon" href="{ASSET_PATH}/favicon.ico">
             <script defer src="{ASSET_PATH}/table-functions.js"></script>
         </head>
         <body>
