@@ -26,31 +26,15 @@ class HTMLGenerator:
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>File Dashboard</title>
-            <link rel="stylesheet" href="{ASSET_PATH}/table-styles.css">
-            <script defer src="{ASSET_PATH}/table-functions.js"></script>
-            <script>
-                function loadContent(file) {{
-                    document.getElementById('content-frame').src = file;
-                    let downloadLink = document.getElementById('download-btn');
-                    if (file.endsWith(".html")) {{
-                        downloadLink.href = file.replace('.html', '.json');
-                        downloadLink.download = file.replace('.html', '.json');
-                    }} else if (file.endsWith(".yaml")) {{
-                        downloadLink.href = file;
-                        downloadLink.download = file;
-                    }}
-                }}
-                document.addEventListener('DOMContentLoaded', () => {{
-                    loadContent('{html_files[0]}'); // Default content
-                }});
-            </script>
+            <link rel="stylesheet" href="{ASSET_PATH}/index-styles.css">
+            <script defer src="{ASSET_PATH}/index-functions.js"></script>
         </head>
         <body>
             <nav>
                 <ul>{navbar_links}</ul>
                 <a id="download-btn" class="download-btn" href="#" download="">Download File</a>
             </nav>
-            <iframe id="content-frame" src=""></iframe>
+            <iframe id="content-frame" src="entities.html" style="width: 100%; height: calc(100vh - 60px); border: none;"></iframe>
         </body>
         </html>
         """
@@ -76,8 +60,8 @@ class HTMLGenerator:
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Home Assistant Entities</title>
-            <link rel="stylesheet" href="assets/table-styles.css">
-            <script defer src="assets/table-functions.js"></script>
+            <link rel="stylesheet" href="{ASSET_PATH}/table-styles.css">
+            <script defer src="{ASSET_PATH}/table-functions.js"></script>
         </head>
         <body>
             <h1>Home Assistant Entities</h1>
@@ -104,7 +88,6 @@ class HTMLGenerator:
         </html>
         """
 
-
     @staticmethod
     def generate_integrations_html(integrations_data, total_entries, version):
         """Generate HTML for Home Assistant integrations."""
@@ -127,8 +110,8 @@ class HTMLGenerator:
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Home Assistant Integrations</title>
-            <link rel="stylesheet" href="assets/table-styles.css">
-            <script defer src="assets/table-functions.js"></script>
+            <link rel="stylesheet" href="{ASSET_PATH}/table-styles.css">
+            <script defer src="{ASSET_PATH}/table-functions.js"></script>
         </head>
         <body>
             <h1>Home Assistant Integrations</h1>
@@ -154,4 +137,3 @@ class HTMLGenerator:
         </body>
         </html>
         """
-
