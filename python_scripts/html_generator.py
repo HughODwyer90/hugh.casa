@@ -67,7 +67,9 @@ class HTMLGenerator:
             <h1>Home Assistant Entities</h1>
             <p>Total Entities: {total_entities} (Hidden: {hidden_entities})</p>
             <p>Version: {version}</p>
-            <input type="text" id="entitySearch" placeholder="Search entities..." />
+            <div class="search-container">
+                <input type="text" id="entitySearch" class="search-box" placeholder="🔍 Search entities...">
+            </div>
             <div class="filters">
                 <div id="filter-All" class="filter entity-filter active">All</div>
                 {filters}
@@ -117,7 +119,9 @@ class HTMLGenerator:
             <h1>Home Assistant Integrations</h1>
             <p>Total Integrations: {total_entries}</p>
             <p>Version: {version}</p>
-            <input type="text" id="integrationSearch" placeholder="Search integrations..." />
+            <div class="search-container">
+                <input type="text" id="integrationSearch" class="search-box" placeholder="🔍 Search integrations...">
+            </div>
             <div class="filters">
                 <div id="filter-All" class="filter integration-filter active">All</div>
                 {filters}
