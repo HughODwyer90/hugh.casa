@@ -25,7 +25,7 @@ def main():
         # Define directories
         html_directory = "/config/www/community/"
         yaml_directory = "/config/"
-        assets_directory = "/config/www/community/assets/"
+        assets_directory = "/config/www/community/assets"  # Correct directory for JS & CSS
 
         # Ensure directories exist
         for directory in [html_directory, yaml_directory, assets_directory]:
@@ -54,33 +54,35 @@ def main():
             try:
                 uploader.upload_file(
                     local_file_path=index_file_path,
-                    github_file_path="community/index.html",
+                    github_file_path="community/index.html",  # Upload index.html to community/
                     commit_message="Update index.html with latest file listings"
                 )
                 print("index.html has been updated and uploaded successfully.")
             except Exception as e:
                 print(f"Error uploading index.html to GitHub: {e}")
 
-        # Upload JavaScript and CSS files (moved outside to ensure execution)
+        # Upload JavaScript and CSS files to assets/ in GitHub
         js_file_path = os.path.join(assets_directory, "table-functions.js")
         css_file_path = os.path.join(assets_directory, "table-styles.css")
 
-        for file_path, github_path, description in [
-            (js_file_path, "community/table-functions.js", "Update table-functions.js"),
-            (css_file_path, "community/table-styles.css", "Update table-styles.css"),
-        ]:
-            if os.path.exists(file_path):
+        files_to_upload = {
+            js_file_path: "assets/table-functions.js",
+            css_file_path: "assets/table-styles.css",
+        }
+
+        for local_path, github_path in files_to_upload.items():
+            if os.path.exists(local_path):
                 try:
                     uploader.upload_file(
-                        local_file_path=file_path,
+                        local_file_path=local_path,
                         github_file_path=github_path,
-                        commit_message=description
+                        commit_message=f"Update {os.path.basename(local_path)}"
                     )
-                    print(f"{os.path.basename(file_path)} has been uploaded successfully.")
+                    print(f"{os.path.basename(local_path)} has been uploaded to GitHub assets folder.")
                 except Exception as e:
-                    print(f"Error uploading {os.path.basename(file_path)} to GitHub: {e}")
+                    print(f"Error uploading {os.path.basename(local_path)} to GitHub: {e}")
             else:
-                print(f"Warning: {os.path.basename(file_path)} not found. Skipping upload.")
+                print(f"Warning: {os.path.basename(local_path)} not found. Skipping upload.")
 
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
