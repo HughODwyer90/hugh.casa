@@ -338,10 +338,10 @@
 - id: '1702207044468'
   alias: Admin on Start
   description: Executes actions when Home Assistant starts.
-  trigger:
+  triggers:
   - trigger: homeassistant
     event: start
-  action:
+  actions:
   - target:
       entity_id: select.diffuser_colors
     data:
@@ -365,7 +365,7 @@
       value: '705'
     target:
       entity_id:
-      - number.living_room_epone_mmwave_distance
+      - number.living_room_epone_mmwave_zone_1_end
     action: number.set_value
   - target:
       entity_id: input_boolean.shower_in_progress
