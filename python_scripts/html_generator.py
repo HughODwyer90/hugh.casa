@@ -72,6 +72,9 @@ class HTMLGenerator:
             <div class="search-container">
                 <input type="text" id="entitySearch" class="search-box" placeholder="🔍 Search entities...">
             </div>
+            <div>
+                <p id="table-count">Search total: 0</p>
+            </div>
             <div class="filters">
                 <div id="filter-All" class="filter entity-filter active">All</div>
                 {filters}
@@ -124,6 +127,9 @@ class HTMLGenerator:
             <p>Version: {version}</p>
             <div class="search-container">
                 <input type="text" id="integrationSearch" class="search-box" placeholder="🔍 Search integrations...">
+            </div>
+            <div>
+                <p id="table-count">Search total: 0</p>
             </div>
             <div class="filters">
                 <div id="filter-All" class="filter integration-filter active">All</div>
