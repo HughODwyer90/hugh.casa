@@ -33,7 +33,7 @@ class HTMLGenerator:
         <body>
             <nav>
                 <ul>{navbar_links}</ul>
-                <a id="download-btn" class="download-btn" href="#" download="">Download File</a>
+                <a id="download-btn" class="download-btn" href="#" download="">Download Files</a>
             </nav>
             <iframe id="content-frame" src="entities.html" style="width: 100%; height: calc(100vh - 60px); border: none;"></iframe>
         </body>
@@ -41,7 +41,7 @@ class HTMLGenerator:
         """
 
     @staticmethod
-    def generate_entities_html(entities, total_entities, version, prefixes, hidden_entities):
+    def generate_entities_html(entities, total_entities, version, prefixes, redacted_entities):
         """Generate HTML for Home Assistant entities."""
         filters = ''.join(f'<div id="filter-{prefix}" class="filter entity-filter">{prefix}</div>' for prefix in prefixes)
         rows = ''.join(f"""
@@ -67,7 +67,7 @@ class HTMLGenerator:
         </head>
         <body>
             <h1>Home Assistant Entities</h1>
-            <p>Total Entities: {total_entities} (Hidden: {hidden_entities})</p>
+            <p>Total Entities: {total_entities} (Redacted: {redacted_entities})</p>
             <p>Version: {version}</p>
             <div class="search-container">
                 <input type="text" id="entitySearch" class="search-box" placeholder="🔍 Search entities...">
