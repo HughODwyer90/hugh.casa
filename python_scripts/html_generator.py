@@ -1,3 +1,5 @@
+ASSET_PATH = "/assets"  # Change to "/local/assets" if needed for Home Assistant
+
 class HTMLGenerator:
     """A class to generate various types of HTML content."""
 
@@ -24,8 +26,8 @@ class HTMLGenerator:
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>File Dashboard</title>
-            <link rel="stylesheet" href="/assets/table-styles.css">
-            <script defer src="/assets/table-functions.js"></script>
+            <link rel="stylesheet" href="{ASSET_PATH}/table-styles.css">
+            <script defer src="{ASSET_PATH}/table-functions.js"></script>
             <script>
                 function loadContent(file) {{
                     document.getElementById('content-frame').src = file;
@@ -74,8 +76,8 @@ class HTMLGenerator:
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Home Assistant Entities</title>
-            <link rel="stylesheet" href="/assets/table-styles.css">
-            <script defer src="/assets/table-functions.js"></script>
+            <link rel="stylesheet" href="{ASSET_PATH}/table-styles.css">
+            <script defer src="{ASSET_PATH}/table-functions.js"></script>
         </head>
         <body>
             <h1>Home Assistant Entities</h1>
@@ -124,8 +126,8 @@ class HTMLGenerator:
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Home Assistant Integrations</title>
-            <link rel="stylesheet" href="/assets/table-styles.css">
-            <script defer src="/assets/table-functions.js"></script>
+            <link rel="stylesheet" href="{ASSET_PATH}/table-styles.css">
+            <script defer src="{ASSET_PATH}/table-functions.js"></script>
         </head>
         <body>
             <h1>Home Assistant Integrations</h1>
