@@ -3,10 +3,18 @@ import time  # Import time module to add delay
 from secret_manager import SecretsManager  # Import the SecretsManager class
 from git_uploader import GitHubUploader  # Import the GitHubUploader class
 
-# Function to get all YAML files from a directory (excluding secrets.yaml)
-def get_yaml_files_from_directory(directory):
-    """Retrieve all YAML files from the specified directory, excluding secrets.yaml."""
-    return [f for f in os.listdir(directory) if f.endswith(".yaml") and f != "secrets.yaml"]
+# Function to get YAML files from multiple directories (excluding secrets.yaml)
+def get_yaml_files_from_directories(directories):
+    """Retrieve all YAML files from the specified directories, excluding secrets.yaml."""
+    yaml_files = []
+    for directory in directories:
+        if os.path.exists(directory):
+            yaml_files.extend(
+                [(directory, f) for f in os.listdir(directory) if f.endswith(".yaml") and f != "secrets.yaml" and f != "everything-presence-one.yaml"]
+            )
+        else:
+            print(f"Warning: Directory {directory} does not exist. Skipping...")
+    return yaml_files
 
 # Main function
 def main():
@@ -23,20 +31,22 @@ def main():
         # Initialize GitHubUploader
         uploader = GitHubUploader(github_token=github_token, repo_name=github_repo)
 
-        # Directory containing YAML files
-        yaml_directory = "/config"  # Path to the directory containing YAML files
-        yaml_files = get_yaml_files_from_directory(yaml_directory)
+        # Directories containing YAML files
+        yaml_directories = ["/config", "/config/esphome"]  # Add /esphome as a source
+
+        # Get all YAML files from both directories
+        yaml_files = get_yaml_files_from_directories(yaml_directories)
 
         if not yaml_files:
-            print("No YAML files found in the directory.")
+            print("No YAML files found in the directories.")
             return
 
-        print(f"Processing YAML files: {', '.join(yaml_files)}")
+        print(f"Processing YAML files: {', '.join([f[1] for f in yaml_files])}")
 
         # Upload each YAML file with a delay
-        for yaml_file in yaml_files:
-            yaml_file_path = os.path.join(yaml_directory, yaml_file)
-            github_file_path = f"community/{yaml_file}"
+        for directory, yaml_file in yaml_files:
+            yaml_file_path = os.path.join(directory, yaml_file)
+            github_file_path = f"community/{yaml_file}"  # Upload under 'community/' in GitHub
 
             # Upload the YAML file to GitHub
             try:
@@ -45,6 +55,7 @@ def main():
                     github_file_path=github_file_path,
                     commit_message=f"Update {yaml_file}"
                 )
+                print(f"Uploaded: {yaml_file}")
             except Exception as e:
                 print(f"Error uploading {yaml_file}: {e}")
 
