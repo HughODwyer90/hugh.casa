@@ -3,21 +3,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let integrationFilter = 'All';
 
     function updateTableCount() {
-        const iframe = document.getElementById('content-frame'); // Access the iframe
-        if (!iframe || !iframe.contentDocument) return;
-
-        const table = iframe.contentDocument.getElementById('entitiesTable');
-        if (table) {
-            let visibleRows = table.querySelectorAll("tbody tr:not([style*='display: none'])").length;
-            document.getElementById("search-total").textContent = `Search total: ${visibleRows}`;
+        const entityTable = document.getElementById('entitiesTable');
+        if (entityTable) {
+            let visibleRows = entityTable.querySelectorAll("tbody tr:not([style*='display: none'])").length;
+            document.getElementById("table-count").textContent = `Search total: ${visibleRows}`;
         }
     }
 
     function sortTable(tableId, columnIndex) {
-        const iframe = document.getElementById('content-frame');
-        if (!iframe || !iframe.contentDocument) return;
-
-        const table = iframe.contentDocument.getElementById(tableId);
+        const table = document.getElementById(tableId);
         if (!table) return;
 
         const tbody = table.querySelector('tbody');
@@ -39,11 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function filterEntities() {
-        const iframe = document.getElementById('content-frame');
-        if (!iframe || !iframe.contentDocument) return;
-
         const query = document.getElementById('entitySearch')?.value.toLowerCase();
-        const entityTable = iframe.contentDocument.getElementById('entitiesTable');
+        const entityTable = document.getElementById('entitiesTable');
 
         if (entityTable) {
             entityTable.querySelectorAll('tbody tr').forEach(row => {
@@ -58,11 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function filterIntegrations() {
-        const iframe = document.getElementById('content-frame');
-        if (!iframe || !iframe.contentDocument) return;
-
         const query = document.getElementById('integrationSearch')?.value.toLowerCase();
-        const integrationTable = iframe.contentDocument.getElementById('integrationsTable');
+        const integrationTable = document.getElementById('integrationsTable');
 
         if (integrationTable) {
             integrationTable.querySelectorAll('tbody tr').forEach(row => {
@@ -76,8 +64,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Attach event listeners for entity filters
+    // Attach event listeners for sorting
+    document.querySelectorAll('th').forEach((header, index) => {
+        header.style.cursor = "pointer";
+        header.addEventListener('click', () => {
+            const tableId = header.closest('table').id;
+            sortTable(tableId, index);
+        });
+    });
+
+    // Attach event listeners for entity search & filter
     document.getElementById('entitySearch')?.addEventListener('input', filterEntities);
+    
     document.querySelectorAll('.entity-filter').forEach(filter => {
         filter.addEventListener('click', () => {
             document.querySelectorAll('.entity-filter.active').forEach(f => f.classList.remove('active'));
@@ -87,8 +85,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Attach event listeners for integration filters
+    // Attach event listeners for integration search & filter
     document.getElementById('integrationSearch')?.addEventListener('input', filterIntegrations);
+    
     document.querySelectorAll('.integration-filter').forEach(filter => {
         filter.addEventListener('click', () => {
             document.querySelectorAll('.integration-filter.active').forEach(f => f.classList.remove('active'));
@@ -98,14 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Ensure table count updates after iframe loads
-    document.getElementById('content-frame').addEventListener('load', () => {
-        updateTableCount();
-        filterEntities();
-        filterIntegrations();
-    });
-
-    // Initialize Filters
+    // Ensure table count updates on load
+    updateTableCount();
     filterEntities();
     filterIntegrations();
 });
