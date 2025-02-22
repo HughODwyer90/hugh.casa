@@ -66,8 +66,8 @@ def main():
         css_file_path = os.path.join(assets_directory, "table-styles.css")
 
         files_to_upload = {
-            js_file_path: "assets/table-functions.js",
-            css_file_path: "assets/table-styles.css",
+            js_file_path: "community/assets/table-functions.js",
+            css_file_path: "community/assets/table-styles.css",
         }
 
         for local_path, github_path in files_to_upload.items():
