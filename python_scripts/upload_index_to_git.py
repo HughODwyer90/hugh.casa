@@ -62,16 +62,12 @@ def main():
                 print(f"Error uploading index.html to GitHub: {e}")
 
         # Upload JavaScript and CSS files to assets/ in GitHub
-        js_files = ["table-functions.js", "index-functions.js"]
-        css_files = ["table-styles.css", "index-styles.css"]
+        asset_files = ["table-functions.js", "index-functions.js", "table-styles.css", "index-styles.css", "favicon.png"]
 
         files_to_upload = {
-            os.path.join(assets_directory, js_file): f"community/assets/{js_file}" for js_file in js_files
+            os.path.join(assets_directory, asset_file): f"community/assets/{asset_file}" for asset_file in asset_files
         }
-        files_to_upload.update({
-            os.path.join(assets_directory, css_file): f"community/assets/{css_file}" for css_file in css_files
-        })
-
+        
         for local_path, github_path in files_to_upload.items():
             if os.path.exists(local_path):
                 try:
