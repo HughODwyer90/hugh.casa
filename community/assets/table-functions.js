@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    let currentFilter = 'All';
+    let entityFilter = 'All';
+    let integrationFilter = 'All';
 
+    // Sort function (works for any table)
     function sortTable(tableId, columnIndex) {
         const table = document.getElementById(tableId);
         if (!table) return; // Prevent errors if table isn't found
@@ -29,42 +31,59 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    function filterTable() {
-        const query = document.getElementById('searchBox').value.toLowerCase();
+    // Entity Table Filter
+    function filterEntities() {
+        const query = document.getElementById('entitySearch').value.toLowerCase();
         const entityTable = document.getElementById('entitiesTable');
-        const integrationTable = document.getElementById('integrationsTable');
 
-        // Apply filtering to entities table (if it exists)
         if (entityTable) {
             entityTable.querySelectorAll('tbody tr').forEach(row => {
                 const entityId = row.cells[0].textContent.trim().toLowerCase();
-                const matchesFilter = currentFilter === 'All' || entityId.startsWith(currentFilter.toLowerCase());
-                const matchesQuery = Array.from(row.cells).some(cell => cell.textContent.toLowerCase().includes(query));
-                row.style.display = matchesFilter && matchesQuery ? '' : 'none';
-            });
-        }
-
-        // Apply filtering to integrations table (if it exists)
-        if (integrationTable) {
-            integrationTable.querySelectorAll('tbody tr').forEach(row => {
-                const integrationId = row.cells[0].textContent.trim().toLowerCase();
-                const matchesFilter = currentFilter === 'All' || integrationId.startsWith(currentFilter.toLowerCase());
+                const matchesFilter = entityFilter === 'All' || entityId.startsWith(entityFilter.toLowerCase());
                 const matchesQuery = Array.from(row.cells).some(cell => cell.textContent.toLowerCase().includes(query));
                 row.style.display = matchesFilter && matchesQuery ? '' : 'none';
             });
         }
     }
 
-    document.getElementById('searchBox').addEventListener('input', filterTable);
+    // Integration Table Filter
+    function filterIntegrations() {
+        const query = document.getElementById('integrationSearch').value.toLowerCase();
+        const integrationTable = document.getElementById('integrationsTable');
 
-    document.querySelectorAll('.filter').forEach(filter => {
+        if (integrationTable) {
+            integrationTable.querySelectorAll('tbody tr').forEach(row => {
+                const integrationId = row.cells[0].textContent.trim().toLowerCase();
+                const matchesFilter = integrationFilter === 'All' || integrationId.startsWith(integrationFilter.toLowerCase());
+                const matchesQuery = Array.from(row.cells).some(cell => cell.textContent.toLowerCase().includes(query));
+                row.style.display = matchesFilter && matchesQuery ? '' : 'none';
+            });
+        }
+    }
+
+    // Event listeners for entity filter
+    document.getElementById('entitySearch').addEventListener('input', filterEntities);
+    document.querySelectorAll('.entity-filter').forEach(filter => {
         filter.addEventListener('click', () => {
-            document.querySelectorAll('.filter.active').forEach(f => f.classList.remove('active'));
+            document.querySelectorAll('.entity-filter.active').forEach(f => f.classList.remove('active'));
             filter.classList.add('active');
-            currentFilter = filter.textContent.trim();
-            filterTable();
+            entityFilter = filter.textContent.trim();
+            filterEntities();
         });
     });
 
-    filterTable();
+    // Event listeners for integration filter
+    document.getElementById('integrationSearch').addEventListener('input', filterIntegrations);
+    document.querySelectorAll('.integration-filter').forEach(filter => {
+        filter.addEventListener('click', () => {
+            document.querySelectorAll('.integration-filter.active').forEach(f => f.classList.remove('active'));
+            filter.classList.add('active');
+            integrationFilter = filter.textContent.trim();
+            filterIntegrations();
+        });
+    });
+
+    // Initialize Filters
+    filterEntities();
+    filterIntegrations();
 });
