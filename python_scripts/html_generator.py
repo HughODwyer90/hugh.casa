@@ -58,7 +58,7 @@ class HTMLGenerator:
     @staticmethod
     def generate_entities_html(entities, total_entities, version, prefixes, hidden_entities):
         """Generate HTML for Home Assistant entities."""
-        filters = ''.join(f'<div id="filter-{prefix}" class="filter">{prefix}</div>' for prefix in prefixes)
+        filters = ''.join(f'<div id="filter-{prefix}" class="filter entity-filter">{prefix}</div>' for prefix in prefixes)
         rows = ''.join(f"""
             <tr>
                 <td>{entity['entity_id']}</td>
@@ -76,16 +76,16 @@ class HTMLGenerator:
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Home Assistant Entities</title>
-            <link rel="stylesheet" href="{ASSET_PATH}/table-styles.css">
-            <script defer src="{ASSET_PATH}/table-functions.js"></script>
+            <link rel="stylesheet" href="assets/table-styles.css">
+            <script defer src="assets/table-functions.js"></script>
         </head>
         <body>
             <h1>Home Assistant Entities</h1>
             <p>Total Entities: {total_entities} (Hidden: {hidden_entities})</p>
             <p>Version: {version}</p>
-            <input type="text" id="searchBox" placeholder="Search entities..." />
+            <input type="text" id="entitySearch" placeholder="Search entities..." />
             <div class="filters">
-                <div id="filter-All" class="filter active">All</div>
+                <div id="filter-All" class="filter entity-filter active">All</div>
                 {filters}
             </div>
             <table id="entitiesTable">
@@ -104,11 +104,12 @@ class HTMLGenerator:
         </html>
         """
 
+
     @staticmethod
     def generate_integrations_html(integrations_data, total_entries, version):
         """Generate HTML for Home Assistant integrations."""
         prefixes = sorted({integration.get('Integration ID', '')[0].upper() for integration in integrations_data if integration.get('Integration ID', '')})
-        filters = ''.join(f'<button id="filter-{prefix}" class="filter">{prefix}</button>' for prefix in prefixes)
+        filters = ''.join(f'<div id="filter-{prefix}" class="filter integration-filter">{prefix}</div>' for prefix in prefixes)
         rows = ''.join(f"""
             <tr>
                 <td>{integration.get('Integration ID', 'N/A')}</td>
@@ -126,16 +127,16 @@ class HTMLGenerator:
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Home Assistant Integrations</title>
-            <link rel="stylesheet" href="{ASSET_PATH}/table-styles.css">
-            <script defer src="{ASSET_PATH}/table-functions.js"></script>
+            <link rel="stylesheet" href="assets/table-styles.css">
+            <script defer src="assets/table-functions.js"></script>
         </head>
         <body>
             <h1>Home Assistant Integrations</h1>
             <p>Total Integrations: {total_entries}</p>
             <p>Version: {version}</p>
-            <input type="text" id="searchBox" placeholder="Search integrations..." />
+            <input type="text" id="integrationSearch" placeholder="Search integrations..." />
             <div class="filters">
-                <button id="filter-All" class="filter active">All</button>
+                <div id="filter-All" class="filter integration-filter active">All</div>
                 {filters}
             </div>
             <table id="integrationsTable">
@@ -153,3 +154,4 @@ class HTMLGenerator:
         </body>
         </html>
         """
+
