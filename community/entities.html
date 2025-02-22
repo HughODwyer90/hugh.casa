@@ -5,94 +5,13 @@
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Home Assistant Entities</title>
-            <style>
-                body {
-                    font-family: Arial, sans-serif;
-                    margin: 20px;
-                    background-color: #f9f9f9;
-                }
-                h1 {
-                    text-align: center;
-                    color: #333;
-                }
-                #searchBox {
-                    width: 100%;
-                    padding: 10px;
-                    margin: 12px 0;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    font-size: 16px;
-                }
-                .filters {
-                    display: flex;
-                    flex-wrap: wrap;
-                    margin-bottom: 12px;
-                }
-                .filter {
-                    margin: 4px;
-                    padding: 6px 12px;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    background-color: #f4f4f4;
-                    cursor: pointer;
-                }
-                .filter.active {
-                    background-color: #0056b3;
-                    color: white;
-                    font-weight: bold;
-                }
-                table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin-top: 20px;
-                    background-color: white;
-                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                }
-                th, td {
-                    border: 1px solid #ccc;
-                    padding: 10px;
-                    text-align: left;
-                }
-                th {
-                    background-color: #f8f9fa;
-                    color: #333;
-                }
-                tr:nth-child(even) {
-                    background-color: #f9f9f9;
-                }
-                tr:hover {
-                    background-color: #e9ecef !important;
-                }
-            </style>
-            <script>
-                let currentFilter = 'All';
-                document.addEventListener('DOMContentLoaded', () => {
-                    const filterButtons = document.querySelectorAll('.filter');
-                    filterButtons.forEach(button => {
-                        button.addEventListener('click', () => {
-                            document.querySelectorAll('.filter.active').forEach(el => el.classList.remove('active'));
-                            button.classList.add('active');
-                            currentFilter = button.id.replace('filter-', '');
-                            searchTable();
-                        });
-                    });
-                });
-                function searchTable() {
-                    const query = document.getElementById('searchBox').value.toLowerCase();
-                    const rows = document.querySelectorAll('#entitiesTable tr');
-                    rows.forEach((row, index) => {
-                        if (index === 0) return;
-                        const entity = row.cells[0].textContent.toLowerCase();
-                        const matchFilter = currentFilter === 'All' || entity.startsWith(currentFilter.toLowerCase());
-                        row.style.display = matchFilter ? '' : 'none';
-                    });
-                }
-            </script>
+            <link rel="stylesheet" href="/local/table-styles.css">
+            <script defer src="/local/table-functions.js"></script>
         </head>
         <body>
             <h1>Home Assistant Entities</h1>
             <p>Total Entities: 724 (Hidden: 17)</p>
-            <p>Version: 2025-02-22-160836</p>
+            <p>Version: 2025-02-22-161737</p>
             <input type="text" id="searchBox" placeholder="Search entities..." />
             <div class="filters">
                 <div id="filter-All" class="filter active">All</div>
@@ -2281,7 +2200,7 @@
                 <td>media_player.rory_room_tv</td>
                 <td>Rory Room TV</td>
                 <td>N/A</td>
-                <td>N/A</td>
+                <td>on, off</td>
                 <td>Yes</td>
             </tr>
         
