@@ -38,7 +38,6 @@ class GitHubUploader:
             print(f"Failed to fetch SHA for {github_file_path}: {e}")
             return None  # Treat as a missing file
 
-
     def upload_file(self, local_file_path, github_file_path, commit_message=None):
         """
         Upload or update a file in the repository.
@@ -48,9 +47,16 @@ class GitHubUploader:
         :param commit_message: Commit message for the upload. If not provided, a default message is used.
         """
         try:
-            with open(local_file_path, "r", encoding="utf-8") as file:
-                content = file.read()
-            encoded_content = base64.b64encode(content.encode("utf-8")).decode("utf-8")
+            # Determine if the file is binary
+            is_binary = local_file_path.endswith((".png", ".jpg", ".jpeg", ".gif", ".ico"))
+
+            # Read the file correctly based on type
+            if is_binary:
+                with open(local_file_path, "rb") as file:
+                    content = base64.b64encode(file.read()).decode("utf-8")  # Encode binary as Base64
+            else:
+                with open(local_file_path, "r", encoding="utf-8") as file:
+                    content = base64.b64encode(file.read().encode("utf-8")).decode("utf-8")  # Encode text as Base64
 
             # Get the SHA if the file already exists
             sha = self._get_file_sha(github_file_path)
@@ -58,7 +64,7 @@ class GitHubUploader:
             # Prepare the data for the API request
             data = {
                 "message": commit_message or f"Update {os.path.basename(local_file_path)}",
-                "content": encoded_content,
+                "content": content,
                 "branch": self.branch,
             }
             if sha:
