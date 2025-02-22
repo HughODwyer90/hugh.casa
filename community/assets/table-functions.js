@@ -2,10 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let entityFilter = 'All';
     let integrationFilter = 'All';
 
-    // Sort function (works for any table)
     function sortTable(tableId, columnIndex) {
         const table = document.getElementById(tableId);
-        if (!table) return; // Prevent errors if table isn't found
+        if (!table) return;
 
         const tbody = table.querySelector('tbody');
         const header = table.querySelectorAll('th')[columnIndex];
@@ -31,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Entity Table Filter
     function filterEntities() {
         const query = document.getElementById('entitySearch').value.toLowerCase();
         const entityTable = document.getElementById('entitiesTable');
@@ -46,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Integration Table Filter
     function filterIntegrations() {
         const query = document.getElementById('integrationSearch').value.toLowerCase();
         const integrationTable = document.getElementById('integrationsTable');
@@ -61,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Event listeners for entity filter
+    // Attach event listeners for entity filter
     document.getElementById('entitySearch').addEventListener('input', filterEntities);
     document.querySelectorAll('.entity-filter').forEach(filter => {
         filter.addEventListener('click', () => {
@@ -72,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Event listeners for integration filter
+    // Attach event listeners for integration filter
     document.getElementById('integrationSearch').addEventListener('input', filterIntegrations);
     document.querySelectorAll('.integration-filter').forEach(filter => {
         filter.addEventListener('click', () => {
