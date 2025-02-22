@@ -47,7 +47,7 @@ try:
 
             # Check if the entity falls into the redacted category
             if (
-                entity_id.startswith("device_tracker.")  # Previously excluded device_tracker entities
+                (entity_id.startswith("device_tracker.") and "toothbrush" not in entity_id.lower())  # Previously excluded device_tracker entities
                 or any("device_tracker." in str(value) for value in attributes.values())  # References to device_tracker
                 or "gps" in entity_id.lower()  # Previously excluded GPS-related entities
                 or entity_id.startswith("zone.")  # Previously excluded zone entities
@@ -60,7 +60,7 @@ try:
                 processed_entities.append({
                     "entity_id": entity_id, 
                     "state": "REDACTED", 
-                    "attributes": {}
+                    "attributes": {"friendly_name": "REDACTED"}
                 })
                 redacted_count += 1  # Increment redacted counter
             else:
