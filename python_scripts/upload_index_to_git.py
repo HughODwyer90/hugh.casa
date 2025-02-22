@@ -61,27 +61,29 @@ def main():
             except Exception as e:
                 print(f"Error uploading index.html to GitHub: {e}")
 
-        # Upload JavaScript and CSS files to assets/ in GitHub
+        # Upload JavaScript, CSS, and PNG files to assets/ in GitHub
         asset_files = ["table-functions.js", "index-functions.js", "table-styles.css", "index-styles.css", "favicon.png"]
 
         files_to_upload = {
             os.path.join(assets_directory, asset_file): f"community/assets/{asset_file}" for asset_file in asset_files
         }
-        
+
         for local_path, github_path in files_to_upload.items():
             if os.path.exists(local_path):
                 try:
                     uploader.upload_file(
-                        local_file_path=local_path,
+                        local_file_path=local_path,  # Only pass file path
                         github_file_path=github_path,
                         commit_message=f"Update {os.path.basename(local_path)}"
                     )
                     print(f"{os.path.basename(local_path)} has been uploaded to GitHub assets folder.")
+
                 except Exception as e:
                     print(f"Error uploading {os.path.basename(local_path)} to GitHub: {e}")
             else:
                 print(f"Warning: {os.path.basename(local_path)} not found. Skipping upload.")
 
+            
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
 
