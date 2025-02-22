@@ -3,10 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function sortTable(tableId, columnIndex) {
         const table = document.getElementById(tableId);
+        if (!table) return; // Prevent errors if table isn't found
+
         const tbody = table.querySelector('tbody');
         const header = table.querySelectorAll('th')[columnIndex];
         const order = header.dataset.order === 'desc' ? 'asc' : 'desc';
-
         header.dataset.order = order;
 
         const rows = Array.from(tbody.querySelectorAll('tr'));
@@ -28,33 +29,42 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    function filterTable(tableId, filter = 'All') {
+    function filterTable() {
         const query = document.getElementById('searchBox').value.toLowerCase();
-        const rows = document.querySelectorAll(`#${tableId} tbody tr`);
+        const entityTable = document.getElementById('entitiesTable');
+        const integrationTable = document.getElementById('integrationsTable');
 
-        rows.forEach(row => {
-            const entityId = row.cells[0].textContent.trim();
-            const matchesFilter = filter === 'All' || entityId.charAt(0).toUpperCase() === filter;
-            const matchesQuery = Array.from(row.cells).some(cell => cell.textContent.toLowerCase().includes(query));
-            row.style.display = matchesFilter && matchesQuery ? '' : 'none';
-        });
+        // Apply filtering to entities table (if it exists)
+        if (entityTable) {
+            entityTable.querySelectorAll('tbody tr').forEach(row => {
+                const entityId = row.cells[0].textContent.trim().toLowerCase();
+                const matchesFilter = currentFilter === 'All' || entityId.startsWith(currentFilter.toLowerCase());
+                const matchesQuery = Array.from(row.cells).some(cell => cell.textContent.toLowerCase().includes(query));
+                row.style.display = matchesFilter && matchesQuery ? '' : 'none';
+            });
+        }
+
+        // Apply filtering to integrations table (if it exists)
+        if (integrationTable) {
+            integrationTable.querySelectorAll('tbody tr').forEach(row => {
+                const integrationId = row.cells[0].textContent.trim().toLowerCase();
+                const matchesFilter = currentFilter === 'All' || integrationId.startsWith(currentFilter.toLowerCase());
+                const matchesQuery = Array.from(row.cells).some(cell => cell.textContent.toLowerCase().includes(query));
+                row.style.display = matchesFilter && matchesQuery ? '' : 'none';
+            });
+        }
     }
 
-    function applyFiltering() {
-        filterTable('entitiesTable', currentFilter);
-        filterTable('integrationsTable', currentFilter);
-    }
-
-    document.getElementById('searchBox').addEventListener('input', applyFiltering);
+    document.getElementById('searchBox').addEventListener('input', filterTable);
 
     document.querySelectorAll('.filter').forEach(filter => {
         filter.addEventListener('click', () => {
             document.querySelectorAll('.filter.active').forEach(f => f.classList.remove('active'));
             filter.classList.add('active');
             currentFilter = filter.textContent.trim();
-            applyFiltering();
+            filterTable();
         });
     });
 
-    applyFiltering();
+    filterTable();
 });
