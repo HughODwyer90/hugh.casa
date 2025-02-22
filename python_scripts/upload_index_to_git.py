@@ -8,6 +8,14 @@ def get_files_from_directory(directory, file_type, exclude=("index.html", "secre
     """Retrieve all files of a given type from a directory, excluding specified files."""
     return [f for f in os.listdir(directory) if f.endswith(file_type) and f not in exclude]
 
+# Function to get YAML files from multiple directories, excluding specific ones
+def get_yaml_files_from_directories(directories, file_type=".yaml", exclude=("everything-presence-one.yaml", "secrets.yaml")):
+    """Retrieve all YAML files from multiple directories, excluding specified files."""
+    return [
+        f for directory in directories if os.path.exists(directory)
+        for f in os.listdir(directory) if f.endswith(file_type) and f not in exclude
+    ]
+
 # Main function to generate and upload index.html, JS, and CSS files
 def main():
     try:
@@ -24,17 +32,18 @@ def main():
 
         # Define directories
         html_directory = "/config/www/community/"
-        yaml_directory = "/config/"
-        assets_directory = "/config/www/community/assets"  # Correct directory for JS & CSS
+        yaml_directories = ["/config", "/config/esphome"]  # ✅ Fixed absolute path
+        assets_directory = "/config/www/community/assets"  # ✅ Correct directory for JS & CSS
 
         # Ensure directories exist
-        for directory in [html_directory, yaml_directory, assets_directory]:
+        for directory in [html_directory, assets_directory] + yaml_directories:
             if not os.path.exists(directory):
-                raise FileNotFoundError(f"The directory {directory} does not exist.")
+                print(f"Warning: The directory {directory} does not exist. Skipping...")
+                continue  # ✅ Skips missing directories instead of raising an error
 
         # Retrieve files
         html_files = get_files_from_directory(html_directory, ".html")
-        yaml_files = get_files_from_directory(yaml_directory, ".yaml")
+        yaml_files = get_yaml_files_from_directories(yaml_directories, ".yaml")
 
         if not html_files:
             print("No HTML files found, skipping index.html generation.")
@@ -54,12 +63,12 @@ def main():
             try:
                 uploader.upload_file(
                     local_file_path=index_file_path,
-                    github_file_path="community/index.html",  # Upload index.html to community/
+                    github_file_path="community/index.html",  # ✅ Upload index.html to community/
                     commit_message="Update index.html with latest file listings"
                 )
-                print("index.html has been updated and uploaded successfully.")
+                print("✅ index.html has been updated and uploaded successfully.")
             except Exception as e:
-                print(f"Error uploading index.html to GitHub: {e}")
+                print(f"❌ Error uploading index.html to GitHub: {e}")
 
         # Upload JavaScript, CSS, and PNG files to assets/ in GitHub
         asset_files = ["table-functions.js", "index-functions.js", "table-styles.css", "index-styles.css", "favicon.ico"]
@@ -72,20 +81,19 @@ def main():
             if os.path.exists(local_path):
                 try:
                     uploader.upload_file(
-                        local_file_path=local_path,  # Only pass file path
+                        local_file_path=local_path,  # ✅ Only pass file path
                         github_file_path=github_path,
                         commit_message=f"Update {os.path.basename(local_path)}"
                     )
-                    print(f"{os.path.basename(local_path)} has been uploaded to GitHub assets folder.")
+                    print(f"✅ {os.path.basename(local_path)} has been uploaded to GitHub assets folder.")
 
                 except Exception as e:
-                    print(f"Error uploading {os.path.basename(local_path)} to GitHub: {e}")
+                    print(f"❌ Error uploading {os.path.basename(local_path)} to GitHub: {e}")
             else:
-                print(f"Warning: {os.path.basename(local_path)} not found. Skipping upload.")
+                print(f"⚠️ Warning: {os.path.basename(local_path)} not found. Skipping upload.")
 
-            
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        print(f"❌ An unexpected error occurred: {e}")
 
 if __name__ == "__main__":
     main()
