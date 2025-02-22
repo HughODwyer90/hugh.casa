@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function filterEntities() {
-        const query = document.getElementById('entitySearch').value.toLowerCase();
+        const query = document.getElementById('entitySearch')?.value.toLowerCase();
         const entityTable = document.getElementById('entitiesTable');
 
         if (entityTable) {
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function filterIntegrations() {
-        const query = document.getElementById('integrationSearch').value.toLowerCase();
+        const query = document.getElementById('integrationSearch')?.value.toLowerCase();
         const integrationTable = document.getElementById('integrationsTable');
 
         if (integrationTable) {
@@ -58,8 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Attach event listeners for entity filter
-    document.getElementById('entitySearch').addEventListener('input', filterEntities);
+    // Attach event listeners for entity filters
+    document.getElementById('entitySearch')?.addEventListener('input', filterEntities);
     document.querySelectorAll('.entity-filter').forEach(filter => {
         filter.addEventListener('click', () => {
             document.querySelectorAll('.entity-filter.active').forEach(f => f.classList.remove('active'));
@@ -69,8 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Attach event listeners for integration filter
-    document.getElementById('integrationSearch').addEventListener('input', filterIntegrations);
+    // Attach event listeners for integration filters
+    document.getElementById('integrationSearch')?.addEventListener('input', filterIntegrations);
+    
     document.querySelectorAll('.integration-filter').forEach(filter => {
         filter.addEventListener('click', () => {
             document.querySelectorAll('.integration-filter.active').forEach(f => f.classList.remove('active'));
