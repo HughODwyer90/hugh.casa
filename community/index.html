@@ -5,15 +5,8 @@
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>File Dashboard</title>
-            <style>
-                body { font-family: Arial, sans-serif; }
-                nav { background-color: #333; color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center; }
-                nav ul { list-style: none; margin: 0; padding: 0; display: flex; }
-                nav ul li { margin-right: 20px; }
-                nav ul li a { color: white; text-decoration: none; cursor: pointer; }
-                iframe { width: 100%; height: calc(100vh - 50px); border: none; }
-                .download-btn { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; }
-            </style>
+            <link rel="stylesheet" href="/local/table-styles.css">
+            <script defer src="/local/table-functions.js"></script>
             <script>
                 function loadContent(file) {
                     document.getElementById('content-frame').src = file;
