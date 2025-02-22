@@ -5,105 +5,13 @@
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Home Assistant Integrations</title>
-            <style>
-                body {
-                    font-family: Arial, sans-serif;
-                    margin: 20px;
-                    background-color: #f9f9f9;
-                }
-                h1 {
-                    text-align: center;
-                    color: #333;
-                }
-                #searchBox {
-                    width: 100%;
-                    padding: 10px;
-                    margin: 12px 0;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    font-size: 16px;
-                }
-                .filters {
-                    display: flex;
-                    flex-wrap: wrap;
-                    margin-bottom: 12px;
-                }
-                .filter {
-                    margin: 4px;
-                    padding: 6px 12px;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    background-color: #f4f4f4;
-                    cursor: pointer;
-                }
-                .filter.active {
-                    background-color: #0056b3;
-                    color: white;
-                    font-weight: bold;
-                }
-                table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin-top: 20px;
-                    background-color: white;
-                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                }
-                th, td {
-                    border: 1px solid #ccc;
-                    padding: 10px;
-                    text-align: left;
-                }
-                th {
-                    background-color: #f8f9fa;
-                    color: #333;
-                }
-                tr:nth-child(even) {
-                    background-color: #f9f9f9;
-                }
-                tr:hover {
-                    background-color: #e9ecef !important;
-                }
-            </style>
-            <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                    let currentFilter = 'All';
-
-                    // Handle filter button clicks
-                    const filters = document.querySelectorAll('.filter');
-                    filters.forEach(filter => {
-                        filter.addEventListener('click', () => {
-                            document.querySelectorAll('.filter.active').forEach(f => f.classList.remove('active'));
-                            filter.classList.add('active');
-                            currentFilter = filter.textContent.trim();  // Update current filter
-                            filterTable(currentFilter);
-                        });
-                    });
-
-                    // Handle search input
-                    const searchBox = document.getElementById('searchBox');
-                    searchBox.addEventListener('input', () => filterTable(currentFilter));
-
-                    // Function to filter the table
-                    function filterTable(filter = 'All') {
-                        const query = searchBox.value.toLowerCase();
-                        const rows = document.querySelectorAll('#integrationsTable tbody tr');
-                        rows.forEach(row => {
-                            const integrationID = row.cells[0].textContent.trim();  // Get Integration ID
-                            const matchesFilter = filter === 'All' || integrationID.charAt(0).toUpperCase() === filter;
-                            const matchesQuery = Array.from(row.cells).some(cell => cell.textContent.toLowerCase().includes(query));
-                            row.style.display = matchesFilter && matchesQuery ? '' : 'none';
-                        });
-                    }
-
-                    // Default: Show all rows
-                    filterTable('All');
-                });
-            </script>
+            <link rel="stylesheet" href="/local/table-styles.css">
+            <script defer src="/local/table-functions.js"></script>
         </head>
         <body>
             <h1>Home Assistant Integrations</h1>
             <p>Total Integrations: 65</p>
-            <p>Version: 2025-02-22-160849</p>
+            <p>Version: 2025-02-22-161752</p>
             <input type="text" id="searchBox" placeholder="Search integrations..." />
             <div class="filters">
                 <button id="filter-All" class="filter active">All</button>
