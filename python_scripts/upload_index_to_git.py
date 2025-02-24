@@ -9,11 +9,12 @@ def get_files_from_directory(directory, file_type, exclude=("index.html", "secre
     return [f for f in os.listdir(directory) if f.endswith(file_type) and f not in exclude]
 
 # Function to get YAML files from multiple directories, excluding specific ones
-def get_yaml_files_from_directories(directories, file_type=".yaml", exclude=("everything-presence-one.yaml", "secrets.yaml")):
-    """Retrieve all YAML files from multiple directories, excluding specified files."""
+def get_yaml_files_from_directories(directories, file_type=".yaml", exclude_prefix=("everything",), exclude=("secrets.yaml",)):
+    """Retrieve all YAML files from multiple directories, excluding specified files and those with certain prefixes."""
     return [
         f for directory in directories if os.path.exists(directory)
-        for f in os.listdir(directory) if f.endswith(file_type) and f not in exclude
+        for f in os.listdir(directory)
+        if f.endswith(file_type) and not f.startswith(exclude_prefix) and f not in exclude
     ]
 
 # Main function to generate and upload index.html, JS, and CSS files
