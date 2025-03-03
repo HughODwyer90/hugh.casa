@@ -7,13 +7,13 @@
       unit_of_measurement: "%"
       icon_template: "{{ 'mdi:air-filter' }}"
 
-    air_purifier_filter_change:
-      friendly_name: "Air Purifier Filter Change"
+    air_purifier_filter_changed:
+      friendly_name: "Air Purifier Filter Changed"
       unique_id: "air_purifier_filter_change_sensor"
       value_template: >
         {% set last_changed = states('input_datetime.hugh_room_filter_changed') %}
         {% if last_changed not in ['unknown', 'unavailable', 'none'] %}
-          {{ last_changed }}
+          {{ as_datetime(last_changed).strftime('%d/%m/%Y') }}
         {% else %}
           No Data
         {% endif %}
