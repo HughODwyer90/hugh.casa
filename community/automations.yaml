@@ -3921,3 +3921,18 @@
         notification_icon: mdi:air-filter
     action: notify.notifications
   mode: single
+- id: '1740992262706'
+  alias: Update Hugh Room Filter Change Date
+  description: Stores the last change date when the Hugh Room air purifier filter
+    lifetime resets to 100%.
+  triggers:
+  - entity_id: sensor.air_purifier_lifetime
+    to: '100'
+    trigger: state
+  actions:
+  - target:
+      entity_id: input_datetime.hugh_room_filter_changed
+    data:
+      date: '{{ now().strftime(''%Y-%m-%d'') }}'
+    action: input_datetime.set_datetime
+  mode: single
