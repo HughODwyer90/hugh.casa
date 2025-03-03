@@ -2651,13 +2651,13 @@
 - id: '1717497134228'
   alias: Reset Plant Water Notification
   description: ''
-  trigger:
+  triggers:
   - trigger: numeric_state
     entity_id:
     - sensor.snake_plant_moisture
-    above: 25
-  condition: []
-  action:
+    above: 20
+  conditions: []
+  actions:
   - action: input_boolean.turn_off
     entity_id: input_boolean.patrick_needs_water
   mode: single
