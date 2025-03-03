@@ -7,6 +7,18 @@
       unit_of_measurement: "%"
       icon_template: "{{ 'mdi:air-filter' }}"
 
+    air_purifier_filter_change:
+      friendly_name: "Air Purifier Filter Change"
+      unique_id: "air_purifier_filter_change_sensor"
+      value_template: >
+        {% set last_changed = states('input_datetime.hugh_room_filter_changed') %}
+        {% if last_changed not in ['unknown', 'unavailable', 'none'] %}
+          {{ last_changed }}
+        {% else %}
+          No Data
+        {% endif %}
+      icon_template: "mdi:calendar-clock"
+
     air_purifier_speed:
       friendly_name: "Air Purifier Fan Speed"
       unique_id: "air_purifier_fan_speed_sensor"
@@ -223,7 +235,6 @@
         {% endif %}
       icon_template: "{{ 'mdi:map' }}"
 
-    
     daily_distance_traveled:
       friendly_name: "Car Today Distance"
       unit_of_measurement: "km"
@@ -295,7 +306,6 @@
           0
         {% endif %}
 
-    
     daily_driving_time:
       friendly_name: "Car Today Driving Time"
       unique_id: "car_daily_driving_time_sensor"
