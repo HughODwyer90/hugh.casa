@@ -107,21 +107,20 @@ def upload_entities():
 
 
 def upload_yaml_files():
-    """Find and upload all YAML files, respecting exclusions and checking file existence."""
+    """Find and upload all YAML files from both /config and /config/esphome, respecting exclusions and checking file existence."""
     exclusions = load_exclusions()
     yaml_files = []
 
     for yaml_dir in YAML_DIRS:
-        yaml_files.extend(get_files(yaml_dir, ".yaml", exclusions))
+        yaml_files.extend([(yaml_dir, f) for f in get_files(yaml_dir, ".yaml", exclusions)])
 
     if not yaml_files:
         print("⚠️ No YAML files found after applying exclusions.")
         return
 
-    for yaml_file in yaml_files:
-        yaml_file_path = os.path.join(YAML_DIRS[0], yaml_file)
+    for yaml_dir, yaml_file in yaml_files:
+        yaml_file_path = os.path.join(yaml_dir, yaml_file)  # ✅ Correctly construct the file path for each file
 
-        # **CHECK IF FILE EXISTS BEFORE UPLOADING**
         if not os.path.exists(yaml_file_path):
             print(f"❌ Skipping {yaml_file}: File not found at {yaml_file_path}")
             continue  # Skip this file
