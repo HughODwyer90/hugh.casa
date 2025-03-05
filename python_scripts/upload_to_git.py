@@ -144,8 +144,32 @@ def upload_entities():
     uploader.upload_file(LOCAL_HTML_PATH, "community/entities.html", "Update Home Assistant entities list")
     uploader.upload_file(LOCAL_JSON_PATH, "community/entities.json", "Update Home Assistant entities JSON list")
 
+def fetch_home_assistant_integrations():
+    """Fetch integrations from Home Assistant."""
+    response = requests.get(f"{HA_BASE_URL}/api/config/config_entries/entry", headers=ha_headers)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise RuntimeError(f"Error fetching integrations: {response.status_code}")
+
+def upload_integrations():
+    """Fetch and upload Home Assistant integrations."""
+    integrations = fetch_home_assistant_integrations()
+    version = datetime.utcnow().strftime("%Y-%m-%d-%H%M%S")
+
+    html_content = HTMLGenerator.generate_integrations_html(integrations, len(integrations), version)
+
+    with open(INTEGRATIONS_JSON_PATH, "w", encoding="utf-8") as json_file:
+        json.dump(integrations, json_file, indent=4)
+    with open(INTEGRATIONS_HTML_PATH, "w", encoding="utf-8") as file:
+        file.write(html_content)
+
+    uploader.upload_file(INTEGRATIONS_HTML_PATH, "community/integrations.html", "Update integrations HTML")
+    uploader.upload_file(INTEGRATIONS_JSON_PATH, "community/integrations.json", "Update integrations JSON")
+
 if __name__ == "__main__":
     upload_entities()
+    upload_integrations()
     upload_yaml_files()
     upload_python_scripts()
     upload_asset_files()
