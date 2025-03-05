@@ -376,31 +376,42 @@ update_liverpool_sensors:
   description: ''
 update_entities_html:
   sequence:
+  - action: shell_command.upload_to_git
+    data: {}
   - action: shell_command.upload_entities_to_git
     data: {}
+    enabled: false
   - delay:
       hours: 0
       minutes: 0
       seconds: 10
+    enabled: false
   - action: shell_command.upload_integrations_to_git
     data: {}
+    enabled: false
   - delay:
       hours: 0
       minutes: 0
       seconds: 10
+    enabled: false
   - action: shell_command.upload_yaml_to_git
     data: {}
+    enabled: false
   - delay:
       hours: 0
       minutes: 1
       seconds: 0
+    enabled: false
   - action: shell_command.upload_py_to_git
     data: {}
+    enabled: false
   - delay:
       hours: 0
       minutes: 1
       seconds: 0
+    enabled: false
   - action: shell_command.upload_index_to_git
     data: {}
+    enabled: false
   alias: Github Backup
   description: ''
