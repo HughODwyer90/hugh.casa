@@ -1,44 +1,10 @@
 import os
-import json
-import time
-import requests
-from datetime import datetime
-from fnmatch import fnmatch
 from secret_manager import SecretsManager
 from git_uploader import GitHubUploader
 from html_generator import HTMLGenerator
+from fnmatch import fnmatch
 
-# File paths
 EXCLUDE_FILE_PATH = "/config/text_files/excluded_files.txt"
-HTML_DIR = "/config/www/community/"
-YAML_DIRS = ["/config", "/config/esphome"]
-PYTHON_SCRIPTS_DIR = "/config/python_scripts"
-ASSETS_DIR = "/config/www/community/assets"
-HA_BASE_URL = "http://homeassistant.local:8123"
-LOCAL_JSON_PATH = "/config/www/community/entities.json"
-LOCAL_HTML_PATH = "/config/www/community/entities.html"
-INTEGRATIONS_JSON_PATH = "/config/www/community/integrations.json"
-INTEGRATIONS_HTML_PATH = "/config/www/community/integrations.html"
-INDEX_HTML_PATH = "/config/www/community/index.html"
-
-
-# Load secrets
-secrets = SecretsManager()
-ha_token = secrets["ha_access_token"]
-github_token = secrets["github_token"]
-github_repo = secrets["github_repro"]
-
-if not ha_token or not github_token or not github_repo:
-    raise ValueError("Missing required tokens or repository in secrets.yaml.")
-
-# Initialize GitHubUploader
-uploader = GitHubUploader(github_token=github_token, repo_name=github_repo)
-
-# Headers for Home Assistant API
-ha_headers = {"Authorization": f"Bearer {ha_token}", "Content-Type": "application/json"}
-
-MAX_RETRIES = 3  # Number of retries for failed uploads
-
 
 def load_exclusions():
     """Load excluded files and patterns from a text file."""
@@ -47,166 +13,86 @@ def load_exclusions():
             return [line.strip() for line in f.readlines() if line.strip()]
     return []
 
-
 def should_exclude(filename, exclusions):
     """Check if a file should be excluded based on patterns."""
     return any(fnmatch(filename, pattern) for pattern in exclusions)
 
-
-def get_files(directory, file_type, exclusions):
-    """Retrieve all files of a given type from a directory, excluding specified ones."""
+def get_files_from_directory(directory, file_type, exclusions):
+    """Retrieve all files of a given type from a directory, excluding specified files."""
     return [f for f in os.listdir(directory) if f.endswith(file_type) and not should_exclude(f, exclusions)]
 
+def get_yaml_files_from_directories(directories, exclusions, file_type=".yaml"):
+    """Retrieve YAML files from multiple directories, excluding specific ones."""
+    return [
+        f for directory in directories if os.path.exists(directory)
+        for f in os.listdir(directory)
+        if f.endswith(file_type) and not should_exclude(f, exclusions)
+    ]
 
-def upload_to_github(local_path, github_path, commit_message):
-    """Attempt to upload a file with retry logic."""
-    for attempt in range(MAX_RETRIES):
-        try:
-            uploader.upload_file(
-                local_file_path=local_path,
-                github_file_path=github_path,
-                commit_message=commit_message
-            )
-            print(f"✅ Successfully uploaded: {github_path}")
-            break
-        except Exception as e:
-            print(f"❌ Attempt {attempt + 1} failed for {github_path}: {e}")
-            if attempt < MAX_RETRIES - 1:
-                print("Retrying in 5 seconds...")
-                time.sleep(5)
+def main():
+    try:
+        secrets = SecretsManager()
+        github_token = secrets["github_token"]
+        github_repo = secrets["github_repro"]
+
+        if not github_token or not github_repo:
+            raise ValueError("Missing GitHub token or repository information in secrets.yaml.")
+
+        uploader = GitHubUploader(github_token=github_token, repo_name=github_repo)
+        exclusions = load_exclusions()
+
+        html_directory = "/config/www/community/"
+        yaml_directories = ["/config", "/config/esphome"]
+        assets_directory = "/config/www/community/assets"
+
+        for directory in [html_directory, assets_directory] + yaml_directories:
+            if not os.path.exists(directory):
+                print(f"Warning: Directory {directory} does not exist. Skipping...")
+
+        html_files = get_files_from_directory(html_directory, ".html", exclusions)
+        yaml_files = get_yaml_files_from_directories(yaml_directories, exclusions, ".yaml")
+
+        if html_files:
+            print(f"Processing HTML files: {', '.join(html_files)}")
+            print(f"Processing YAML files: {', '.join(yaml_files)}")
+
+            index_html_content = HTMLGenerator.generate_index_html(html_files, yaml_files)
+            index_file_path = os.path.join(html_directory, "index.html")
+
+            with open(index_file_path, "w", encoding="utf-8") as file:
+                file.write(index_html_content)
+
+            try:
+                uploader.upload_file(
+                    local_file_path=index_file_path,
+                    github_file_path="community/index.html",
+                    commit_message="Update index.html with latest file listings"
+                )
+                print("✅ index.html has been updated and uploaded successfully.")
+            except Exception as e:
+                print(f"❌ Error uploading index.html: {e}")
+
+        asset_files = ["table-functions.js", "index-functions.js", "table-styles.css", "index-styles.css", "favicon.ico"]
+        files_to_upload = {
+            os.path.join(assets_directory, asset_file): f"community/assets/{asset_file}" for asset_file in asset_files
+        }
+
+        for local_path, github_path in files_to_upload.items():
+            if os.path.exists(local_path) and not should_exclude(os.path.basename(local_path), exclusions):
+                try:
+                    uploader.upload_file(
+                        local_file_path=local_path,
+                        github_file_path=github_path,
+                        commit_message=f"Update {os.path.basename(local_path)}"
+                    )
+                    print(f"✅ {os.path.basename(local_path)} uploaded to GitHub assets folder.")
+                except Exception as e:
+                    print(f"❌ Error uploading {os.path.basename(local_path)}: {e}")
             else:
-                print(f"❌ All attempts failed for {github_path}. Skipping.")
+                print(f"⚠️ Skipping {os.path.basename(local_path)} due to exclusions or missing file.")
 
-
-def fetch_home_assistant_entities():
-    """Fetch entities from Home Assistant and redact sensitive ones."""
-    response = requests.get(f"{HA_BASE_URL}/api/states", headers=ha_headers, timeout=30)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        raise RuntimeError(f"Error retrieving entities: {response.status_code}")
-
-
-def upload_entities():
-    """Fetch and upload Home Assistant entities."""
-    entities = fetch_home_assistant_entities()
-    version = datetime.utcnow().strftime("%Y-%m-%d-%H%M%S")
-    
-    html_content = HTMLGenerator.generate_entities_html(entities, len(entities), version, [], 0)
-
-    with open(LOCAL_JSON_PATH, "w", encoding="utf-8") as json_file:
-        json.dump(entities, json_file, indent=4)
-    with open(LOCAL_HTML_PATH, "w", encoding="utf-8") as file:
-        file.write(html_content)
-
-    upload_to_github(LOCAL_HTML_PATH, "community/entities.html", "Update Home Assistant entities list")
-    upload_to_github(LOCAL_JSON_PATH, "community/entities.json", "Update Home Assistant entities JSON list")
-
-
-def fetch_home_assistant_integrations():
-    """Fetch integrations from Home Assistant."""
-    response = requests.get(f"{HA_BASE_URL}/api/config/config_entries/entry", headers=ha_headers)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        raise RuntimeError(f"Error fetching integrations: {response.status_code}")
-
-
-def upload_integrations():
-    """Fetch and upload Home Assistant integrations."""
-    integrations = fetch_home_assistant_integrations()
-    version = datetime.utcnow().strftime("%Y-%m-%d-%H%M%S")
-    
-    html_content = HTMLGenerator.generate_integrations_html(integrations, len(integrations), version)
-
-    with open(INTEGRATIONS_JSON_PATH, "w", encoding="utf-8") as json_file:
-        json.dump(integrations, json_file, indent=4)
-    with open(INTEGRATIONS_HTML_PATH, "w", encoding="utf-8") as file:
-        file.write(html_content)
-
-    upload_to_github(INTEGRATIONS_HTML_PATH, "community/integrations.html", "Update integrations HTML")
-    upload_to_github(INTEGRATIONS_JSON_PATH, "community/integrations.json", "Update integrations JSON")
-
-
-def upload_yaml_files():
-    """Find and upload all YAML files, respecting exclusions."""
-    exclusions = load_exclusions()
-    yaml_files = []
-
-    for yaml_dir in YAML_DIRS:
-        yaml_files.extend(get_files(yaml_dir, ".yaml", exclusions))
-
-    if not yaml_files:
-        print("⚠️ No YAML files found after applying exclusions.")
-        return
-
-    for yaml_file in yaml_files:
-        yaml_file_path = os.path.join(YAML_DIRS[0], yaml_file)
-        github_file_path = f"community/{yaml_file}"
-
-        upload_to_github(yaml_file_path, github_file_path, f"Update {yaml_file}")
-        time.sleep(5)
-
-
-def upload_python_scripts():
-    """Find and upload all Python scripts."""
-    exclusions = load_exclusions()
-    py_files = get_files(PYTHON_SCRIPTS_DIR, ".py", exclusions)
-
-    if not py_files:
-        print("⚠️ No Python scripts found after applying exclusions.")
-        return
-
-    for py_file in py_files:
-        py_file_path = os.path.join(PYTHON_SCRIPTS_DIR, py_file)
-        github_file_path = f"python_scripts/{py_file}"
-
-        upload_to_github(py_file_path, github_file_path, f"Update {py_file}")
-
-
-def upload_asset_files():
-    """Upload all files from the assets directory, respecting exclusions."""
-    exclusions = load_exclusions()
-
-    if not os.path.exists(ASSETS_DIR):
-        print(f"⚠️ Warning: Assets directory {ASSETS_DIR} does not exist. Skipping...")
-        return
-
-    asset_files = [f for f in os.listdir(ASSETS_DIR) if not should_exclude(f, exclusions)]
-
-    if not asset_files:
-        print("⚠️ No asset files found after applying exclusions.")
-        return
-
-    for asset_file in asset_files:
-        local_path = os.path.join(ASSETS_DIR, asset_file)
-        github_path = f"community/assets/{asset_file}"
-
-        upload_to_github(local_path, github_path, f"Update {asset_file}")
-
-
-def generate_and_upload_index():
-    """Generate and upload index.html after all other files."""
-    exclusions = load_exclusions()
-    html_files = get_files(HTML_DIR, ".html", exclusions)
-
-    yaml_files = []
-    for yaml_dir in YAML_DIRS:
-        yaml_files.extend(get_files(yaml_dir, ".yaml", exclusions))
-
-    index_content = HTMLGenerator.generate_index_html(html_files, yaml_files)
-
-    with open(INDEX_HTML_PATH, "w", encoding="utf-8") as file:
-        file.write(index_content)
-
-    upload_to_github(INDEX_HTML_PATH, "community/index.html", "Update index.html")
-
+    except Exception as e:
+        print(f"❌ An unexpected error occurred: {e}")
 
 if __name__ == "__main__":
-    upload_entities()
-    upload_integrations()
-    upload_yaml_files()
-    upload_python_scripts()
-    upload_asset_files()
-    generate_and_upload_index()
-    print("✅ All files uploaded successfully.")
+    main()
