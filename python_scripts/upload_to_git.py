@@ -122,18 +122,24 @@ def generate_and_upload_index():
     uploader.upload_file(INDEX_HTML_PATH, "community/index.html", "Update index.html")
 
 def fetch_home_assistant_entities():
-    """Fetch entities from Home Assistant and redact sensitive ones."""
+    """Fetch entities from Home Assistant and redact sensitive ones based on exclusions."""
+    exclusions = load_exclusions()
     response = requests.get(f"{HA_BASE_URL}/api/states", headers=ha_headers, timeout=30)
+
     if response.status_code == 200:
-        return response.json()
+        entities = response.json()
+        processed_entities = [
+            entity for entity in entities if not should_exclude(entity["entity_id"], exclusions)
+        ]
+        return processed_entities
     else:
         raise RuntimeError(f"Error retrieving entities: {response.status_code}")
 
 def upload_entities():
-    """Fetch and upload Home Assistant entities."""
+    """Fetch and upload Home Assistant entities, excluding sensitive ones."""
     entities = fetch_home_assistant_entities()
     version = datetime.utcnow().strftime("%Y-%m-%d-%H%M%S")
-    
+
     html_content = HTMLGenerator.generate_entities_html(entities, len(entities), version, [], 0)
 
     with open(LOCAL_JSON_PATH, "w", encoding="utf-8") as json_file:
