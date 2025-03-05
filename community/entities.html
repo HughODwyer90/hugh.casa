@@ -11,8 +11,8 @@
         </head>
         <body>
             <h1>Home Assistant Entities</h1>
-            <p>Total Entities: 725 (Redacted: 15)</p>
-            <p>Version: 2025-03-05-152640</p>
+            <p>Total Entities: 724 (Redacted: 0)</p>
+            <p>Version: 2025-03-05-153851</p>
             <div class="search-container">
                 <input type="text" id="entitySearch" class="search-box" placeholder="🔍 Search entities...">
             </div>
@@ -21,7 +21,7 @@
             </div>
             <div class="filters">
                 <div id="filter-All" class="filter entity-filter active">All</div>
-                <div id="filter-automation" class="filter entity-filter">automation</div><div id="filter-binary_sensor" class="filter entity-filter">binary_sensor</div><div id="filter-button" class="filter entity-filter">button</div><div id="filter-calendar" class="filter entity-filter">calendar</div><div id="filter-conversation" class="filter entity-filter">conversation</div><div id="filter-counter" class="filter entity-filter">counter</div><div id="filter-cover" class="filter entity-filter">cover</div><div id="filter-device_tracker" class="filter entity-filter">device_tracker</div><div id="filter-event" class="filter entity-filter">event</div><div id="filter-fan" class="filter entity-filter">fan</div><div id="filter-input_boolean" class="filter entity-filter">input_boolean</div><div id="filter-input_button" class="filter entity-filter">input_button</div><div id="filter-input_datetime" class="filter entity-filter">input_datetime</div><div id="filter-input_number" class="filter entity-filter">input_number</div><div id="filter-input_text" class="filter entity-filter">input_text</div><div id="filter-light" class="filter entity-filter">light</div><div id="filter-media_player" class="filter entity-filter">media_player</div><div id="filter-notify" class="filter entity-filter">notify</div><div id="filter-number" class="filter entity-filter">number</div><div id="filter-person" class="filter entity-filter">person</div><div id="filter-remote" class="filter entity-filter">remote</div><div id="filter-scene" class="filter entity-filter">scene</div><div id="filter-script" class="filter entity-filter">script</div><div id="filter-select" class="filter entity-filter">select</div><div id="filter-sensor" class="filter entity-filter">sensor</div><div id="filter-stt" class="filter entity-filter">stt</div><div id="filter-sun" class="filter entity-filter">sun</div><div id="filter-switch" class="filter entity-filter">switch</div><div id="filter-tag" class="filter entity-filter">tag</div><div id="filter-timer" class="filter entity-filter">timer</div><div id="filter-todo" class="filter entity-filter">todo</div><div id="filter-tts" class="filter entity-filter">tts</div><div id="filter-update" class="filter entity-filter">update</div><div id="filter-weather" class="filter entity-filter">weather</div><div id="filter-zone" class="filter entity-filter">zone</div>
+                
             </div>
             <table id="entitiesTable">
                 <thead>
@@ -1003,14 +1003,6 @@
             </tr>
         
             <tr>
-                <td>binary_sensor.backups_stale</td>
-                <td>Backups Stale</td>
-                <td>N/A</td>
-                <td>on, off</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>binary_sensor.bathroom_aqara_battery_plus_low</td>
                 <td>Bathroom Aqara Battery low</td>
                 <td>N/A</td>
@@ -1620,7 +1612,7 @@
         
             <tr>
                 <td>device_tracker.car_location</td>
-                <td>REDACTED</td>
+                <td>Car Location</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>Yes</td>
@@ -1628,7 +1620,7 @@
         
             <tr>
                 <td>device_tracker.hugh_phone</td>
-                <td>REDACTED</td>
+                <td>Hugh Phone</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>Yes</td>
@@ -2060,7 +2052,7 @@
         
             <tr>
                 <td>input_text.car_gps_map_url</td>
-                <td>REDACTED</td>
+                <td>Car GPS Map URL</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>Yes</td>
@@ -2068,7 +2060,7 @@
         
             <tr>
                 <td>input_text.kasa_token</td>
-                <td>N/A</td>
+                <td>Kasa Token</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>Yes</td>
@@ -2084,7 +2076,7 @@
         
             <tr>
                 <td>input_text.work_plug_state</td>
-                <td>N/A</td>
+                <td>Work Plug State</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>Yes</td>
@@ -2412,7 +2404,7 @@
         
             <tr>
                 <td>person.hughod90</td>
-                <td>REDACTED</td>
+                <td>HughOD90</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>Yes</td>
@@ -2509,6 +2501,14 @@
             <tr>
                 <td>scene.living_room_all_lights_on</td>
                 <td>Living Room All Lights On</td>
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>scene.living_room_lights_last_state</td>
+                <td>living_room_lights_last_state</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>Yes</td>
@@ -2971,14 +2971,6 @@
             </tr>
         
             <tr>
-                <td>sensor.backup_state</td>
-                <td>Backup State</td>
-                <td>N/A</td>
-                <td>N/A</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>sensor.backups_stale_fallback</td>
                 <td>Backups Stale Fallback</td>
                 <td>N/A</td>
@@ -3276,23 +3268,23 @@
         
             <tr>
                 <td>sensor.car_gps_latitude</td>
-                <td>REDACTED</td>
-                <td>N/A</td>
+                <td>Car GPS Latitude</td>
+                <td>degrees</td>
                 <td>N/A</td>
                 <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.car_gps_longitude</td>
-                <td>REDACTED</td>
-                <td>N/A</td>
+                <td>Car GPS Longitude</td>
+                <td>degrees</td>
                 <td>N/A</td>
                 <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.car_gps_map_url</td>
-                <td>REDACTED</td>
+                <td>Car GPS Map URL</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>Yes</td>
@@ -4407,7 +4399,7 @@
                 <td>Record</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4415,7 +4407,7 @@
                 <td>Competition</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4423,7 +4415,7 @@
                 <td>Competition Stage</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4431,7 +4423,7 @@
                 <td>Competition Stage</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4439,7 +4431,7 @@
                 <td>Position</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4447,7 +4439,7 @@
                 <td>Record</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4455,7 +4447,7 @@
                 <td>Competition Stage</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4471,7 +4463,7 @@
                 <td>Kick off</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4487,7 +4479,7 @@
                 <td>Liverpool (UTC)</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4495,7 +4487,7 @@
                 <td>Location</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4503,7 +4495,7 @@
                 <td>Game vs</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -5772,7 +5764,7 @@
         
             <tr>
                 <td>zone.aldi</td>
-                <td>REDACTED</td>
+                <td>Aldi shop</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>Yes</td>
@@ -5780,7 +5772,7 @@
         
             <tr>
                 <td>zone.big_dunnes</td>
-                <td>REDACTED</td>
+                <td>Big Dunnes shop</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>Yes</td>
@@ -5788,7 +5780,7 @@
         
             <tr>
                 <td>zone.gym</td>
-                <td>REDACTED</td>
+                <td>Gym</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>Yes</td>
@@ -5796,7 +5788,7 @@
         
             <tr>
                 <td>zone.home</td>
-                <td>REDACTED</td>
+                <td>Home</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>Yes</td>
@@ -5804,7 +5796,7 @@
         
             <tr>
                 <td>zone.pallas</td>
-                <td>REDACTED</td>
+                <td>Pallas</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>Yes</td>
@@ -5812,7 +5804,7 @@
         
             <tr>
                 <td>zone.tesco_douglas</td>
-                <td>REDACTED</td>
+                <td>Tesco Douglas shop</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>Yes</td>
@@ -5820,7 +5812,7 @@
         
             <tr>
                 <td>zone.tesco_wilton</td>
-                <td>REDACTED</td>
+                <td>Tesco Wilton shop</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>Yes</td>
@@ -5828,7 +5820,7 @@
         
             <tr>
                 <td>zone.work</td>
-                <td>REDACTED</td>
+                <td>Work</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>Yes</td>
