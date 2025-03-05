@@ -430,15 +430,6 @@
           Tomorrow at {{ sunset | timestamp_custom('%H:%M') }}
         {% endif %}
 
-    backups_stale_fallback:
-      friendly_name: "Backups Stale Fallback"
-      unique_id: "backups_stale_fallback_sensor"
-      value_template: >
-        {% if states('binary_sensor.backups_stale') != 'OK' %}
-          Problem
-        {% else %}
-          OK
-        {% endif %}
 
     lucifer_activewindow_filtered:
       friendly_name: "Active Window"
