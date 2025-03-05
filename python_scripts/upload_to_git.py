@@ -36,6 +36,8 @@ uploader = GitHubUploader(github_token=github_token, repo_name=github_repo)
 # Headers for Home Assistant API
 ha_headers = {"Authorization": f"Bearer {ha_token}", "Content-Type": "application/json"}
 
+MAX_RETRIES = 3
+
 
 def load_exclusions():
     """Load excluded files and patterns from a text file."""
@@ -53,6 +55,37 @@ def should_exclude(filename, exclusions):
 def get_files(directory, file_type, exclusions):
     """Retrieve all files of a given type from a directory, excluding specified ones."""
     return [f for f in os.listdir(directory) if f.endswith(file_type) and not should_exclude(f, exclusions)]
+
+
+def get_latest_sha(file_path):
+    """Fetch the latest SHA of the file from GitHub to avoid conflicts."""
+    api_url = f"https://api.github.com/repos/{github_repo}/contents/{file_path}"
+    headers = {"Authorization": f"Bearer {github_token}"}
+
+    response = requests.get(api_url, headers=headers)
+    if response.status_code == 200:
+        return response.json().get("sha")
+    return None
+
+
+def upload_to_github(local_path, github_path, commit_message):
+    """Attempt to upload a file with retry logic (SHA removed)."""
+    for attempt in range(MAX_RETRIES):
+        try:
+            uploader.upload_file(
+                local_file_path=local_path,
+                github_file_path=github_path,
+                commit_message=commit_message
+            )
+            print(f"✅ Successfully uploaded: {github_path}")
+            break
+        except Exception as e:
+            print(f"❌ Attempt {attempt + 1} failed for {github_path}: {e}")
+            if attempt < MAX_RETRIES - 1:
+                print("Retrying in 5 seconds...")
+                time.sleep(5)
+            else:
+                print(f"❌ All attempts failed for {github_path}. Skipping.")
 
 
 def fetch_home_assistant_entities():
@@ -83,7 +116,6 @@ def fetch_home_assistant_entities():
             else:
                 processed_entities.append(entity)
 
-        print(f"Total entities fetched: {len(entities)} | Redacted: {redacted_count}")
         return processed_entities, redacted_count
     else:
         raise RuntimeError(f"Error retrieving entities: {response.status_code}")
@@ -112,75 +144,45 @@ def generate_and_upload_files():
     """Generate and upload all necessary files, with index.html done last."""
     exclusions = load_exclusions()
 
-    # Fetch Entities and Process Data
+    # Fetch and Upload Entities
     entities, redacted_count = fetch_home_assistant_entities()
     version = datetime.utcnow().strftime("%Y-%m-%d-%H%M%S")
-    prefixes = sorted(set(entity['entity_id'].split('.')[0] for entity in entities))
+    html_content = HTMLGenerator.generate_entities_html(entities, len(entities), version, [], redacted_count)
 
-    # Generate and Save JSON/HTML for Entities
-    html_content = HTMLGenerator.generate_entities_html(entities, len(entities), version, prefixes, redacted_count)
     with open(LOCAL_JSON_PATH, "w", encoding="utf-8") as json_file:
         json.dump(entities, json_file, indent=4)
     with open(LOCAL_HTML_PATH, "w", encoding="utf-8") as file:
         file.write(html_content)
 
-    # Fetch and Save Integrations
+    upload_to_github(LOCAL_HTML_PATH, "community/entities.html", "Update Home Assistant entities list")
+    upload_to_github(LOCAL_JSON_PATH, "community/entities.json", "Update Home Assistant entities JSON list")
+
+    # Fetch and Upload Integrations
     integrations = fetch_home_assistant_integrations()
     integrations_html = HTMLGenerator.generate_integrations_html(integrations, len(integrations), version)
+
     with open(INTEGRATIONS_JSON_PATH, "w", encoding="utf-8") as json_file:
         json.dump(integrations, json_file, indent=4)
     with open(INTEGRATIONS_HTML_PATH, "w", encoding="utf-8") as file:
         file.write(integrations_html)
 
-    # Upload JSON and HTML Files
-    files_to_upload = {
-        LOCAL_HTML_PATH: "community/entities.html",
-        LOCAL_JSON_PATH: "community/entities.json",
-        INTEGRATIONS_HTML_PATH: "community/integrations.html",
-        INTEGRATIONS_JSON_PATH: "community/integrations.json"
-    }
-    
-    for local_path, github_path in files_to_upload.items():
-        try:
-            uploader.upload_file(local_path, github_path, f"Update {os.path.basename(local_path)}")
-            print(f"✅ Uploaded {os.path.basename(local_path)}")
-        except Exception as e:
-            print(f"❌ Error uploading {os.path.basename(local_path)}: {e}")
+    upload_to_github(INTEGRATIONS_HTML_PATH, "community/integrations.html", "Update integrations HTML")
+    upload_to_github(INTEGRATIONS_JSON_PATH, "community/integrations.json", "Update integrations JSON")
 
-    # Upload YAML Files
-    yaml_files = [os.path.join(dir, f) for dir in YAML_DIRS for f in get_files(dir, ".yaml", exclusions)]
-    for yaml_file in yaml_files:
-        try:
-            uploader.upload_file(yaml_file, f"community/{os.path.basename(yaml_file)}", f"Update {yaml_file}")
-            print(f"✅ Uploaded {os.path.basename(yaml_file)}")
-        except Exception as e:
-            print(f"❌ Error uploading {os.path.basename(yaml_file)}: {e}")
-        time.sleep(5)
+    # Upload YAML and Python Files
+    for yaml_file in get_files(YAML_DIRS[0], ".yaml", exclusions):
+        upload_to_github(os.path.join(YAML_DIRS[0], yaml_file), f"community/{yaml_file}", f"Update {yaml_file}")
 
-    # Upload Python Scripts
-    py_files = [os.path.join(PYTHON_SCRIPTS_DIR, f) for f in get_files(PYTHON_SCRIPTS_DIR, ".py", exclusions)]
-    for py_file in py_files:
-        try:
-            uploader.upload_file(py_file, f"python_scripts/{os.path.basename(py_file)}", f"Update {py_file}")
-            print(f"✅ Uploaded {os.path.basename(py_file)}")
-        except Exception as e:
-            print(f"❌ Error uploading {os.path.basename(py_file)}: {e}")
+    for py_file in get_files(PYTHON_SCRIPTS_DIR, ".py", exclusions):
+        upload_to_github(os.path.join(PYTHON_SCRIPTS_DIR, py_file), f"python_scripts/{py_file}", f"Update {py_file}")
 
-    # **Index Generation Last**
-    html_files = get_files(HTML_DIR, ".html", exclusions)
-    yaml_files = get_files(YAML_DIRS[0], ".yaml", exclusions)
-    index_content = HTMLGenerator.generate_index_html(html_files, yaml_files)
-    
+    # Generate and Upload Index Last
+    index_content = HTMLGenerator.generate_index_html(get_files(HTML_DIR, ".html", exclusions), [])
     with open(INDEX_HTML_PATH, "w", encoding="utf-8") as file:
         file.write(index_content)
+    upload_to_github(INDEX_HTML_PATH, "community/index.html", "Update index.html")
 
-    try:
-        uploader.upload_file(INDEX_HTML_PATH, "community/index.html", "Update index.html with latest file listings")
-        print("✅ Index file updated and uploaded last.")
-    except Exception as e:
-        print(f"❌ Error uploading index.html: {e}")
-
-    print("✅ All files have been updated and uploaded successfully.")
+    print("✅ All files uploaded successfully.")
 
 
 if __name__ == "__main__":
