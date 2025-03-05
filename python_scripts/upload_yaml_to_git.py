@@ -24,7 +24,7 @@ def get_yaml_files_from_directories(directories, exclusions):
         if os.path.exists(directory):
             yaml_files.extend(
                 [(directory, f) for f in os.listdir(directory)
-                 if f.endswith(".yaml") and not should_exclude(f, exclusions)])
+                    if f.endswith(".yaml") and not should_exclude(f, exclusions)])
         else:
             print(f"Warning: Directory {directory} does not exist. Skipping...")
     return yaml_files
