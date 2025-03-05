@@ -1,0 +1,406 @@
+hugh_room_stereo_volume_up:
+  alias: Hugh Room Stereo Volume Up
+  sequence:
+  - action: media_player.volume_up
+    target:
+      entity_id:
+      - media_player.hugh_room_display
+    data: {}
+  mode: single
+  icon: mdi:volume-plus
+hugh_room_stereo_volume_down:
+  alias: Hugh Room Stereo Volume Down
+  sequence:
+  - action: media_player.volume_down
+    data: {}
+    target:
+      entity_id: media_player.hugh_room_display
+  mode: single
+  icon: mdi:volume-minus
+play_spotify_playlist:
+  alias: Play Spotify Playlist
+  sequence:
+  - action: spotcast.start
+    metadata: {}
+    data:
+      force_playback: true
+      random_song: true
+      repeat: 'off'
+      shuffle: true
+      ignore_fully_played: false
+      uri: spotify:playlist:7Gtodbwg48bzliqflc1BE9
+      start_volume: 10
+      entity_id: media_player.hugh_room_stereo
+  icon: mdi:spotify
+  mode: single
+execute_alarm_actions:
+  alias: Execute Alarm Actions
+  sequence:
+  - target:
+      entity_id: input_boolean.wake_up_alarm_running
+    data: {}
+    action: input_boolean.turn_on
+  - condition: template
+    value_template: '{{ now() <= state_attr(''sun.sun'', ''next_rising'') | as_datetime
+      }}
+
+      '
+  - data:
+      transition: 300
+    target:
+      entity_id: light.hugh_room_lamp
+    action: light.turn_on
+  - delay:
+      minutes: 5
+  - data:
+      media_content_id: media-source://radio_browser/d0a1da9f-46b3-11e9-aa55-52543be04c81
+      media_content_type: audio/mpeg
+    target:
+      entity_id: media_player.hugh_room_stereo
+    action: media_player.play_media
+  - data:
+      volume_level: 0.15
+    target:
+      entity_id: media_player.hugh_room_stereo
+    action: media_player.volume_set
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: sensor.windscreen_freeze_risk
+        state: Likely Frozen
+      sequence:
+      - data:
+          title: Wake Up Alarm
+          message: "Good morning! \U0001F976 Prepare to de-ice your car!"
+          data:
+            actions:
+            - action: TURN_OFF_ALARM
+              title: Turn Off Alarm
+            - action: SNOOZE_ALARM
+              title: Snooze Alarm
+            notification_icon: mdi:snowflake
+        action: notify.notifications
+    - conditions:
+      - condition: state
+        entity_id: sensor.windscreen_freeze_risk
+        state: Not Frozen
+      sequence:
+      - data:
+          title: Wake Up Alarm
+          message: "Good morning! \U0001F31E"
+          data:
+            actions:
+            - action: TURN_OFF_ALARM
+              title: Turn Off Alarm
+            - action: SNOOZE_ALARM
+              title: Snooze Alarm
+            notification_icon: mdi:alarm
+        action: notify.notifications
+  - action: script.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - script.blinds_alarm_open
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: sensor.windscreen_freeze_risk
+        state: Likely Frozen
+      sequence:
+      - action: light.turn_on
+        data:
+          rgb_color:
+          - 173
+          - 216
+          - 230
+          brightness_pct: 10
+        target:
+          entity_id: light.hugh_room_ceiling
+  mode: single
+  icon: mdi:alarm-bell
+calculate_last_day_of_month:
+  alias: Calculate Last Day of Month
+  sequence:
+  - action: input_datetime.set_datetime
+    target:
+      entity_id: input_datetime.last_day_of_month
+    data:
+      date: '{{ ((now().replace(day=1) + timedelta(days=32)).replace(day=1) - timedelta(days=1)).strftime(''%Y-%m-%d'')
+        }}
+
+        '
+  mode: single
+  icon: mdi:calendar
+update_tuya_expiration:
+  alias: Update Tuya Account Expiration
+  sequence:
+  - action: input_datetime.set_datetime
+    data_template:
+      entity_id: input_datetime.tuya_account_expiration
+      date: "{% set current_date = as_datetime(now()) %}\n        {% set new_month
+        = (current_date.month + 6) %}\n        {% set new_year = current_date.year
+        + (1 if new_month > 12 else 0) %}\n        {% set final_month = new_month
+        - 12 if new_month > 12 else new_month %}\n        {{ current_date.replace(year=new_year,
+        month=final_month).strftime('%Y-%m-%d') }}"
+      time: '{{ now().strftime(''%H:%M:%S'') }}'
+  - action: notify.notifications
+    data:
+      message: Tuya account expiration date updated.
+      data:
+        notification_icon: mdi:calendar-alert
+  icon: mdi:calendar-alert
+  mode: single
+water_patrick:
+  alias: Water Patrick
+  sequence:
+  - action: shell_command.water_patrick_message
+    data: {}
+    response_variable: message
+  - action: notify.notifications
+    data_template:
+      message: '{{ message[''stdout''] }}'
+      title: Patrick the Plant
+      data:
+        notification_icon: mdi:water
+  - action: input_boolean.turn_on
+    entity_id: input_boolean.patrick_needs_water
+  mode: single
+feed_patrick:
+  alias: Feed Patrick
+  sequence:
+  - action: shell_command.feed_patrick_message
+    data: {}
+    response_variable: message
+  - action: notify.notifications
+    data_template:
+      message: '{{ message[''stdout''] }}'
+      title: Patrick the Plant
+      data:
+        notification_icon: mdi:food-apple
+  mode: single
+find_car:
+  alias: Find Car
+  sequence:
+  - action: shell_command.find_car
+    data: {}
+    response_variable: message
+  - action: input_text.set_value
+    target:
+      entity_id: input_text.car_gps_map_url
+    data:
+      value: "{% set latitude = states('sensor.car_gps_latitude') %} {% set longitude
+        = states('sensor.car_gps_longitude') %} {% if latitude not in ['unknown',
+        'unavailable', 'None'] and longitude not in ['unknown', 'unavailable', 'None']
+        %}\n  https://www.google.com/maps?q={{ latitude }},{{ longitude }}\n{% else
+        %}\n  https://www.google.com/maps\n{% endif %}\n"
+  - action: notify.notifications
+    data_template:
+      message: '{{ message[''stdout''] }}'
+      title: Clio the Car
+      data:
+        notification_icon: mdi:car-search
+        clickAction: '{{ states(''input_text.car_gps_map_url'') }}
+
+          '
+  mode: single
+  description: ''
+  icon: mdi:car-search
+update_umail_expiration:
+  alias: Update Umail Expiration
+  sequence:
+  - action: input_datetime.set_datetime
+    data_template:
+      entity_id: input_datetime.umail_account_expiration
+      date: "{% set current_date = as_datetime(now()) %}\n        {% set new_month
+        = (current_date.month + 11) %}\n        {% set new_year = current_date.year
+        + (1 if new_month > 12 else 0) %}\n        {% set final_month = new_month
+        - 12 if new_month > 12 else new_month %}\n        {{ current_date.replace(year=new_year,
+        month=final_month).strftime('%Y-%m-%d') }}"
+      time: '{{ now().strftime(''%H:%M:%S'') }}'
+  - action: notify.notifications
+    data:
+      message: Umail account expiration date updated.
+      data:
+        notification_icon: mdi:calendar-alert
+  icon: mdi:calendar-alert
+  mode: single
+  description: ''
+reload_vesync:
+  alias: Reload VeSync Integration
+  sequence:
+  - action: homeassistant.reload_config_entry
+    data:
+      entry_id: af0e7105f5eb1d6df46598f6d4a7adc6
+reload_spotify:
+  alias: Reload Spotify Integration
+  sequence:
+  - action: homeassistant.reload_config_entry
+    data:
+      entry_id: 51cc8b5d71654625b84481b41649a6b8
+reload_tuya:
+  alias: Reload Tuya Integration
+  sequence:
+  - action: homeassistant.reload_config_entry
+    data:
+      entry_id: e06b3aef84633bb3473c18d9cc2976c6
+update_car_data_expiration:
+  alias: Update Car Data Expiration
+  sequence:
+  - data_template:
+      entity_id: input_datetime.car_data_expiration
+      date: "{% set current_date = as_datetime(now()) %}\n        {% set new_month
+        = (current_date.month + 11) %}\n        {% set new_year = current_date.year
+        + (1 if new_month > 12 else 0) %}\n        {% set final_month = new_month
+        - 12 if new_month > 12 else new_month %}\n        {{ current_date.replace(year=new_year,
+        month=final_month).strftime('%Y-%m-%d') }}"
+      time: '{{ now().strftime(''%H:%M:%S'') }}'
+    action: input_datetime.set_datetime
+  - data:
+      message: Car data expiration date updated.
+      data:
+        notification_icon: mdi:calendar-alert
+    action: notify.notifications
+  icon: mdi:calendar-alert
+  mode: single
+  description: ''
+close_blinds:
+  alias: Blinds close
+  sequence:
+  - action: cover.set_cover_position
+    metadata: {}
+    data:
+      position: 14
+    target:
+      entity_id: cover.hugh_room_blinds
+  description: ''
+open_blinds:
+  alias: Blinds open
+  sequence:
+  - action: cover.set_cover_position
+    metadata: {}
+    data:
+      position: 71
+    target:
+      entity_id: cover.hugh_room_blinds
+  description: ''
+blinds_alarm_open:
+  alias: Blinds alarm open
+  sequence:
+  - action: cover.set_cover_position
+    metadata: {}
+    data:
+      position: 29
+    target:
+      entity_id: cover.hugh_room_blinds
+  description: ''
+update_liverpool_sensors:
+  alias: Update Liverpool Sensors
+  sequence:
+  - data:
+      entity_id:
+      - sensor.liverpool_comp
+      - sensor.liverpool_vs
+      - sensor.liverpool_venue
+      - sensor.liverpool_champions_league_position
+      - sensor.liverpool_premier_league_position
+      - sensor.liverpool_premier_league_record
+      - sensor.liverpool_champions_league_record
+      - sensor.liverpool_generic_stage
+      - sensor.liverpool_european_stage
+      - sensor.liverpool_premier_league_stage
+      - sensor.liverpool_utc
+    action: homeassistant.update_entity
+  - delay:
+      seconds: 10
+  - action: shell_command.update_liverpool_channel
+    data: {}
+  - delay:
+      seconds: 10
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ ''Premier League'' in states(''sensor.liverpool_comp'')
+          }}
+
+          '
+      sequence:
+      - data:
+          entity_id:
+          - sensor.liverpool_premier_league_stage
+          - sensor.liverpool_premier_league_position
+          - sensor.liverpool_premier_league_record
+        action: homeassistant.unhide_entity
+      - data:
+          entity_id:
+          - sensor.liverpool_champions_league_position
+          - sensor.liverpool_champions_league_record
+          - sensor.liverpool_generic_stage
+          - sensor.liverpool_european_stage
+        action: homeassistant.hide_entity
+    - conditions:
+      - condition: template
+        value_template: '{{ ''League Phase'' in states(''sensor.liverpool_generic_stage'')
+          }}
+
+          '
+      sequence:
+      - data:
+          entity_id:
+          - sensor.liverpool_european_stage
+          - sensor.liverpool_champions_league_position
+          - sensor.liverpool_champions_league_record
+        action: homeassistant.unhide_entity
+      - data:
+          entity_id:
+          - sensor.liverpool_premier_league_stage
+          - sensor.liverpool_premier_league_position
+          - sensor.liverpool_premier_league_record
+          - sensor.liverpool_generic_stage
+        action: homeassistant.hide_entity
+    - conditions: []
+      sequence:
+      - data:
+          entity_id:
+          - sensor.liverpool_generic_stage
+        action: homeassistant.unhide_entity
+      - data:
+          entity_id:
+          - sensor.liverpool_premier_league_stage
+          - sensor.liverpool_premier_league_position
+          - sensor.liverpool_premier_league_record
+          - sensor.liverpool_champions_league_position
+          - sensor.liverpool_champions_league_record
+          - sensor.liverpool_european_stage
+        action: homeassistant.hide_entity
+  description: ''
+update_entities_html:
+  sequence:
+  - action: shell_command.upload_entities_to_git
+    data: {}
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+  - action: shell_command.upload_integrations_to_git
+    data: {}
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+  - action: shell_command.upload_yaml_to_git
+    data: {}
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 0
+  - action: shell_command.upload_py_to_git
+    data: {}
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 0
+  - action: shell_command.upload_index_to_git
+    data: {}
+  alias: Github Backup
+  description: ''
