@@ -21,8 +21,6 @@ INTEGRATIONS_JSON_PATH = "/config/www/community/integrations.json"
 INTEGRATIONS_HTML_PATH = "/config/www/community/integrations.html"
 INDEX_HTML_PATH = "/config/www/community/index.html"
 
-# Asset files to upload
-ASSET_FILES = ["table-functions.js", "index-functions.js", "table-styles.css", "index-styles.css", "favicon.ico"]
 
 # Load secrets
 secrets = SecretsManager()
@@ -84,8 +82,7 @@ def fetch_home_assistant_entities():
     """Fetch entities from Home Assistant and redact sensitive ones."""
     response = requests.get(f"{HA_BASE_URL}/api/states", headers=ha_headers, timeout=30)
     if response.status_code == 200:
-        entities = response.json()
-        return entities
+        return response.json()
     else:
         raise RuntimeError(f"Error retrieving entities: {response.status_code}")
 
@@ -134,7 +131,10 @@ def upload_integrations():
 def upload_yaml_files():
     """Find and upload all YAML files, respecting exclusions."""
     exclusions = load_exclusions()
-    yaml_files = get_files(YAML_DIRS[0], ".yaml", exclusions)
+    yaml_files = []
+
+    for yaml_dir in YAML_DIRS:
+        yaml_files.extend(get_files(yaml_dir, ".yaml", exclusions))
 
     if not yaml_files:
         print("⚠️ No YAML files found after applying exclusions.")
@@ -165,22 +165,37 @@ def upload_python_scripts():
 
 
 def upload_asset_files():
-    """Upload predefined asset files."""
+    """Upload all files from the assets directory, respecting exclusions."""
     exclusions = load_exclusions()
-    for asset_file in ASSET_FILES:
+
+    if not os.path.exists(ASSETS_DIR):
+        print(f"⚠️ Warning: Assets directory {ASSETS_DIR} does not exist. Skipping...")
+        return
+
+    asset_files = [f for f in os.listdir(ASSETS_DIR) if not should_exclude(f, exclusions)]
+
+    if not asset_files:
+        print("⚠️ No asset files found after applying exclusions.")
+        return
+
+    for asset_file in asset_files:
         local_path = os.path.join(ASSETS_DIR, asset_file)
         github_path = f"community/assets/{asset_file}"
-        if os.path.exists(local_path) and not should_exclude(asset_file, exclusions):
-            upload_to_github(local_path, github_path, f"Update {asset_file}")
+
+        upload_to_github(local_path, github_path, f"Update {asset_file}")
 
 
 def generate_and_upload_index():
     """Generate and upload index.html after all other files."""
     exclusions = load_exclusions()
     html_files = get_files(HTML_DIR, ".html", exclusions)
-    yaml_files = get_files(YAML_DIRS[0], ".yaml", exclusions)
+
+    yaml_files = []
+    for yaml_dir in YAML_DIRS:
+        yaml_files.extend(get_files(yaml_dir, ".yaml", exclusions))
 
     index_content = HTMLGenerator.generate_index_html(html_files, yaml_files)
+
     with open(INDEX_HTML_PATH, "w", encoding="utf-8") as file:
         file.write(index_content)
 
