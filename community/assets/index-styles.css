@@ -56,15 +56,17 @@ iframe {
     cursor: pointer;
     padding: 10px 15px;
     text-decoration: none;
-    display: block;
     color: white;
+    background-color: #333;
+    border: none;
+    font-size: 16px;
 }
 
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #333;
-    min-width: 150px;
+    background-color: #444;
+    min-width: 160px;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
     z-index: 1000;
 }
@@ -76,6 +78,11 @@ iframe {
     display: block;
 }
 
+.dropdown-content a:hover {
+    background-color: #555;
+}
+
 .dropdown:hover .dropdown-content {
     display: block;
 }
+
