@@ -1,16 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
-    function loadContent(file) {
-        document.getElementById('content-frame').src = file;
-        let downloadLink = document.getElementById('download-btn');
-
-        // Always link to the full Git directory ZIP instead of a specific file
-        let gitDownloadURL = "https://github.com/HughODwyer90/hugh.casa/archive/refs/heads/main.zip";  // GitHub repo ZIP
-
-        // Update Download button to download the full Git repo
-        downloadLink.href = gitDownloadURL;
-        downloadLink.download = "hugh_casa.zip"; // Set a friendly file name for the download
+    function loadContent(filename) {
+        const iframe = document.getElementById("content-frame");
+    
+        if (filename.endsWith(".yaml")) {
+            // Show the YAML file as plain text
+            fetch(filename)
+                .then(response => response.text())
+                .then(text => {
+                    iframe.srcdoc = `<pre style="white-space: pre-wrap; font-family: monospace; padding: 10px;">${text}</pre>`;
+                })
+                .catch(error => console.error("Error loading YAML file:", error));
+        } else {
+            // Load HTML files normally
+            iframe.src = filename;
+        }
     }
-
+    
     // Set default content
     loadContent('entities.html');
 
