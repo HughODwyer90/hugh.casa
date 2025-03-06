@@ -3,9 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let integrationFilter = 'All';
 
     function updateTableCount() {
-        // Find the currently visible table
         let visibleTable = document.querySelector("table:not([style*='display: none'])");
-        
+
         if (visibleTable) {
             let visibleRows = visibleTable.querySelectorAll("tbody tr:not([style*='display: none'])").length;
             document.getElementById("table-count").textContent = `Search total: ${visibleRows}`;
@@ -31,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tbody.innerHTML = '';
         rows.forEach(row => tbody.appendChild(row));
 
-        updateTableCount(); // Update count after sorting
+        updateTableCount(); 
     }
 
     function filterEntities() {
@@ -46,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 row.style.display = matchesFilter && matchesQuery ? '' : 'none';
             });
 
-            updateTableCount(); // Update count after filtering
+            updateTableCount(); 
         }
     }
 
@@ -62,45 +61,48 @@ document.addEventListener('DOMContentLoaded', () => {
                 row.style.display = matchesFilter && matchesQuery ? '' : 'none';
             });
 
-            updateTableCount(); // Update count after filtering
+            updateTableCount(); 
         }
     }
 
-    // Attach event listeners for sorting
-    document.querySelectorAll('th').forEach((header, index) => {
-        header.style.cursor = "pointer";
-        header.addEventListener('click', () => {
-            const tableId = header.closest('table').id;
-            sortTable(tableId, index);
+    function attachEventListeners() {
+        // Attach sorting event listeners
+        document.querySelectorAll('th').forEach((header, index) => {
+            header.style.cursor = "pointer";
+            header.addEventListener('click', () => {
+                const tableId = header.closest('table').id;
+                sortTable(tableId, index);
+            });
         });
-    });
 
-    // Attach event listeners for entity search & filter
-    document.getElementById('entitySearch')?.addEventListener('input', filterEntities);
-    
-    document.querySelectorAll('.entity-filter').forEach(filter => {
-        filter.addEventListener('click', () => {
-            document.querySelectorAll('.entity-filter.active').forEach(f => f.classList.remove('active'));
-            filter.classList.add('active');
-            entityFilter = filter.textContent.trim();
-            filterEntities();
+        // Attach search input listeners
+        document.getElementById('entitySearch')?.addEventListener('input', filterEntities);
+        document.getElementById('integrationSearch')?.addEventListener('input', filterIntegrations);
+
+        // Attach filter click event listeners
+        document.querySelectorAll('.entity-filter').forEach(filter => {
+            filter.addEventListener('click', () => {
+                document.querySelectorAll('.entity-filter.active').forEach(f => f.classList.remove('active'));
+                filter.classList.add('active');
+                entityFilter = filter.textContent.trim();
+                filterEntities();
+            });
         });
-    });
 
-    // Attach event listeners for integration search & filter
-    document.getElementById('integrationSearch')?.addEventListener('input', filterIntegrations);
-    
-    document.querySelectorAll('.integration-filter').forEach(filter => {
-        filter.addEventListener('click', () => {
-            document.querySelectorAll('.integration-filter.active').forEach(f => f.classList.remove('active'));
-            filter.classList.add('active');
-            integrationFilter = filter.textContent.trim();
-            filterIntegrations();
+        document.querySelectorAll('.integration-filter').forEach(filter => {
+            filter.addEventListener('click', () => {
+                document.querySelectorAll('.integration-filter.active').forEach(f => f.classList.remove('active'));
+                filter.classList.add('active');
+                integrationFilter = filter.textContent.trim();
+                filterIntegrations();
+            });
         });
-    });
 
-    // Ensure table count updates on load
-    updateTableCount();
-    filterEntities();
-    filterIntegrations();
+        updateTableCount();
+        filterEntities();
+        filterIntegrations();
+    }
+
+    // Ensure event listeners attach only after filters exist
+    setTimeout(attachEventListeners, 500);
 });
