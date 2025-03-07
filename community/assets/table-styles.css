@@ -131,3 +131,35 @@ iframe {
     height: calc(100vh - 50px);
     border: none;
 }
+
+/* Fixed header to keep title, search, and filters at the top */
+.fixed-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+}
+
+/* Push the content down so it doesn't hide behind the fixed header */
+.scrollable-content {
+    margin-top: 120px;  /* Adjust based on the height of the fixed header */
+    padding: 10px;
+    overflow-y: auto;
+    max-height: calc(100vh - 140px); /* Prevent overflow */
+}
+
+/* Style for YAML content block */
+.yaml-content {
+    white-space: pre-wrap;
+    font-family: monospace;
+    background-color: #222;
+    color: #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+}
