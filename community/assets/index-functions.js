@@ -32,12 +32,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Toggle dropdown on click
-    document.querySelectorAll(".dropbtn").forEach((button) => {
-        button.addEventListener("click", (event) => {
-            event.stopPropagation();
-            const dropdownContent = button.nextElementSibling;
-            dropdownContent.classList.toggle("show-dropdown");
-        });
+    document.querySelector(".dropbtn").addEventListener("click", (event) => {
+        event.stopPropagation();
+        const dropdownContent = event.target.nextElementSibling;
+        dropdownContent.classList.toggle("show-dropdown");
     });
 
     // Close dropdown when clicking outside
