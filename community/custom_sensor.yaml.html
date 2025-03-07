@@ -7,21 +7,13 @@
             <title>custom_sensor.yaml</title>
             <link rel="stylesheet" href="assets/table-styles.css">
             <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
-            <style>
-                pre {
-                    white-space: pre-wrap;
-                    font-family: monospace;
-                    background-color: #222;
-                    color: #ddd;
-                    padding: 10px;
-                    border-radius: 5px;
-                    overflow-x: auto;
-                }
-            </style>
         </head>
         <body>
-            <h1>Viewing: custom_sensor.yaml</h1>
-            <pre>- platform: template
+            <div class="fixed-header">
+                <h1>Viewing: custom_sensor.yaml</h1>
+            </div>
+            <div class="scrollable-content">
+                <pre class="yaml-content">- platform: template
   sensors:
     air_purifier_lifetime:
       friendly_name: &quot;Air Purifier Filter Life&quot;
@@ -978,6 +970,7 @@
   scan_interval: 10
   timeout: 10
 </pre>
+            </div>
         </body>
         </html>
         
