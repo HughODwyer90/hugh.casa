@@ -7,21 +7,13 @@
             <title>notifications.yaml</title>
             <link rel="stylesheet" href="assets/table-styles.css">
             <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
-            <style>
-                pre {
-                    white-space: pre-wrap;
-                    font-family: monospace;
-                    background-color: #222;
-                    color: #ddd;
-                    padding: 10px;
-                    border-radius: 5px;
-                    overflow-x: auto;
-                }
-            </style>
         </head>
         <body>
-            <h1>Viewing: notifications.yaml</h1>
-            <pre># Group notification configuration (if you have multiple notification services)
+            <div class="fixed-header">
+                <h1>Viewing: notifications.yaml</h1>
+            </div>
+            <div class="scrollable-content">
+                <pre class="yaml-content"># Group notification configuration (if you have multiple notification services)
 - platform: group
   name: notifications
   services:
@@ -46,6 +38,7 @@
   recipient: !secret ha_email
   sender_name: &quot;Home Assistant&quot;
 </pre>
+            </div>
         </body>
         </html>
         
