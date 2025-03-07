@@ -91,6 +91,32 @@ tr:hover {
     background-color: #e9ecef !important;
 }
 
+/* Ensure the table container is scrollable */
+.table-container {
+    overflow-y: auto;
+    max-height: calc(100vh - 50px); /* Adjust for available space */
+}
+
+/* Fix the table header at the top */
+table thead {
+    position: sticky;
+    top: 0;
+    background-color: #222;
+    color: white;
+    z-index: 999;
+}
+
+/* Optional: Add a subtle shadow effect when scrolling */
+table thead::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 5px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), transparent);
+}
+
 .download-btn {
     background-color: #4CAF50;
     color: white;
@@ -148,20 +174,17 @@ iframe {
     overflow-x: auto;
 }
 
-/* Ensure the title, search, and filters are fixed */
+/* Fixed header for title, search, and filters */
 .fixed-header {
-    position: fixed;
-    top: 50px; /* Push down below navbar */
-    left: 0;
-    width: 100%;
-    padding: 10px;
+    position: sticky;
+    padding: 15px;
     z-index: 999;
 }
 
-/* Push content down so it doesn't hide behind the fixed elements */
+/* Dynamic scrollable content starts AFTER fixed header */
 .scrollable-content {
-    margin-top: 140px; /* Adjust based on navbar + filter height */
-    padding: 10px;
+    display: flex;
+    flex-direction: column;
     overflow-y: auto;
-    max-height: calc(100vh - 140px);
+    max-height: calc(100vh - 50px); /* Takes up remaining space */
 }
