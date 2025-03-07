@@ -7,21 +7,13 @@
             <title>custom_command.yaml</title>
             <link rel="stylesheet" href="assets/table-styles.css">
             <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
-            <style>
-                pre {
-                    white-space: pre-wrap;
-                    font-family: monospace;
-                    background-color: #222;
-                    color: #ddd;
-                    padding: 10px;
-                    border-radius: 5px;
-                    overflow-x: auto;
-                }
-            </style>
         </head>
         <body>
-            <h1>Viewing: custom_command.yaml</h1>
-            <pre>toggle_work_plug:
+            <div class="fixed-header">
+                <h1>Viewing: custom_command.yaml</h1>
+            </div>
+            <div class="scrollable-content">
+                <pre class="yaml-content">toggle_work_plug:
   url: &quot;https://eu-wap.tplinkcloud.com/?token={{ states(&#x27;input_text.kasa_token&#x27;) }}&quot;
   method: POST
   headers:
@@ -35,6 +27,7 @@
       }
     }
 </pre>
+            </div>
         </body>
         </html>
         
