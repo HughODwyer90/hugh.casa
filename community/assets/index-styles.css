@@ -46,22 +46,25 @@ iframe {
     text-decoration: none;
 }
 
-/* Style for dropdown button */
+/* Style the dropdown container */
 .dropdown {
     position: relative;
     display: inline-block;
 }
 
+/* Style the dropdown button */
 .dropbtn {
     cursor: pointer;
     padding: 10px 15px;
-    text-decoration: none;
     color: white;
     background-color: #333;
     border: none;
     font-size: 16px;
+    text-decoration: none;
+    display: block;
 }
 
+/* Style the dropdown content (hidden by default) */
 .dropdown-content {
     display: none;
     position: absolute;
@@ -71,6 +74,7 @@ iframe {
     z-index: 1000;
 }
 
+/* Style links inside the dropdown */
 .dropdown-content a {
     color: white;
     padding: 10px 15px;
@@ -78,11 +82,13 @@ iframe {
     display: block;
 }
 
-.dropdown-content a:hover {
-    background-color: #555;
+/* Show the dropdown content when hovering over the dropdown */
+.dropdown:hover .dropdown-content {
+    display: block;
 }
 
-.dropdown:hover .dropdown-content {
+/* Ensure the dropdown stays visible on click */
+.dropdown:focus-within .dropdown-content {
     display: block;
 }
 
