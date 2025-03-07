@@ -7,6 +7,7 @@
             <title>Living Backup</title>
             <link rel="stylesheet" href="assets/index-styles.css">
             <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+            <script defer src="assets/index-functions.js"></script>
         </head>
         <body>
             <nav>
@@ -15,15 +16,13 @@
                     <li class="dropdown">
                         <a href="#" class="dropbtn">YAML ▾</a>
                         <div class="dropdown-content">
-                            <a href="#" class="yaml-link" onclick="loadContent('automations.yaml.html')">Automations.Html</a><a href="#" class="yaml-link" onclick="loadContent('configuration.yaml.html')">Configuration.Html</a><a href="#" class="yaml-link" onclick="loadContent('custom_command.yaml.html')">Custom_Command.Html</a><a href="#" class="yaml-link" onclick="loadContent('custom_sensor.yaml.html')">Custom_Sensor.Html</a><a href="#" class="yaml-link" onclick="loadContent('ir_receiver.yaml.html')">Ir_Receiver.Html</a><a href="#" class="yaml-link" onclick="loadContent('notifications.yaml.html')">Notifications.Html</a><a href="#" class="yaml-link" onclick="loadContent('pressure.yaml.html')">Pressure.Html</a><a href="#" class="yaml-link" onclick="loadContent('scenes.yaml.html')">Scenes.Html</a><a href="#" class="yaml-link" onclick="loadContent('scripts.yaml.html')">Scripts.Html</a><a href="#" class="yaml-link" onclick="loadContent('shell_commands.yaml.html')">Shell_Commands.Html</a>
+                            
                         </div>
                     </li>
                 </ul>
                 <a id="download-btn" class="download-btn" href="#" download="">Download Files</a>
             </nav>
             <iframe id="content-frame" src="entities.html" style="width: 100%; height: calc(100vh - 60px); border: none;"></iframe>
-
-            <script defer src="assets/index-functions.js"></script>
         </body>
         </html>
         
