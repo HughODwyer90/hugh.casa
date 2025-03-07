@@ -21,11 +21,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ✅ Attach event listeners for ALL navbar links (including YAML)
-    document.querySelectorAll("nav ul li a").forEach((link) => {
+    document.querySelectorAll("nav ul li a, .yaml-link").forEach((link) => {
         link.addEventListener("click", (event) => {
             event.preventDefault();
             const file = link.getAttribute("onclick").match(/'([^']+)'/)[1];
             loadContent(file);
+        });
+    });
+
+    // ✅ Ensure dropdown opens and closes correctly
+    document.querySelector(".dropbtn").addEventListener("click", (event) => {
+        event.stopPropagation();
+        const dropdownContent = event.target.nextElementSibling;
+        dropdownContent.classList.toggle("show-dropdown");
+    });
+
+    // ✅ Close dropdown when clicking outside
+    document.addEventListener("click", (event) => {
+        document.querySelectorAll(".dropdown-content").forEach((dropdown) => {
+            if (!dropdown.contains(event.target) && !dropdown.previousElementSibling.contains(event.target)) {
+                dropdown.classList.remove("show-dropdown");
+            }
         });
     });
 });
