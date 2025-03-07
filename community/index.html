@@ -12,7 +12,12 @@
             <nav>
                 <ul>
                     <li><a href="#" onclick="loadContent('entities.html')">Entities</a></li><li><a href="#" onclick="loadContent('integrations.html')">Integrations</a></li>
-                    <li><a href="#" onclick="loadContent('automations.yaml.html')">Automations.Html (YAML)</a></li><li><a href="#" onclick="loadContent('configuration.yaml.html')">Configuration.Html (YAML)</a></li><li><a href="#" onclick="loadContent('custom_command.yaml.html')">Custom_Command.Html (YAML)</a></li><li><a href="#" onclick="loadContent('custom_sensor.yaml.html')">Custom_Sensor.Html (YAML)</a></li><li><a href="#" onclick="loadContent('ir_receiver.yaml.html')">Ir_Receiver.Html (YAML)</a></li><li><a href="#" onclick="loadContent('notifications.yaml.html')">Notifications.Html (YAML)</a></li><li><a href="#" onclick="loadContent('pressure.yaml.html')">Pressure.Html (YAML)</a></li><li><a href="#" onclick="loadContent('scenes.yaml.html')">Scenes.Html (YAML)</a></li><li><a href="#" onclick="loadContent('scripts.yaml.html')">Scripts.Html (YAML)</a></li><li><a href="#" onclick="loadContent('shell_commands.yaml.html')">Shell_Commands.Html (YAML)</a></li>  <!-- ✅ Working version lists YAML files directly -->
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">YAML ▾</a>
+                        <div class="dropdown-content">
+                            <a href="#" class="yaml-link" onclick="loadContent('automations.yaml.html')">Automations.Html</a><a href="#" class="yaml-link" onclick="loadContent('configuration.yaml.html')">Configuration.Html</a><a href="#" class="yaml-link" onclick="loadContent('custom_command.yaml.html')">Custom_Command.Html</a><a href="#" class="yaml-link" onclick="loadContent('custom_sensor.yaml.html')">Custom_Sensor.Html</a><a href="#" class="yaml-link" onclick="loadContent('ir_receiver.yaml.html')">Ir_Receiver.Html</a><a href="#" class="yaml-link" onclick="loadContent('notifications.yaml.html')">Notifications.Html</a><a href="#" class="yaml-link" onclick="loadContent('pressure.yaml.html')">Pressure.Html</a><a href="#" class="yaml-link" onclick="loadContent('scenes.yaml.html')">Scenes.Html</a><a href="#" class="yaml-link" onclick="loadContent('scripts.yaml.html')">Scripts.Html</a><a href="#" class="yaml-link" onclick="loadContent('shell_commands.yaml.html')">Shell_Commands.Html</a>
+                        </div>
+                    </li>
                 </ul>
                 <a id="download-btn" class="download-btn" href="#" download="">Download Files</a>
             </nav>
