@@ -19,12 +19,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ✅ Attach event listeners for ALL navbar links (including YAML dropdown)
+    // ✅ Attach event listeners for all navbar and dropdown links
     document.querySelectorAll("nav ul li a, .dropdown-content a").forEach((link) => {
         link.addEventListener("click", (event) => {
             event.preventDefault();
-            const file = link.getAttribute("onclick").match(/'([^']+)'/)[1];
-            loadContent(file);
+
+            // ✅ Extract filename from href instead of onclick
+            const file = link.getAttribute("href");
+            if (file) {
+                loadContent(file);
+            } else {
+                console.error("Error: href is missing on the link.");
+            }
         });
     });
 
