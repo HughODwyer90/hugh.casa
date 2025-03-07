@@ -45,26 +45,25 @@ iframe {
     border-radius: 5px;
     text-decoration: none;
 }
-/* Style the dropdown container */
+/* Fix dropdown styling */
 .dropdown {
     position: relative;
     display: inline-block;
 }
 
-/* Style the dropdown button */
+/* Style dropdown button */
 .dropbtn {
     cursor: pointer;
     padding: 10px 15px;
-    font-size: 16px;
     color: white;
-    background-color: transparent;
+    background-color: #333;
     border: none;
+    font-size: 16px;
     text-decoration: none;
-    display: inline-block;
-    vertical-align: middle; /* ✅ Ensures proper alignment */
+    display: block;
 }
 
-/* Style the dropdown content (hidden by default) */
+/* Dropdown content (hidden by default) */
 .dropdown-content {
     display: none;
     position: absolute;
@@ -74,16 +73,13 @@ iframe {
     z-index: 1000;
 }
 
-/* Style links inside the dropdown */
-.dropdown-content a {
-    color: white;
-    padding: 10px 15px;
-    text-decoration: none;
+/* Show dropdown when clicked */
+.show-dropdown {
     display: block;
 }
 
-/* Ensure the dropdown stays visible on click */
-.show-dropdown {
-    display: block;
+/* Fix YAML dropdown alignment */
+.dropbtn {
+    vertical-align: middle;
 }
 
