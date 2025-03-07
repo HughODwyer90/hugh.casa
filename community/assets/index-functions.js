@@ -19,15 +19,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Set default content
-    loadContent("entities.html");
-
     // Ensure all menu links update correctly
     document.querySelectorAll("nav ul li a").forEach((link) => {
         link.addEventListener("click", (event) => {
             event.preventDefault();
-            const file = link.getAttribute("href");
-            if (file) loadContent(file);
+            const file = link.getAttribute("onclick").match(/'([^']+)'/)[1];
+            loadContent(file);
         });
     });
 
