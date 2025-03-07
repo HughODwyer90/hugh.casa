@@ -19,8 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Ensure all menu links update correctly
-    document.querySelectorAll("nav ul li a").forEach((link) => {
+    // ✅ Attach event listeners for ALL navbar links (including YAML dropdown)
+    document.querySelectorAll("nav ul li a, .dropdown-content a").forEach((link) => {
         link.addEventListener("click", (event) => {
             event.preventDefault();
             const file = link.getAttribute("onclick").match(/'([^']+)'/)[1];
@@ -28,14 +28,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Toggle dropdown on click
+    // ✅ Ensure dropdown opens and closes correctly
     document.querySelector(".dropbtn").addEventListener("click", (event) => {
         event.stopPropagation();
         const dropdownContent = event.target.nextElementSibling;
         dropdownContent.classList.toggle("show-dropdown");
     });
 
-    // Close dropdown when clicking outside
+    // ✅ Close dropdown when clicking outside
     document.addEventListener("click", (event) => {
         document.querySelectorAll(".dropdown-content").forEach((dropdown) => {
             if (!dropdown.contains(event.target) && !dropdown.previousElementSibling.contains(event.target)) {
