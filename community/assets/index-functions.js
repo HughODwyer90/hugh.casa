@@ -3,18 +3,29 @@ document.addEventListener('DOMContentLoaded', () => {
         const iframe = document.getElementById("content-frame");
     
         if (filename.endsWith(".yaml")) {
-            // Show the YAML file as plain text
+            // Fetch and display YAML content as text
             fetch(filename)
                 .then(response => response.text())
                 .then(text => {
-                    iframe.srcdoc = `<pre style="white-space: pre-wrap; font-family: monospace; padding: 10px;">${text}</pre>`;
+                    // Replace iframe content with formatted YAML
+                    iframe.srcdoc = `<pre style="
+                        white-space: pre-wrap;
+                        font-family: monospace;
+                        padding: 10px;
+                        background-color: #222;
+                        color: #ddd;
+                        border-radius: 5px;
+                        overflow-x: auto;
+                        height: 100vh;
+                    ">${text}</pre>`;
                 })
                 .catch(error => console.error("Error loading YAML file:", error));
         } else {
-            // Load HTML files normally
+            // Restore the iframe to normal behavior
             iframe.src = filename;
         }
     }
+    
     
     // Set default content
     loadContent('entities.html');
