@@ -1,0 +1,51 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>notifications.yaml</title>
+            <link rel="stylesheet" href="assets/table-styles.css">
+            <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+            <style>
+                pre {
+                    white-space: pre-wrap;
+                    font-family: monospace;
+                    background-color: #222;
+                    color: #ddd;
+                    padding: 10px;
+                    border-radius: 5px;
+                    overflow-x: auto;
+                }
+            </style>
+        </head>
+        <body>
+            <h1>Viewing: notifications.yaml</h1>
+            <pre># Group notification configuration (if you have multiple notification services)
+- platform: group
+  name: notifications
+  services:
+    - service: mobile_app_sm_s9060
+      data:
+        message: &quot;Notification to mobile app&quot;
+
+# File notification configuration for logging remote work days
+- platform: file
+  name: remote_work_log
+  filename: &quot;/config/text_files/{{ now().year }}_working_from_home.txt&quot;
+
+# SMTP notification configuration for email notifications
+- platform: smtp
+  name: hugh_email
+  server: smtp.gmail.com
+  port: 587
+  sender: !secret ha_email_backend
+  encryption: starttls
+  username: !secret ha_email_backend
+  password: !secret ha_pass_backend
+  recipient: !secret ha_email
+  sender_name: &quot;Home Assistant&quot;
+</pre>
+        </body>
+        </html>
+        
