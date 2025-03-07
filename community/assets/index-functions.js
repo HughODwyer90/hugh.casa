@@ -1,13 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
     function loadContent(filename) {
+        if (!filename) {
+            console.error("Error: filename is null or undefined.");
+            return;
+        }
+    
         const iframe = document.getElementById("content-frame");
     
         if (filename.endsWith(".yaml")) {
-            // Fetch and display YAML content as text
             fetch(filename)
                 .then(response => response.text())
                 .then(text => {
-                    // Replace iframe content with formatted YAML
                     iframe.srcdoc = `<pre style="
                         white-space: pre-wrap;
                         font-family: monospace;
@@ -21,11 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .catch(error => console.error("Error loading YAML file:", error));
         } else {
-            // Restore the iframe to normal behavior
             iframe.src = filename;
         }
     }
-    
     
     // Set default content
     loadContent('entities.html');
