@@ -11,16 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
             fetch(filename)
                 .then(response => response.text())
                 .then(text => {
-                    iframe.srcdoc = `<pre style="
-                        white-space: pre-wrap;
-                        font-family: monospace;
-                        padding: 10px;
-                        background-color: #222;
-                        color: #ddd;
-                        border-radius: 5px;
-                        overflow-x: auto;
-                        height: 100vh;
-                    ">${text}</pre>`;
+                    iframe.srcdoc = `<pre class="yaml-content">${text}</pre>`;
                 })
                 .catch(error => console.error("Error loading YAML file:", error));
         } else {
@@ -40,21 +31,20 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Handle dropdown button click
+    // Toggle dropdown on click
     document.querySelectorAll(".dropbtn").forEach((button) => {
         button.addEventListener("click", (event) => {
             event.stopPropagation();
             const dropdownContent = button.nextElementSibling;
-            dropdownContent.style.display =
-                dropdownContent.style.display === "block" ? "none" : "block";
+            dropdownContent.classList.toggle("show-dropdown");
         });
     });
 
-    // Close the dropdown when clicking outside (but not when clicking inside)
+    // Close dropdown when clicking outside
     document.addEventListener("click", (event) => {
         document.querySelectorAll(".dropdown-content").forEach((dropdown) => {
             if (!dropdown.contains(event.target) && !dropdown.previousElementSibling.contains(event.target)) {
-                dropdown.style.display = "none";
+                dropdown.classList.remove("show-dropdown");
             }
         });
     });
