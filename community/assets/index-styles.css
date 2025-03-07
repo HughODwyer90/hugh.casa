@@ -45,7 +45,6 @@ iframe {
     border-radius: 5px;
     text-decoration: none;
 }
-
 /* Style the dropdown container */
 .dropdown {
     position: relative;
@@ -56,12 +55,13 @@ iframe {
 .dropbtn {
     cursor: pointer;
     padding: 10px 15px;
-    color: white;
-    background-color: #333;
-    border: none;
     font-size: 16px;
+    color: white;
+    background-color: transparent;
+    border: none;
     text-decoration: none;
-    display: block;
+    display: inline-block;
+    vertical-align: middle; /* ✅ Ensures proper alignment */
 }
 
 /* Style the dropdown content (hidden by default) */
@@ -82,13 +82,8 @@ iframe {
     display: block;
 }
 
-/* Show the dropdown content when hovering over the dropdown */
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
 /* Ensure the dropdown stays visible on click */
-.dropdown:focus-within .dropdown-content {
+.show-dropdown {
     display: block;
 }
 
