@@ -1,0 +1,41 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>shell_commands.yaml</title>
+            <link rel="stylesheet" href="assets/table-styles.css">
+            <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+            <style>
+                pre {
+                    white-space: pre-wrap;
+                    font-family: monospace;
+                    background-color: #222;
+                    color: #ddd;
+                    padding: 10px;
+                    border-radius: 5px;
+                    overflow-x: auto;
+                }
+            </style>
+        </head>
+        <body>
+            <h1>Viewing: shell_commands.yaml</h1>
+            <pre>water_patrick_message: &quot;jq -r &#x27;.messages[]&#x27; /config/messages/plant/water_patrick_messages.json | shuf -n 1 | tee /config/messages/plant/plant_message.txt | cat&quot;
+feed_patrick_message: &quot;jq -r &#x27;.messages[]&#x27; /config/messages/plant/feed_patrick_messages.json | shuf -n 1 | tee /config/messages/plant/plant_message.txt | cat&quot;
+find_car: &quot;jq -r &#x27;.messages[]&#x27; /config/messages/car/car_messages.json | shuf -n 1 | tee /config/messages/car/car_message.txt | cat&quot;
+log_work_from_home: &quot;python3 /config/python_scripts/log_work_from_home.py&quot;
+run_pension_script: &quot;python3 /config/python_scripts/pension.py&quot;
+tivimate_backups: &quot;python3 /config/python_scripts/tivimate_backups.py&quot;
+update_liverpool_channel: &quot;python3 /config/python_scripts/liverpool_channel.py&quot;
+upload_entities_to_git: &quot;python3 /config/python_scripts/upload_entities_to_git.py&quot;
+upload_index_to_git: &quot;python3 /config/python_scripts/upload_index_to_git.py&quot;
+upload_integrations_to_git: &quot;python3 /config/python_scripts/upload_integrations_to_git.py&quot;
+upload_py_to_git: &quot;python3 /config/python_scripts/upload_py_to_git.py&quot;
+upload_yaml_to_git: &quot;python3 /config/python_scripts/upload_yaml_to_git.py&quot;
+upload_to_git: &quot;python3 /config/python_scripts/upload_to_git.py&quot;
+update_work_plug_state: &quot;python3 /config/python_scripts/fetch_work_plug_state.py&quot;
+</pre>
+        </body>
+        </html>
+        
