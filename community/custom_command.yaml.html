@@ -1,0 +1,40 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>custom_command.yaml</title>
+            <link rel="stylesheet" href="assets/table-styles.css">
+            <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+            <style>
+                pre {
+                    white-space: pre-wrap;
+                    font-family: monospace;
+                    background-color: #222;
+                    color: #ddd;
+                    padding: 10px;
+                    border-radius: 5px;
+                    overflow-x: auto;
+                }
+            </style>
+        </head>
+        <body>
+            <h1>Viewing: custom_command.yaml</h1>
+            <pre>toggle_work_plug:
+  url: &quot;https://eu-wap.tplinkcloud.com/?token={{ states(&#x27;input_text.kasa_token&#x27;) }}&quot;
+  method: POST
+  headers:
+    Content-Type: application/json
+  payload: &gt;
+    {
+      &quot;method&quot;: &quot;passthrough&quot;,
+      &quot;params&quot;: {
+        &quot;deviceId&quot;: &quot;8006929CF9F00DDDBC098E4604E38A1C1D5A653B&quot;,
+        &quot;requestData&quot;: &quot;{ \&quot;system\&quot;: { \&quot;set_relay_state\&quot;: { \&quot;state\&quot;: {{ state }} } } }&quot;
+      }
+    }
+</pre>
+        </body>
+        </html>
+        
