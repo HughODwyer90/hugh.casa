@@ -9,8 +9,7 @@ nav {
     background-color: #333;
     padding: 10px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    align-items: center; /* ✅ Ensure vertical alignment */
 }
 
 nav ul {
@@ -18,11 +17,15 @@ nav ul {
     margin: 0;
     padding: 0;
     display: flex;
+    align-items: center; /* ✅ Align items within navbar */
 }
 
 nav ul li {
     margin-right: 15px;
+    display: flex;
+    align-items: center; /* ✅ Ensure even spacing */
 }
+
 
 nav ul li a {
     color: white;
@@ -45,10 +48,12 @@ iframe {
     border-radius: 5px;
     text-decoration: none;
 }
-/* Dropdown Container */
+
+/* Fix Dropdown alignment */
 .dropdown {
     position: relative;
-    display: inline-block;
+    display: flex; /* ✅ Makes it behave like the other nav items */
+    align-items: center; /* ✅ Align with the other nav items */
 }
 
 /* Dropdown Button */
