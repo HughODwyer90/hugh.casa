@@ -7,25 +7,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const iframe = document.getElementById("content-frame");
 
-        // ✅ Dynamically adjust path based on current location
-        const basePath = window.location.pathname.includes("/yaml_previews/") ? "../" : "";
-
-        // ✅ If switching **from a YAML preview** back to a normal page, force a full navigation
-        if (iframe.src.includes("/yaml_previews/") && !filename.includes("/yaml_previews/")) {
-            window.location.href = basePath + filename;
+        // ✅ If currently viewing a YAML file, reset srcdoc before loading new content
+        if (iframe.srcdoc !== "" && !filename.includes("/yaml_previews/")) {
+            iframe.srcdoc = "";
+            iframe.src = filename;
             return;
         }
 
-        // ✅ Properly handle YAML file display
+        // ✅ Load YAML files correctly inside iframe
         if (filename.includes("/yaml_previews/")) {
-            fetch(basePath + filename)
+            fetch(filename)
                 .then(response => response.text())
                 .then(text => {
                     iframe.srcdoc = `<pre class="yaml-content">${text}</pre>`;
                 })
                 .catch(error => console.error("Error loading YAML file:", error));
         } else {
-            iframe.src = basePath + filename;
+            iframe.src = filename;
         }
     }
 
@@ -40,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // ✅ Ensure dropdown opens and closes correctly (works for multiple dropdowns)
+    // ✅ Ensure dropdown opens and closes correctly
     document.querySelectorAll(".dropbtn").forEach((button) => {
         button.addEventListener("click", (event) => {
             event.stopPropagation();
@@ -58,10 +56,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // ✅ Set default content (Ensures correct path resolution)
-    const defaultPage = window.location.pathname.includes("/yaml_previews/") ? "../entities.html" : "entities.html";
+    // ✅ Handle direct URL navigation (e.g., index.html?load=integrations.html)
+    const urlParams = new URLSearchParams(window.location.search);
+    const pageToLoad = urlParams.get("load") || "community/entities.html";  // ✅ Default to Entities
+
     const iframe = document.getElementById("content-frame");
     if (iframe) {
-        loadContent(defaultPage);
+        loadContent(pageToLoad);
     }
 });
