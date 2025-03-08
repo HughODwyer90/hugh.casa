@@ -24,16 +24,20 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("nav ul li a, .yaml-link").forEach((link) => {
         link.addEventListener("click", (event) => {
             event.preventDefault();
-            const file = link.getAttribute("onclick").match(/'([^']+)'/)[1];
-            loadContent(file);
+            const file = link.dataset.file; // ✅ Get the filename from data attribute
+            if (file) {
+                loadContent(file);
+            }
         });
     });
 
     // ✅ Ensure dropdown opens and closes correctly
-    document.querySelector(".dropbtn").addEventListener("click", (event) => {
-        event.stopPropagation();
-        const dropdownContent = event.target.nextElementSibling;
-        dropdownContent.classList.toggle("show-dropdown");
+    document.querySelectorAll(".dropbtn").forEach((button) => {
+        button.addEventListener("click", (event) => {
+            event.stopPropagation();
+            const dropdownContent = button.nextElementSibling;
+            dropdownContent.classList.toggle("show-dropdown");
+        });
     });
 
     // ✅ Close dropdown when clicking outside
@@ -44,4 +48,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
+
+    // ✅ Set default content (only if an iframe exists)
+    const defaultPage = "entities.html";
+    const iframe = document.getElementById("content-frame");
+    if (iframe) {
+        loadContent(defaultPage);
+    }
 });
