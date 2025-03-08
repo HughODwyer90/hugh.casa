@@ -1,0 +1,13 @@
+toggle_work_plug:
+  url: "https://eu-wap.tplinkcloud.com/?token={{ states('input_text.kasa_token') }}"
+  method: POST
+  headers:
+    Content-Type: application/json
+  payload: >
+    {
+      "method": "passthrough",
+      "params": {
+        "deviceId": "8006929CF9F00DDDBC098E4604E38A1C1D5A653B",
+        "requestData": "{ \"system\": { \"set_relay_state\": { \"state\": {{ state }} } } }"
+      }
+    }
