@@ -75,9 +75,21 @@ def upload_python_scripts():
 
     print("✅ All Python scripts have been uploaded.")
 
+def should_exclude_entity(entity):
+    """Check if an entity should be redacted for privacy/security reasons."""
+    entity_id = entity["entity_id"]
+    attributes = entity.get("attributes", {})
+
+    return (
+        (entity_id.startswith("device_tracker.") and "toothbrush" not in entity_id.lower()) or
+        any("device_tracker." in str(value) for value in attributes.values()) or
+        "gps" in entity_id.lower() or
+        entity_id.startswith("zone.") or
+        (entity_id.startswith("input_text.") and attributes.get("mode", "").lower() == "password")
+    )
 
 def upload_entities():
-    """Fetch and upload Home Assistant entities."""
+    """Fetch, redact, and upload Home Assistant entities."""
     response = requests.get(f"{HA_BASE_URL}/api/states", headers=ha_headers, timeout=30)
     if response.status_code != 200:
         raise RuntimeError(f"❌ Error retrieving entities: {response.status_code}")
@@ -85,12 +97,32 @@ def upload_entities():
     entities = response.json()
     version = datetime.utcnow().strftime("%Y-%m-%d-%H%M%S")
 
-    html_content = HTMLGenerator.generate_entities_html(entities, len(entities), version, [], 0)
-    json_content = json.dumps(entities, indent=4)
+    # ✅ **Apply redaction logic**
+    redacted_count = 0
+    processed_entities = []
+    
+    for entity in entities:
+        if should_exclude_entity(entity):
+            processed_entities.append({
+                "entity_id": entity["entity_id"],
+                "state": "REDACTED",
+                "attributes": {"friendly_name": "REDACTED"}
+            })
+            redacted_count += 1
+        else:
+            processed_entities.append(entity)
 
+    print(f"✅ Total entities fetched: {len(entities)}, Redacted: {redacted_count}")
+
+    # ✅ Generate HTML & JSON with redacted entities
+    html_content = HTMLGenerator.generate_entities_html(processed_entities, len(entities), version, [], redacted_count)
+    json_content = json.dumps(processed_entities, indent=4)
+
+    # ✅ Upload redacted files
     uploader.upload_content(f"{COMMUNITY_DIR}entities.html", html_content, "Update entities HTML")
     uploader.upload_content(f"{COMMUNITY_DIR}entities.json", json_content, "Update entities JSON")
     uploaded_files.append("entities.html")  # ✅ Track uploaded file
+
 
 def upload_integrations():
     """Fetch and upload Home Assistant integrations."""
