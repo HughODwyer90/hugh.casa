@@ -9,7 +9,26 @@ nav {
     background-color: #333;
     padding: 10px;
     display: flex;
-    align-items: center; /* ✅ Ensure vertical alignment */
+    justify-content: space-between; /* ✅ Ensures spacing between nav items & download button */
+    align-items: center;
+    position: relative;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+
+/* ✅ Push Download Button to the Right */
+.download-btn {
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-left: auto; /* ✅ Moves it to the right */
 }
 
 nav ul {
@@ -26,7 +45,6 @@ nav ul li {
     align-items: center; /* ✅ Ensure even spacing */
 }
 
-
 nav ul li a {
     color: white;
     text-decoration: none;
@@ -39,15 +57,6 @@ iframe {
     border: none;
 }
 
-.download-btn {
-    background-color: #0056b3;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-    text-decoration: none;
-}
 
 /* Fix Dropdown alignment */
 .dropdown {
