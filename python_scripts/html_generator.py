@@ -21,7 +21,7 @@ class HTMLGenerator:
 
         # ✅ Generate dropdown for YAML previews
         yaml_dropdown = ''.join(
-            f'<a href="#" class="yaml-link" data-file="community/{file}">'
+            f'<a href="#" class="yaml-link" data-file="community/yaml_previews/{file}">'
             + (
                 file.replace(".yaml.html", "").replace("_", " ").title().replace("Ir ", "IR ")
                 if file.lower().startswith("ir_")  # ✅ Fix "IR Receiver" case
@@ -54,7 +54,7 @@ class HTMLGenerator:
                 </ul>
                 <a id="download-btn" class="download-btn" href="#" download="">Download Files</a>
             </nav>
-            <iframe id="content-frame" src="community/entities.html" style="width: 100%; height: calc(100vh - 60px); border: none;"></iframe>
+            <iframe id="content-frame" src="community/entities.html"></iframe>
             <script defer src="{ASSET_PATH}/index-functions.js"></script>
         </body>
         </html>
