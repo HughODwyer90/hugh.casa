@@ -68,17 +68,22 @@ iframe {
     display: block;
 }
 
-/* Dropdown Content */
 .dropdown-content {
     display: none;
-    position: absolute;
+    position: absolute; /* ✅ Ensures it floats above other elements */
     background-color: #444;
     min-width: 160px;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    flex-direction: column; /* ✅ Ensures vertical list */
+    z-index: 1000; /* ✅ Ensures it stays on top */
+    left: 0; /* ✅ Aligns it properly */
+    top: 100%; /* ✅ Places it just below the button */
+    overflow: visible; /* ✅ Prevents it from being cut off */
 }
 
+/* Ensure dropdown shows when clicked */
+.show-dropdown {
+    display: block;
+}
 /* Make items appear as a list */
 .dropdown-content a {
     color: white;
@@ -87,9 +92,5 @@ iframe {
     display: block;
 }
 
-/* Ensure dropdown shows on click */
-.show-dropdown {
-    display: flex;
-}
 
 
