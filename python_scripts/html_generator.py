@@ -33,8 +33,6 @@ class HTMLGenerator:
             for file in yaml_files
         )
 
-        
-
         return f"""
         <!DOCTYPE html>
         <html lang="en">
@@ -76,8 +74,8 @@ class HTMLGenerator:
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>{yaml_filename}</title>
-            <link rel="stylesheet" href="/community/assets/table-styles.css">
-            <link rel="icon" type="image/x-icon" href="/community/assets/favicon.ico">
+            <link rel="stylesheet" id="dynamic-styles">
+            <link rel="icon" id="dynamic-favicon">
         </head>
         <body>
             <div class="fixed-header">
@@ -86,10 +84,24 @@ class HTMLGenerator:
             <div class="scrollable-content">
                 <pre class="yaml-content">{formatted_yaml}</pre>
             </div>
-            <script defer src="/community/assets/table-functions.js"></script>
+            <script>
+                (function fixPaths() {{
+                    // ✅ If inside yaml_previews, use "../assets/", otherwise use "assets/"
+                    var basePath = window.location.pathname.includes("/yaml_previews/") ? "../assets/" : "assets/";
+
+                    // ✅ Apply correct asset paths
+                    document.getElementById("dynamic-styles").href = basePath + "table-styles.css";
+                    document.getElementById("dynamic-favicon").href = basePath + "favicon.ico";
+
+                    var script = document.createElement("script");
+                    script.src = basePath + "table-functions.js";
+                    document.body.appendChild(script);
+                }})();
+            </script>
         </body>
         </html>
         """
+
 
     @staticmethod
     def generate_entities_html(entities, total_entities, version, prefixes, redacted_entities):
