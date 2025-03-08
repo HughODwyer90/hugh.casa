@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
+    
 
     // ✅ Ensure dropdown opens and closes correctly
     document.querySelectorAll(".dropbtn").forEach((button) => {
