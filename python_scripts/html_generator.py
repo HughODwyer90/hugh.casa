@@ -21,15 +21,18 @@ class HTMLGenerator:
 
         # ✅ Generate dropdown for YAML previews
         yaml_dropdown = ''.join(
-            f'<a href="#" class="yaml-link" data-file="community/{file}">'
+            f'<a href="#" class="yaml-link" data-file="community/{file}">'  # ✅ Correct `data-file` path
             + (
-                file.replace(".yaml.html", "").replace("_", " ").replace("Yaml Previews/", "").title().replace("Ir ", "IR ")
-                if file.lower().startswith("ir_")  # ✅ Fix "IR Receiver" case
-                else file.replace(".yaml.html", "").replace("_", " ").title()
+                file.replace("yaml_previews/", "")  # ✅ Remove folder prefix
+                    .replace(".yaml.html", "")  # ✅ Remove file extension
+                    .replace("_", " ")  # ✅ Convert underscores to spaces
+                    .title()  # ✅ Capitalize properly
+                    .replace("Ir ", "IR ")  # ✅ Ensure "IR Receiver" remains correct
             )
             + '</a>'
             for file in yaml_files
         )
+
         
 
         return f"""
