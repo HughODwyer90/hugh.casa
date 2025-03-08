@@ -21,7 +21,7 @@ class HTMLGenerator:
 
         # ✅ Generate dropdown for YAML previews
         yaml_dropdown = ''.join(
-            f'<a href="#" class="yaml-link" data-file="community/{file}">'  # ✅ Correct `data-file` path
+            f'<a href="#" class="yaml-link" data-file="{file}">'  # ✅ Correct `data-file` path
             + (
                 file.replace("yaml_previews/", "")  # ✅ Remove folder prefix
                     .replace(".yaml.html", "")  # ✅ Remove file extension
