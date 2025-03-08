@@ -139,7 +139,7 @@ def upload_yaml_files():
             uploaded_files.append(yaml_file)  # ✅ Only append if upload succeeds
 
             uploader.upload_content(github_yaml_html_path, yaml_html, f"{yaml_file}")
-            uploaded_files.append(f"{yaml_file}.html")  # ✅ Only append if upload succeeds
+            uploaded_files.append(f"yaml_previews/{yaml_file}.html")  # ✅ Only append if upload succeeds
 
             print(f"✅ Uploaded: {yaml_file} & its HTML preview.")
         
