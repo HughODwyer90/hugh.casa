@@ -15,7 +15,7 @@ class HTMLGenerator:
 
         # ✅ Generate navbar links for **actual HTML files** (excluding YAML previews)
         navbar_links = ''.join(
-            f'<li><a href="#" class="nav-link" data-file="community/{file}">{file.replace(".html", "").title()}</a></li>'
+            f'<li><a href="#" class="nav-link" data-file="{file}">{file.replace(".html", "").title()}</a></li>'
             for file in html_files if not file.endswith(".yaml.html")
         )
 
@@ -58,7 +58,7 @@ class HTMLGenerator:
                 </ul>
                 <a id="download-btn" class="download-btn" href="#" download="">Download Files</a>
             </nav>
-            <iframe id="content-frame" src="community/entities.html"></iframe>
+            <iframe id="content-frame" src="entities.html"></iframe>
             <script defer src="{ASSET_PATH}/index-functions.js"></script>
         </body>
         </html>
