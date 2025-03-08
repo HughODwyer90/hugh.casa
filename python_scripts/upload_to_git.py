@@ -85,7 +85,8 @@ def should_exclude_entity(entity):
         any("device_tracker." in str(value) for value in attributes.values()) or
         "gps" in entity_id.lower() or
         entity_id.startswith("zone.") or
-        (entity_id.startswith("input_text.") and attributes.get("mode", "").lower() == "password")
+        (entity_id.startswith("input_text.") and attributes.get("mode", "").lower() == "password") or
+        (entity_id == "input_text.kasa_token")
     )
 
 def upload_entities():
