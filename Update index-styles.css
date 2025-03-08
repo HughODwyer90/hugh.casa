@@ -45,56 +45,46 @@ iframe {
     border-radius: 5px;
     text-decoration: none;
 }
-/* Fix dropdown styling */
+/* Dropdown Container */
 .dropdown {
     position: relative;
     display: inline-block;
 }
 
-/* Style dropdown button */
+/* Dropdown Button */
 .dropbtn {
     cursor: pointer;
+    padding: 10px 15px;
     color: white;
     background-color: #333;
     border: none;
     font-size: 16px;
     text-decoration: none;
-    vertical-align: middle;
+    display: block;
 }
 
-
-/* Ensure dropdown content is a vertical list */
+/* Dropdown Content */
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #333;  /* Dark background for contrast */
-    min-width: 180px;  /* Adjust width for readability */
+    background-color: #444;
+    min-width: 160px;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
-    padding: 5px 0;
     z-index: 1000;
-    text-align: left;
-    flex-direction: column;  /* ✅ Makes items appear vertically */
+    flex-direction: column; /* ✅ Ensures vertical list */
 }
 
-/* Ensure each dropdown link is displayed as a block */
+/* Make items appear as a list */
 .dropdown-content a {
     color: white;
     padding: 10px 15px;
     text-decoration: none;
-    display: block;  /* ✅ Forces items to stack vertically */
-    font-size: 14px;
+    display: block;
 }
 
-/* Hover effect for better visibility */
-.dropdown-content a:hover {
-    background-color: #444;
-}
-
-/* Show dropdown when clicked */
+/* Ensure dropdown shows on click */
 .show-dropdown {
-    display: flex;  /* ✅ Ensures vertical layout */
-    flex-direction: column; /* ✅ Makes sure items are stacked */
+    display: flex;
 }
 
 
