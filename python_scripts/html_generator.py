@@ -76,8 +76,8 @@ class HTMLGenerator:
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>{yaml_filename}</title>
-            <link rel="stylesheet" href="../{ASSET_PATH}/table-styles.css">
-            <link rel="icon" type="image/x-icon" href="../{ASSET_PATH}/favicon.ico">
+            <link rel="stylesheet" href="./{ASSET_PATH}/table-styles.css">
+            <link rel="icon" type="image/x-icon" href="./{ASSET_PATH}/favicon.ico">
         </head>
         <body>
             <div class="fixed-header">
@@ -86,7 +86,7 @@ class HTMLGenerator:
             <div class="scrollable-content">
                 <pre class="yaml-content">{formatted_yaml}</pre>
             </div>
-            <script defer src="../{ASSET_PATH}/table-functions.js"></script>
+            <script defer src="./{ASSET_PATH}/table-functions.js"></script>
         </body>
         </html>
         """
