@@ -1,5 +1,5 @@
 import html
-ASSET_PATH = "community/assets"  # ✅ Ensure assets load correctly
+ASSET_PATH = "assets"  # ✅ Ensure assets load correctly
 
 class HTMLGenerator:
     """A class to generate various types of HTML content."""
