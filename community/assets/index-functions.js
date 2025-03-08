@@ -34,6 +34,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const file = link.dataset.file;
             if (file) {
                 loadContent(file);
+
+                // ✅ Close the dropdown when clicking a YAML item
+                document.querySelectorAll(".dropdown-content").forEach((dropdown) => {
+                    dropdown.classList.remove("show-dropdown");
+                });
             }
         });
     });
