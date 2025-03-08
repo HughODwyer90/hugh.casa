@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ✅ Handle direct URL navigation (e.g., index.html?load=integrations.html)
     const urlParams = new URLSearchParams(window.location.search);
-    const pageToLoad = urlParams.get("load") || "community/entities.html";  // ✅ Default to Entities
+    const pageToLoad = urlParams.get("load") || "entities.html";  // ✅ Default to Entities
 
     const iframe = document.getElementById("content-frame");
     if (iframe) {
