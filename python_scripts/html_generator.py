@@ -19,17 +19,17 @@ class HTMLGenerator:
             for file in html_files if not file.endswith(".yaml.html")
         )
 
-        # ✅ Generate dropdown for YAML previews
         yaml_dropdown = ''.join(
-            f'<a href="#" class="yaml-link" data-file="community/{file}">'
+            f'<a href="#" class="yaml-link" data-file="community/yaml_previews/{file}">'
             + (
-                file.replace(".yaml.html", "").replace("_", " ").title().replace("Ir ", "IR ")
-                if file.lower().startswith("ir_")  # ✅ Fix "IR Receiver" case
+                file.replace(".yaml.html", "").replace("_", " ").title().replace("Ir ", "IR ")  
+                if file.lower().startswith("ir_")  # ✅ Keep "IR Receiver" fix
                 else file.replace(".yaml.html", "").replace("_", " ").title()
             )
             + '</a>'
             for file in yaml_files
         )
+
 
         return f"""
         <!DOCTYPE html>
