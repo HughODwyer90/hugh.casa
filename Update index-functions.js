@@ -7,8 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const iframe = document.getElementById("content-frame");
 
-        // ✅ Correctly handle YAML file display
-        if (filename.endsWith(".yaml")) {
+        if (filename.endsWith(".yaml.html")) {
             fetch(filename)
                 .then(response => response.text())
                 .then(text => {
@@ -20,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ✅ Attach event listeners for ALL navbar links (including YAML)
+    // ✅ Attach event listeners for ALL navbar links
     document.querySelectorAll("nav ul li a, .yaml-link").forEach((link) => {
         link.addEventListener("click", (event) => {
             event.preventDefault();
@@ -30,30 +29,25 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
-    
 
     // ✅ Ensure dropdown opens and closes correctly
-    document.querySelectorAll(".dropbtn").forEach((button) => {
-        button.addEventListener("click", (event) => {
-            event.stopPropagation();
-            const dropdownContent = button.nextElementSibling;
-            dropdownContent.classList.toggle("show-dropdown");
-        });
+    document.querySelector(".dropbtn").addEventListener("click", (event) => {
+        event.stopPropagation();
+        const dropdownContent = document.querySelector(".dropdown-content");
+        dropdownContent.classList.toggle("show-dropdown");
     });
 
     // ✅ Close dropdown when clicking outside
     document.addEventListener("click", (event) => {
-        document.querySelectorAll(".dropdown-content").forEach((dropdown) => {
-            if (!dropdown.contains(event.target) && !dropdown.previousElementSibling.contains(event.target)) {
-                dropdown.classList.remove("show-dropdown");
-            }
-        });
+        const dropdownContent = document.querySelector(".dropdown-content");
+        if (!dropdownContent.contains(event.target) && !document.querySelector(".dropbtn").contains(event.target)) {
+            dropdownContent.classList.remove("show-dropdown");
+        }
     });
 
-    // ✅ Set default content (only if an iframe exists)
-    const defaultPage = "entities.html";
+    // ✅ Set default content
     const iframe = document.getElementById("content-frame");
     if (iframe) {
-        loadContent(defaultPage);
+        loadContent("entities.html");
     }
 });
