@@ -39,6 +39,10 @@ class HTMLGenerator:
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+            <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+            <meta http-equiv="X-Content-Type-Options" content="nosniff">
+            <meta name="referrer" content="no-referrer-when-downgrade">
             <title>Living Backup</title>
             <link rel="stylesheet" href="{ASSET_PATH}/index-styles.css">
             <link rel="icon" type="image/x-icon" href="{ASSET_PATH}/favicon.ico">
