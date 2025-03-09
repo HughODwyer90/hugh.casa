@@ -39,10 +39,11 @@ class HTMLGenerator:
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
-            <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'self';">
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <meta http-equiv="X-Content-Type-Options" content="nosniff">
             <meta name="referrer" content="no-referrer-when-downgrade">
+            <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
             <title>Living Backup</title>
             <link rel="stylesheet" href="{ASSET_PATH}/index-styles.css">
             <link rel="icon" type="image/x-icon" href="{ASSET_PATH}/favicon.ico">
