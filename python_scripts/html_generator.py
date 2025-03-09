@@ -40,7 +40,7 @@ class HTMLGenerator:
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
-            <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+            <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'self';">
             <meta http-equiv="X-Content-Type-Options" content="nosniff">
             <meta name="referrer" content="no-referrer-when-downgrade">
             <title>Living Backup</title>
