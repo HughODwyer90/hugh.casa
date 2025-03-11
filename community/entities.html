@@ -11,13 +11,13 @@
         <body>
             <div class="fixed-header">
                 <h1>Home Assistant Entities</h1>
-                <p>Total Entities: 716 (Redacted: 16)</p>
-                <p>Version: 2025-03-11-141914</p>
+                <p>Total Entities: 717 (Redacted: 16)</p>
+                <p>Version: 2025-03-11-143649</p>
                 <div class="search-container">
                     <input type="text" id="entitySearch" class="search-box" placeholder="🔍 Search entities...">
                 </div>
                 <div>
-                    <p id="table-count">Search total: 716</p>
+                    <p id="table-count">Search total: 717</p>
                 </div>
                 <div class="filters">
                     <div id="filter-All" class="filter entity-filter active">All</div>
@@ -1056,8 +1056,8 @@
                 <td>binary_sensor.diffuser_moisture</td>
                 <td>Diffuser Moisture</td>
                 <td>N/A</td>
-                <td>N/A</td>
-                <td>No</td>
+                <td>on, off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -1374,18 +1374,18 @@
         
             <tr>
                 <td>button.homeassistant_reload</td>
-                <td>Reload</td>
+                <td>Home Assistant Reload</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>button.homeassistant_restart</td>
-                <td>Restart</td>
+                <td>Home Assistant Restart</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -1462,10 +1462,10 @@
         
             <tr>
                 <td>button.ignore_all_issues</td>
-                <td>Ignore all</td>
+                <td>Repairs Ignore all</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -1510,10 +1510,10 @@
         
             <tr>
                 <td>button.unignore_all_issues</td>
-                <td>Unignore all</td>
+                <td>Repairs Unignore all</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -1678,10 +1678,10 @@
         
             <tr>
                 <td>event.repair</td>
+                <td>Repairs</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -2289,7 +2289,7 @@
                 <td>Select Diffuser Brightness</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -2493,6 +2493,14 @@
             </tr>
         
             <tr>
+                <td>scene.living_room_lights_last_state</td>
+                <td>living_room_lights_last_state</td>
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>script.blinds_alarm_open</td>
                 <td>Blinds alarm open</td>
                 <td>N/A</td>
@@ -2681,7 +2689,7 @@
                 <td>Select Diffuser Color</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -2689,7 +2697,7 @@
                 <td>Select Diffuser Light Mode</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -2697,7 +2705,7 @@
                 <td>Select Diffuser Mist</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -2854,10 +2862,10 @@
         
             <tr>
                 <td>sensor.active_issues</td>
-                <td>Active</td>
+                <td>Repairs Active</td>
                 <td>issues</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -2918,34 +2926,34 @@
         
             <tr>
                 <td>sensor.air_quality</td>
-                <td>Air quality</td>
+                <td>Home Assistant Air quality</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.alarm_control_panels</td>
-                <td>Alarm control panels</td>
+                <td>Home Assistant Alarm control panels</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.areas</td>
-                <td>Areas</td>
+                <td>Home Assistant Areas</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.automations</td>
-                <td>Automations</td>
+                <td>Home Assistant Automations</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -3166,34 +3174,34 @@
         
             <tr>
                 <td>sensor.binary_sensors</td>
-                <td>Binary sensors</td>
+                <td>Home Assistant Binary sensors</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.buttons</td>
-                <td>Buttons</td>
+                <td>Home Assistant Buttons</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.calendars</td>
-                <td>Calendars</td>
+                <td>Home Assistant Calendars</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.cameras</td>
-                <td>Cameras</td>
+                <td>Home Assistant Cameras</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -3294,26 +3302,26 @@
         
             <tr>
                 <td>sensor.climate</td>
-                <td>Climate</td>
+                <td>Home Assistant Climate</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.covers</td>
-                <td>Covers</td>
+                <td>Home Assistant Covers</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.custom_integrations</td>
-                <td>Custom integrations</td>
+                <td>Home Assistant Custom integrations</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -3334,50 +3342,50 @@
         
             <tr>
                 <td>sensor.dates</td>
-                <td>Dates</td>
+                <td>Home Assistant Dates</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.datetimes</td>
-                <td>Date/times</td>
+                <td>Home Assistant Date/times</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.device_trackers</td>
-                <td>Device trackers</td>
+                <td>Home Assistant Device trackers</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.devices</td>
-                <td>Devices</td>
+                <td>Home Assistant Devices</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.entities</td>
-                <td>Entities</td>
+                <td>Home Assistant Entities</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.fans</td>
-                <td>Fans</td>
+                <td>Home Assistant Fans</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4270,98 +4278,98 @@
         
             <tr>
                 <td>sensor.humidifiers</td>
-                <td>Humidifiers</td>
+                <td>Home Assistant Humidifiers</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.ignored_issues</td>
-                <td>Ignored</td>
+                <td>Repairs Ignored</td>
                 <td>issues</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.images</td>
-                <td>Images</td>
+                <td>Home Assistant Images</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.input_booleans</td>
-                <td>Input booleans</td>
+                <td>Home Assistant Input booleans</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.input_buttons</td>
-                <td>Input buttons</td>
+                <td>Home Assistant Input buttons</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.input_datetimes</td>
-                <td>Input date/times</td>
+                <td>Home Assistant Input date/times</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.input_numbers</td>
-                <td>Input numbers</td>
+                <td>Home Assistant Input numbers</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.input_selects</td>
-                <td>Input selects</td>
+                <td>Home Assistant Input selects</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.input_texts</td>
-                <td>Input texts</td>
+                <td>Home Assistant Input texts</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.integrations</td>
-                <td>Integrations</td>
+                <td>Home Assistant Integrations</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.issues</td>
-                <td>Total</td>
+                <td>Repairs Total</td>
                 <td>issues</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.lights</td>
-                <td>Lights</td>
+                <td>Home Assistant Lights</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4369,7 +4377,7 @@
                 <td>Position</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4377,7 +4385,7 @@
                 <td>Record</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4385,7 +4393,7 @@
                 <td>Competition</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4393,7 +4401,7 @@
                 <td>Competition Stage</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4401,7 +4409,7 @@
                 <td>Competition Stage</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4409,7 +4417,7 @@
                 <td>Position</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4417,7 +4425,7 @@
                 <td>Record</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4425,7 +4433,7 @@
                 <td>Competition Stage</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4441,7 +4449,7 @@
                 <td>Kick off</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4457,7 +4465,7 @@
                 <td>Liverpool (UTC)</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4465,7 +4473,7 @@
                 <td>Location</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4473,7 +4481,7 @@
                 <td>Game vs</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4606,10 +4614,10 @@
         
             <tr>
                 <td>sensor.locks</td>
-                <td>Locks</td>
+                <td>Home Assistant Locks</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4630,10 +4638,10 @@
         
             <tr>
                 <td>sensor.media_players</td>
-                <td>Media players</td>
+                <td>Home Assistant Media players</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4670,10 +4678,10 @@
         
             <tr>
                 <td>sensor.numbers</td>
-                <td>Numbers</td>
+                <td>Home Assistant Numbers</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4718,18 +4726,18 @@
         
             <tr>
                 <td>sensor.persistent_notifications</td>
-                <td>Persistent notifications</td>
+                <td>Home Assistant Persistent notifications</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.persons</td>
-                <td>Persons</td>
+                <td>Home Assistant Persons</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4750,50 +4758,50 @@
         
             <tr>
                 <td>sensor.remotes</td>
-                <td>Remotes</td>
+                <td>Home Assistant Remotes</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.scenes</td>
-                <td>Scenes</td>
+                <td>Home Assistant Scenes</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.scripts</td>
-                <td>Scripts</td>
+                <td>Home Assistant Scripts</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.selects</td>
-                <td>Selects</td>
+                <td>Home Assistant Selects</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.sensors</td>
-                <td>Sensors</td>
+                <td>Home Assistant Sensors</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.sirens</td>
-                <td>Sirens</td>
+                <td>Home Assistant Sirens</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4878,10 +4886,10 @@
         
             <tr>
                 <td>sensor.stt</td>
-                <td>Speech-to-text</td>
+                <td>Home Assistant Speech-to-text</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4942,10 +4950,10 @@
         
             <tr>
                 <td>sensor.suns</td>
-                <td>Suns</td>
+                <td>Home Assistant Suns</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4958,26 +4966,26 @@
         
             <tr>
                 <td>sensor.switches</td>
-                <td>Switches</td>
+                <td>Home Assistant Switches</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.texts</td>
-                <td>Texts</td>
+                <td>Home Assistant Texts</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.times</td>
-                <td>Times</td>
+                <td>Home Assistant Times</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4990,10 +4998,10 @@
         
             <tr>
                 <td>sensor.tts</td>
-                <td>Text-to-speech</td>
+                <td>Home Assistant Text-to-speech</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -5014,18 +5022,18 @@
         
             <tr>
                 <td>sensor.update</td>
-                <td>Update</td>
+                <td>Home Assistant Update</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.vacuums</td>
-                <td>Vacuums</td>
+                <td>Home Assistant Vacuums</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -5054,18 +5062,18 @@
         
             <tr>
                 <td>sensor.water_heaters</td>
-                <td>Water heaters</td>
+                <td>Home Assistant Water heaters</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.weather</td>
-                <td>Weather</td>
+                <td>Home Assistant Weather</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -5094,10 +5102,10 @@
         
             <tr>
                 <td>sensor.zones</td>
-                <td>Zones</td>
+                <td>Home Assistant Zones</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>No</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -5184,16 +5192,16 @@
                 <td>switch.diffuser_light</td>
                 <td>Light Diffuser</td>
                 <td>N/A</td>
-                <td>N/A</td>
-                <td>No</td>
+                <td>on, off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>switch.diffuser_power</td>
                 <td>Power Diffuser</td>
                 <td>N/A</td>
-                <td>N/A</td>
-                <td>No</td>
+                <td>on, off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
