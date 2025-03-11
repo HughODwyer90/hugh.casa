@@ -3932,43 +3932,6 @@
       date: &#x27;{{ now().strftime(&#x27;&#x27;%Y-%m-%d&#x27;&#x27;) }}&#x27;
     action: input_datetime.set_datetime
   mode: single
-- id: &#x27;1741699969794&#x27;
-  alias: Cloudflared Tunnel Status Alert
-  description: Sends notifications when Cloudflared tunnel goes offline or comes back
-    online.
-  triggers:
-  - entity_id: switch.cloudflared_tunnel
-    from: &#x27;on&#x27;
-    to: &#x27;off&#x27;
-    for:
-      minutes: 1
-    id: cloudflared_offline
-    trigger: state
-  - entity_id: switch.cloudflared_tunnel
-    from: &#x27;off&#x27;
-    to: &#x27;on&#x27;
-    id: cloudflared_online
-    trigger: state
-  actions:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: cloudflared_offline
-      sequence:
-      - data:
-          title: &quot;\U0001F6A8 Cloudflared Tunnel Down!&quot;
-          message: Your Home Assistant Cloudflared tunnel is offline. Check Cloudflare
-            or restart the service.
-        action: notify.notifications
-    - conditions:
-      - condition: trigger
-        id: cloudflared_online
-      sequence:
-      - data:
-          title: ✅ Cloudflared Tunnel Back Online!
-          message: Your Cloudflared tunnel is back online.
-        action: notify.notifications
-  mode: restart
 </pre>
             </div>
             <script>
