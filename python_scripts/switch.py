@@ -13,6 +13,8 @@ from ...entity import SpookEntityDescription
 from .entity import CloudflaredSpookEntity  # Changed from HomeAssistantCloudSpookEntity
 
 if TYPE_CHECKING:
+    from collections.abc import Awaitable, Callable
+
     from homeassistant.config_entries import ConfigEntry
     from homeassistant.core import HomeAssistant
     from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -25,11 +27,11 @@ class CloudflaredSpookSwitchEntityDescription(
 ):
     """Class describing Spook Cloudflared switch entities."""
 
-    is_on_fn: callable
-    set_fn: callable
+    is_on_fn: Callable[[Any], bool | None]
+    set_fn: Callable[[Any, bool], Awaitable[Any]]
 
 
-# 🚀 Define Cloudflared Switch (Only ON/OFF)
+# 🚀 Define Cloudflared Switch with Actual Monitoring
 SWITCHES: tuple[CloudflaredSpookSwitchEntityDescription, ...] = (
     CloudflaredSpookSwitchEntityDescription(
         key="cloudflared_tunnel",
