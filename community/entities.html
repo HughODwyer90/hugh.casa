@@ -11,13 +11,13 @@
         <body>
             <div class="fixed-header">
                 <h1>Home Assistant Entities</h1>
-                <p>Total Entities: 723 (Redacted: 16)</p>
-                <p>Version: 2025-03-11-120019</p>
+                <p>Total Entities: 722 (Redacted: 16)</p>
+                <p>Version: 2025-03-11-120615</p>
                 <div class="search-container">
                     <input type="text" id="entitySearch" class="search-box" placeholder="🔍 Search entities...">
                 </div>
                 <div>
-                    <p id="table-count">Search total: 723</p>
+                    <p id="table-count">Search total: 722</p>
                 </div>
                 <div class="filters">
                     <div id="filter-All" class="filter entity-filter active">All</div>
@@ -2070,7 +2070,7 @@
         
             <tr>
                 <td>input_text.work_plug_state</td>
-                <td>N/A</td>
+                <td>Work Plug State</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>Yes</td>
@@ -2495,14 +2495,6 @@
             <tr>
                 <td>scene.living_room_all_lights_on</td>
                 <td>Living Room All Lights On</td>
-                <td>N/A</td>
-                <td>N/A</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>scene.living_room_lights_last_state</td>
-                <td>living_room_lights_last_state</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>Yes</td>
@@ -5197,16 +5189,8 @@
             </tr>
         
             <tr>
-                <td>switch.cloud_alexa</td>
-                <td>Home Assistant Cloud Alexa</td>
-                <td>N/A</td>
-                <td>N/A</td>
-                <td>No</td>
-            </tr>
-        
-            <tr>
                 <td>switch.cloud_alexa_report_state</td>
-                <td>Home Assistant Cloud Alexa state reporting</td>
+                <td>Alexa state reporting</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>No</td>
@@ -5214,7 +5198,7 @@
         
             <tr>
                 <td>switch.cloud_google</td>
-                <td>Home Assistant Cloud Google Assistant</td>
+                <td>Google Assistant</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>No</td>
@@ -5222,7 +5206,7 @@
         
             <tr>
                 <td>switch.cloud_google_report_state</td>
-                <td>Home Assistant Cloud Google Assistant state reporting</td>
+                <td>Google Assistant state reporting</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>No</td>
@@ -5230,10 +5214,18 @@
         
             <tr>
                 <td>switch.cloud_remote</td>
-                <td>Home Assistant Cloud Remote</td>
+                <td>Remote</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>No</td>
+            </tr>
+        
+            <tr>
+                <td>switch.cloudflared_tunnel</td>
+                <td>Cloudflared Tunnel Cloudflared Tunnel</td>
+                <td>N/A</td>
+                <td>on, off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
