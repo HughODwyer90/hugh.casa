@@ -337,16 +337,16 @@
           {{ "%d:%02d:%02d:%02d" | format(days, hours, minutes, seconds) }}
         {% endif %}
 
-    daily_driving_time_seconds:
-      friendly_name: "Car Today Driving Time (Seconds)"
-      unique_id: "car_daily_driving_time_seconds"
+    daily_driving_time_mins:
+      friendly_name: "Car Today Driving Time (Mins)"
+      unique_id: "car_daily_driving_time_mins"
       icon_template: "mdi:car-clock"
       unit_of_measurement: "min"
       value_template: "{{ (states('input_number.daily_driving_seconds') | int(default=0) / 60) | round(1) }}"
 
-    year_driving_time_seconds:
-      friendly_name: "Car YTD Driving Time (Seconds)"
-      unique_id: "car_yearly_driving_time_seconds"
+    year_driving_time_hours:
+      friendly_name: "Car YTD Driving Time (Hours)"
+      unique_id: "car_yearly_driving_time_hours"
       icon_template: "mdi:car-clock"
       unit_of_measurement: "h"
       value_template: "{{ (states('input_number.yearly_driving_seconds') | int(default=0) / 3600) | round(2) }}"
