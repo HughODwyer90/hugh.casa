@@ -355,12 +355,14 @@
     daily_driving_time_seconds:
       friendly_name: &quot;Car Today Driving Time (Seconds)&quot;
       unique_id: &quot;car_daily_driving_time_seconds&quot;
+      unit_of_measurement: &quot;s&quot;
       icon_template: &quot;mdi:car-clock&quot;
       value_template: &quot;{{ states(&#x27;input_number.daily_driving_seconds&#x27;) | int(default=0) }}&quot;
 
     year_driving_time_seconds:
       friendly_name: &quot;Car YTD Driving Time (Seconds)&quot;
       unique_id: &quot;car_yearly_driving_time_seconds&quot;
+      unit_of_measurement: &quot;s&quot;
       icon_template: &quot;mdi:car-clock&quot;
       value_template: &quot;{{ states(&#x27;input_number.yearly_driving_seconds&#x27;) | int(default=0) }}&quot;
 
