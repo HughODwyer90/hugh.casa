@@ -312,11 +312,17 @@ update_liverpool_sensors:
       - sensor.liverpool_utc
     action: homeassistant.update_entity
   - delay:
-      seconds: 10
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
   - action: shell_command.update_liverpool_channel
     data: {}
   - delay:
-      seconds: 10
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
   - choose:
     - conditions:
       - condition: template
