@@ -340,16 +340,16 @@
     daily_driving_time_seconds:
       friendly_name: "Car Today Driving Time (Seconds)"
       unique_id: "car_daily_driving_time_seconds"
-      unit_of_measurement: "s"
       icon_template: "mdi:car-clock"
-      value_template: "{{ states('input_number.daily_driving_seconds') | int(default=0) }}"
+      unit_of_measurement: "min"
+      value_template: "{{ (states('input_number.daily_driving_seconds') | int(default=0) / 60) | round(1) }}"
 
     year_driving_time_seconds:
       friendly_name: "Car YTD Driving Time (Seconds)"
       unique_id: "car_yearly_driving_time_seconds"
-      unit_of_measurement: "s"
       icon_template: "mdi:car-clock"
-      value_template: "{{ states('input_number.yearly_driving_seconds') | int(default=0) }}"
+      unit_of_measurement: "h"
+      value_template: "{{ (states('input_number.yearly_driving_seconds') | int(default=0) / 3600) | round(2) }}"
 
     windscreen_freeze_risk:
       friendly_name: "Windscreen Freeze Risk"
