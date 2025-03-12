@@ -352,19 +352,27 @@
           {{ &quot;%d:%02d:%02d:%02d&quot; | format(days, hours, minutes, seconds) }}
         {% endif %}
 
-    daily_driving_time_mins:
-      friendly_name: &quot;Car Today Driving Time (Mins)&quot;
-      unique_id: &quot;car_daily_driving_time_mins&quot;
+    daily_driving_time_minutes:
+      friendly_name: &quot;Car Today Driving Time (Minutes.Seconds)&quot;
+      unique_id: &quot;car_daily_driving_time_minutes&quot;
       icon_template: &quot;mdi:car-clock&quot;
       unit_of_measurement: &quot;min&quot;
-      value_template: &quot;{{ (states(&#x27;input_number.daily_driving_seconds&#x27;) | int(default=0) / 60) | round(1) }}&quot;
+      value_template: &gt;
+        {% set total_seconds = states(&#x27;input_number.daily_driving_seconds&#x27;) | int(default=0) %}
+        {% set minutes = total_seconds // 60 %}
+        {% set seconds = total_seconds % 60 %}
+        {{ &quot;%d.%02d&quot; | format(minutes, seconds) }}
 
     year_driving_time_hours:
-      friendly_name: &quot;Car YTD Driving Time (Hours)&quot;
+      friendly_name: &quot;Car YTD Driving Time (Hours.Minutes)&quot;
       unique_id: &quot;car_yearly_driving_time_hours&quot;
       icon_template: &quot;mdi:car-clock&quot;
       unit_of_measurement: &quot;h&quot;
-      value_template: &quot;{{ (states(&#x27;input_number.yearly_driving_seconds&#x27;) | int(default=0) / 3600) | round(2) }}&quot;
+      value_template: &gt;
+        {% set total_seconds = states(&#x27;input_number.yearly_driving_seconds&#x27;) | int(default=0) %}
+        {% set hours = total_seconds // 3600 %}
+        {% set minutes = (total_seconds % 3600) // 60 %}
+        {{ &quot;%d.%02d&quot; | format(hours, minutes) }}
 
     windscreen_freeze_risk:
       friendly_name: &quot;Windscreen Freeze Risk&quot;
