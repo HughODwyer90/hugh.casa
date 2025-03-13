@@ -336,6 +336,7 @@
         {% else%}
           {{ "%d:%02d:%02d:%02d" | format(days, hours, minutes, seconds) }}
         {% endif %}
+      
 
     daily_driving_time_minutes:
       friendly_name: "Car Today Driving Time (Minutes.Seconds)"
@@ -347,6 +348,16 @@
         {% set minutes = total_seconds // 60 %}
         {% set seconds = total_seconds % 60 %}
         {{ "%d.%02d" | format(minutes, seconds) }}
+      attribute_templates:
+        readable_time: >
+          {% set hours = total_seconds // 3600 %}
+          {% set minutes = (total_seconds % 3600) // 60 %}
+          {% set seconds = total_seconds % 60 %}
+          {% if hours > 0 %}
+            {{ hours }}h {{ minutes }}m {{ seconds }}s
+          {% else %}
+            {{ minutes }}m {{ seconds }}s
+          {% endif %}
 
     year_driving_time_hours:
       friendly_name: "Car YTD Driving Time (Hours.Minutes)"
@@ -358,6 +369,18 @@
         {% set hours = total_seconds // 3600 %}
         {% set minutes = (total_seconds % 3600) // 60 %}
         {{ "%d.%02d" | format(hours, minutes) }}
+      attribute_templates:
+        readable_time: >
+          {% set days = total_seconds // 86400 %}
+          {% set hours = (total_seconds % 86400) // 3600 %}
+          {% set minutes = (total_seconds % 3600) // 60 %}
+          {% if days > 0 %}
+            {{ days }}d {{ hours }}h {{ minutes }}m
+          {% elif hours > 0 %}
+            {{ hours }}h {{ minutes }}m
+          {% else %}
+            {{ minutes }}m
+          {% endif %}
 
     windscreen_freeze_risk:
       friendly_name: "Windscreen Freeze Risk"
