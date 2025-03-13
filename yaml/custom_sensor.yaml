@@ -306,41 +306,9 @@
           0
         {% endif %}
 
-    daily_driving_time:
-      friendly_name: "Car Today Driving Time"
-      unique_id: "car_daily_driving_time_sensor"
-      icon_template: "mdi:car-clock"
-      value_template: >
-        {% set total_seconds = states('input_number.daily_driving_seconds') | float(default=0) %}
-        {% if total_seconds == 0 %}
-          0
-        {% else %}
-          {% set hours = (total_seconds // 3600) %}
-          {% set minutes = ((total_seconds % 3600) // 60) %}
-          {% set seconds = (total_seconds % 60) %}
-          {{ "%02d:%02d:%02d" | format(hours, minutes, seconds) }}
-        {% endif %}
-
-    year_driving_time:
-      friendly_name: "Car YTD Driving Time"
-      unique_id: "car_yearly_driving_time_sensor"
-      icon_template: "mdi:car-clock"
-      value_template: >
-        {% set total_seconds = states('input_number.yearly_driving_seconds') | float(default=0) %}
-        {% set days = (total_seconds // 86400) %}
-        {% set hours = ((total_seconds % 86400) // 3600) %}
-        {% set minutes = ((total_seconds % 3600) // 60) %}
-        {% set seconds = (total_seconds % 60) %}
-        {% if total_seconds == 0 %}
-          0
-        {% else%}
-          {{ "%d:%02d:%02d:%02d" | format(days, hours, minutes, seconds) }}
-        {% endif %}
-      
-
-    daily_driving_time_minutes:
-      friendly_name: "Car Today Driving Time (Minutes.Seconds)"
-      unique_id: "car_daily_driving_time_minutes"
+    car_daily_driving_time:
+      friendly_name: "Today Driving Time"
+      unique_id: "car_daily_driving_time"
       icon_template: "mdi:car-clock"
       unit_of_measurement: "min"
       value_template: >
@@ -360,9 +328,9 @@
             {{ minutes }}m {{ seconds }}s
           {% endif %}
 
-    year_driving_time_hours:
-      friendly_name: "Car YTD Driving Time (Hours.Minutes)"
-      unique_id: "car_yearly_driving_time_hours"
+    car_yearly_driving_time:
+      friendly_name: "YTD Driving Time"
+      unique_id: "car_yearly_driving_time"
       icon_template: "mdi:car-clock"
       unit_of_measurement: "h"
       value_template: >
@@ -376,12 +344,13 @@
           {% set days = total_seconds // 86400 %}
           {% set hours = (total_seconds % 86400) // 3600 %}
           {% set minutes = (total_seconds % 3600) // 60 %}
+          {% set seconds = total_seconds % 60 %}
           {% if days > 0 %}
-            {{ days }}d {{ hours }}h {{ minutes }}m
+            {{ days }}d {{ hours }}h {{ minutes }}m {{ seconds }}s
           {% elif hours > 0 %}
-            {{ hours }}h {{ minutes }}m
+            {{ hours }}h {{ minutes }}m {{ seconds }}s
           {% else %}
-            {{ minutes }}m
+            {{ minutes }}m {{ seconds }}s
           {% endif %}
 
     windscreen_freeze_risk:
