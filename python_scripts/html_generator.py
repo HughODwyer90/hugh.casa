@@ -1,4 +1,5 @@
 import html
+import datetime
 ASSET_PATH = "assets"  # ✅ Ensure assets load correctly
 
 class HTMLGenerator:
@@ -110,6 +111,16 @@ class HTMLGenerator:
 
     @staticmethod
     def generate_entities_html(entities, total_entities, version, prefixes, redacted_entities):
+
+        def format_state(state):
+            """Format state if it's a valid ISO 8601 datetime, otherwise return as is."""
+            if isinstance(state, str):
+                try:
+                    return datetime.datetime.fromisoformat(state).strftime("%Y-%m-%d %H:%M:%S")
+                except ValueError:
+                    pass  # If parsing fails, return the original state
+            return state
+
         """Generate HTML for Home Assistant entities."""
         prefixes = sorted(set(entity["entity_id"].split(".")[0] for entity in entities))
         filters = ''.join(f'<div id="filter-{prefix}" class="filter entity-filter">{prefix}</div>' for prefix in prefixes)
@@ -119,7 +130,7 @@ class HTMLGenerator:
                 <td>{entity['entity_id']}</td>
                 <td>{entity['attributes'].get('friendly_name', 'N/A')}</td>
                 <td>{entity['attributes'].get('unit_of_measurement', 'N/A')}</td>
-                <td>{"on, off" if entity['state'] in ['on', 'off'] else "N/A"}</td>
+                <td>{format_state(entity['state'])}</td>
                 <td>{"Yes" if entity.get('state', 'unavailable') != 'unavailable' else "No"}</td>
             </tr>
         """ for entity in sorted(entities, key=lambda x: x['entity_id']))
@@ -157,7 +168,7 @@ class HTMLGenerator:
                             <th>Entity</th>
                             <th>Friendly Name</th>
                             <th>Unit of Measurement</th>
-                            <th>Acceptable Values</th>
+                            <th>State (ToU)</th>
                             <th>Enabled</th>
                         </tr>
                     </thead>
