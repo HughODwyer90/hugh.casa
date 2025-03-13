@@ -365,6 +365,7 @@
         {{ &quot;%d.%02d&quot; | format(minutes, seconds) }}
       attribute_templates:
         readable_time: &gt;
+          {% set total_seconds = states(&#x27;input_number.yearly_driving_seconds&#x27;) | int(default=0) %}
           {% set hours = total_seconds // 3600 %}
           {% set minutes = (total_seconds % 3600) // 60 %}
           {% set seconds = total_seconds % 60 %}
@@ -386,6 +387,7 @@
         {{ &quot;%d.%02d&quot; | format(hours, minutes) }}
       attribute_templates:
         readable_time: &gt;
+          {% set total_seconds = states(&#x27;input_number.yearly_driving_seconds&#x27;) | int(default=0) %}
           {% set days = total_seconds // 86400 %}
           {% set hours = (total_seconds % 86400) // 3600 %}
           {% set minutes = (total_seconds % 3600) // 60 %}
