@@ -610,6 +610,10 @@
       below: 15
     - condition: template
       value_template: '{{ now().month in [11, 12, 1, 2] }}'
+    - condition: numeric_state
+      entity_id: weather.home
+      attribute: temperature
+      below: 10
   - condition: time
     after: 08:30:00
     before: 03:00:00
