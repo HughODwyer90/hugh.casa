@@ -60,7 +60,9 @@ class HTMLGenerator:
                         </div>
                     </li>
                 </ul>
-                <a id="download-btn" class="download-btn" href="#" download="">Download Files</a>
+                <a id="download-btn" class="download-btn" href="https://github.com/HughODwyer90/hugh.casa/archive/refs/heads/main.zip" download>
+                    Download ZIP
+                </a>
             </nav>
             <iframe id="content-frame" src="entities.html"></iframe>
             <script defer src="{ASSET_PATH}/index-functions.js"></script>
