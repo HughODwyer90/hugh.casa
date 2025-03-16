@@ -3933,34 +3933,6 @@
       date: &#x27;{{ now().strftime(&#x27;&#x27;%Y-%m-%d&#x27;&#x27;) }}&#x27;
     action: input_datetime.set_datetime
   mode: single
-- id: &#x27;1742138946139&#x27;
-  alias: Adjust Google Assistant Volume Before Response
-  description: &#x27;&#x27;
-  triggers:
-  - event_type: google_assistant_sdk.response
-    trigger: event
-  actions:
-  - variables:
-      previous_volume: &#x27;{{ state_attr(&#x27;&#x27;media_player.hugh_room_display&#x27;&#x27;, &#x27;&#x27;volume_level&#x27;&#x27;)
-        }}&#x27;
-  - target:
-      entity_id: media_player.hugh_room_display
-    data:
-      volume_level: 3
-    action: media_player.volume_set
-  - wait_for_trigger:
-    - entity_id: media_player.hugh_room_display
-      attribute: media_content_type
-      to: idle
-      for:
-        seconds: 2
-      trigger: state
-  - target:
-      entity_id: media_player.hugh_room_display
-    data:
-      volume_level: &#x27;{{ previous_volume }}&#x27;
-    action: media_player.volume_set
-  mode: restart
 </pre>
             </div>
             <script>
