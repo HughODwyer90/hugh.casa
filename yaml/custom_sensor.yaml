@@ -120,6 +120,18 @@
         {% else %}
           Unknown
         {% endif %}
+        
+    days_until_retirement:
+      friendly_name: "Days Until Retirement"
+      unique_id: "days_until_retirement_sensor"
+      icon_template: "mdi:calendar-clock"
+      unit_of_measurement: "days"
+      value_template: >
+        {% set retirement_age = 66 %}
+        {% set birth_date = '1990-07-07' %}
+        {% set retirement_date = as_datetime(birth_date) + timedelta(years=retirement_age) %}
+        {% set today = now().date() %}
+        {{ (retirement_date.date() - today).days }}
 
     tuya_account_expiration:
       friendly_name: "Tuya Account Expiration"
