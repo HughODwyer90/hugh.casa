@@ -135,6 +135,18 @@
         {% else %}
           Unknown
         {% endif %}
+        
+    days_until_retirement:
+      friendly_name: &quot;Days Until Retirement&quot;
+      unique_id: &quot;days_until_retirement_sensor&quot;
+      icon_template: &quot;mdi:calendar-clock&quot;
+      unit_of_measurement: &quot;days&quot;
+      value_template: &gt;
+        {% set retirement_age = 66 %}
+        {% set birth_date = &#x27;1990-07-07&#x27; %}
+        {% set retirement_date = as_datetime(birth_date) + timedelta(years=retirement_age) %}
+        {% set today = now().date() %}
+        {{ (retirement_date.date() - today).days }}
 
     tuya_account_expiration:
       friendly_name: &quot;Tuya Account Expiration&quot;
