@@ -622,6 +622,9 @@
     - condition: state
       entity_id: switch.hugh_room_plug_blanket
       state: 'on'
+    - condition: state
+      entity_id: binary_sensor.bed_sensor
+      state: 'on'
   actions:
   - target:
       entity_id: switch.hugh_room_plug_blanket
