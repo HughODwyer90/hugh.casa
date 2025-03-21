@@ -37,6 +37,7 @@
     air_purifier_speed:
       friendly_name: &quot;Air Purifier Fan Speed&quot;
       unique_id: &quot;air_purifier_fan_speed_sensor&quot;
+      unit_of_measurement: &quot;%&quot;
       value_template: &gt;
         {% set state = states(&#x27;fan.air_purifier&#x27;) %}
         {% set speed = state_attr(&#x27;fan.air_purifier&#x27;, &#x27;percentage&#x27;) %}
@@ -45,7 +46,7 @@
         {% elif state == &#x27;off&#x27; %}
           Off
         {% else %}
-          {{ speed }}%
+          {{ speed }}
         {% endif %}
       icon_template: &gt;
         {% set state = states(&#x27;fan.air_purifier&#x27;) %}
