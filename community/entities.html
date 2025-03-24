@@ -11,13 +11,13 @@
         <body>
             <div class="fixed-header">
                 <h1>Home Assistant Entities</h1>
-                <p>Total Entities: 719 (Redacted: 16)</p>
-                <p>Version: 2025-03-24-141119</p>
+                <p>Total Entities: 720 (Redacted: 16)</p>
+                <p>Version: 2025-03-24-141918</p>
                 <div class="search-container">
                     <input type="text" id="entitySearch" class="search-box" placeholder="🔍 Search entities...">
                 </div>
                 <div>
-                    <p id="table-count">Search total: 719</p>
+                    <p id="table-count">Search total: 720</p>
                 </div>
                 <div class="filters">
                     <div id="filter-All" class="filter entity-filter active">All</div>
@@ -1056,8 +1056,8 @@
                 <td>binary_sensor.diffuser_moisture</td>
                 <td>Diffuser Moisture</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -1688,7 +1688,7 @@
                 <td>event.repair</td>
                 <td>Repairs</td>
                 <td>N/A</td>
-                <td>2025-03-24 14:11:16</td>
+                <td>2025-03-24 14:11:19</td>
                 <td>Yes</td>
             </tr>
         
@@ -1768,7 +1768,7 @@
                 <td>input_boolean.pc_on</td>
                 <td>PC On Indicator</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -2304,8 +2304,8 @@
                 <td>number.diffuser_brightness</td>
                 <td>Select Diffuser Brightness</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>255</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -2496,7 +2496,7 @@
                 <td>scene.living_room_all_lights_off</td>
                 <td>Living Room All Lights Off</td>
                 <td>N/A</td>
-                <td>2025-03-24 13:53:48</td>
+                <td>2025-03-24 14:19:18</td>
                 <td>Yes</td>
             </tr>
         
@@ -2504,7 +2504,15 @@
                 <td>scene.living_room_all_lights_on</td>
                 <td>Living Room All Lights On</td>
                 <td>N/A</td>
-                <td>2025-03-22 21:14:38</td>
+                <td>2025-03-24 14:18:31</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>scene.living_room_lights_last_state</td>
+                <td>living_room_lights_last_state</td>
+                <td>N/A</td>
+                <td>2025-03-24 13:53:00</td>
                 <td>Yes</td>
             </tr>
         
@@ -2696,24 +2704,24 @@
                 <td>select.diffuser_colors</td>
                 <td>Select Diffuser Color</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>unknown</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>select.diffuser_light_mode</td>
                 <td>Select Diffuser Light Mode</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>Solid</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>select.diffuser_mist</td>
                 <td>Select Diffuser Mist</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>Off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -2872,7 +2880,7 @@
                 <td>sensor.active_issues</td>
                 <td>Repairs Active</td>
                 <td>issues</td>
-                <td>4</td>
+                <td>0</td>
                 <td>Yes</td>
             </tr>
         
@@ -3392,7 +3400,7 @@
                 <td>sensor.entities</td>
                 <td>Home Assistant Entities</td>
                 <td>N/A</td>
-                <td>718</td>
+                <td>719</td>
                 <td>Yes</td>
             </tr>
         
@@ -3960,7 +3968,7 @@
                 <td>sensor.hugh_phone_battery_level</td>
                 <td>Hugh Phone Battery level</td>
                 <td>%</td>
-                <td>44</td>
+                <td>37</td>
                 <td>Yes</td>
             </tr>
         
@@ -3968,7 +3976,7 @@
                 <td>sensor.hugh_phone_battery_state</td>
                 <td>Hugh Phone Battery state</td>
                 <td>N/A</td>
-                <td>discharging</td>
+                <td>charging</td>
                 <td>Yes</td>
             </tr>
         
@@ -4000,7 +4008,7 @@
                 <td>sensor.hugh_phone_charger_type</td>
                 <td>Hugh Phone Charger type</td>
                 <td>N/A</td>
-                <td>none</td>
+                <td>usb</td>
                 <td>Yes</td>
             </tr>
         
@@ -4376,7 +4384,7 @@
                 <td>sensor.issues</td>
                 <td>Repairs Total</td>
                 <td>issues</td>
-                <td>4</td>
+                <td>0</td>
                 <td>Yes</td>
             </tr>
         
@@ -4392,64 +4400,64 @@
                 <td>sensor.liverpool_champions_league_position</td>
                 <td>Position</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>1st</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.liverpool_champions_league_record</td>
                 <td>Record</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>7-0-1</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.liverpool_comp</td>
                 <td>Competition</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>Premier League</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.liverpool_european_stage</td>
                 <td>Competition Stage</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>Game 1 of 8</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.liverpool_generic_stage</td>
                 <td>Competition Stage</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>2024-25 English Premier League</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.liverpool_premier_league_position</td>
                 <td>Position</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>1st</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.liverpool_premier_league_record</td>
                 <td>Record</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>21-7-1</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.liverpool_premier_league_stage</td>
                 <td>Competition Stage</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>Game 30 of 38</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4464,8 +4472,8 @@
                 <td>sensor.liverpool_time</td>
                 <td>Kick off</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>Wed, 2/4 at 20:00</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4480,24 +4488,24 @@
                 <td>sensor.liverpool_utc</td>
                 <td>Liverpool (UTC)</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>2025-04-02 19:00:00</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.liverpool_venue</td>
                 <td>Location</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>Home - Anfield</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.liverpool_vs</td>
                 <td>Game vs</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>Everton</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4552,7 +4560,7 @@
                 <td>sensor.living_room_epone_humidity</td>
                 <td>EPOne Humidity</td>
                 <td>%</td>
-                <td>42.4</td>
+                <td>42.6</td>
                 <td>Yes</td>
             </tr>
         
@@ -4560,7 +4568,7 @@
                 <td>sensor.living_room_epone_illuminance</td>
                 <td>EPOne Illuminance</td>
                 <td>lx</td>
-                <td>7.6</td>
+                <td>22.2</td>
                 <td>Yes</td>
             </tr>
         
@@ -4736,7 +4744,7 @@
                 <td>sensor.pc_status</td>
                 <td>PC status</td>
                 <td>N/A</td>
-                <td>On</td>
+                <td>Off</td>
                 <td>Yes</td>
             </tr>
         
@@ -4808,7 +4816,7 @@
                 <td>sensor.sensors</td>
                 <td>Home Assistant Sensors</td>
                 <td>N/A</td>
-                <td>281</td>
+                <td>282</td>
                 <td>Yes</td>
             </tr>
         
@@ -4856,7 +4864,7 @@
                 <td>sensor.snake_plant_conductivity</td>
                 <td>Snake Plant Conductivity</td>
                 <td>µS/cm</td>
-                <td>474</td>
+                <td>475</td>
                 <td>Yes</td>
             </tr>
         
@@ -4872,7 +4880,7 @@
                 <td>sensor.snake_plant_illuminance</td>
                 <td>Snake Plant Illuminance</td>
                 <td>lx</td>
-                <td>3105</td>
+                <td>3015</td>
                 <td>Yes</td>
             </tr>
         
@@ -4888,7 +4896,7 @@
                 <td>sensor.snake_plant_signal_strength</td>
                 <td>Snake Plant Signal Strength</td>
                 <td>dBm</td>
-                <td>-89</td>
+                <td>-90</td>
                 <td>Yes</td>
             </tr>
         
@@ -4896,7 +4904,7 @@
                 <td>sensor.snake_plant_temperature</td>
                 <td>Snake Plant Temperature</td>
                 <td>°C</td>
-                <td>23.3</td>
+                <td>23.1</td>
                 <td>Yes</td>
             </tr>
         
@@ -5008,7 +5016,7 @@
                 <td>sensor.total_sensors_count</td>
                 <td>Total Entities</td>
                 <td>sensors</td>
-                <td>719</td>
+                <td>720</td>
                 <td>Yes</td>
             </tr>
         
@@ -5056,7 +5064,7 @@
                 <td>sensor.watchman_last_updated</td>
                 <td>Last Updated</td>
                 <td>N/A</td>
-                <td>2025-03-24 14:11:17</td>
+                <td>2025-03-24 14:11:25</td>
                 <td>Yes</td>
             </tr>
         
@@ -5064,7 +5072,7 @@
                 <td>sensor.watchman_missing_entities</td>
                 <td>Missing Entities</td>
                 <td>items</td>
-                <td>6</td>
+                <td>0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5208,16 +5216,16 @@
                 <td>switch.diffuser_light</td>
                 <td>Light Diffuser</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>switch.diffuser_power</td>
                 <td>Power Diffuser</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
