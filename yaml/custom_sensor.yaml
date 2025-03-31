@@ -490,30 +490,7 @@
           mdi:television
         {% endif %}
 
-    sunrise_time:
-      friendly_name: "Sunrise"
-      unique_id: "sunrise_time_sensor"
-      icon_template: "mdi:weather-sunset-up"
-      value_template: >
-        {% set sunrise = as_timestamp(state_attr('sun.sun', 'next_rising')) %}
-        {% if sunrise | timestamp_custom('%Y-%m-%d') == now().strftime('%Y-%m-%d') %}
-          Today at {{ sunrise | timestamp_custom('%H:%M') }}
-        {% else %}
-          Tomorrow at {{ sunrise | timestamp_custom('%H:%M') }}
-        {% endif %}
-
-    sunset_time:
-      friendly_name: "Sunset"
-      unique_id: "sunset_time_sensor"
-      icon_template: "mdi:weather-sunset-down"
-      value_template: >
-        {% set sunset = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
-        {% if sunset | timestamp_custom('%Y-%m-%d') == now().strftime('%Y-%m-%d') %}
-          Today at {{ sunset | timestamp_custom('%H:%M') }}
-        {% else %}
-          Tomorrow at {{ sunset | timestamp_custom('%H:%M') }}
-        {% endif %}
-
+    
 
     lucifer_activewindow_filtered:
       friendly_name: "Active Window"
@@ -534,6 +511,47 @@
         {% else %}
           {{ value }}
         {% endif %}
+        
+    daylight_duration:
+      friendly_name: "Daylight Duration"
+      unique_id: "daylight_duration_sensor"
+      icon_template: "mdi:weather-sunny"
+      value_template: >
+        {% set sunrise = as_timestamp(state_attr('sun.sun', 'next_rising')) %}
+        {% set sunset = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
+        {% set daylight = sunset - sunrise %}
+        {% set hours = (daylight // 3600) | int %}
+        {% set minutes = ((daylight % 3600) // 60) | int %}
+        {{ hours }}h {{ minutes }}m
+      attribute_templates:
+        sunrise: >
+          {% set sunrise = as_timestamp(state_attr('sun.sun', 'next_rising')) %}
+          {% if sunrise | timestamp_custom('%Y-%m-%d') == now().strftime('%Y-%m-%d') %}
+            Today at {{ sunrise | timestamp_custom('%H:%M') }}
+          {% else %}
+            Tomorrow at {{ sunrise | timestamp_custom('%H:%M') }}
+          {% endif %}
+        sunset: >
+          {% set sunset = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
+          {% if sunset | timestamp_custom('%Y-%m-%d') == now().strftime('%Y-%m-%d') %}
+            Today at {{ sunset | timestamp_custom('%H:%M') }}
+          {% else %}
+            Tomorrow at {{ sunset | timestamp_custom('%H:%M') }}
+          {% endif %}
+        daylight_minutes: >
+          {% set sunrise = as_timestamp(state_attr('sun.sun', 'next_rising')) %}
+          {% set sunset = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
+          {{ ((sunset - sunrise) // 60) | int }}
+        daylight_percent: >
+          {% set sunrise = as_timestamp(state_attr('sun.sun', 'next_rising')) %}
+          {% set sunset = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
+          {% set daylight = sunset - sunrise %}
+          {{ ((daylight / 86400) * 100) | round(1) }}%
+        is_daylight: >
+          {% set now_ts = now().timestamp() %}
+          {% set sunrise = as_timestamp(state_attr('sun.sun', 'next_rising')) %}
+          {% set sunset = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
+          {{ sunrise < now_ts < sunset }}
 
     datamars_activewindow_filtered:
       friendly_name: "Datamars Active Window"
