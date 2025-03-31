@@ -3965,3 +3965,15 @@
       timestamp: '{{ as_timestamp(state_attr(''sun.sun'', ''next_setting'')) - 86400
         }}'
     action: input_datetime.set_datetime
+- id: '1743446912871'
+  alias: Store Today Sunrise at Midnight
+  description: ''
+  triggers:
+  - at: 00:00:05
+    trigger: time
+  actions:
+  - target:
+      entity_id: input_datetime.today_sunrise
+    data:
+      timestamp: '{{ as_timestamp(state_attr(''sun.sun'', ''next_rising'')) }}'
+    action: input_datetime.set_datetime
