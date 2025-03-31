@@ -559,18 +559,32 @@
           {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
           {{ sr &lt;= now_ts &lt;= ss }}
         previous_sunrise: &gt;
-          {% set nr = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;)) %}
-          {% if nr | timestamp_custom(&#x27;%Y-%m-%d&#x27;) != now().strftime(&#x27;%Y-%m-%d&#x27;) %}
-            {{ (nr - 86400) | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
+          {% set pr = states(&#x27;input_datetime.previous_sunrise&#x27;) %}
+          {% if pr not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
+            {% set pr_ts = as_timestamp(pr) %}
+            {% if now().date() == as_datetime(pr).date() %}
+              Today at {{ pr_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% elif now().date() - as_datetime(pr).date() == timedelta(days=1) %}
+              Yesterday at {{ pr_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% else %}
+              {{ pr_ts | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
+            {% endif %}
           {% else %}
-            {{ &#x27;—&#x27; }}
+            —
           {% endif %}
         previous_sunset: &gt;
-          {% set ns = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_setting&#x27;)) %}
-          {% if ns | timestamp_custom(&#x27;%Y-%m-%d&#x27;) != now().strftime(&#x27;%Y-%m-%d&#x27;) %}
-            {{ (ns - 86400) | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
+          {% set ps = states(&#x27;input_datetime.previous_sunset&#x27;) %}
+          {% if ps not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
+            {% set ps_ts = as_timestamp(ps) %}
+            {% if now().date() == as_datetime(ps).date() %}
+              Today at {{ ps_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% elif now().date() - as_datetime(ps).date() == timedelta(days=1) %}
+              Yesterday at {{ ps_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% else %}
+              {{ ps_ts | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
+            {% endif %}
           {% else %}
-            {{ &#x27;—&#x27; }}
+            —
           {% endif %}
         next_sunrise: &gt;
           {% set nr = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;)) %}
