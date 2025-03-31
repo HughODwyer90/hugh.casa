@@ -530,42 +530,54 @@
       unique_id: &quot;daylight_duration_sensor&quot;
       icon_template: &quot;mdi:weather-sunny&quot;
       value_template: &gt;
-        {% set sr = as_timestamp(states(&#x27;input_datetime.previous_sunrise&#x27;)) %}
-        {% set ss = as_timestamp(states(&#x27;input_datetime.previous_sunset&#x27;)) %}
+        {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
+        {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
         {% set daylight = ss - sr %}
         {% set hours = (daylight // 3600) | int %}
         {% set minutes = ((daylight % 3600) // 60) | int %}
         {{ hours }}h {{ minutes }}m
       attribute_templates:
         sunrise: &gt;
-          {% set sr = as_timestamp(states(&#x27;input_datetime.previous_sunrise&#x27;)) %}
-          {% if sr | timestamp_custom(&#x27;%Y-%m-%d&#x27;) == now().strftime(&#x27;%Y-%m-%d&#x27;) %}
-            Today at {{ sr | timestamp_custom(&#x27;%H:%M&#x27;) }}
-          {% else %}
-            {{ sr | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
-          {% endif %}
+          {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
+          Today at {{ sr | timestamp_custom(&#x27;%H:%M&#x27;) }}
         sunset: &gt;
-          {% set ss = as_timestamp(states(&#x27;input_datetime.previous_sunset&#x27;)) %}
-          {% if ss | timestamp_custom(&#x27;%Y-%m-%d&#x27;) == now().strftime(&#x27;%Y-%m-%d&#x27;) %}
-            Today at {{ ss | timestamp_custom(&#x27;%H:%M&#x27;) }}
-          {% else %}
-            {{ ss | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
-          {% endif %}
+          {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
+          Today at {{ ss | timestamp_custom(&#x27;%H:%M&#x27;) }}
         daylight_minutes: &gt;
-          {% set sr = as_timestamp(states(&#x27;input_datetime.previous_sunrise&#x27;)) %}
-          {% set ss = as_timestamp(states(&#x27;input_datetime.previous_sunset&#x27;)) %}
+          {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
+          {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
           {{ ((ss - sr) // 60) | int }}
         daylight_percent: &gt;
-          {% set sr = as_timestamp(states(&#x27;input_datetime.previous_sunrise&#x27;)) %}
-          {% set ss = as_timestamp(states(&#x27;input_datetime.previous_sunset&#x27;)) %}
+          {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
+          {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
           {% set daylight = ss - sr %}
           {{ ((daylight / 86400) * 100) | round(1) }}%
         is_daylight: &gt;
           {% set now_ts = now().timestamp() %}
-          {% set sr = as_timestamp(states(&#x27;input_datetime.previous_sunrise&#x27;)) %}
-          {% set ss = as_timestamp(states(&#x27;input_datetime.previous_sunset&#x27;)) %}
+          {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
+          {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
           {{ sr &lt;= now_ts &lt;= ss }}
-          
+        previous_sunrise: &gt;
+          {% set nr = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;)) %}
+          {% if nr | timestamp_custom(&#x27;%Y-%m-%d&#x27;) != now().strftime(&#x27;%Y-%m-%d&#x27;) %}
+            {{ (nr - 86400) | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
+          {% else %}
+            {{ &#x27;—&#x27; }}
+          {% endif %}
+        previous_sunset: &gt;
+          {% set ns = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_setting&#x27;)) %}
+          {% if ns | timestamp_custom(&#x27;%Y-%m-%d&#x27;) != now().strftime(&#x27;%Y-%m-%d&#x27;) %}
+            {{ (ns - 86400) | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
+          {% else %}
+            {{ &#x27;—&#x27; }}
+          {% endif %}
+        next_sunrise: &gt;
+          {% set nr = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;)) %}
+          {{ nr | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
+        next_sunset: &gt;
+          {% set ns = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_setting&#x27;)) %}
+          {{ ns | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
+              
     datamars_activewindow_filtered:
       friendly_name: &quot;Datamars Active Window&quot;
       unique_id: &quot;datamars_activewindow_filtered_sensor&quot;
