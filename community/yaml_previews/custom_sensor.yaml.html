@@ -532,7 +532,7 @@
       unique_id: &quot;daylight_duration_sensor&quot;
       icon_template: &quot;mdi:weather-sunny&quot;
       value_template: &gt;
-        {% set now_ts = as_timestamp(states(&#x27;sensor.time&#x27;) + &#x27;:00&#x27;) %}
+        {% set now_ts = as_datetime(states(&#x27;sensor.date_time_iso&#x27;)).timestamp() %}
         {% set sr = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;)) %}
         {% set ss = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_setting&#x27;)) %}
         {% set sunrise = sr if sr &lt; ss else sr - 86400 %}
