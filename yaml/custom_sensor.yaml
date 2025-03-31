@@ -515,53 +515,41 @@
       unique_id: "daylight_duration_sensor"
       icon_template: "mdi:weather-sunny"
       value_template: >
-        {% set sr = as_timestamp(state_attr('sun.sun', 'next_rising')) %}
-        {% set ss = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
-        {% set sunrise = sr if sr < ss else sr - 86400 %}
-        {% set sunset = ss if ss > sr else ss + 86400 %}
-        {% set daylight = sunset - sunrise %}
+        {% set sr = as_timestamp(states('input_datetime.previous_sunrise')) %}
+        {% set ss = as_timestamp(states('input_datetime.previous_sunset')) %}
+        {% set daylight = ss - sr %}
         {% set hours = (daylight // 3600) | int %}
         {% set minutes = ((daylight % 3600) // 60) | int %}
         {{ hours }}h {{ minutes }}m
       attribute_templates:
         sunrise: >
-          {% set sr = as_timestamp(state_attr('sun.sun', 'next_rising')) %}
-          {% set ss = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
-          {% set sunrise = sr if sr < ss else sr - 86400 %}
-          {% if sunrise | timestamp_custom('%Y-%m-%d') == now().strftime('%Y-%m-%d') %}
-            Today at {{ sunrise | timestamp_custom('%H:%M') }}
+          {% set sr = as_timestamp(states('input_datetime.previous_sunrise')) %}
+          {% if sr | timestamp_custom('%Y-%m-%d') == now().strftime('%Y-%m-%d') %}
+            Today at {{ sr | timestamp_custom('%H:%M') }}
           {% else %}
-            Tomorrow at {{ sunrise | timestamp_custom('%H:%M') }}
+            {{ sr | timestamp_custom('%A at %H:%M') }}
           {% endif %}
         sunset: >
-          {% set sr = as_timestamp(state_attr('sun.sun', 'next_rising')) %}
-          {% set ss = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
-          {% set sunset = ss if ss > sr else ss + 86400 %}
-          {% if sunset | timestamp_custom('%Y-%m-%d') == now().strftime('%Y-%m-%d') %}
-            Today at {{ sunset | timestamp_custom('%H:%M') }}
+          {% set ss = as_timestamp(states('input_datetime.previous_sunset')) %}
+          {% if ss | timestamp_custom('%Y-%m-%d') == now().strftime('%Y-%m-%d') %}
+            Today at {{ ss | timestamp_custom('%H:%M') }}
           {% else %}
-            Tomorrow at {{ sunset | timestamp_custom('%H:%M') }}
+            {{ ss | timestamp_custom('%A at %H:%M') }}
           {% endif %}
         daylight_minutes: >
-          {% set sr = as_timestamp(state_attr('sun.sun', 'next_rising')) %}
-          {% set ss = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
-          {% set sunrise = sr if sr < ss else sr - 86400 %}
-          {% set sunset = ss if ss > sr else ss + 86400 %}
-          {{ ((sunset - sunrise) // 60) | int }}
+          {% set sr = as_timestamp(states('input_datetime.previous_sunrise')) %}
+          {% set ss = as_timestamp(states('input_datetime.previous_sunset')) %}
+          {{ ((ss - sr) // 60) | int }}
         daylight_percent: >
-          {% set sr = as_timestamp(state_attr('sun.sun', 'next_rising')) %}
-          {% set ss = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
-          {% set sunrise = sr if sr < ss else sr - 86400 %}
-          {% set sunset = ss if ss > sr else ss + 86400 %}
-          {% set daylight = sunset - sunrise %}
+          {% set sr = as_timestamp(states('input_datetime.previous_sunrise')) %}
+          {% set ss = as_timestamp(states('input_datetime.previous_sunset')) %}
+          {% set daylight = ss - sr %}
           {{ ((daylight / 86400) * 100) | round(1) }}%
         is_daylight: >
           {% set now_ts = now().timestamp() %}
-          {% set sr = as_timestamp(state_attr('sun.sun', 'next_rising')) %}
-          {% set ss = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
-          {% set sunrise = sr if sr < ss else sr - 86400 %}
-          {% set sunset = ss if ss > sr else ss + 86400 %}
-          {{ sunrise <= now_ts <= sunset }}
+          {% set sr = as_timestamp(states('input_datetime.previous_sunrise')) %}
+          {% set ss = as_timestamp(states('input_datetime.previous_sunset')) %}
+          {{ sr <= now_ts <= ss }}
           
     datamars_activewindow_filtered:
       friendly_name: "Datamars Active Window"
