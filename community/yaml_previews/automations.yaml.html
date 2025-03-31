@@ -3980,6 +3980,18 @@
       timestamp: &#x27;{{ as_timestamp(state_attr(&#x27;&#x27;sun.sun&#x27;&#x27;, &#x27;&#x27;next_setting&#x27;&#x27;)) - 86400
         }}&#x27;
     action: input_datetime.set_datetime
+- id: &#x27;1743446912871&#x27;
+  alias: Store Today Sunrise at Midnight
+  description: &#x27;&#x27;
+  triggers:
+  - at: 00:00:05
+    trigger: time
+  actions:
+  - target:
+      entity_id: input_datetime.today_sunrise
+    data:
+      timestamp: &#x27;{{ as_timestamp(state_attr(&#x27;&#x27;sun.sun&#x27;&#x27;, &#x27;&#x27;next_rising&#x27;&#x27;)) }}&#x27;
+    action: input_datetime.set_datetime
 </pre>
             </div>
             <script>
