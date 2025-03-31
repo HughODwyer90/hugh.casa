@@ -3960,6 +3960,26 @@
       timestamp: &#x27;{{ as_timestamp(state_attr(&#x27;&#x27;sun.sun&#x27;&#x27;, &#x27;&#x27;next_rising&#x27;&#x27;)) - 86400
         }}&#x27;
     action: input_datetime.set_datetime
+- id: &#x27;1743446054365&#x27;
+  alias: Store Today’s Sunset
+  description: &#x27;&#x27;
+  triggers:
+  - entity_id: sun.sun
+    attribute: next_setting
+    trigger: state
+  conditions:
+  - condition: template
+    value_template: &#x27;{{ as_datetime(state_attr(&#x27;&#x27;sun.sun&#x27;&#x27;, &#x27;&#x27;next_setting&#x27;&#x27;)).date()
+      == (now().date() + timedelta(days=1)) }}
+
+      &#x27;
+  actions:
+  - target:
+      entity_id: input_datetime.previous_sunset
+    data:
+      timestamp: &#x27;{{ as_timestamp(state_attr(&#x27;&#x27;sun.sun&#x27;&#x27;, &#x27;&#x27;next_setting&#x27;&#x27;)) - 86400
+        }}&#x27;
+    action: input_datetime.set_datetime
 </pre>
             </div>
             <script>
