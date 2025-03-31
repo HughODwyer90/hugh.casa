@@ -587,12 +587,36 @@
             —
           {% endif %}
         next_sunrise: &gt;
-          {% set nr = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;)) %}
-          {{ nr | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
+          {% set nr = state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;) %}
+          {% if nr is not none %}
+            {% set nr_ts = as_timestamp(nr) %}
+            {% set nr_date = as_datetime(nr).date() %}
+            {% if now().date() == nr_date %}
+              Today at {{ nr_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% elif now().date() + timedelta(days=1) == nr_date %}
+              Tomorrow at {{ nr_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% else %}
+              {{ nr_ts | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
+            {% endif %}
+          {% else %}
+            —
+          {% endif %}
         next_sunset: &gt;
-          {% set ns = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_setting&#x27;)) %}
-          {{ ns | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
-              
+          {% set ns = state_attr(&#x27;sun.sun&#x27;, &#x27;next_setting&#x27;) %}
+          {% if ns is not none %}
+            {% set ns_ts = as_timestamp(ns) %}
+            {% set ns_date = as_datetime(ns).date() %}
+            {% if now().date() == ns_date %}
+              Today at {{ ns_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% elif now().date() + timedelta(days=1) == ns_date %}
+              Tomorrow at {{ ns_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% else %}
+              {{ ns_ts | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
+            {% endif %}
+          {% else %}
+            —
+          {% endif %}
+          
     datamars_activewindow_filtered:
       friendly_name: &quot;Datamars Active Window&quot;
       unique_id: &quot;datamars_activewindow_filtered_sensor&quot;
