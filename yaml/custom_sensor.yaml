@@ -517,7 +517,7 @@
       unique_id: "daylight_duration_sensor"
       icon_template: "mdi:weather-sunny"
       value_template: >
-        {% set now_ts = as_timestamp(states('sensor.time') + ':00') %}
+        {% set now_ts = as_datetime(states('sensor.date_time_iso')).timestamp() %}
         {% set sr = as_timestamp(state_attr('sun.sun', 'next_rising')) %}
         {% set ss = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
         {% set sunrise = sr if sr < ss else sr - 86400 %}
