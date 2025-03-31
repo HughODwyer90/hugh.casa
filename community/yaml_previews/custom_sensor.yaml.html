@@ -533,8 +533,8 @@
         {% set now_ts = as_datetime(states(&#x27;sensor.date_time_iso&#x27;)).timestamp() %}
         {% set sr = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;)) %}
         {% set ss = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_setting&#x27;)) %}
-        {% set sunrise = sr if sr &lt; ss else sr - 86400 %}
-        {% set sunset = ss if ss &gt; sr else ss + 86400 %}
+        {% set sunrise = sr - 86400 if sr &gt; now_ts else sr %}
+        {% set sunset = ss - 86400 if ss &gt; now_ts else ss %}
         {% set daylight = sunset - sunrise %}
         {% set hours = (daylight // 3600) | int %}
         {% set minutes = ((daylight % 3600) // 60) | int %}
@@ -542,41 +542,43 @@
       attribute_templates:
         sunrise: &gt;
           {% set sr = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;)) %}
-          {% set ss = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_setting&#x27;)) %}
-          {% set sunrise = sr if sr &lt; ss else sr - 86400 %}
+          {% set now_ts = as_datetime(states(&#x27;sensor.date_time_iso&#x27;)).timestamp() %}
+          {% set sunrise = sr - 86400 if sr &gt; now_ts else sr %}
           {% if sunrise | timestamp_custom(&#x27;%Y-%m-%d&#x27;) == now().strftime(&#x27;%Y-%m-%d&#x27;) %}
             Today at {{ sunrise | timestamp_custom(&#x27;%H:%M&#x27;) }}
           {% else %}
             Tomorrow at {{ sunrise | timestamp_custom(&#x27;%H:%M&#x27;) }}
           {% endif %}
         sunset: &gt;
-          {% set sr = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;)) %}
           {% set ss = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_setting&#x27;)) %}
-          {% set sunset = ss if ss &gt; sr else ss + 86400 %}
+          {% set now_ts = as_datetime(states(&#x27;sensor.date_time_iso&#x27;)).timestamp() %}
+          {% set sunset = ss - 86400 if ss &gt; now_ts else ss %}
           {% if sunset | timestamp_custom(&#x27;%Y-%m-%d&#x27;) == now().strftime(&#x27;%Y-%m-%d&#x27;) %}
             Today at {{ sunset | timestamp_custom(&#x27;%H:%M&#x27;) }}
           {% else %}
             Tomorrow at {{ sunset | timestamp_custom(&#x27;%H:%M&#x27;) }}
           {% endif %}
         daylight_minutes: &gt;
+          {% set now_ts = as_datetime(states(&#x27;sensor.date_time_iso&#x27;)).timestamp() %}
           {% set sr = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;)) %}
           {% set ss = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_setting&#x27;)) %}
-          {% set sunrise = sr if sr &lt; ss else sr - 86400 %}
-          {% set sunset = ss if ss &gt; sr else ss + 86400 %}
+          {% set sunrise = sr - 86400 if sr &gt; now_ts else sr %}
+          {% set sunset = ss - 86400 if ss &gt; now_ts else ss %}
           {{ ((sunset - sunrise) // 60) | int }}
         daylight_percent: &gt;
+          {% set now_ts = as_datetime(states(&#x27;sensor.date_time_iso&#x27;)).timestamp() %}
           {% set sr = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;)) %}
           {% set ss = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_setting&#x27;)) %}
-          {% set sunrise = sr if sr &lt; ss else sr - 86400 %}
-          {% set sunset = ss if ss &gt; sr else ss + 86400 %}
+          {% set sunrise = sr - 86400 if sr &gt; now_ts else sr %}
+          {% set sunset = ss - 86400 if ss &gt; now_ts else ss %}
           {% set daylight = sunset - sunrise %}
           {{ ((daylight / 86400) * 100) | round(1) }}%
         is_daylight: &gt;
           {% set now_ts = as_datetime(states(&#x27;sensor.date_time_iso&#x27;)).timestamp() %}
           {% set sr = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;)) %}
           {% set ss = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_setting&#x27;)) %}
-          {% set sunrise = sr if sr &lt; ss else sr - 86400 %}
-          {% set sunset = ss if ss &gt; sr else ss + 86400 %}
+          {% set sunrise = sr - 86400 if sr &gt; now_ts else sr %}
+          {% set sunset = ss - 86400 if ss &gt; now_ts else ss %}
           {{ sunrise &lt;= now_ts &lt;= sunset }}
           
     datamars_activewindow_filtered:
