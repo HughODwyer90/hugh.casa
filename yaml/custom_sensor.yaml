@@ -490,8 +490,6 @@
           mdi:television
         {% endif %}
 
-    
-
     lucifer_activewindow_filtered:
       friendly_name: "Active Window"
       unique_id: "lucifer_activewindow_filtered_sensor"
@@ -559,7 +557,7 @@
           {% set daylight = sunset - sunrise %}
           {{ ((daylight / 86400) * 100) | round(1) }}%
         is_daylight: >
-          {% set now_ts = as_timestamp(states('sensor.time') + ':00') %}
+          {% set now_ts = as_datetime(states('sensor.date_time_iso')).timestamp() %}
           {% set sr = as_timestamp(state_attr('sun.sun', 'next_rising')) %}
           {% set ss = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
           {% set sunrise = sr if sr < ss else sr - 86400 %}
