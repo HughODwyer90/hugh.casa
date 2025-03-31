@@ -514,13 +514,14 @@
       friendly_name: "Daylight Duration"
       unique_id: "daylight_duration_sensor"
       icon_template: "mdi:weather-sunny"
+      unit_of_measurement: "h"
       value_template: >
-        {% set sr = as_timestamp(states('input_datetime.today_sunrise')) %}
-        {% set ss = as_timestamp(states('input_datetime.today_sunset')) %}
-        {% set daylight = ss - sr %}
-        {% set hours = (daylight // 3600) | int %}
-        {% set minutes = ((daylight % 3600) // 60) | int %}
-        {{ hours }}h {{ minutes }}m
+          {% set sr = as_timestamp(states('input_datetime.today_sunrise')) %}
+          {% set ss = as_timestamp(states('input_datetime.today_sunset')) %}
+          {% set daylight = ss - sr %}
+          {% set hours = daylight // 3600 %}
+          {% set minutes = (daylight % 3600) // 60 %}
+          {{ "%d.%02d" | format(hours, minutes) }}
       attribute_templates:
         sunrise: >
           {% set sr = as_timestamp(states('input_datetime.today_sunrise')) %}
