@@ -261,7 +261,7 @@
       friendly_name: "Car Fuel Remaining"
       value_template: >
         {% set current_fuel_quantity = states('sensor.car_fuel_quantity') %}
-        {% set max_fuel_capacity = 42 %}
+        {% set max_fuel_capacity = 44 %}
         {% if current_fuel_quantity not in ['unknown', 'unavailable'] %}
           {% set current_fuel_quantity = current_fuel_quantity | float %}
           {% set percent_remaining = (current_fuel_quantity / max_fuel_capacity) * 100 %}
