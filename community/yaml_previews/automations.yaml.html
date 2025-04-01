@@ -3940,26 +3940,32 @@
       date: &#x27;{{ now().strftime(&#x27;&#x27;%Y-%m-%d&#x27;&#x27;) }}&#x27;
     action: input_datetime.set_datetime
   mode: single
-- id: &#x27;1743446054365&#x27;
-  alias: Store Today’s Sunset
+- id: &#x27;1743536171396&#x27;
+  alias: Store Previous Sunrise at Midnight
   description: &#x27;&#x27;
   triggers:
-  - entity_id: sun.sun
-    attribute: next_setting
-    trigger: state
-  conditions:
-  - condition: template
-    value_template: &#x27;{{ as_datetime(state_attr(&#x27;&#x27;sun.sun&#x27;&#x27;, &#x27;&#x27;next_setting&#x27;&#x27;)).date()
-      == (now().date() + timedelta(days=1)) }}
-
-      &#x27;
+  - at: 00:00:00
+    trigger: time
+  actions:
+  - target:
+      entity_id: input_datetime.previous_sunrise
+    data:
+      timestamp: &#x27;{{ as_timestamp(states(&#x27;&#x27;input_datetime.today_sunrise&#x27;&#x27;)) }}&#x27;
+    action: input_datetime.set_datetime
+  mode: single
+- id: &#x27;1743536193135&#x27;
+  alias: Store Previous Sunset at Midnight
+  description: &#x27;&#x27;
+  triggers:
+  - at: 00:00:05
+    trigger: time
   actions:
   - target:
       entity_id: input_datetime.previous_sunset
     data:
-      timestamp: &#x27;{{ as_timestamp(state_attr(&#x27;&#x27;sun.sun&#x27;&#x27;, &#x27;&#x27;next_setting&#x27;&#x27;)) - 86400
-        }}&#x27;
+      timestamp: &#x27;{{ as_timestamp(states(&#x27;&#x27;input_datetime.today_sunset&#x27;&#x27;)) }}&#x27;
     action: input_datetime.set_datetime
+  mode: single
 </pre>
             </div>
             <script>
