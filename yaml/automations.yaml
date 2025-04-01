@@ -3925,23 +3925,29 @@
       date: '{{ now().strftime(''%Y-%m-%d'') }}'
     action: input_datetime.set_datetime
   mode: single
-- id: '1743446054365'
-  alias: Store Today’s Sunset
+- id: '1743536171396'
+  alias: Store Previous Sunrise at Midnight
   description: ''
   triggers:
-  - entity_id: sun.sun
-    attribute: next_setting
-    trigger: state
-  conditions:
-  - condition: template
-    value_template: '{{ as_datetime(state_attr(''sun.sun'', ''next_setting'')).date()
-      == (now().date() + timedelta(days=1)) }}
-
-      '
+  - at: 00:00:00
+    trigger: time
+  actions:
+  - target:
+      entity_id: input_datetime.previous_sunrise
+    data:
+      timestamp: '{{ as_timestamp(states(''input_datetime.today_sunrise'')) }}'
+    action: input_datetime.set_datetime
+  mode: single
+- id: '1743536193135'
+  alias: Store Previous Sunset at Midnight
+  description: ''
+  triggers:
+  - at: 00:00:05
+    trigger: time
   actions:
   - target:
       entity_id: input_datetime.previous_sunset
     data:
-      timestamp: '{{ as_timestamp(state_attr(''sun.sun'', ''next_setting'')) - 86400
-        }}'
+      timestamp: '{{ as_timestamp(states(''input_datetime.today_sunset'')) }}'
     action: input_datetime.set_datetime
+  mode: single
