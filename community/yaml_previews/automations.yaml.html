@@ -3991,6 +3991,50 @@
       timestamp: &#x27;{{ as_timestamp(state_attr(&#x27;&#x27;sun.sun&#x27;&#x27;, &#x27;&#x27;next_setting&#x27;&#x27;)) }}&#x27;
     action: input_datetime.set_datetime
   mode: single
+- id: &#x27;1743536268804&#x27;
+  alias: Store Previous Sunrise After Sunrise
+  description: &#x27;&#x27;
+  triggers:
+  - value_template: &#x27;{{ now().timestamp() &gt; as_timestamp(states(&#x27;&#x27;input_datetime.today_sunrise&#x27;&#x27;))
+      }}
+
+      &#x27;
+    trigger: template
+  conditions:
+  - condition: template
+    value_template: &#x27;{{ (now() - as_datetime(states(&#x27;&#x27;input_datetime.today_sunrise&#x27;&#x27;))).seconds
+      &lt; 60 }}
+
+      &#x27;
+  actions:
+  - target:
+      entity_id: input_datetime.previous_sunrise
+    data:
+      timestamp: &#x27;{{ as_timestamp(states(&#x27;&#x27;input_datetime.today_sunrise&#x27;&#x27;)) }}&#x27;
+    action: input_datetime.set_datetime
+  mode: single
+- id: &#x27;1743536290958&#x27;
+  alias: Store Previous Sunset After Sunset
+  description: &#x27;&#x27;
+  triggers:
+  - value_template: &#x27;{{ now().timestamp() &gt; as_timestamp(states(&#x27;&#x27;input_datetime.today_sunset&#x27;&#x27;))
+      }}
+
+      &#x27;
+    trigger: template
+  conditions:
+  - condition: template
+    value_template: &#x27;{{ (now() - as_datetime(states(&#x27;&#x27;input_datetime.today_sunset&#x27;&#x27;))).seconds
+      &lt; 60 }}
+
+      &#x27;
+  actions:
+  - target:
+      entity_id: input_datetime.previous_sunset
+    data:
+      timestamp: &#x27;{{ as_timestamp(states(&#x27;&#x27;input_datetime.today_sunset&#x27;&#x27;)) }}&#x27;
+    action: input_datetime.set_datetime
+  mode: single
 </pre>
             </div>
             <script>
