@@ -3940,7 +3940,6 @@
   mode: single
 - id: '1743536193135'
   alias: Store Previous Sunset at Midnight
-  description: ''
   triggers:
   - at: 00:00:05
     trigger: time
@@ -3949,5 +3948,31 @@
       entity_id: input_datetime.previous_sunset
     data:
       timestamp: '{{ as_timestamp(states(''input_datetime.today_sunset'')) }}'
+    action: input_datetime.set_datetime
+  mode: single
+- id: '1743536227424'
+  alias: Store Today Sunrise at Midnight
+  description: ''
+  triggers:
+  - at: 00:00:10
+    trigger: time
+  actions:
+  - target:
+      entity_id: input_datetime.today_sunrise
+    data:
+      timestamp: '{{ as_timestamp(state_attr(''sun.sun'', ''next_rising'')) }}'
+    action: input_datetime.set_datetime
+  mode: single
+- id: '1743536247880'
+  alias: Store Today Sunset at Midnight
+  description: ''
+  triggers:
+  - at: 00:00:15
+    trigger: time
+  actions:
+  - target:
+      entity_id: input_datetime.today_sunset
+    data:
+      timestamp: '{{ as_timestamp(state_attr(''sun.sun'', ''next_setting'')) }}'
     action: input_datetime.set_datetime
   mode: single
