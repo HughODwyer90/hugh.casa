@@ -3925,19 +3925,6 @@
       date: '{{ now().strftime(''%Y-%m-%d'') }}'
     action: input_datetime.set_datetime
   mode: single
-- id: '1743536171396'
-  alias: Store Previous Sunrise at Midnight
-  description: ''
-  triggers:
-  - at: 00:00:00
-    trigger: time
-  actions:
-  - target:
-      entity_id: input_datetime.previous_sunrise
-    data:
-      timestamp: '{{ as_timestamp(states(''input_datetime.today_sunrise'')) }}'
-    action: input_datetime.set_datetime
-  mode: single
 - id: '1743536193135'
   alias: Store Previous Sunset at Midnight
   triggers:
