@@ -516,12 +516,22 @@
       icon_template: "mdi:weather-sunny"
       unit_of_measurement: "h"
       value_template: >
-          {% set sr = as_timestamp(states('input_datetime.today_sunrise')) %}
-          {% set ss = as_timestamp(states('input_datetime.today_sunset')) %}
-          {% set daylight = ss - sr %}
-          {% set hours = daylight // 3600 %}
-          {% set minutes = (daylight % 3600) // 60 %}
-          {{ "%d.%02d" | format(hours, minutes) }}
+          {% set sr = states('input_datetime.today_sunrise') %}
+          {% set ss = states('input_datetime.today_sunset') %}
+          {% if sr not in ['unknown', 'unavailable'] and ss not in ['unknown', 'unavailable'] %}
+            {% set sr_ts = as_timestamp(sr) %}
+            {% set ss_ts = as_timestamp(ss) %}
+            {% if sr_ts < ss_ts %}
+              {% set daylight = ss_ts - sr_ts %}
+              {% set hours = daylight // 3600 %}
+              {% set minutes = (daylight % 3600) // 60 %}
+              {{ "%d.%02d" | format(hours, minutes) }}
+            {% else %}
+              none
+            {% endif %}
+          {% else %}
+            none
+          {% endif %}
       attribute_templates:
         sunrise: >
           {% set sr = as_timestamp(states('input_datetime.today_sunrise')) %}
