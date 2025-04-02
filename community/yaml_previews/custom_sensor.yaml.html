@@ -531,12 +531,22 @@
       icon_template: &quot;mdi:weather-sunny&quot;
       unit_of_measurement: &quot;h&quot;
       value_template: &gt;
-          {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
-          {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
-          {% set daylight = ss - sr %}
-          {% set hours = daylight // 3600 %}
-          {% set minutes = (daylight % 3600) // 60 %}
-          {{ &quot;%d.%02d&quot; | format(hours, minutes) }}
+          {% set sr = states(&#x27;input_datetime.today_sunrise&#x27;) %}
+          {% set ss = states(&#x27;input_datetime.today_sunset&#x27;) %}
+          {% if sr not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] and ss not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
+            {% set sr_ts = as_timestamp(sr) %}
+            {% set ss_ts = as_timestamp(ss) %}
+            {% if sr_ts &lt; ss_ts %}
+              {% set daylight = ss_ts - sr_ts %}
+              {% set hours = daylight // 3600 %}
+              {% set minutes = (daylight % 3600) // 60 %}
+              {{ &quot;%d.%02d&quot; | format(hours, minutes) }}
+            {% else %}
+              none
+            {% endif %}
+          {% else %}
+            none
+          {% endif %}
       attribute_templates:
         sunrise: &gt;
           {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
