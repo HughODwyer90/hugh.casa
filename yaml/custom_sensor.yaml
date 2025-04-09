@@ -6,7 +6,7 @@
       value_template: "{{ now() }}"
       attribute_templates:
         devices: >
-          {% set devices = state_attr('sensor.network_scanner', 'Devices') %}
+          {% set devices = state_attr('sensor.network_scanner', 'devices') %}
           {% if devices %}
             {{ devices | map(attribute='ip') | list | join(', ') }}
           {% else %}
