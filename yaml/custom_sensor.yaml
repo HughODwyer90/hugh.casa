@@ -8,13 +8,13 @@
         devices: >
           {% set devices = state_attr('sensor.network_scanner', 'devices') %}
           {% if devices %}
-            {% set sorted = devices | sort(attribute='vendor', case_sensitive=False) %}
-            {% for d in sorted -%}
-          - IP: {{ d.ip.ljust(15) }} | MAC: {{ d.mac.ljust(17) }} | Vendor: {{ d.vendor or 'Unknown' }}
-          ...........................................................................
-            {%- endfor %}
+          {% set sorted = devices | sort(attribute='vendor', case_sensitive=False) %}
+          {% for d in sorted %}
+          IP: {{ d.ip.ljust(13) }} | MAC: {{ d.mac.ljust(17) }} | Vendor: {{ d.vendor or 'Unknown' }}
+          .....................................................................
+          {%- endfor %}
           {% else %}
-          No devices found
+            No devices found
           {% endif %}
       icon_template: "mdi:lan-connect"
     
