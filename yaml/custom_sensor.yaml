@@ -9,15 +9,10 @@
           {% set devices = state_attr('sensor.network_scanner', 'devices') %}
           {% if devices %}
             {% set sorted = devices | sort(attribute='vendor', case_sensitive=False) %}
-            {% set output = '' %}
-            {% for d in sorted %}
-              {% set output = output
-                ~ '- IP: ' ~ d.ip.ljust(15)
-                ~ ' | MAC: ' ~ d.mac.ljust(17)
-                ~ ' | Vendor: ' ~ (d.vendor or 'Unknown')
-                ~ '\n\n' %}
+            {% for d in sorted -%}
+              - IP: {{ d.ip.ljust(15) }} | MAC: {{ d.mac.ljust(17) }} | Vendor: {{ d.vendor or 'Unknown' }}
+
             {% endfor %}
-            {{ output }}
           {% else %}
             No devices found
           {% endif %}
