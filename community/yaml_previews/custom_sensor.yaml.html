@@ -21,7 +21,7 @@
       value_template: &quot;{{ now() }}&quot;
       attribute_templates:
         devices: &gt;
-          {% set devices = state_attr(&#x27;sensor.network_scanner&#x27;, &#x27;Devices&#x27;) %}
+          {% set devices = state_attr(&#x27;sensor.network_scanner&#x27;, &#x27;devices&#x27;) %}
           {% if devices %}
             {{ devices | map(attribute=&#x27;ip&#x27;) | list | join(&#x27;, &#x27;) }}
           {% else %}
