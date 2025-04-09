@@ -25,7 +25,7 @@
           {% if devices %}
           {% set sorted = devices | sort(attribute=&#x27;vendor&#x27;, case_sensitive=False) %}
           {% for d in sorted %}
-          IP: {{ d.ip.ljust(13) }} | MAC: {{ d.mac.ljust(17) }} | Vendor: {{ d.vendor or &#x27;Unknown&#x27; }}
+          IP: {{ d.ip.ljust(13) }} | MAC: {{ d.mac.ljust(17) }}  Vendor: {{ d.vendor or &#x27;Unknown&#x27; }}
           .....................................................................
           {%- endfor %}
           {% else %}
