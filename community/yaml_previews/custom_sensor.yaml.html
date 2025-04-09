@@ -15,6 +15,20 @@
             <div class="scrollable-content">
                 <pre class="yaml-content">- platform: template
   sensors:
+    connected_devices_list:
+      friendly_name: &quot;Connected Devices List&quot;
+      unique_id: &quot;connected_devices_list_sensor&quot;
+      value_template: &quot;{{ now() }}&quot;
+      attribute_templates:
+        devices: &gt;
+          {% set devices = state_attr(&#x27;sensor.network_scanner&#x27;, &#x27;Devices&#x27;) %}
+          {% if devices %}
+            {{ devices | map(attribute=&#x27;ip&#x27;) | list | join(&#x27;, &#x27;) }}
+          {% else %}
+            No devices found
+          {% endif %}
+      icon_template: &quot;mdi:lan-connect&quot;
+    
     air_purifier_lifetime:
       friendly_name: &quot;Air Purifier Filter Life&quot;
       unique_id: &quot;air_purifier_filter_life_sensor&quot;
