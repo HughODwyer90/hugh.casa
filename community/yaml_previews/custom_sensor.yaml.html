@@ -23,7 +23,10 @@
         devices: &gt;
           {% set devices = state_attr(&#x27;sensor.network_scanner&#x27;, &#x27;devices&#x27;) %}
           {% if devices %}
-            {{ devices | map(attribute=&#x27;ip&#x27;) | list | join(&#x27;, &#x27;) }}
+            {% set sorted = devices | sort(attribute=&#x27;vendor&#x27;, case_sensitive=False) %}
+            {% for d in sorted %}
+            - IP: {{ d.ip.ljust(13) }} | MAC: {{ d.mac.ljust(17) }} | Vendor: {{ d.vendor or &#x27;Unknown&#x27; }}
+            {% endfor %}
           {% else %}
             No devices found
           {% endif %}
