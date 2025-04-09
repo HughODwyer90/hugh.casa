@@ -1,5 +1,19 @@
 - platform: template
   sensors:
+    connected_devices_list:
+      friendly_name: "Connected Devices List"
+      unique_id: "connected_devices_list_sensor"
+      value_template: "{{ now() }}"
+      attribute_templates:
+        devices: >
+          {% set devices = state_attr('sensor.network_scanner', 'Devices') %}
+          {% if devices %}
+            {{ devices | map(attribute='ip') | list | join(', ') }}
+          {% else %}
+            No devices found
+          {% endif %}
+      icon_template: "mdi:lan-connect"
+    
     air_purifier_lifetime:
       friendly_name: "Air Purifier Filter Life"
       unique_id: "air_purifier_filter_life_sensor"
