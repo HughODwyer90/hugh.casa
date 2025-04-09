@@ -27,7 +27,7 @@
             {% for d in sorted -%}
           - IP: {{ d.ip.ljust(15) }} | MAC: {{ d.mac.ljust(17) }} | Vendor: {{ d.vendor or &#x27;Unknown&#x27; }}
           ...........................................................................
-            {% endfor %}
+            {%- endfor %}
           {% else %}
           No devices found
           {% endif %}
