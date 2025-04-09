@@ -9,9 +9,18 @@
           {% set devices = state_attr('sensor.network_scanner', 'devices') %}
           {% if devices %}
             {% set sorted = devices | sort(attribute='vendor', case_sensitive=False) %}
-            {% for d in sorted %}
-            - IP: {{ d.ip.ljust(13) }} | MAC: {{ d.mac.ljust(17) }} | Vendor: {{ d.vendor or 'Unknown' }}
-            {% endfor %}
+            {{ sorted
+              | map(attribute='ip') | list
+              | zip(
+                  sorted | map(attribute='mac'),
+                  sorted | map(attribute='vendor')
+              )
+              | map('join', ' | MAC: ') 
+              | map('regex_replace', '^(.*)$', '- IP: \\1') 
+              | map('regex_replace', '(.*\\| MAC: .*?) \\| (Vendor: .*)', '\\1 | \\2') 
+              | map('regex_replace', '$', '\\n') 
+              | join('')
+            }}
           {% else %}
             No devices found
           {% endif %}
