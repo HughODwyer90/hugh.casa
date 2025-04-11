@@ -18,7 +18,10 @@
     network_scanner_devices_list:
       friendly_name: &quot;Network Scanner Devices List&quot;
       unique_id: &quot;network_scanner_devices_list_sensor&quot;
-      value_template: &quot;{{ now() }}&quot;
+      unit_of_measurement: &quot;devices&quot;
+      value_template: &gt;
+        {% set devices = state_attr(&#x27;sensor.network_scanner&#x27;, &#x27;devices&#x27;) %}
+        {{ devices | count if devices else 0 }}
       attribute_templates:
         devices: &gt;
           {% set devices = state_attr(&#x27;sensor.network_scanner&#x27;, &#x27;devices&#x27;) %}
