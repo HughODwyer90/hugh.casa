@@ -3975,23 +3975,14 @@
   mode: single
 - id: '1743536290958'
   alias: Store Previous Sunset After Sunset
-  description: ''
   triggers:
-  - value_template: '{{ now().timestamp() > as_timestamp(states(''input_datetime.today_sunset''))
-      }}
-
-      '
-    trigger: template
-  conditions:
-  - condition: template
-    value_template: '{{ (now() - as_datetime(states(''input_datetime.today_sunset''))).seconds
-      < 60 }}
-
-      '
+  - event: sunset
+    trigger: sun
+  conditions: []
   actions:
   - target:
       entity_id: input_datetime.previous_sunset
     data:
-      timestamp: '{{ as_timestamp(states(''input_datetime.today_sunset'')) }}'
+      timestamp: '{{ as_timestamp(now()) }}'
     action: input_datetime.set_datetime
   mode: single
