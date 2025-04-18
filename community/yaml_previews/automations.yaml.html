@@ -688,7 +688,7 @@
     at: &#x27;21:00:00&#x27;
   - trigger: state
     entity_id:
-    - fan.aroma_diffuser_aroma_diffuser
+    - fan.aroma_diffuser
     to: &#x27;on&#x27;
     from: &#x27;off&#x27;
   conditions:
@@ -698,7 +698,7 @@
   actions:
   - action: fan.turn_on
     target:
-      entity_id: fan.aroma_diffuser_aroma_diffuser
+      entity_id: fan.aroma_diffuser
     data:
       percentage: 50
   - action: light.turn_on
@@ -1006,12 +1006,12 @@
   triggers:
   - trigger: state
     entity_id:
-    - fan.aroma_diffuser_aroma_diffuser
+    - fan.aroma_diffuser
     to: &#x27;off&#x27;
     from: &#x27;on&#x27;
   - trigger: state
     entity_id:
-    - fan.aroma_diffuser_aroma_diffuser
+    - fan.aroma_diffuser
     to: &#x27;on&#x27;
     for:
       hours: 0
@@ -1020,13 +1020,13 @@
     from: &#x27;off&#x27;
   - trigger: state
     entity_id:
-    - fan.aroma_diffuser_aroma_diffuser
+    - fan.aroma_diffuser
     from: unavailable
   conditions: []
   actions:
   - action: fan.turn_off
     target:
-      entity_id: fan.aroma_diffuser_aroma_diffuser
+      entity_id: fan.aroma_diffuser
     data: {}
   - action: automation.trigger
     metadata: {}
@@ -1305,7 +1305,7 @@
       - condition: not
         conditions:
         - condition: state
-          entity_id: fan.aroma_diffuser_aroma_diffuser
+          entity_id: fan.aroma_diffuser
           state: &#x27;on&#x27;
       sequence:
       - action: light.turn_on
@@ -1333,7 +1333,7 @@
     to: &#x27;on&#x27;
   - trigger: state
     entity_id:
-    - fan.aroma_diffuser_aroma_diffuser
+    - fan.aroma_diffuser
     to: &#x27;on&#x27;
   actions:
   - action: select.select_option
