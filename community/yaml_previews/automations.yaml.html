@@ -3228,107 +3228,91 @@
   alias: IR Remote Button Ollny Sequential
   description: &#x27;&#x27;
   triggers:
-  - entity_id:
-    - binary_sensor.ollny_sequential
+  - entity_id: binary_sensor.ollny_sequential
     to: &#x27;on&#x27;
     trigger: state
   conditions: []
   actions:
   - variables:
-      previous_light_state: &#x27;{{ states(&#x27;&#x27;switch.diffuser_light&#x27;&#x27;) }}&#x27;
-      previous_light_mode: &#x27;{{ states(&#x27;&#x27;select.diffuser_light_mode&#x27;&#x27;) }}&#x27;
-      previous_light_color: &#x27;{{ states(&#x27;&#x27;select.diffuser_colors&#x27;&#x27;) }}&#x27;
-  - target:
+      previous_light_state: &#x27;{{ states(&#x27;&#x27;light.aroma_diffuser&#x27;&#x27;) }}&#x27;
+      previous_light_rgb: &#x27;{{ state_attr(&#x27;&#x27;light.aroma_diffuser&#x27;&#x27;, &#x27;&#x27;rgb_color&#x27;&#x27;)
+        }}&#x27;
+      previous_brightness: &#x27;{{ state_attr(&#x27;&#x27;light.aroma_diffuser&#x27;&#x27;, &#x27;&#x27;brightness&#x27;&#x27;)
+        }}&#x27;
+  - action: input_boolean.toggle
+    target:
       entity_id: input_boolean.bed_automation_enabled
-    action: input_boolean.toggle
-    data: {}
   - choose:
     - conditions:
       - condition: state
         entity_id: input_boolean.bed_automation_enabled
         state: &#x27;on&#x27;
       sequence:
-      - target:
-          entity_id: switch.diffuser_light
-        action: switch.turn_on
-        data: {}
-      - target:
-          entity_id: select.diffuser_light_mode
+      - action: light.turn_on
+        target:
+          entity_id: light.aroma_diffuser
         data:
-          option: Solid
-        action: select.select_option
-      - target:
-          entity_id: select.diffuser_colors
-        data:
-          option: Green100
-        action: select.select_option
+          rgb_color:
+          - 0
+          - 255
+          - 0
+          brightness: 255
+          effect: &#x27;off&#x27;
       - delay: 00:00:02
       - choose:
         - conditions:
           - condition: template
             value_template: &#x27;{{ previous_light_state == &#x27;&#x27;off&#x27;&#x27; }}&#x27;
           sequence:
-          - target:
-              entity_id: switch.diffuser_light
-            action: switch.turn_off
-            data: {}
+          - action: light.turn_off
+            target:
+              entity_id: light.aroma_diffuser
         - conditions:
           - condition: template
             value_template: &#x27;{{ previous_light_state == &#x27;&#x27;on&#x27;&#x27; }}&#x27;
           sequence:
-          - target:
-              entity_id: select.diffuser_light_mode
+          - action: light.turn_on
+            target:
+              entity_id: light.aroma_diffuser
             data:
-              option: &#x27;{{ previous_light_mode }}&#x27;
-            action: select.select_option
-          - target:
-              entity_id: select.diffuser_colors
-            data:
-              option: &#x27;{{ previous_light_color }}&#x27;
-            action: select.select_option
+              rgb_color: &#x27;{{ previous_light_rgb }}&#x27;
+              brightness: &#x27;{{ previous_brightness }}&#x27;
+              effect: &#x27;off&#x27;
     - conditions:
       - condition: state
         entity_id: input_boolean.bed_automation_enabled
         state: &#x27;off&#x27;
       sequence:
-      - target:
-          entity_id: switch.diffuser_light
-        action: switch.turn_on
-        data: {}
-      - target:
-          entity_id: select.diffuser_light_mode
+      - action: light.turn_on
+        target:
+          entity_id: light.aroma_diffuser
         data:
-          option: Solid
-        action: select.select_option
-      - target:
-          entity_id: select.diffuser_colors
-        data:
-          option: Red100
-        action: select.select_option
+          rgb_color:
+          - 255
+          - 0
+          - 0
+          brightness: 255
+          effect: &#x27;off&#x27;
       - delay: 00:00:02
       - choose:
         - conditions:
           - condition: template
             value_template: &#x27;{{ previous_light_state == &#x27;&#x27;off&#x27;&#x27; }}&#x27;
           sequence:
-          - target:
-              entity_id: switch.diffuser_light
-            action: switch.turn_off
-            data: {}
+          - action: light.turn_off
+            target:
+              entity_id: light.aroma_diffuser
         - conditions:
           - condition: template
             value_template: &#x27;{{ previous_light_state == &#x27;&#x27;on&#x27;&#x27; }}&#x27;
           sequence:
-          - target:
-              entity_id: select.diffuser_light_mode
+          - action: light.turn_on
+            target:
+              entity_id: light.aroma_diffuser
             data:
-              option: &#x27;{{ previous_light_mode }}&#x27;
-            action: select.select_option
-          - target:
-              entity_id: select.diffuser_colors
-            data:
-              option: &#x27;{{ previous_light_color }}&#x27;
-            action: select.select_option
+              rgb_color: &#x27;{{ previous_light_rgb }}&#x27;
+              brightness: &#x27;{{ previous_brightness }}&#x27;
+              effect: &#x27;off&#x27;
   mode: single
 - id: &#x27;1726565274036&#x27;
   alias: Reset Car Stats Button
@@ -3422,8 +3406,10 @@
   mode: single
 - id: &#x27;1728126796689&#x27;
   alias: IR Remote Button in Wave
-  description: This automation flashes the diffuser light red and reboots Home Assistant
+  description: &#x27;This automation flashes the diffuser light red and reboots Home Assistant
     when the IR remote button is pressed in wave mode.
+
+    &#x27;
   triggers:
   - entity_id: binary_sensor.ollny_wave
     to: &#x27;on&#x27;
@@ -3431,55 +3417,51 @@
   conditions: []
   actions:
   - variables:
-      previous_light_state: &#x27;{{ states(&#x27;&#x27;switch.diffuser_light&#x27;&#x27;) }}&#x27;
-      previous_light_mode: &#x27;{{ states(&#x27;&#x27;select.diffuser_light_mode&#x27;&#x27;) }}&#x27;
-      previous_light_color: &#x27;{{ states(&#x27;&#x27;select.diffuser_colors&#x27;&#x27;) }}&#x27;
+      previous_light_state: &#x27;{{ states(&#x27;&#x27;light.aroma_diffuser&#x27;&#x27;) }}&#x27;
+      previous_light_rgb: &#x27;{{ state_attr(&#x27;&#x27;light.aroma_diffuser&#x27;&#x27;, &#x27;&#x27;rgb_color&#x27;&#x27;)
+        }}&#x27;
+      previous_brightness: &#x27;{{ state_attr(&#x27;&#x27;light.aroma_diffuser&#x27;&#x27;, &#x27;&#x27;brightness&#x27;&#x27;)
+        }}&#x27;
   - choose:
     - conditions:
       - condition: template
         value_template: &#x27;{{ previous_light_state == &#x27;&#x27;off&#x27;&#x27; }}&#x27;
       sequence:
-      - target:
-          entity_id: switch.diffuser_light
-        action: switch.turn_on
-        data: {}
-  - target:
-      entity_id: select.diffuser_light_mode
+      - action: light.turn_on
+        target:
+          entity_id: light.aroma_diffuser
+  - action: light.turn_on
+    target:
+      entity_id: light.aroma_diffuser
     data:
-      option: Solid
-    action: select.select_option
-  - target:
-      entity_id: select.diffuser_colors
-    data:
-      option: Red100
-    action: select.select_option
+      rgb_color:
+      - 255
+      - 0
+      - 0
+      brightness: 255
+      effect: &#x27;off&#x27;
   - delay: 00:00:02
   - choose:
     - conditions:
       - condition: template
         value_template: &#x27;{{ previous_light_state == &#x27;&#x27;off&#x27;&#x27; }}&#x27;
       sequence:
-      - target:
-          entity_id: switch.diffuser_light
-        action: switch.turn_off
-        data: {}
+      - action: light.turn_off
+        target:
+          entity_id: light.aroma_diffuser
     - conditions:
       - condition: template
         value_template: &#x27;{{ previous_light_state == &#x27;&#x27;on&#x27;&#x27; }}&#x27;
       sequence:
-      - target:
-          entity_id: select.diffuser_light_mode
+      - action: light.turn_on
+        target:
+          entity_id: light.aroma_diffuser
         data:
-          option: &#x27;{{ previous_light_mode }}&#x27;
-        action: select.select_option
+          rgb_color: &#x27;{{ previous_light_rgb }}&#x27;
+          brightness: &#x27;{{ previous_brightness }}&#x27;
+          effect: &#x27;off&#x27;
       - delay: 00:00:01
-      - target:
-          entity_id: select.diffuser_colors
-        data:
-          option: &#x27;{{ previous_light_color }}&#x27;
-        action: select.select_option
-  - data: {}
-    action: homeassistant.restart
+  - action: homeassistant.restart
     enabled: true
   mode: single
 - id: &#x27;1728775622846&#x27;
