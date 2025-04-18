@@ -324,11 +324,6 @@
     event: start
   actions:
   - target:
-      entity_id: select.diffuser_colors
-    data:
-      option: Red100
-    action: select.select_option
-  - target:
       entity_id: button.zigbee2mqtt_bridge_restart
     data: {}
     action: button.press
@@ -355,10 +350,6 @@
   - data:
       message: System has restarted and is now ready.
     action: notify.notifications
-  - target:
-      entity_id: switch.diffuser_light
-    data: {}
-    action: switch.turn_off
   - action: input_boolean.turn_on
     metadata: {}
     data: {}
