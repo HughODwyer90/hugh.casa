@@ -3953,13 +3953,9 @@
   mode: single
 - id: '1743536268804'
   alias: Store Previous Sunrise After Sunrise
-  description: ''
   triggers:
-  - value_template: '{{ now().timestamp() > as_timestamp(states(''input_datetime.today_sunrise''))
-      }}
-
-      '
-    trigger: template
+  - event: sunrise
+    trigger: sun
   conditions:
   - condition: template
     value_template: '{{ (now() - as_datetime(states(''input_datetime.today_sunrise''))).seconds
