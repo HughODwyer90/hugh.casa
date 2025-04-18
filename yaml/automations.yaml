@@ -3982,18 +3982,3 @@
       timestamp: '{{ as_timestamp(now()) }}'
     action: input_datetime.set_datetime
   mode: single
-- id: '1744992679552'
-  alias: Set Aroma Diffuser to Fixed Color
-  description: ''
-  triggers: []
-  conditions: []
-  actions:
-  - action: light.turn_on
-    target:
-      entity_id: light.aroma_diffuser
-    data:
-      effect: 'off'
-      rgb_color:
-      - 0
-      - 255
-      - 0
