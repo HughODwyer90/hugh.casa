@@ -142,31 +142,6 @@
         {% else %}
           Unknown
         {% endif %}
-    
-    tuya_account_expiration:
-      friendly_name: "Tuya Account Expiration"
-      unique_id: "tuya_account_expiration_sensor"
-      icon_template: "{{ 'mdi:calendar-clock' }}"
-      value_template: >
-        {% set expiration_date = states('input_datetime.tuya_account_expiration') %}
-        {% if expiration_date not in ['unknown', 'unavailable'] %}
-          {% set expiration_timestamp = as_timestamp(expiration_date) %}
-          {% set seconds_until_expiration = expiration_timestamp - now().timestamp() %}
-          {% set days_until_expiration = seconds_until_expiration / 86400 %}
-          {% if seconds_until_expiration < 0 %}
-            Expired
-          {% elif days_until_expiration < 1 %}
-            {% set hours_until_expiration = (seconds_until_expiration / 3600) | float | round(0, 'floor') %}
-            Expires in {{ hours_until_expiration }} hours
-          {% elif days_until_expiration <= 7 %}
-            {% set days_until_expiration_floor = days_until_expiration | float | round(0, 'floor') %}
-            Expires in {{ days_until_expiration_floor }} days
-          {% else %}
-            {{ expiration_timestamp | timestamp_custom('%d/%m/%Y', true) }}
-          {% endif %}
-        {% else %}
-          Unknown
-        {% endif %}
 
     umail_account_expiration:
       friendly_name: "Umail Account Expiration"
