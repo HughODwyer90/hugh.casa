@@ -653,13 +653,13 @@
 - id: '1704468879583'
   alias: Hugh Room Diffuser Empty Warning
   description: Sends a notification when the diffuser is empty.
-  trigger:
+  triggers:
   - trigger: state
     entity_id:
-    - binary_sensor.diffuser_moisture
-    to: 'off'
-  condition: []
-  action:
+    - binary_sensor.aroma_diffuser_problem
+    to: 'on'
+  conditions: []
+  actions:
   - action: notify.notifications
     data:
       title: Diffuser Warning
@@ -668,42 +668,32 @@
 - id: '1704470061031'
   alias: Hugh Room Diffuser On
   description: ''
-  trigger:
+  triggers:
   - trigger: time
     at: '21:00:00'
   - trigger: state
     entity_id:
-    - switch.diffuser_power
+    - fan.aroma_diffuser_aroma_diffuser
     to: 'on'
     from: 'off'
-  condition:
+  conditions:
   - condition: state
-    entity_id: binary_sensor.diffuser_moisture
-    state: 'on'
-  action:
-  - action: switch.turn_on
-    data: {}
+    entity_id: binary_sensor.aroma_diffuser_problem
+    state: 'off'
+  actions:
+  - action: fan.turn_on
     target:
-      entity_id:
-      - switch.diffuser_power
-  - action: switch.turn_on
-    entity_id: switch.diffuser_light
-  - action: select.select_option
-    target:
-      entity_id: select.diffuser_colors
+      entity_id: fan.aroma_diffuser_aroma_diffuser
     data:
-      option: Red100
-  - action: select.select_option
+      percentage: 50
+  - action: light.turn_on
     target:
-      entity_id:
-      - select.diffuser_light_mode
+      entity_id: light.aroma_diffuser
     data:
-      option: Solid
-  - action: select.select_option
-    target:
-      entity_id: select.diffuser_mist
-    data:
-      option: Weak
+      rgb_color:
+      - 255
+      - 0
+      - 0
   - action: fan.turn_off
     target:
       entity_id: fan.air_purifier
@@ -933,12 +923,12 @@
 - id: '1705859376552'
   alias: Hugh Phone Charging
   description: ''
-  trigger:
+  triggers:
   - trigger: state
     entity_id:
     - sensor.hugh_phone_charger_type
     to: ac
-  condition:
+  conditions:
   - condition: state
     entity_id: sensor.hugh_phone_battery_state
     state: charging
@@ -948,26 +938,20 @@
   - condition: state
     entity_id: input_boolean.hugh_room_occupied
     state: 'on'
-  action:
-  - action: switch.turn_on
-    data: {}
+  actions:
+  - action: light.turn_on
     target:
-      entity_id: switch.diffuser_light
-  - action: select.select_option
-    target:
-      entity_id: select.diffuser_light_mode
+      entity_id: light.aroma_diffuser
     data:
-      option: Solid
-  - action: select.select_option
-    target:
-      entity_id: select.diffuser_colors
-    data:
-      option: Blue100
+      rgb_color:
+      - 0
+      - 17
+      - 255
   mode: single
 - id: '1705859650174'
   alias: Hugh Phone Charged
   description: ''
-  trigger:
+  triggers:
   - trigger: state
     entity_id:
     - sensor.hugh_phone_battery_state
@@ -975,8 +959,8 @@
   - trigger: numeric_state
     entity_id:
     - sensor.hugh_phone_battery_level
-    above: 83
-  condition:
+    above: 90
+  conditions:
   - condition: time
     after: 08:00:00
     before: '23:00:00'
@@ -986,21 +970,15 @@
   - condition: state
     entity_id: input_boolean.hugh_room_occupied
     state: 'on'
-  action:
-  - action: switch.turn_on
-    data: {}
+  actions:
+  - action: light.turn_on
     target:
-      entity_id: switch.diffuser_light
-  - action: select.select_option
-    target:
-      entity_id: select.diffuser_light_mode
+      entity_id: light.aroma_diffuser
     data:
-      option: Solid
-  - action: select.select_option
-    target:
-      entity_id: select.diffuser_colors
-    data:
-      option: Green100
+      rgb_color:
+      - 0
+      - 255
+      - 0
   mode: single
 - id: '1705861047328'
   alias: Hugh Room Diffuser Off
@@ -1010,14 +988,15 @@
     off regardless of time.
 
     '
-  trigger:
+  triggers:
   - trigger: state
-    entity_id: switch.diffuser_power
+    entity_id:
+    - fan.aroma_diffuser_aroma_diffuser
     to: 'off'
     from: 'on'
   - trigger: state
     entity_id:
-    - switch.diffuser_power
+    - fan.aroma_diffuser_aroma_diffuser
     to: 'on'
     for:
       hours: 0
@@ -1025,13 +1004,14 @@
       seconds: 0
     from: 'off'
   - trigger: state
-    entity_id: switch.diffuser_power
+    entity_id:
+    - fan.aroma_diffuser_aroma_diffuser
     from: unavailable
-  condition: []
-  action:
-  - action: switch.turn_off
+  conditions: []
+  actions:
+  - action: fan.turn_off
     target:
-      entity_id: switch.diffuser_power
+      entity_id: fan.aroma_diffuser_aroma_diffuser
     data: {}
   - action: automation.trigger
     metadata: {}
@@ -1269,7 +1249,7 @@
   description: 'Sets the diffuser light state
 
     '
-  trigger:
+  triggers:
   - trigger: state
     entity_id:
     - sensor.hugh_phone_battery_state
@@ -1277,74 +1257,76 @@
   - trigger: state
     entity_id:
     - input_boolean.pc_on
-  condition:
+  conditions:
   - condition: state
     entity_id: input_boolean.hugh_room_occupied
     state: 'on'
-  action:
-  - action: select.select_option
-    target:
-      entity_id: select.diffuser_light_mode
-    data:
-      option: Solid
+  actions:
   - choose:
     - conditions:
       - condition: state
         state: 'off'
         entity_id: input_boolean.pc_on
       sequence:
-      - action: switch.turn_off
+      - action: light.turn_off
         target:
-          entity_id: switch.diffuser_light
+          entity_id: light.aroma_diffuser
         data: {}
     - conditions:
       - condition: state
         entity_id: input_boolean.pc_on
         state: 'on'
       sequence:
-      - action: select.select_option
-        target:
-          entity_id: select.diffuser_colors
+      - action: light.turn_on
+        metadata: {}
         data:
-          option: Amber
+          rgb_color:
+          - 255
+          - 136
+          - 0
+        target:
+          entity_id: light.aroma_diffuser
     - conditions:
-      - condition: or
+      - condition: not
         conditions:
         - condition: state
-          entity_id: select.diffuser_mist
-          state: Weak
-        - condition: state
-          entity_id: select.diffuser_mist
-          state: Strong
+          entity_id: fan.aroma_diffuser_aroma_diffuser
+          state: 'on'
       sequence:
-      - action: select.select_option
-        target:
-          entity_id: select.diffuser_colors
+      - action: light.turn_on
+        metadata: {}
         data:
-          option: Red100
+          rgb_color:
+          - 255
+          - 0
+          - 0
+        target:
+          entity_id: light.aroma_diffuser
     default:
-    - action: switch.turn_off
+    - action: light.turn_off
       target:
-        entity_id: switch.diffuser_light
+        entity_id: light.aroma_diffuser
       data: {}
   mode: single
 - id: '1708037379935'
   alias: Diffuser Light Mode Check
   description: Triggered when diffuser light is manually turned on
-  trigger:
+  triggers:
   - trigger: state
-    entity_id: switch.diffuser_light
+    entity_id:
+    - light.aroma_diffuser
     to: 'on'
   - trigger: state
     entity_id:
-    - switch.diffuser_power
+    - fan.aroma_diffuser_aroma_diffuser
     to: 'on'
-  action:
+  actions:
   - action: select.select_option
     target:
-      entity_id: select.diffuser_light_mode
+      entity_id:
+      - select.aroma_diffuser_mood_lighting
     data:
-      option: Solid
+      option: Fixed
   mode: single
 - id: '1708774732316'
   alias: Hugh Room Door Button Double
