@@ -1050,23 +1050,18 @@
   alias: Hugh Room Diffuser Lights Off
   description: Turns off the diffuser lights if they are on between midnight and 8
     AM.
-  trigger:
+  triggers:
   - trigger: time
     at: 00:00:00
-  condition:
+  conditions:
   - condition: state
-    entity_id: switch.diffuser_light
+    entity_id: light.aroma_diffuser
     state: 'on'
-  action:
-  - action: switch.turn_off
+  actions:
+  - action: light.turn_off
     target:
-      entity_id: switch.diffuser_light
+      entity_id: light.aroma_diffuser
     data: {}
-  - action: select.select_option
-    target:
-      entity_id: select.diffuser_colors
-    data:
-      option: Red100
   mode: single
 - id: '1707161504438'
   alias: Hugh Room Stereo Vol Up
@@ -1184,106 +1179,6 @@
       - action: scene.turn_on
         target:
           entity_id: scene.dimmers
-    default: []
-  mode: single
-- id: '1707348124701'
-  alias: Admin Devices Unavailable
-  description: Sends a notification when devices are unavailable or unknown for 5
-    minutes.
-  trigger:
-  - trigger: time_pattern
-    minutes: /5
-  condition:
-  - condition: or
-    conditions:
-    - condition: state
-      entity_id: number.diffuser_brightness
-      state: unavailable
-    - condition: state
-      entity_id: fan.air_purifier
-      state: unavailable
-    - condition: state
-      entity_id: light.living_room_floor_back
-      state: unavailable
-    - condition: state
-      entity_id: light.living_room_floor_front
-      state: unavailable
-    - condition: state
-      entity_id: number.diffuser_brightness
-      state: unknown
-    - condition: state
-      entity_id: fan.air_purifier
-      state: unknown
-    - condition: state
-      entity_id: light.living_room_floor_back
-      state: unknown
-    - condition: state
-      entity_id: light.living_room_floor_front
-      state: unknown
-  action:
-  - choose:
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: light.living_room_floor_back
-          state: unavailable
-        - condition: state
-          entity_id: light.living_room_floor_front
-          state: unavailable
-        - condition: state
-          entity_id: light.living_room_floor_back
-          state: unknown
-        - condition: state
-          entity_id: light.living_room_floor_front
-          state: unknown
-      sequence:
-      - data: {}
-        target:
-          entity_id: button.zigbee2mqtt_bridge_restart
-        action: button.press
-      - data:
-          message: Zigbee lights unavailable for 5 minutes.
-          title: 'Warning: Zigbee Lights Unavailable'
-          data:
-            actions:
-            - action: RESTART_HA
-              title: Restart HA
-            - action: IGNORE_ALERT
-              title: Ignore
-        action: notify.notifications
-    - conditions:
-      - condition: state
-        entity_id: number.diffuser_brightness
-        state: unavailable
-      - condition: state
-        entity_id: number.diffuser_brightness
-        state: unknown
-      sequence:
-      - target:
-          entity_id: number.diffuser_brightness
-        data: {}
-        action: homeassistant.reload_config_entry
-      - data:
-          message: Device has been unavailable for 5 minutes.
-          title: 'Warning: Device Unavailable'
-          data:
-            actions:
-            - action: RESTART_HA
-              title: Restart HA
-            - action: IGNORE_ALERT
-              title: Ignore
-        action: notify.notifications
-    - conditions:
-      - condition: state
-        entity_id: fan.air_purifier
-        state: unavailable
-      - condition: state
-        entity_id: fan.air_purifier
-        state: unknown
-      sequence:
-      - data: {}
-        action: homeassistant.restart
     default: []
   mode: single
 - id: '1707620611866'
