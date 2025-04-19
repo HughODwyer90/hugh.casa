@@ -3793,12 +3793,7 @@
   triggers:
   - event: sunrise
     trigger: sun
-  conditions:
-  - condition: template
-    value_template: &#x27;{{ (now() - as_datetime(states(&#x27;&#x27;input_datetime.today_sunrise&#x27;&#x27;))).seconds
-      &lt; 60 }}
-
-      &#x27;
+  conditions: []
   actions:
   - target:
       entity_id: input_datetime.previous_sunrise
