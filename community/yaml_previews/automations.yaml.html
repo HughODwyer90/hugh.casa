@@ -3814,6 +3814,36 @@
       timestamp: &#x27;{{ as_timestamp(now()) }}&#x27;
     action: input_datetime.set_datetime
   mode: single
+- id: &#x27;1745479112868&#x27;
+  alias: Alarm Dismiss (PC on)
+  description: Turns off the alarm when the &quot;Turn Off Alarm&quot; button is pressed or
+    when the rug sensor is activated, but only if the alarm is currently running.
+  triggers:
+  - trigger: state
+    entity_id:
+    - sensor.pc_status
+    to: &#x27;On&#x27;
+  conditions:
+  - condition: state
+    entity_id: input_boolean.wake_up_alarm_running
+    state: &#x27;on&#x27;
+  actions:
+  - choose:
+    - conditions:
+      - condition: state
+        state: playing
+        entity_id: media_player.universal_player
+      sequence:
+      - data: {}
+        target:
+          entity_id: media_player.universal_player
+        action: media_player.media_stop
+    default: []
+  - target:
+      entity_id: input_boolean.wake_up_alarm_running
+    data: {}
+    action: input_boolean.turn_off
+  mode: single
 </pre>
             </div>
             <script>
