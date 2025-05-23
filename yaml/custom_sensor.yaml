@@ -847,31 +847,39 @@
   unique_id: "liverpool_premier_league_position_sensor"
   resource: "https://site.web.api.espn.com/apis/v2/sports/soccer/eng.1/standings?region=uk&lang=en"
   value_template: >
-    {% if value_json is not none and 'children' in value_json and value_json['children'] %}
-      {% set entries = value_json['children'][0].get('standings', {}).get('entries', []) %}
-      {% if entries %}
-        {% set liverpool = entries | selectattr('team.displayName', 'equalto', 'Liverpool') | list | first %}
-        {% if liverpool and 'stats' in liverpool %}
-          {% set raw_rank = liverpool['stats'] | selectattr('name', 'equalto', 'rank') | map(attribute='value') | list | first %}
-          {% set rank = (raw_rank | int) if raw_rank is not none else none %}
-          {% if rank is number %}
-            {% if rank in [11,12,13] %}{{ rank }}th
-            {% elif rank % 10 == 1 %}{{ rank }}st
-            {% elif rank % 10 == 2 %}{{ rank }}nd
-            {% elif rank % 10 == 3 %}{{ rank }}rd
-            {% else %}{{ rank }}th
-            {% endif %}
-          {% else %}
-            Not Ranked
-          {% endif %}
-        {% else %}
-          Liverpool not found
+    {% set entries = value_json.get('children', [])[0].get('standings', {}).get('entries', []) %}
+    {% set total_games = 38 %}
+    {% set liverpool = entries | selectattr('team.displayName', 'equalto', 'Liverpool') | list | first %}
+    {% if liverpool %}
+      {% set lfc_points = liverpool['stats'] | selectattr('name', 'equalto', 'points') | map(attribute='value') | list | first | int %}
+      {% set lfc_played = liverpool['stats'] | selectattr('name', 'equalto', 'gamesPlayed') | map(attribute='value') | list | first | int %}
+      {% set rank = liverpool['stats'] | selectattr('name', 'equalto', 'rank') | map(attribute='value') | list | first | int %}
+      {% set lfc_remaining = total_games - lfc_played %}
+      
+      {% set challengers = entries | rejectattr('team.displayName', 'equalto', 'Liverpool') %}
+      {% set uncatchable = true %}
+      {% for team in challengers %}
+        {% set pts = team['stats'] | selectattr('name', 'equalto', 'points') | map(attribute='value') | list | first | int %}
+        {% set played = team['stats'] | selectattr('name', 'equalto', 'gamesPlayed') | map(attribute='value') | list | first | int %}
+        {% set max_possible = pts + (total_games - played) * 3 %}
+        {% if max_possible >= lfc_points %}
+          {% set uncatchable = false %}
         {% endif %}
+      {% endfor %}
+
+      {% if rank in [11,12,13] %}
+        {{ rank }}th{% if rank == 1 and uncatchable %} (Champions){% endif %}
+      {% elif rank % 10 == 1 %}
+        {{ rank }}st{% if rank == 1 and uncatchable %} (Champions){% endif %}
+      {% elif rank % 10 == 2 %}
+        {{ rank }}nd{% if rank == 1 and uncatchable %} (Champions){% endif %}
+      {% elif rank % 10 == 3 %}
+        {{ rank }}rd{% if rank == 1 and uncatchable %} (Champions){% endif %}
       {% else %}
-        No standings entries found
+        {{ rank }}th{% if rank == 1 and uncatchable %} (Champions){% endif %}
       {% endif %}
     {% else %}
-      API unavailable or invalid response
+      Liverpool not found
     {% endif %}
   scan_interval: 9000
   timeout: 10
