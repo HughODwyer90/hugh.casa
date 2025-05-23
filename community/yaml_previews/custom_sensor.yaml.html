@@ -867,8 +867,18 @@
       {% if entries %}
         {% set liverpool = entries | selectattr(&#x27;team.displayName&#x27;, &#x27;equalto&#x27;, &#x27;Liverpool&#x27;) | list | first %}
         {% if liverpool and &#x27;stats&#x27; in liverpool %}
-          {% set rank = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;rank&#x27;) | map(attribute=&#x27;value&#x27;) | list | first %}
-          {{ rank + 1 if rank is not none else &#x27;Not Ranked&#x27; }}
+          {% set raw_rank = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;rank&#x27;) | map(attribute=&#x27;value&#x27;) | list | first %}
+          {% set rank = (raw_rank | int) if raw_rank is not none else none %}
+          {% if rank is number %}
+            {% if rank in [11,12,13] %}{{ rank }}th
+            {% elif rank % 10 == 1 %}{{ rank }}st
+            {% elif rank % 10 == 2 %}{{ rank }}nd
+            {% elif rank % 10 == 3 %}{{ rank }}rd
+            {% else %}{{ rank }}th
+            {% endif %}
+          {% else %}
+            Not Ranked
+          {% endif %}
         {% else %}
           Liverpool not found
         {% endif %}
@@ -884,7 +894,6 @@
 - platform: rest
   name: &quot;Liverpool (Champions League Position)&quot;
   unique_id: &quot;liverpool_champions_league_position_sensor&quot;
-  # UCL endpoint (default)
   resource: &quot;https://site.web.api.espn.com/apis/v2/sports/soccer/uefa.champions/standings?region=uk&amp;lang=en&quot;
   # To check Europa League, use:
   # resource: &quot;https://site.web.api.espn.com/apis/v2/sports/soccer/uefa.europa/standings?region=uk&amp;lang=en&quot;
@@ -896,7 +905,8 @@
       {% set entries = groups | map(attribute=&#x27;standings&#x27;) | map(attribute=&#x27;entries&#x27;) | sum(start=[]) %}
       {% set liverpool = entries | selectattr(&#x27;team.displayName&#x27;, &#x27;equalto&#x27;, &#x27;Liverpool&#x27;) | list | first %}
       {% if liverpool and &#x27;stats&#x27; in liverpool %}
-        {% set rank = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;rank&#x27;) | map(attribute=&#x27;value&#x27;) | list | first %}
+        {% set raw_rank = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;rank&#x27;) | map(attribute=&#x27;value&#x27;) | list | first %}
+        {% set rank = (raw_rank | int) if raw_rank is not none else none %}
         {% if rank is number %}
           {% if rank in [11,12,13] %}{{ rank }}th
           {% elif rank % 10 == 1 %}{{ rank }}st
@@ -915,7 +925,6 @@
     {% endif %}
   scan_interval: 9000
   timeout: 10
-
 
 - platform: rest
   name: &quot;Liverpool (Generic Stage)&quot;
