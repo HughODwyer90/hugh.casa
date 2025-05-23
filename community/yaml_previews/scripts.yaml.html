@@ -32,22 +32,6 @@ hugh_room_stereo_volume_down:
       entity_id: media_player.hugh_room_display
   mode: single
   icon: mdi:volume-minus
-play_spotify_playlist:
-  alias: Play Spotify Playlist
-  sequence:
-  - action: spotcast.start
-    metadata: {}
-    data:
-      force_playback: true
-      random_song: true
-      repeat: &#x27;off&#x27;
-      shuffle: true
-      ignore_fully_played: false
-      start_volume: 10
-      entity_id: media_player.hugh_room_stereo
-      uri: spotify:playlist:7Gtodbwg48bzliqflc1BE9
-  icon: mdi:spotify
-  mode: single
 execute_alarm_actions:
   alias: Execute Alarm Actions
   sequence:
@@ -410,6 +394,23 @@ update_entities_html:
     data: {}
     enabled: false
   alias: Github Backup
+  description: &#x27;&#x27;
+play_spotify_playlist_2:
+  alias: Play Spotify Playlist
+  sequence:
+  - action: spotcast.start
+    metadata: {}
+    data:
+      force_playback: true
+      random_song: true
+      repeat: &#x27;off&#x27;
+      shuffle: true
+      ignore_fully_played: false
+      start_volume: 10
+      entity_id: media_player.hugh_room_stereo
+      uri: spotify:playlist:7Gtodbwg48bzliqflc1BE9
+  icon: mdi:spotify
+  mode: single
   description: &#x27;&#x27;
 </pre>
             </div>
