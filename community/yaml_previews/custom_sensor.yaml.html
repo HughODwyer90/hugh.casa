@@ -886,6 +886,31 @@
   timeout: 10
 
 - platform: rest
+  name: &quot;Liverpool (Premier League Position)&quot;
+  unique_id: &quot;liverpool_premier_league_position_sensor&quot;
+  resource: &quot;https://site.web.api.espn.com/apis/v2/sports/soccer/eng.1/standings?region=uk&amp;lang=en&quot;
+  value_template: &gt;
+    {% if value_json is not none and &#x27;children&#x27; in value_json and value_json[&#x27;children&#x27;] %}
+      {% set entries = value_json[&#x27;children&#x27;][0].get(&#x27;standings&#x27;, {}).get(&#x27;entries&#x27;, []) %}
+      {% if entries %}
+        {% set liverpool = entries | selectattr(&#x27;team.displayName&#x27;, &#x27;equalto&#x27;, &#x27;Liverpool&#x27;) | list | first %}
+        {% if liverpool and &#x27;stats&#x27; in liverpool %}
+          {% set rank = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;rank&#x27;) | map(attribute=&#x27;value&#x27;) | list | first %}
+          {{ rank if rank is not none else &#x27;Not Ranked&#x27; }}
+        {% else %}
+          Liverpool not found
+        {% endif %}
+      {% else %}
+        No standings entries found
+      {% endif %}
+    {% else %}
+      API unavailable or invalid response
+    {% endif %}
+  scan_interval: 9000
+  timeout: 10
+
+
+- platform: rest
   name: &quot;Liverpool (Champions League Position)&quot;
   unique_id: &quot;liverpool_champions_league_position_sensor&quot;
   resource: &quot;https://prod-cdn-public-api.livescore.com/v1/api/app/stage/soccer/champions-league/league-stage/0?countryCode=IE&amp;locale=en&amp;MD=1&quot;
@@ -919,6 +944,42 @@
     {% endif %}
   scan_interval: 9000
   timeout: 10
+
+- platform: rest
+  name: &quot;Liverpool (Champions League Position)&quot;
+  unique_id: &quot;liverpool_champions_league_position_sensor&quot;
+  # UCL endpoint (default)
+  resource: &quot;https://site.web.api.espn.com/apis/v2/sports/soccer/uefa.champions/standings?region=uk&amp;lang=en&quot;
+  # To check Europa League, use:
+  # resource: &quot;https://site.web.api.espn.com/apis/v2/sports/soccer/uefa.europa/standings?region=uk&amp;lang=en&quot;
+  # To check Conference League, use:
+  # resource: &quot;https://site.web.api.espn.com/apis/v2/sports/soccer/uefa.europa.conference/standings?region=uk&amp;lang=en&quot;
+  value_template: &gt;
+    {% if value_json is not none and &#x27;children&#x27; in value_json and value_json[&#x27;children&#x27;] %}
+      {% set groups = value_json[&#x27;children&#x27;] %}
+      {% set entries = groups | map(attribute=&#x27;standings&#x27;) | map(attribute=&#x27;entries&#x27;) | sum(start=[]) %}
+      {% set liverpool = entries | selectattr(&#x27;team.displayName&#x27;, &#x27;equalto&#x27;, &#x27;Liverpool&#x27;) | list | first %}
+      {% if liverpool and &#x27;stats&#x27; in liverpool %}
+        {% set rank = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;rank&#x27;) | map(attribute=&#x27;value&#x27;) | list | first %}
+        {% if rank is number %}
+          {% if rank in [11,12,13] %}{{ rank }}th
+          {% elif rank % 10 == 1 %}{{ rank }}st
+          {% elif rank % 10 == 2 %}{{ rank }}nd
+          {% elif rank % 10 == 3 %}{{ rank }}rd
+          {% else %}{{ rank }}th
+          {% endif %}
+        {% else %}
+          Not Ranked
+        {% endif %}
+      {% else %}
+        Liverpool not found
+      {% endif %}
+    {% else %}
+      API unavailable or invalid response
+    {% endif %}
+  scan_interval: 9000
+  timeout: 10
+
 
 - platform: rest
   name: &quot;Liverpool (Generic Stage)&quot;
