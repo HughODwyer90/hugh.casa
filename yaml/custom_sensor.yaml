@@ -853,7 +853,7 @@
         {% set liverpool = entries | selectattr('team.displayName', 'equalto', 'Liverpool') | list | first %}
         {% if liverpool and 'stats' in liverpool %}
           {% set rank = liverpool['stats'] | selectattr('name', 'equalto', 'rank') | map(attribute='value') | list | first %}
-          {{ rank if rank is not none else 'Not Ranked' }}
+          {{ rank + 1 if rank is not none else 'Not Ranked' }}
         {% else %}
           Liverpool not found
         {% endif %}
