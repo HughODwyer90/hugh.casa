@@ -869,29 +869,27 @@
       {% set lfc_points = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
       {% set lfc_played = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;gamesPlayed&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
       {% set rank = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;rank&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
-      {% set lfc_remaining = total_games - lfc_played %}
-      
-      {% set challengers = entries | rejectattr(&#x27;team.displayName&#x27;, &#x27;equalto&#x27;, &#x27;Liverpool&#x27;) %}
-      {% set uncatchable = true %}
-      {% for team in challengers %}
-        {% set pts = team[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
-        {% set played = team[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;gamesPlayed&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
-        {% set max_possible = pts + (total_games - played) * 3 %}
-        {% if max_possible &gt;= lfc_points %}
-          {% set uncatchable = false %}
-        {% endif %}
-      {% endfor %}
-
-      {% if rank in [11,12,13] %}
-        {{ rank }}th{% if rank == 1 and uncatchable %} (Champions){% endif %}
-      {% elif rank % 10 == 1 %}
-        {{ rank }}st{% if rank == 1 and uncatchable %} (Champions){% endif %}
-      {% elif rank % 10 == 2 %}
-        {{ rank }}nd{% if rank == 1 and uncatchable %} (Champions){% endif %}
-      {% elif rank % 10 == 3 %}
-        {{ rank }}rd{% if rank == 1 and uncatchable %} (Champions){% endif %}
+      {% set suffix = 
+        &#x27;th&#x27; if rank in [11, 12, 13] else
+        &#x27;st&#x27; if rank % 10 == 1 else
+        &#x27;nd&#x27; if rank % 10 == 2 else
+        &#x27;rd&#x27; if rank % 10 == 3 else
+        &#x27;th&#x27; %}
+      {% if rank == 1 %}
+        {% set lfc_remaining = total_games - lfc_played %}
+        {% set challengers = entries | rejectattr(&#x27;team.displayName&#x27;, &#x27;equalto&#x27;, &#x27;Liverpool&#x27;) %}
+        {% set uncatchable = true %}
+        {% for team in challengers %}
+          {% set pts = team[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+          {% set played = team[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;gamesPlayed&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+          {% set max_possible = pts + (total_games - played) * 3 %}
+          {% if max_possible &gt;= lfc_points %}
+            {% set uncatchable = false %}
+          {% endif %}
+        {% endfor %}
+        {{ rank }}{{ suffix }}{% if uncatchable %} (Champions){% endif %}
       {% else %}
-        {{ rank }}th{% if rank == 1 and uncatchable %} (Champions){% endif %}
+        {{ rank }}{{ suffix }}
       {% endif %}
     {% else %}
       Liverpool not found
@@ -903,25 +901,25 @@
   name: &quot;Liverpool (Champions League Position)&quot;
   unique_id: &quot;liverpool_champions_league_position_sensor&quot;
   resource: &quot;https://site.web.api.espn.com/apis/v2/sports/soccer/uefa.champions/standings?region=uk&amp;lang=en&quot;
-  # To check Europa League, use:
+  # For Europa League:
   # resource: &quot;https://site.web.api.espn.com/apis/v2/sports/soccer/uefa.europa/standings?region=uk&amp;lang=en&quot;
-  # To check Conference League, use:
+  # For Conference League:
   # resource: &quot;https://site.web.api.espn.com/apis/v2/sports/soccer/uefa.europa.conference/standings?region=uk&amp;lang=en&quot;
   value_template: &gt;
     {% if value_json is not none and &#x27;children&#x27; in value_json and value_json[&#x27;children&#x27;] %}
-      {% set groups = value_json[&#x27;children&#x27;] %}
-      {% set entries = groups | map(attribute=&#x27;standings&#x27;) | map(attribute=&#x27;entries&#x27;) | sum(start=[]) %}
+      {% set entries = value_json[&#x27;children&#x27;] | map(attribute=&#x27;standings&#x27;) | map(attribute=&#x27;entries&#x27;) | sum(start=[]) %}
       {% set liverpool = entries | selectattr(&#x27;team.displayName&#x27;, &#x27;equalto&#x27;, &#x27;Liverpool&#x27;) | list | first %}
       {% if liverpool and &#x27;stats&#x27; in liverpool %}
         {% set raw_rank = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;rank&#x27;) | map(attribute=&#x27;value&#x27;) | list | first %}
         {% set rank = (raw_rank | int) if raw_rank is not none else none %}
         {% if rank is number %}
-          {% if rank in [11,12,13] %}{{ rank }}th
-          {% elif rank % 10 == 1 %}{{ rank }}st
-          {% elif rank % 10 == 2 %}{{ rank }}nd
-          {% elif rank % 10 == 3 %}{{ rank }}rd
-          {% else %}{{ rank }}th
-          {% endif %}
+          {% set suffix =
+            &#x27;th&#x27; if rank in [11,12,13] else
+            &#x27;st&#x27; if rank % 10 == 1 else
+            &#x27;nd&#x27; if rank % 10 == 2 else
+            &#x27;rd&#x27; if rank % 10 == 3 else
+            &#x27;th&#x27; %}
+          {{ rank }}{{ suffix }}
         {% else %}
           Not Ranked
         {% endif %}
