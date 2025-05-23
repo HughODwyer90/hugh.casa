@@ -852,8 +852,18 @@
       {% if entries %}
         {% set liverpool = entries | selectattr('team.displayName', 'equalto', 'Liverpool') | list | first %}
         {% if liverpool and 'stats' in liverpool %}
-          {% set rank = liverpool['stats'] | selectattr('name', 'equalto', 'rank') | map(attribute='value') | list | first %}
-          {{ rank + 1 if rank is not none else 'Not Ranked' }}
+          {% set raw_rank = liverpool['stats'] | selectattr('name', 'equalto', 'rank') | map(attribute='value') | list | first %}
+          {% set rank = (raw_rank | int) if raw_rank is not none else none %}
+          {% if rank is number %}
+            {% if rank in [11,12,13] %}{{ rank }}th
+            {% elif rank % 10 == 1 %}{{ rank }}st
+            {% elif rank % 10 == 2 %}{{ rank }}nd
+            {% elif rank % 10 == 3 %}{{ rank }}rd
+            {% else %}{{ rank }}th
+            {% endif %}
+          {% else %}
+            Not Ranked
+          {% endif %}
         {% else %}
           Liverpool not found
         {% endif %}
@@ -869,7 +879,6 @@
 - platform: rest
   name: "Liverpool (Champions League Position)"
   unique_id: "liverpool_champions_league_position_sensor"
-  # UCL endpoint (default)
   resource: "https://site.web.api.espn.com/apis/v2/sports/soccer/uefa.champions/standings?region=uk&lang=en"
   # To check Europa League, use:
   # resource: "https://site.web.api.espn.com/apis/v2/sports/soccer/uefa.europa/standings?region=uk&lang=en"
@@ -881,7 +890,8 @@
       {% set entries = groups | map(attribute='standings') | map(attribute='entries') | sum(start=[]) %}
       {% set liverpool = entries | selectattr('team.displayName', 'equalto', 'Liverpool') | list | first %}
       {% if liverpool and 'stats' in liverpool %}
-        {% set rank = liverpool['stats'] | selectattr('name', 'equalto', 'rank') | map(attribute='value') | list | first %}
+        {% set raw_rank = liverpool['stats'] | selectattr('name', 'equalto', 'rank') | map(attribute='value') | list | first %}
+        {% set rank = (raw_rank | int) if raw_rank is not none else none %}
         {% if rank is number %}
           {% if rank in [11,12,13] %}{{ rank }}th
           {% elif rank % 10 == 1 %}{{ rank }}st
@@ -900,7 +910,6 @@
     {% endif %}
   scan_interval: 9000
   timeout: 10
-
 
 - platform: rest
   name: "Liverpool (Generic Stage)"
