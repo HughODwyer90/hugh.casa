@@ -2178,6 +2178,12 @@
 
       &#x27;
     trigger: template
+  - id: weekday_wfh_alarm
+    value_template: &#x27;{{ now().strftime(&#x27;&#x27;%H:%M&#x27;&#x27;) == ((state_attr(&#x27;&#x27;input_datetime.weekday_wake_up_alarm&#x27;&#x27;,
+      &#x27;&#x27;timestamp&#x27;&#x27;) | int - 300) | timestamp_custom(&#x27;&#x27;%H:%M&#x27;&#x27;, False)) }}
+
+      &#x27;
+    trigger: template
   conditions:
   - condition: state
     entity_id: binary_sensor.bed_sensor
@@ -2212,6 +2218,23 @@
       - condition: time
         weekday:
         - sat
+      sequence:
+      - data: {}
+        action: script.execute_alarm_actions
+    - conditions:
+      - condition: trigger
+        id:
+        - weekday_wfh_alarm
+      - condition: and
+        conditions:
+        - condition: state
+          entity_id: calendar.weekday
+          state: &#x27;on&#x27;
+        - condition: not
+          conditions:
+          - condition: numeric_state
+            entity_id: calendar.ireland_bank_holidays
+            below: 1
       sequence:
       - data: {}
         action: script.execute_alarm_actions
