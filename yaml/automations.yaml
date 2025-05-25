@@ -2163,6 +2163,12 @@
 
       '
     trigger: template
+  - id: weekday_wfh_alarm
+    value_template: '{{ now().strftime(''%H:%M'') == ((state_attr(''input_datetime.weekday_wake_up_alarm'',
+      ''timestamp'') | int - 300) | timestamp_custom(''%H:%M'', False)) }}
+
+      '
+    trigger: template
   conditions:
   - condition: state
     entity_id: binary_sensor.bed_sensor
@@ -2197,6 +2203,23 @@
       - condition: time
         weekday:
         - sat
+      sequence:
+      - data: {}
+        action: script.execute_alarm_actions
+    - conditions:
+      - condition: trigger
+        id:
+        - weekday_wfh_alarm
+      - condition: and
+        conditions:
+        - condition: state
+          entity_id: calendar.weekday
+          state: 'on'
+        - condition: not
+          conditions:
+          - condition: numeric_state
+            entity_id: calendar.ireland_bank_holidays
+            below: 1
       sequence:
       - data: {}
         action: script.execute_alarm_actions
