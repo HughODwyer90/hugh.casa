@@ -2164,7 +2164,7 @@
       '
     trigger: template
   - id: weekday_wfh_alarm
-    value_template: '{{ now().strftime(''%H:%M'') == ((state_attr(''input_datetime.weekday_wake_up_alarm'',
+    value_template: '{{ now().strftime(''%H:%M'') == ((state_attr(''input_datetime.weekday_wfh_wake_up_alarm'',
       ''timestamp'') | int - 300) | timestamp_custom(''%H:%M'', False)) }}
 
       '
