@@ -2179,7 +2179,7 @@
       &#x27;
     trigger: template
   - id: weekday_wfh_alarm
-    value_template: &#x27;{{ now().strftime(&#x27;&#x27;%H:%M&#x27;&#x27;) == ((state_attr(&#x27;&#x27;input_datetime.weekday_wake_up_alarm&#x27;&#x27;,
+    value_template: &#x27;{{ now().strftime(&#x27;&#x27;%H:%M&#x27;&#x27;) == ((state_attr(&#x27;&#x27;input_datetime.weekday_wfh_wake_up_alarm&#x27;&#x27;,
       &#x27;&#x27;timestamp&#x27;&#x27;) | int - 300) | timestamp_custom(&#x27;&#x27;%H:%M&#x27;&#x27;, False)) }}
 
       &#x27;
