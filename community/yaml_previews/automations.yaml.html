@@ -2198,8 +2198,7 @@
   - choose:
     - conditions:
       - condition: trigger
-        id:
-        - weekday_wfh_alarm
+        id: weekday_alarm
       - condition: and
         conditions:
         - condition: state
@@ -2210,12 +2209,16 @@
           - condition: numeric_state
             entity_id: calendar.ireland_bank_holidays
             below: 1
+        - condition: state
+          entity_id: input_boolean.wfh_tomorrow
+          state: &#x27;off&#x27;
       sequence:
       - data: {}
         action: script.execute_alarm_actions
     - conditions:
       - condition: trigger
-        id: weekday_alarm
+        id:
+        - weekday_wfh_alarm
       - condition: and
         conditions:
         - condition: state
