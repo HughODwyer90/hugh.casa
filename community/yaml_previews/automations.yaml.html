@@ -2667,22 +2667,21 @@
     New Year&#x27;&#x27;s Day.
 
     &#x27;
-  trigger:
-  - trigger: state
-    entity_id: counter.remote_work_days_count
+  triggers:
+  - entity_id: counter.remote_work_days_count
     id: increment_counter
-  - trigger: time
-    at: 00:00:00
+    trigger: state
+  - at: 00:00:00
     id: reset_boolean
-  - trigger: state
-    entity_id: calendar.new_year
-    to: &#x27;on&#x27;
+    trigger: time
+  - entity_id: calendar.ireland_bank_holidays
     id: reset_counter
-  - trigger: template
-    value_template: &#x27;{{ &#x27;&#x27;Teams&#x27;&#x27; in states(&#x27;&#x27;sensor.datamars_activewindow&#x27;&#x27;) }}&#x27;
+    trigger: state
+  - value_template: &#x27;{{ &#x27;&#x27;Teams&#x27;&#x27; in states(&#x27;&#x27;sensor.datamars_activewindow&#x27;&#x27;) }}&#x27;
     id: laptop
-  condition: []
-  action:
+    trigger: template
+  conditions: []
+  actions:
   - choose:
     - conditions:
       - condition: trigger
@@ -2693,26 +2692,25 @@
         entity_id: input_boolean.remote_work_logged_today
         state: &#x27;off&#x27;
       sequence:
-      - action: counter.increment
-        target:
+      - target:
           entity_id: counter.remote_work_days_count
-        data: {}
+        action: counter.increment
     - conditions:
       - condition: trigger
         id: reset_counter
+      - condition: template
+        value_template: &#x27;{{ now().month == 1 and now().day == 1 }}&#x27;
       sequence:
-      - action: counter.reset
-        target:
+      - target:
           entity_id: counter.remote_work_days_count
-        data: {}
+        action: counter.reset
     - conditions:
       - condition: trigger
         id: reset_boolean
       sequence:
-      - action: input_boolean.turn_off
-        target:
+      - target:
           entity_id: input_boolean.remote_work_logged_today
-        data: {}
+        action: input_boolean.turn_off
     - conditions:
       - condition: state
         entity_id: device_tracker.hugh_phone
@@ -2724,11 +2722,9 @@
         state: &#x27;off&#x27;
       sequence:
       - action: shell_command.log_work_from_home
-        data: {}
-      - action: input_boolean.turn_on
-        target:
+      - target:
           entity_id: input_boolean.remote_work_logged_today
-        data: {}
+        action: input_boolean.turn_on
   mode: restart
 - id: &#x27;1720953328203&#x27;
   alias: Redirect Display Audio to Stereo Group
