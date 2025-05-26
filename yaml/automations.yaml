@@ -2652,22 +2652,21 @@
     New Year''s Day.
 
     '
-  trigger:
-  - trigger: state
-    entity_id: counter.remote_work_days_count
+  triggers:
+  - entity_id: counter.remote_work_days_count
     id: increment_counter
-  - trigger: time
-    at: 00:00:00
+    trigger: state
+  - at: 00:00:00
     id: reset_boolean
-  - trigger: state
-    entity_id: calendar.new_year
-    to: 'on'
+    trigger: time
+  - entity_id: calendar.ireland_bank_holidays
     id: reset_counter
-  - trigger: template
-    value_template: '{{ ''Teams'' in states(''sensor.datamars_activewindow'') }}'
+    trigger: state
+  - value_template: '{{ ''Teams'' in states(''sensor.datamars_activewindow'') }}'
     id: laptop
-  condition: []
-  action:
+    trigger: template
+  conditions: []
+  actions:
   - choose:
     - conditions:
       - condition: trigger
@@ -2678,26 +2677,25 @@
         entity_id: input_boolean.remote_work_logged_today
         state: 'off'
       sequence:
-      - action: counter.increment
-        target:
+      - target:
           entity_id: counter.remote_work_days_count
-        data: {}
+        action: counter.increment
     - conditions:
       - condition: trigger
         id: reset_counter
+      - condition: template
+        value_template: '{{ now().month == 1 and now().day == 1 }}'
       sequence:
-      - action: counter.reset
-        target:
+      - target:
           entity_id: counter.remote_work_days_count
-        data: {}
+        action: counter.reset
     - conditions:
       - condition: trigger
         id: reset_boolean
       sequence:
-      - action: input_boolean.turn_off
-        target:
+      - target:
           entity_id: input_boolean.remote_work_logged_today
-        data: {}
+        action: input_boolean.turn_off
     - conditions:
       - condition: state
         entity_id: device_tracker.hugh_phone
@@ -2709,11 +2707,9 @@
         state: 'off'
       sequence:
       - action: shell_command.log_work_from_home
-        data: {}
-      - action: input_boolean.turn_on
-        target:
+      - target:
           entity_id: input_boolean.remote_work_logged_today
-        data: {}
+        action: input_boolean.turn_on
   mode: restart
 - id: '1720953328203'
   alias: Redirect Display Audio to Stereo Group
