@@ -1132,7 +1132,7 @@
   username: !secret email_username
   password: !secret email_password
   senders:
-    - "payslips@collsoft.ie"
+    - !secret payslip_sender
   search: 'UNSEEN SUBJECT "Payslip for"'  # only matches unseen with 'Payslip for' in subject
   value_template: "New payslip received"
   scan_interval: 600
