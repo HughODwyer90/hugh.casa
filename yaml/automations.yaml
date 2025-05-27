@@ -2235,8 +2235,8 @@
     trigger: event
   conditions:
   - condition: template
-    value_template: '{% set sender = "payslips@collsoft.ie" %} {{ "Payslip for" in
-      trigger.event.data.subject and sender in trigger.event.data.from }}
+    value_template: '{{ "Payslip for" in trigger.event.data.subject and secrets.payslip_sender_email
+      in trigger.event.data.from }}
 
       '
   actions:
@@ -2260,13 +2260,6 @@
 
         '
     action: input_datetime.set_datetime
-  - data:
-      level: info
-      message: 'Payslip automation triggered from {{ trigger.event.data.from }} with
-        subject: {{ trigger.event.data.subject }}
-
-        '
-    action: system_log.write
   mode: single
 - id: '1715936038206'
   alias: Alarm Snooze
