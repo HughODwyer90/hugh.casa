@@ -2264,11 +2264,11 @@
   - target:
       entity_id: input_datetime.last_day_of_month
     data:
-      date: &#x27;{% set today = now() %}  {% set next_month = (today.month % 12) + 1 %}  {%
-        set year = today.year if next_month &gt; 1 else today.year + 1 %}  {% set first_day_next_month
-        = strptime(year ~ &#x27;&#x27;-&#x27;&#x27; ~ next_month ~ &#x27;&#x27;-01&#x27;&#x27;, &#x27;&#x27;%Y-%m-%d&#x27;&#x27;) %}  {% set first_day_after_next_month
-        = first_day_next_month + timedelta(days=31) %}  {% set last_day_next_month
-        = first_day_after_next_month.replace(day=1) - timedelta(days=1) %}  {{ last_day_next_month.strftime(&#x27;&#x27;%Y-%m-%d&#x27;&#x27;)
+      date: &#x27;{% set today = now() %} {% set next_month = (today.month % 12) + 1 %}
+        {% set year = today.year if next_month &gt; 1 else today.year + 1 %} {% set first_day_next_month
+        = strptime(year ~ &#x27;&#x27;-&#x27;&#x27; ~ next_month ~ &#x27;&#x27;-01&#x27;&#x27;, &#x27;&#x27;%Y-%m-%d&#x27;&#x27;) %} {% set first_day_after_next_month
+        = first_day_next_month + timedelta(days=31) %} {% set last_day_next_month
+        = first_day_after_next_month.replace(day=1) - timedelta(days=1) %} {{ last_day_next_month.strftime(&#x27;&#x27;%Y-%m-%d&#x27;&#x27;)
         }}
 
         &#x27;
