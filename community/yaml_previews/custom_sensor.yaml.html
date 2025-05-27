@@ -1147,10 +1147,11 @@
   username: !secret email_username
   password: !secret email_password
   senders:
-    - &quot;hr@example.com&quot;  # replace with actual sender
-  search: &#x27;UNSEEN SUBJECT &quot;Payslip&quot;&#x27;  # adjust if needed
+    - &quot;payslips@collsoft.ie&quot;
+  search: &#x27;UNSEEN SUBJECT &quot;Payslip for&quot;&#x27;  # only matches unseen with &#x27;Payslip for&#x27; in subject
   value_template: &quot;New payslip received&quot;
   scan_interval: 600
+
 
 </pre>
             </div>
