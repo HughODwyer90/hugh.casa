@@ -2250,10 +2250,10 @@
     trigger: event
   conditions:
   - condition: template
-    value_template: &#x27;{{ &quot;Payslip for&quot; in trigger.event.data.subject and secrets.payslip_sender_email
-      in trigger.event.data.from }}
+    value_template: &#x27;{% set sender = states(&#x27;&#x27;input_text.payslip_sender&#x27;&#x27;) %}
 
-      &#x27;
+      {{ &quot;Payslip for&quot; in trigger.event.data.subject and sender in trigger.event.data.from
+      }}&#x27;
   actions:
   - data:
       title: &quot;\U0001F4E9 Payslip Received&quot;
