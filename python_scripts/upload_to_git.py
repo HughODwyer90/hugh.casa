@@ -78,15 +78,21 @@ def upload_python_scripts():
 def should_exclude_entity(entity):
     """Check if an entity should be redacted for privacy/security reasons."""
     entity_id = entity["entity_id"]
+    entity_id_lower = entity_id.lower()
     attributes = entity.get("attributes", {})
 
+    sensitive_ids = {
+        "input_text.kasa_token",
+        "input_text.payslip_sender",
+    }
+
     return (
-        (entity_id.startswith("device_tracker.") and "toothbrush" not in entity_id.lower()) or
+        (entity_id_lower.startswith("device_tracker.") and "toothbrush" not in entity_id_lower) or
         any("device_tracker." in str(value) for value in attributes.values()) or
-        "gps" in entity_id.lower() or
-        entity_id.startswith("zone.") or
-        (entity_id.startswith("input_text.") and attributes.get("mode", "").lower() == "password") or
-        (entity_id == "input_text.kasa_token")
+        "gps" in entity_id_lower or
+        entity_id_lower.startswith("zone.") or
+        (entity_id_lower.startswith("input_text.") and attributes.get("mode", "").lower() == "password") or
+        entity_id in sensitive_ids
     )
 
 def upload_entities():
