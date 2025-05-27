@@ -2250,9 +2250,12 @@
     trigger: event
   conditions:
   - condition: template
-    value_template: &quot;{{ trigger.event.data.subject is defined and\n   \&quot;Payslip for\&quot;
-      in trigger.event.data.subject and\n   trigger.event.data.from == secrets.payslip_sender_email
-      }}\n&quot;
+    value_template: &#x27;{% set sender = &quot;payslips@collsoft.ie&quot; %}
+
+      {{ &quot;Payslip for&quot; in trigger.event.data.subject and sender in trigger.event.data.from
+      }}
+
+      &#x27;
   actions:
   - data:
       title: &quot;\U0001F4E9 Payslip Received&quot;
@@ -2260,6 +2263,7 @@
       data:
         notification_icon: mdi:currency-eur
         clickAction: https://mail.google.com/mail/u/0/#inbox
+        tag: payslip_notification
     action: notify.notifications
   - target:
       entity_id: input_datetime.last_day_of_month
