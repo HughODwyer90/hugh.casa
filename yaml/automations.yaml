@@ -3883,3 +3883,15 @@
   - target:
       entity_id: input_boolean.check_payslip_email
     action: input_boolean.turn_off
+- id: '1748355187479'
+  alias: Auto Calculate Last Day of Month
+  description: ''
+  triggers:
+  - at: 00:05:00
+    trigger: time
+  conditions:
+  - condition: template
+    value_template: '{{ now().day == 1 }}'
+  actions:
+  - action: script.calculate_last_day_of_month
+  mode: single
