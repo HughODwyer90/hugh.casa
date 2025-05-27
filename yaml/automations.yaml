@@ -2246,15 +2246,25 @@
         notification_icon: mdi:currency-eur
     action: notify.notifications
   - data:
-      entity_id: input_datetime.last_day_of_month
-      date: '{% set today = now().date() %} {% set next_month = today.month + 1 if
-        today.month < 12 else 1 %} {% set year = today.year if today.month < 12 else
-        today.year + 1 %} {% set first_of_next_month = strptime(year ~ ''-'' ~ next_month
-        ~ ''-01'', ''%Y-%m-%d'') %} {% set last_of_this_month = first_of_next_month
-        - timedelta(days=1) %} {{ last_of_this_month.strftime(''%Y-%m-%d'') }}
+      date: '{% set today = now().date() %}
+
+        {% set month_after_next = today.month + 2 if today.month < 11 else (today.month
+        + 2) % 12 %}
+
+        {% set year = today.year if today.month < 11 else today.year + 1 %}
+
+        {% set first_of_month_after_next = strptime(year ~ ''-'' ~ month_after_next
+        ~ ''-01'', ''%Y-%m-%d'') %}
+
+        {% set last_day_next_month = first_of_month_after_next - timedelta(days=1)
+        %}
+
+        {{ last_day_next_month.strftime(''%Y-%m-%d'') }}
 
         '
     action: input_datetime.set_datetime
+    target:
+      entity_id: input_datetime.last_day_of_month
   mode: single
 - id: '1715936038206'
   alias: Alarm Snooze
