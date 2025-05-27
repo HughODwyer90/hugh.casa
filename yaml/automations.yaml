@@ -2244,6 +2244,9 @@
       message: Your payslip email has arrived.
       data:
         notification_icon: mdi:currency-eur
+        tag: payslip_notification
+        clickAction: ''
+        sticky: false
     action: notify.notifications
   - target:
       entity_id: input_datetime.last_day_of_month
