@@ -2249,11 +2249,11 @@
   - target:
       entity_id: input_datetime.last_day_of_month
     data:
-      date: '{% set today = now() %}  {% set next_month = (today.month % 12) + 1 %}  {%
-        set year = today.year if next_month > 1 else today.year + 1 %}  {% set first_day_next_month
-        = strptime(year ~ ''-'' ~ next_month ~ ''-01'', ''%Y-%m-%d'') %}  {% set first_day_after_next_month
-        = first_day_next_month + timedelta(days=31) %}  {% set last_day_next_month
-        = first_day_after_next_month.replace(day=1) - timedelta(days=1) %}  {{ last_day_next_month.strftime(''%Y-%m-%d'')
+      date: '{% set today = now() %} {% set next_month = (today.month % 12) + 1 %}
+        {% set year = today.year if next_month > 1 else today.year + 1 %} {% set first_day_next_month
+        = strptime(year ~ ''-'' ~ next_month ~ ''-01'', ''%Y-%m-%d'') %} {% set first_day_after_next_month
+        = first_day_next_month + timedelta(days=31) %} {% set last_day_next_month
+        = first_day_after_next_month.replace(day=1) - timedelta(days=1) %} {{ last_day_next_month.strftime(''%Y-%m-%d'')
         }}
 
         '
