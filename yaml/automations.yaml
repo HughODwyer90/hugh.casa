@@ -2243,7 +2243,6 @@
       title: "\U0001F4E9 Payslip Received"
       message: Your payslip email has arrived.
       data:
-        clickAction: googlegmail://
         notification_icon: mdi:currency-eur
     action: notify.notifications
   - data:
@@ -3884,33 +3883,3 @@
   - target:
       entity_id: input_boolean.check_payslip_email
     action: input_boolean.turn_off
-- id: '1748354195182'
-  alias: Notify on Payslip Email Detection
-  description: ''
-  triggers:
-  - entity_id: sensor.payslip_email
-    to: New payslip received
-    trigger: state
-  conditions:
-  - condition: state
-    entity_id: input_boolean.check_payslip_email
-    state: 'on'
-  actions:
-  - data:
-      title: "\U0001F4E9 Payslip Received"
-      message: Your payslip email has arrived.
-      data:
-        clickAction: https://mail.google.com/mail/u/0/#inbox
-        notification_icon: mdi:currency-eur
-    action: notify.notifications
-  - data:
-      entity_id: input_datetime.last_day_of_month
-      date: '{% set today = now().date() %} {% set next_month = today.month + 1 if
-        today.month < 12 else 1 %} {% set year = today.year if today.month < 12 else
-        today.year + 1 %} {% set first_of_next_month = strptime(year ~ ''-'' ~ next_month
-        ~ ''-01'', ''%Y-%m-%d'') %} {% set last_of_this_month = first_of_next_month
-        - timedelta(days=1) %} {{ last_of_this_month.strftime(''%Y-%m-%d'') }}
-
-        '
-    action: input_datetime.set_datetime
-  mode: single
