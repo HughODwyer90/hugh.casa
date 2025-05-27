@@ -2235,10 +2235,8 @@
     trigger: event
   conditions:
   - condition: template
-    value_template: '{% set sender = "payslips@collsoft.ie" %}
-
-      {{ "Payslip for" in trigger.event.data.subject and sender in trigger.event.data.from
-      }}
+    value_template: '{% set sender = "payslips@collsoft.ie" %} {{ "Payslip for" in
+      trigger.event.data.subject and sender in trigger.event.data.from }}
 
       '
   actions:
@@ -2262,6 +2260,13 @@
 
         '
     action: input_datetime.set_datetime
+  - data:
+      level: info
+      message: 'Payslip automation triggered from {{ trigger.event.data.from }} with
+        subject: {{ trigger.event.data.subject }}
+
+        '
+    action: system_log.write
   mode: single
 - id: '1715936038206'
   alias: Alarm Snooze
@@ -3901,4 +3906,28 @@
     value_template: '{{ now().day == 1 }}'
   actions:
   - action: script.calculate_last_day_of_month
+  mode: single
+- id: '1748359285385'
+  alias: Test Payslip Trigger
+  description: ''
+  triggers:
+  - event_type: imap_content
+    trigger: event
+  actions:
+  - data:
+      level: warning
+      message: "\U0001F680 IMAP event received: {{ trigger.event.data }}\n"
+    action: system_log.write
+  mode: single
+- id: '1748359290350'
+  alias: Test Payslip Trigger
+  description: ''
+  triggers:
+  - event_type: imap_content
+    trigger: event
+  actions:
+  - data:
+      level: warning
+      message: "\U0001F680 IMAP event received: {{ trigger.event.data }}\n"
+    action: system_log.write
   mode: single
