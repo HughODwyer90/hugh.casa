@@ -3931,3 +3931,26 @@
       message: "\U0001F680 IMAP event received: {{ trigger.event.data }}\n"
     action: system_log.write
   mode: single
+- id: '1748359312318'
+  alias: Test Payslip Trigger
+  triggers:
+  - event_type: imap_content
+    trigger: event
+  actions:
+  - data:
+      level: warning
+      message: "\U0001F680 IMAP event received: {{ trigger.event.data }}\n"
+    action: system_log.write
+  mode: single
+- id: '1748359319623'
+  alias: Test Payslip Trigger
+  description: ''
+  triggers:
+  - event_type: imap_content
+    trigger: event
+  actions:
+  - data:
+      level: warning
+      message: "\U0001F680 IMAP event received: {{ trigger.event.data }}\n"
+    action: system_log.write
+  mode: single
