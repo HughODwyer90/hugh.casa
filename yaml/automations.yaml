@@ -2229,32 +2229,31 @@
     default: []
   mode: single
 - id: '1715822596053'
-  alias: Notify on Payslip Email Detection
+  alias: Notify on Payslip Email (via IMAP Event)
   triggers:
-  - entity_id: sensor.payslip_email
-    to: New payslip received
-    trigger: state
+  - event_type: imap_content
+    trigger: event
   conditions:
-  - condition: state
-    entity_id: input_boolean.check_payslip_email
-    state: 'on'
+  - condition: template
+    value_template: "{{ trigger.event.data.subject is defined and\n   \"Payslip for\"
+      in trigger.event.data.subject and\n   trigger.event.data.from == secrets.payslip_sender_email
+      }}\n"
   actions:
   - data:
       title: "\U0001F4E9 Payslip Received"
       message: Your payslip email has arrived.
       data:
         notification_icon: mdi:currency-eur
-        tag: payslip_notification
         clickAction: https://mail.google.com/mail/u/0/#inbox
     action: notify.notifications
   - target:
       entity_id: input_datetime.last_day_of_month
     data:
-      date: '{% set today = now() %} {% set next_month = (today.month % 12) + 1 %}
-        {% set year = today.year if next_month > 1 else today.year + 1 %} {% set first_day_next_month
-        = strptime(year ~ ''-'' ~ next_month ~ ''-01'', ''%Y-%m-%d'') %} {% set first_day_after_next_month
-        = first_day_next_month + timedelta(days=31) %} {% set last_day_next_month
-        = first_day_after_next_month.replace(day=1) - timedelta(days=1) %} {{ last_day_next_month.strftime(''%Y-%m-%d'')
+      date: '{% set today = now() %}  {% set next_month = (today.month % 12) + 1 %}  {%
+        set year = today.year if next_month > 1 else today.year + 1 %}  {% set first_day_next_month
+        = strptime(year ~ ''-'' ~ next_month ~ ''-01'', ''%Y-%m-%d'') %}  {% set first_day_after_next_month
+        = first_day_next_month + timedelta(days=31) %}  {% set last_day_next_month
+        = first_day_after_next_month.replace(day=1) - timedelta(days=1) %}  {{ last_day_next_month.strftime(''%Y-%m-%d'')
         }}
 
         '
