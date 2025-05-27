@@ -2261,6 +2261,17 @@
         clickAction: https://mail.google.com/mail/u/0/#inbox
         notification_icon: mdi:currency-eur
     action: notify.notifications
+  - data:
+      entity_id: input_datetime.last_day_of_month
+      date: &#x27;{% set today = now().date() %} {% set next_month = today.month + 1 if
+        today.month &lt; 12 else 1 %} {% set year = today.year if today.month &lt; 12 else
+        today.year + 1 %} {% set first_of_next_month = strptime(year ~ &#x27;&#x27;-&#x27;&#x27; ~ next_month
+        ~ &#x27;&#x27;-01&#x27;&#x27;, &#x27;&#x27;%Y-%m-%d&#x27;&#x27;) %} {% set last_of_this_month = first_of_next_month
+        - timedelta(days=1) %} {{ last_of_this_month.strftime(&#x27;&#x27;%Y-%m-%d&#x27;&#x27;) }}
+
+        &#x27;
+    action: input_datetime.set_datetime
+  mode: single
 - id: &#x27;1715936038206&#x27;
   alias: Alarm Snooze
   description: Snoozes the alarm when the &quot;Snooze Alarm&quot; button is pressed, but only
