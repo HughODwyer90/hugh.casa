@@ -1139,6 +1139,19 @@
     {% endif %}
   scan_interval: 10
   timeout: 10
+
+- platform: imap_email_content
+  server: imap.gmail.com
+  port: 993
+  name: payslip_email
+  username: !secret email_username
+  password: !secret email_password
+  senders:
+    - &quot;hr@example.com&quot;  # replace with actual sender
+  search: &#x27;UNSEEN SUBJECT &quot;Payslip&quot;&#x27;  # adjust if needed
+  value_template: &quot;New payslip received&quot;
+  scan_interval: 600
+
 </pre>
             </div>
             <script>
