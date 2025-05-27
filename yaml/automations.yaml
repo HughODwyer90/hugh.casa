@@ -2229,33 +2229,23 @@
     default: []
   mode: single
 - id: '1715822596053'
-  alias: Pay Day Notification
-  trigger:
-  - trigger: template
-    value_template: '{{ (states(''input_datetime.next_pay_day'') | as_datetime).date()
-      == now().date() and now().time().hour == 8 and now().time().minute == 0 }}
-
-      '
-  action:
-  - action: notify.notifications
-    data:
-      title: Pay Day
-      message: Today is pay day! Click to view your payslip.
+  alias: Notify on Payslip Email Detection
+  triggers:
+  - entity_id: sensor.payslip_email
+    to: New payslip received
+    trigger: state
+  conditions:
+  - condition: state
+    entity_id: input_boolean.check_payslip_email
+    state: 'on'
+  actions:
+  - data:
+      title: "\U0001F4E9 Payslip Received"
+      message: Your payslip email has arrived.
       data:
-        clickAction: https://osc.vistra.com/hr/Employees.html#/payslips
+        clickAction: https://mail.google.com/mail/u/0/#inbox
         notification_icon: mdi:currency-eur
-  - action: input_datetime.set_datetime
-    data:
-      entity_id: input_datetime.last_day_of_month
-      date: '{% set today = now() %} {% set next_month = (today.month % 12) + 1 %}
-        {% set year = today.year if next_month > 1 else today.year + 1 %} {% set first_day_next_month
-        = strptime(year ~ ''-'' ~ next_month ~ ''-01'', ''%Y-%m-%d'') %} {% set first_day_after_next_month
-        = first_day_next_month + timedelta(days=31) %} {% set last_day_next_month
-        = first_day_after_next_month.replace(day=1) - timedelta(days=1) %} {{ last_day_next_month.strftime(''%Y-%m-%d'')
-        }}
-
-        '
-  mode: single
+    action: notify.notifications
 - id: '1715936038206'
   alias: Alarm Snooze
   description: Snoozes the alarm when the "Snooze Alarm" button is pressed, but only
