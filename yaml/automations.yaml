@@ -2230,6 +2230,7 @@
       - condition: time
         weekday:
         - sat
+        - sun
       sequence:
       - data: {}
         action: script.execute_alarm_actions
@@ -3907,8 +3908,9 @@
   actions:
   - action: script.calculate_last_day_of_month
   mode: single
-- id: enable_wfh_friday_3am
-  alias: Enable WFH Tomorrow Early Friday
+- &id001
+  id: enable_wfh_friday_3am
+  alias: Enable WFH
   description: ''
   triggers:
   - at: 03:00:00
@@ -3921,78 +3923,10 @@
   - target:
       entity_id: input_boolean.wfh_tomorrow
     action: input_boolean.turn_on
+    data: {}
   mode: single
-- id: enable_wfh_friday_3am
-  alias: Enable WFH Early Friday
-  triggers:
-  - at: 03:00:00
-    trigger: time
-  conditions:
-  - condition: time
-    weekday:
-    - fri
-  actions:
-  - target:
-      entity_id: input_boolean.wfh_tomorrow
-    action: input_boolean.turn_on
-  mode: single
-- id: enable_wfh_friday_3am
-  alias: Enable WFH Early Friday
-  description: ''
-  triggers:
-  - at: 03:00:00
-    trigger: time
-  conditions:
-  - condition: time
-    weekday:
-    - fri
-  actions:
-  - target:
-      entity_id: input_boolean.wfh_tomorrow
-    action: input_boolean.turn_on
-  mode: single
-- id: enable_wfh_friday_3am
-  alias: Enable WFH Early Friday
-  description: ''
-  triggers:
-  - at: 03:00:00
-    trigger: time
-  conditions:
-  - condition: time
-    weekday:
-    - fri
-  actions:
-  - target:
-      entity_id: input_boolean.wfh_tomorrow
-    action: input_boolean.turn_on
-  mode: single
-- id: enable_wfh_friday_3am
-  alias: Enable WFH Early Friday
-  description: ''
-  triggers:
-  - at: 03:00:00
-    trigger: time
-  conditions:
-  - condition: time
-    weekday:
-    - fri
-  actions:
-  - target:
-      entity_id: input_boolean.wfh_tomorrow
-    action: input_boolean.turn_on
-  mode: single
-- id: enable_wfh_friday_3am
-  alias: Enable WFH Tomorrow Early Friday
-  description: ''
-  triggers:
-  - at: 03:00:00
-    trigger: time
-  conditions:
-  - condition: time
-    weekday:
-    - fri
-  actions:
-  - target:
-      entity_id: input_boolean.wfh_tomorrow
-    action: input_boolean.turn_on
-  mode: single
+- *id001
+- *id001
+- *id001
+- *id001
+- *id001
