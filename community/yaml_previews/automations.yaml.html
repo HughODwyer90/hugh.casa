@@ -2676,23 +2676,23 @@
           entity_id: media_player.hugh_room_stereo
 - id: &#x27;1718016208552&#x27;
   alias: Manage Work From Home Days
-  description: &#x27;Logs work from home days, increments counter, and resets counter on
-    New Year&#x27;&#x27;s Day.
+  description: &#x27;Logs work from home days, increments counter on Teams activity, or
+    just logs if manually incremented. Resets annually.
 
     &#x27;
   triggers:
-  - entity_id: counter.remote_work_days_count
-    id: increment_counter
-    trigger: state
+  - value_template: &#x27;{{ &#x27;&#x27;Teams&#x27;&#x27; in states(&#x27;&#x27;sensor.datamars_activewindow&#x27;&#x27;) }}&#x27;
+    id: laptop
+    trigger: template
   - at: 00:00:00
     id: reset_boolean
     trigger: time
   - entity_id: calendar.ireland_bank_holidays
     id: reset_counter
     trigger: state
-  - value_template: &#x27;{{ &#x27;&#x27;Teams&#x27;&#x27; in states(&#x27;&#x27;sensor.datamars_activewindow&#x27;&#x27;) }}&#x27;
-    id: laptop
-    trigger: template
+  - entity_id: counter.remote_work_days_count
+    id: increment_counter
+    trigger: state
   conditions: []
   actions:
   - choose:
@@ -2705,9 +2705,24 @@
         entity_id: input_boolean.remote_work_logged_today
         state: &#x27;off&#x27;
       sequence:
+      - action: shell_command.log_work_from_home
       - target:
           entity_id: counter.remote_work_days_count
         action: counter.increment
+      - target:
+          entity_id: input_boolean.remote_work_logged_today
+        action: input_boolean.turn_on
+    - conditions:
+      - condition: trigger
+        id: increment_counter
+      - condition: state
+        entity_id: input_boolean.remote_work_logged_today
+        state: &#x27;off&#x27;
+      sequence:
+      - action: shell_command.log_work_from_home
+      - target:
+          entity_id: input_boolean.remote_work_logged_today
+        action: input_boolean.turn_on
     - conditions:
       - condition: trigger
         id: reset_counter
@@ -2724,20 +2739,6 @@
       - target:
           entity_id: input_boolean.remote_work_logged_today
         action: input_boolean.turn_off
-    - conditions:
-      - condition: state
-        entity_id: device_tracker.hugh_phone
-        state: home
-      - condition: template
-        value_template: &#x27;{{ states(&#x27;&#x27;calendar.ireland_bank_holidays&#x27;&#x27;) != &#x27;&#x27;0&#x27;&#x27; }}&#x27;
-      - condition: state
-        entity_id: input_boolean.remote_work_logged_today
-        state: &#x27;off&#x27;
-      sequence:
-      - action: shell_command.log_work_from_home
-      - target:
-          entity_id: input_boolean.remote_work_logged_today
-        action: input_boolean.turn_on
   mode: restart
 - id: &#x27;1720953328203&#x27;
   alias: Redirect Display Audio to Stereo Group
