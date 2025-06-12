@@ -610,7 +610,7 @@
         sunrise_status: >
           {% set sr = as_timestamp(states('input_datetime.today_sunrise')) %}
           {% set pr = as_timestamp(states('input_datetime.previous_sunrise')) %}
-          {% set nr = as_timestamp(state_attr('sun.sun', 'next_rising')) %}
+          {% set nr = as_timestamp(states('input_datetime.tomorrow_sunrise')) %}
           {% if sr <= pr and sr <= nr %}
             Earliest
           {% elif sr >= pr and sr >= nr %}
@@ -622,7 +622,7 @@
         sunset_status: >
           {% set ss = as_timestamp(states('input_datetime.today_sunset')) %}
           {% set ps = as_timestamp(states('input_datetime.previous_sunset')) %}
-          {% set ns = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
+          {% set ns = as_timestamp(states('input_datetime.tomorrow_sunset')) %}
           {% if ss <= ps and ss <= ns %}
             Earliest
           {% elif ss >= ps and ss >= ns %}
@@ -631,13 +631,14 @@
             ""
           {% endif %}
 
+
         daylight_duration_status: >
           {% set sr = as_timestamp(states('input_datetime.today_sunrise')) %}
           {% set ss = as_timestamp(states('input_datetime.today_sunset')) %}
           {% set pr = as_timestamp(states('input_datetime.previous_sunrise')) %}
           {% set ps = as_timestamp(states('input_datetime.previous_sunset')) %}
-          {% set nr = as_timestamp(state_attr('sun.sun', 'next_rising')) %}
-          {% set ns = as_timestamp(state_attr('sun.sun', 'next_setting')) %}
+          {% set nr = as_timestamp(states('input_datetime.tomorrow_sunrise')) %}
+          {% set ns = as_timestamp(states('input_datetime.tomorrow_sunset')) %}
 
           {% set today = ss - sr %}
           {% set prev = ps - pr %}
@@ -650,6 +651,7 @@
           {% else %}
             ""
           {% endif %}
+
 
     datamars_activewindow_filtered:
       friendly_name: "Datamars Active Window"
