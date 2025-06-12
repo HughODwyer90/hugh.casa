@@ -534,7 +534,12 @@
           Today at {{ sr | timestamp_custom('%H:%M') }}
         sunset: >
           {% set ss = as_timestamp(states('input_datetime.today_sunset')) %}
-          Today at {{ ss | timestamp_custom('%H:%M') }}
+          {% set ps = as_timestamp(states('input_datetime.previous_sunset')) %}
+          {% set ns_raw = state_attr('sun.sun', 'next_setting') %}
+          {% set ns = as_timestamp(ns_raw) %}
+          {% set ns_fixed = ns if as_datetime(ns_raw).date() > now().date() else as_timestamp(states('input_datetime.tomorrow_sunset')) %}
+          {% set flag = ' (Earliest)' if ss <= ps and ss <= ns_fixed else ' (Latest)' if ss >= ps and ss >= ns_fixed else '' %}
+          Today at {{ ss | timestamp_custom('%H:%M') }}{{ flag }}
         daylight_minutes: >
           {% set sr = as_timestamp(states('input_datetime.today_sunrise')) %}
           {% set ss = as_timestamp(states('input_datetime.today_sunset')) %}
