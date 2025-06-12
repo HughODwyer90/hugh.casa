@@ -2468,16 +2468,26 @@
         weekday:
         - sat
       - condition: template
-        value_template: &#x27;{{ states(&#x27;&#x27;calendar.ireland_bank_holidays&#x27;&#x27;) | int == 2
-          }}&#x27;
+        value_template: &gt;
+          {% set next = state_attr(&#x27;calendar.ireland&#x27;, &#x27;start_time&#x27;) %}
+          {% if next %}
+            {{ as_datetime(next).date() == (now().date() + timedelta(days=2)) }}
+          {% else %}
+            false
+          {% endif %}
     - condition: and
       conditions:
       - condition: time
         weekday:
         - mon
       - condition: template
-        value_template: &#x27;{{ states(&#x27;&#x27;calendar.ireland_bank_holidays&#x27;&#x27;) | int != 0
-          }}&#x27;
+        value_template: &gt;
+          {% set next = state_attr(&#x27;calendar.ireland&#x27;, &#x27;start_time&#x27;) %}
+          {% if next %}
+            {{ as_datetime(next).date() != now().date() }}
+          {% else %}
+            true
+          {% endif %}
   action:
   - action: input_text.set_value
     target:
@@ -2486,6 +2496,7 @@
       value: &quot;{% if states(&#x27;input_text.bin_collection_type&#x27;) == &#x27;General Waste&#x27; %}\n
         \ Recycling\n{% elif states(&#x27;input_text.bin_collection_type&#x27;) == &#x27;Recycling&#x27;
         %}\n  General Waste\n{% else %}\n  Unknown\n{% endif %}\n&quot;
+
 - id: &#x27;1717237084062&#x27;
   alias: Sync Google Mini Volumes
   description: Adjust all Google Minis to have the same volume when one changes
