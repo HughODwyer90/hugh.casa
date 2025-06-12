@@ -2129,24 +2129,7 @@
         third_last_workday.strftime('%Y-%m-%d') }}\n"
     action: input_datetime.set_datetime
   mode: single
-- id: '1715411566124'
-  alias: Bank Holiday Next Date
-  description: Updates the helper with the date of the next bank holiday based on
-    the countdown.
-  trigger:
-  - trigger: time
-    at: 00:01:00
-  condition: []
-  action:
-  - action: input_datetime.set_datetime
-    target:
-      entity_id: input_datetime.next_public_holiday
-    data:
-      date: '{{ (now() + timedelta(days=states(''calendar.ireland_bank_holidays'')
-        | int)).strftime(''%Y-%m-%d'') }}
 
-        '
-  mode: single
 - id: '1715594297562'
   alias: Alarm Start
   description: 'Triggers the morning alarm routine 5 minutes before the set wake-up
