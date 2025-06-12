@@ -625,7 +625,7 @@
         sunrise_status: &gt;
           {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
           {% set pr = as_timestamp(states(&#x27;input_datetime.previous_sunrise&#x27;)) %}
-          {% set nr = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;)) %}
+          {% set nr = as_timestamp(states(&#x27;input_datetime.tomorrow_sunrise&#x27;)) %}
           {% if sr &lt;= pr and sr &lt;= nr %}
             Earliest
           {% elif sr &gt;= pr and sr &gt;= nr %}
@@ -637,7 +637,7 @@
         sunset_status: &gt;
           {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
           {% set ps = as_timestamp(states(&#x27;input_datetime.previous_sunset&#x27;)) %}
-          {% set ns = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_setting&#x27;)) %}
+          {% set ns = as_timestamp(states(&#x27;input_datetime.tomorrow_sunset&#x27;)) %}
           {% if ss &lt;= ps and ss &lt;= ns %}
             Earliest
           {% elif ss &gt;= ps and ss &gt;= ns %}
@@ -646,13 +646,14 @@
             &quot;&quot;
           {% endif %}
 
+
         daylight_duration_status: &gt;
           {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
           {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
           {% set pr = as_timestamp(states(&#x27;input_datetime.previous_sunrise&#x27;)) %}
           {% set ps = as_timestamp(states(&#x27;input_datetime.previous_sunset&#x27;)) %}
-          {% set nr = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;)) %}
-          {% set ns = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_setting&#x27;)) %}
+          {% set nr = as_timestamp(states(&#x27;input_datetime.tomorrow_sunrise&#x27;)) %}
+          {% set ns = as_timestamp(states(&#x27;input_datetime.tomorrow_sunset&#x27;)) %}
 
           {% set today = ss - sr %}
           {% set prev = ps - pr %}
@@ -665,6 +666,7 @@
           {% else %}
             &quot;&quot;
           {% endif %}
+
 
     datamars_activewindow_filtered:
       friendly_name: &quot;Datamars Active Window&quot;
