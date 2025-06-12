@@ -140,19 +140,19 @@
       unique_id: &quot;next_public_holiday_sensor&quot;
       icon_template: &quot;{{ &#x27;mdi:beach&#x27; }}&quot;
       value_template: &gt;
-        {% set next_public_holiday = states(&#x27;input_datetime.next_public_holiday&#x27;) %}
-        {% if next_public_holiday not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
-          {% set next_holiday_date = as_timestamp(next_public_holiday) %}
-          {% set current_date = as_timestamp(now().strftime(&#x27;%Y-%m-%d&#x27;)) %}
-          {% set days_until_holiday = ((next_holiday_date - current_date) / 86400) %}
-          {% if days_until_holiday == 0 %}
+        {% set next = state_attr(&#x27;calendar.ireland&#x27;, &#x27;start_time&#x27;) %}
+        {% if next not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;, None] %}
+          {% set next_holiday_date = as_datetime(next).date() %}
+          {% set current_date = now().date() %}
+          {% set days_until = (next_holiday_date - current_date).days %}
+          {% if days_until == 0 %}
             Today
-          {% elif days_until_holiday == 1 %}
+          {% elif days_until == 1 %}
             Tomorrow
-          {% elif days_until_holiday &lt;= 7 %}
-            {{ next_holiday_date | timestamp_custom(&#x27;%A&#x27;) }}
+          {% elif days_until &lt;= 7 %}
+            {{ next_holiday_date.strftime(&#x27;%A&#x27;) }}
           {% else %}
-            {{ next_holiday_date | timestamp_custom(&#x27;%d/%m/%Y&#x27;) }}
+            {{ next_holiday_date.strftime(&#x27;%d/%m/%Y&#x27;) }}
           {% endif %}
         {% else %}
           Unknown
