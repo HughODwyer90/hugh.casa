@@ -384,37 +384,24 @@
             {{ '{} years, {} months, {} days'.format(years, months, days) }}
           {% endif %}
         working_days_remaining: >
-          {% set total_days = states('sensor.days_until_retirement') | int(default=0) %}
-          {% set years_remaining = (total_days // 365) %}
-          {% set current_year = now().year %}
-          {% set bank_holidays_raw = state_attr('calendar.ireland_bank_holidays', 'holidays') %}
-          {% set annual_leave = states('input_number.annual_leave') | int(default=22) %}
-          {% set ns = namespace(current_year_holidays=0, full_year_holidays=0, working_days=0) %}
+          {% set total_days = states('sensor.days_until_retirement') | int(0) %}
+          {% set annual_leave = states('input_number.annual_leave') | int(22) %}
           {% set today = now().date() %}
-          {% if bank_holidays_raw is not none %}
-            {% for date_str, name in bank_holidays_raw.items() %}
-              {% set holiday_date = as_datetime(date_str).date() %}
-              {% set holiday_year = holiday_date.year %}
-              {% if holiday_date >= today %}
-                {% if holiday_year == current_year %}
-                  {% set ns.current_year_holidays = ns.current_year_holidays + 1 %}
-                {% elif holiday_year > current_year %}
-                  {% set ns.full_year_holidays = ns.full_year_holidays + 1 %}
-                {% endif %}
-              {% endif %}
-            {% endfor %}
-          {% endif %}
-          {% set total_bank_holidays = (ns.full_year_holidays * years_remaining) + ns.current_year_holidays %}
+          {% set ns = namespace(working_days=0) %}
+          {% set years_remaining = (total_days // 365) %}
+          {% set total_bank_holidays = 10 * years_remaining %}
           {% set total_vacation_days = annual_leave * years_remaining %}
+
           {% for day in range(0, total_days) %}
             {% set current_date = (today + timedelta(days=day)) %}
-            {% set weekday = current_date.weekday() %}
-            {% if weekday < 5 %}
+            {% if current_date.weekday() < 5 %}
               {% set ns.working_days = ns.working_days + 1 %}
             {% endif %}
           {% endfor %}
-          {% set adjusted_working_days = ns.working_days - total_bank_holidays - total_vacation_days %}
-          {{ adjusted_working_days if adjusted_working_days > 0 else 0 }}
+
+          {% set adjusted = ns.working_days - total_bank_holidays - total_vacation_days %}
+          {{ adjusted if adjusted > 0 else 0 }}
+
 
     windscreen_freeze_risk:
       friendly_name: "Windscreen Freeze Risk"
