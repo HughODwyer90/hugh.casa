@@ -531,7 +531,12 @@
       attribute_templates:
         sunrise: >
           {% set sr = as_timestamp(states('input_datetime.today_sunrise')) %}
-          Today at {{ sr | timestamp_custom('%H:%M') }}
+          {% set pr = as_timestamp(states('input_datetime.previous_sunrise')) %}
+          {% set nr_raw = state_attr('sun.sun', 'next_rising') %}
+          {% set nr = as_timestamp(nr_raw) %}
+          {% set nr_fixed = nr if as_datetime(nr_raw).date() > now().date() else as_timestamp(states('input_datetime.tomorrow_sunrise')) %}
+          {% set flag = ' (Earliest)' if sr <= pr and sr <= nr_fixed else ' (Latest)' if sr >= pr and sr >= nr_fixed else '' %}
+          Today at {{ sr | timestamp_custom('%H:%M') }}{{ flag }}
         sunset: >
           {% set ss = as_timestamp(states('input_datetime.today_sunset')) %}
           {% set ps = as_timestamp(states('input_datetime.previous_sunset')) %}
@@ -543,7 +548,21 @@
         daylight_minutes: >
           {% set sr = as_timestamp(states('input_datetime.today_sunrise')) %}
           {% set ss = as_timestamp(states('input_datetime.today_sunset')) %}
-          {{ ((ss - sr) // 60) | int }}
+          {% set pr = as_timestamp(states('input_datetime.previous_sunrise')) %}
+          {% set ps = as_timestamp(states('input_datetime.previous_sunset')) %}
+          
+          {% set nr_raw = state_attr('sun.sun', 'next_rising') %}
+          {% set ns_raw = state_attr('sun.sun', 'next_setting') %}
+          {% set nr = as_timestamp(nr_raw) %}
+          {% set ns = as_timestamp(ns_raw) %}
+          {% set nr_fixed = nr if as_datetime(nr_raw).date() > now().date() else as_timestamp(states('input_datetime.tomorrow_sunrise')) %}
+          {% set ns_fixed = ns if as_datetime(ns_raw).date() > now().date() else as_timestamp(states('input_datetime.tomorrow_sunset')) %}
+
+          {% set today = ((ss - sr) // 60) | int %}
+          {% set prev = ((ps - pr) // 60) | int %}
+          {% set next = ((ns_fixed - nr_fixed) // 60) | int %}
+          {% set flag = ' (Shortest)' if today <= prev and today <= next else ' (Longest)' if today >= prev and today >= next else '' %}
+          {{ today }}{{ flag }}
         daylight_percent: >
           {% set sr = as_timestamp(states('input_datetime.today_sunrise')) %}
           {% set ss = as_timestamp(states('input_datetime.today_sunset')) %}
