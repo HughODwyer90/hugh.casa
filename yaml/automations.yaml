@@ -2668,7 +2668,7 @@
   - at: 00:00:00
     id: reset_boolean
     trigger: time
-  - entity_id: calendar.ireland_bank_holidays
+  - entity_id: calendar.ireland
     id: reset_counter
     trigger: state
   - entity_id: counter.remote_work_days_count
@@ -2680,8 +2680,9 @@
     - conditions:
       - condition: trigger
         id: laptop
-      - condition: template
-        value_template: '{{ states(''calendar.ireland_bank_holidays'') != ''0'' }}'
+      - condition: state
+        entity_id: calendar.ireland
+        state: 'off'
       - condition: state
         entity_id: input_boolean.remote_work_logged_today
         state: 'off'
@@ -2721,6 +2722,7 @@
           entity_id: input_boolean.remote_work_logged_today
         action: input_boolean.turn_off
   mode: restart
+
 - id: '1720953328203'
   alias: Redirect Display Audio to Stereo Group
   description: Redirect audio to hugh_room_stereo if it plays only on the display
