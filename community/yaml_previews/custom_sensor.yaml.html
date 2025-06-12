@@ -35,7 +35,7 @@
             No devices found
           {% endif %}
       icon_template: &quot;mdi:lan-connect&quot;
-    
+
     air_purifier_lifetime:
       friendly_name: &quot;Air Purifier Filter Life&quot;
       unique_id: &quot;air_purifier_filter_life_sensor&quot;
@@ -364,7 +364,7 @@
           {% else %}
             {{ minutes }}m {{ seconds }}s
           {% endif %}
-          
+
     days_until_retirement:
       friendly_name: &quot;Days Until Retirement&quot;
       unique_id: &quot;days_until_retirement_sensor&quot;
@@ -430,7 +430,6 @@
           {% endfor %}
           {% set adjusted_working_days = ns.working_days - total_bank_holidays - total_vacation_days %}
           {{ adjusted_working_days if adjusted_working_days &gt; 0 else 0 }}
-
 
     windscreen_freeze_risk:
       friendly_name: &quot;Windscreen Freeze Risk&quot;
@@ -522,151 +521,150 @@
         {% endif %}
 
     daylight_duration:
-          friendly_name: &quot;Daylight Duration&quot;
-          unique_id: &quot;daylight_duration_sensor&quot;
-          icon_template: &quot;mdi:weather-sunny&quot;
-          unit_of_measurement: &quot;h&quot;
-          value_template: &gt;
-              {% set sr = states(&#x27;input_datetime.today_sunrise&#x27;) %}
-              {% set ss = states(&#x27;input_datetime.today_sunset&#x27;) %}
-              {% if sr not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] and ss not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
-                {% set sr_ts = as_timestamp(sr) %}
-                {% set ss_ts = as_timestamp(ss) %}
-                {% if sr_ts &lt; ss_ts %}
-                  {% set daylight = ss_ts - sr_ts %}
-                  {% set hours = daylight // 3600 %}
-                  {% set minutes = (daylight % 3600) // 60 %}
-                  {{ &quot;%d.%02d&quot; | format(hours, minutes) }}
-                {% else %}
-                  none
-                {% endif %}
-              {% else %}
-                none
-              {% endif %}
-          attribute_templates:
-            sunrise: &gt;
-              {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
-              Today at {{ sr | timestamp_custom(&#x27;%H:%M&#x27;) }}
-            sunset: &gt;
-              {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
-              Today at {{ ss | timestamp_custom(&#x27;%H:%M&#x27;) }}
-            daylight_minutes: &gt;
-              {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
-              {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
-              {{ ((ss - sr) // 60) | int }}
-            daylight_percent: &gt;
-              {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
-              {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
-              {% set daylight = ss - sr %}
-              {{ ((daylight / 86400) * 100) | round(1) }}%
-            is_daylight: &gt;
-              {% set now_ts = now().timestamp() %}
-              {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
-              {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
-              {{ sr &lt;= now_ts &lt;= ss }}
-            previous_sunrise: &gt;
-              {% set pr = states(&#x27;input_datetime.previous_sunrise&#x27;) %}
-              {% if pr not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
-                {% set pr_ts = as_timestamp(pr) %}
-                {% if now().date() == as_datetime(pr).date() %}
-                  Today at {{ pr_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
-                {% elif now().date() - as_datetime(pr).date() == timedelta(days=1) %}
-                  Yesterday at {{ pr_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
-                {% else %}
-                  {{ pr_ts | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
-                {% endif %}
-              {% else %}
-                —
-              {% endif %}
-            previous_sunset: &gt;
-              {% set ps = states(&#x27;input_datetime.previous_sunset&#x27;) %}
-              {% if ps not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
-                {% set ps_ts = as_timestamp(ps) %}
-                {% if now().date() == as_datetime(ps).date() %}
-                  Today at {{ ps_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
-                {% elif now().date() - as_datetime(ps).date() == timedelta(days=1) %}
-                  Yesterday at {{ ps_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
-                {% else %}
-                  {{ ps_ts | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
-                {% endif %}
-              {% else %}
-                —
-              {% endif %}
-            next_sunrise: &gt;
-              {% set nr = state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;) %}
-              {% if nr is not none %}
-                {% set nr_ts = as_timestamp(nr) %}
-                {% set nr_date = as_datetime(nr).date() %}
-                {% if now().date() == nr_date %}
-                  Today at {{ nr_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
-                {% elif now().date() + timedelta(days=1) == nr_date %}
-                  Tomorrow at {{ nr_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
-                {% else %}
-                  {{ nr_ts | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
-                {% endif %}
-              {% else %}
-                —
-              {% endif %}
-            next_sunset: &gt;
-              {% set ns = state_attr(&#x27;sun.sun&#x27;, &#x27;next_setting&#x27;) %}
-              {% if ns is not none %}
-                {% set ns_ts = as_timestamp(ns) %}
-                {% set ns_date = as_datetime(ns).date() %}
-                {% if now().date() == ns_date %}
-                  Today at {{ ns_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
-                {% elif now().date() + timedelta(days=1) == ns_date %}
-                  Tomorrow at {{ ns_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
-                {% else %}
-                  {{ ns_ts | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
-                {% endif %}
-              {% else %}
-                —
-              {% endif %}
-              
-            sunrise_status: &gt;
-              {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
-              {% set pr = as_timestamp(states(&#x27;input_datetime.previous_sunrise&#x27;)) %}
-              {% set nr = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;)) %}
-              {% if sr &lt;= pr and sr &lt;= nr %}
-                Earliest
-              {% elif sr &gt;= pr and sr &gt;= nr %}
-                Latest
-              {% else %}
-                &quot;&quot;
-              {% endif %}
+      friendly_name: &quot;Daylight Duration&quot;
+      unique_id: &quot;daylight_duration_sensor&quot;
+      icon_template: &quot;mdi:weather-sunny&quot;
+      unit_of_measurement: &quot;h&quot;
+      value_template: &gt;
+        {% set sr = states(&#x27;input_datetime.today_sunrise&#x27;) %}
+        {% set ss = states(&#x27;input_datetime.today_sunset&#x27;) %}
+        {% if sr not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] and ss not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
+          {% set sr_ts = as_timestamp(sr) %}
+          {% set ss_ts = as_timestamp(ss) %}
+          {% if sr_ts &lt; ss_ts %}
+            {% set daylight = ss_ts - sr_ts %}
+            {% set hours = daylight // 3600 %}
+            {% set minutes = (daylight % 3600) // 60 %}
+            {{ &quot;%d.%02d&quot; | format(hours, minutes) }}
+          {% else %}
+            none
+          {% endif %}
+        {% else %}
+          none
+        {% endif %}
+      attribute_templates:
+        sunrise: &gt;
+          {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
+          Today at {{ sr | timestamp_custom(&#x27;%H:%M&#x27;) }}
+        sunset: &gt;
+          {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
+          Today at {{ ss | timestamp_custom(&#x27;%H:%M&#x27;) }}
+        daylight_minutes: &gt;
+          {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
+          {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
+          {{ ((ss - sr) // 60) | int }}
+        daylight_percent: &gt;
+          {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
+          {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
+          {% set daylight = ss - sr %}
+          {{ ((daylight / 86400) * 100) | round(1) }}%
+        is_daylight: &gt;
+          {% set now_ts = now().timestamp() %}
+          {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
+          {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
+          {{ sr &lt;= now_ts &lt;= ss }}
+        previous_sunrise: &gt;
+          {% set pr = states(&#x27;input_datetime.previous_sunrise&#x27;) %}
+          {% if pr not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
+            {% set pr_ts = as_timestamp(pr) %}
+            {% if now().date() == as_datetime(pr).date() %}
+              Today at {{ pr_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% elif now().date() - as_datetime(pr).date() == timedelta(days=1) %}
+              Yesterday at {{ pr_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% else %}
+              {{ pr_ts | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
+            {% endif %}
+          {% else %}
+            —
+          {% endif %}
+        previous_sunset: &gt;
+          {% set ps = states(&#x27;input_datetime.previous_sunset&#x27;) %}
+          {% if ps not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
+            {% set ps_ts = as_timestamp(ps) %}
+            {% if now().date() == as_datetime(ps).date() %}
+              Today at {{ ps_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% elif now().date() - as_datetime(ps).date() == timedelta(days=1) %}
+              Yesterday at {{ ps_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% else %}
+              {{ ps_ts | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
+            {% endif %}
+          {% else %}
+            —
+          {% endif %}
+        next_sunrise: &gt;
+          {% set nr = state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;) %}
+          {% if nr is not none %}
+            {% set nr_ts = as_timestamp(nr) %}
+            {% set nr_date = as_datetime(nr).date() %}
+            {% if now().date() == nr_date %}
+              Today at {{ nr_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% elif now().date() + timedelta(days=1) == nr_date %}
+              Tomorrow at {{ nr_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% else %}
+              {{ nr_ts | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
+            {% endif %}
+          {% else %}
+            —
+          {% endif %}
+        next_sunset: &gt;
+          {% set ns = state_attr(&#x27;sun.sun&#x27;, &#x27;next_setting&#x27;) %}
+          {% if ns is not none %}
+            {% set ns_ts = as_timestamp(ns) %}
+            {% set ns_date = as_datetime(ns).date() %}
+            {% if now().date() == ns_date %}
+              Today at {{ ns_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% elif now().date() + timedelta(days=1) == ns_date %}
+              Tomorrow at {{ ns_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% else %}
+              {{ ns_ts | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
+            {% endif %}
+          {% else %}
+            —
+          {% endif %}
 
-            sunset_status: &gt;
-              {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
-              {% set ps = as_timestamp(states(&#x27;input_datetime.previous_sunset&#x27;)) %}
-              {% set ns = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_setting&#x27;)) %}
-              {% if ss &lt;= ps and ss &lt;= ns %}
-                Earliest
-              {% elif ss &gt;= ps and ss &gt;= ns %}
-                Latest
-              {% else %}
-                &quot;&quot;
-              {% endif %}
+        sunrise_status: &gt;
+          {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
+          {% set pr = as_timestamp(states(&#x27;input_datetime.previous_sunrise&#x27;)) %}
+          {% set nr = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;)) %}
+          {% if sr &lt;= pr and sr &lt;= nr %}
+            Earliest
+          {% elif sr &gt;= pr and sr &gt;= nr %}
+            Latest
+          {% else %}
+            &quot;&quot;
+          {% endif %}
 
-            daylight_duration_status: &gt;
-              {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
-              {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
-              {% set pr = as_timestamp(states(&#x27;input_datetime.previous_sunrise&#x27;)) %}
-              {% set ps = as_timestamp(states(&#x27;input_datetime.previous_sunset&#x27;)) %}
-              {% set nr = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;)) %}
-              {% set ns = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_setting&#x27;)) %}
+        sunset_status: &gt;
+          {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
+          {% set ps = as_timestamp(states(&#x27;input_datetime.previous_sunset&#x27;)) %}
+          {% set ns = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_setting&#x27;)) %}
+          {% if ss &lt;= ps and ss &lt;= ns %}
+            Earliest
+          {% elif ss &gt;= ps and ss &gt;= ns %}
+            Latest
+          {% else %}
+            &quot;&quot;
+          {% endif %}
 
-              {% set today = ss - sr %}
-              {% set prev = ps - pr %}
-              {% set next = ns - nr %}
+        daylight_duration_status: &gt;
+          {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
+          {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
+          {% set pr = as_timestamp(states(&#x27;input_datetime.previous_sunrise&#x27;)) %}
+          {% set ps = as_timestamp(states(&#x27;input_datetime.previous_sunset&#x27;)) %}
+          {% set nr = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;)) %}
+          {% set ns = as_timestamp(state_attr(&#x27;sun.sun&#x27;, &#x27;next_setting&#x27;)) %}
 
-              {% if today &lt;= prev and today &lt;= next %}
-                Shortest
-              {% elif today &gt;= prev and today &gt;= next %}
-                Longest
-              {% else %}
-                &quot;&quot;
-              {% endif %}
+          {% set today = ss - sr %}
+          {% set prev = ps - pr %}
+          {% set next = ns - nr %}
 
+          {% if today &lt;= prev and today &lt;= next %}
+            Shortest
+          {% elif today &gt;= prev and today &gt;= next %}
+            Longest
+          {% else %}
+            &quot;&quot;
+          {% endif %}
 
     datamars_activewindow_filtered:
       friendly_name: &quot;Datamars Active Window&quot;
@@ -1184,8 +1182,6 @@
     {% endif %}
   scan_interval: 10
   timeout: 10
-
-
 </pre>
             </div>
             <script>
