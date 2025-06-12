@@ -2033,10 +2033,10 @@
     night at 10 PM, alternating between recycling and general waste.
 
     &#x27;
-  trigger:
-  - trigger: time
-    at: &#x27;22:00:00&#x27;
-  condition:
+  triggers:
+  - at: &#x27;22:00:00&#x27;
+    trigger: time
+  conditions:
   - condition: or
     conditions:
     - condition: and
@@ -2045,34 +2045,37 @@
         weekday:
         - fri
       - condition: template
-        value_template: &#x27;{{ states(&#x27;&#x27;calendar.ireland_bank_holidays&#x27;&#x27;) | int == 3
-          }}&#x27;
+        value_template: &quot;{% set next = state_attr(&#x27;calendar.ireland&#x27;, &#x27;start_time&#x27;)
+          %} {% if next %}\n  {{ as_datetime(next).date() == (now().date() + timedelta(days=3))
+          }}\n{% else %}\n  false\n{% endif %}\n&quot;
     - condition: and
       conditions:
       - condition: time
         weekday:
         - sun
       - condition: template
-        value_template: &#x27;{{ states(&#x27;&#x27;calendar.ireland_bank_holidays&#x27;&#x27;) | int &gt; 3 }}&#x27;
-  action:
+        value_template: &quot;{% set next = state_attr(&#x27;calendar.ireland&#x27;, &#x27;start_time&#x27;)
+          %} {% if next %}\n  {{ as_datetime(next).date() &gt; (now().date() + timedelta(days=3))
+          }}\n{% else %}\n  true\n{% endif %}\n&quot;
+  actions:
   - choose:
     - conditions:
       - condition: template
         value_template: &#x27;{{ now().isocalendar()[1] % 2 == 1 }}&#x27;
       sequence:
-      - action: notify.notifications
-        data:
+      - data:
           message: Put out the general waste bin.
           title: Bin Night Reminder
           data:
             notification_icon: mdi:trash-can
+        action: notify.notifications
     default:
-    - action: notify.notifications
-      data:
+    - data:
         message: Put out the recycling bin.
         title: Bin Night Reminder
         data:
           notification_icon: mdi:recycle
+      action: notify.notifications
   mode: single
 - id: &#x27;1715102099827&#x27;
   alias: Navigate Home from Work
@@ -2144,7 +2147,6 @@
         third_last_workday.strftime(&#x27;%Y-%m-%d&#x27;) }}\n&quot;
     action: input_datetime.set_datetime
   mode: single
-
 - id: &#x27;1715594297562&#x27;
   alias: Alarm Start
   description: &#x27;Triggers the morning alarm routine 5 minutes before the set wake-up
@@ -2194,9 +2196,9 @@
           state: &#x27;on&#x27;
         - condition: not
           conditions:
-          - condition: numeric_state
-            entity_id: calendar.ireland_bank_holidays
-            below: 1
+          - condition: state
+            entity_id: calendar.ireland
+            state: &#x27;on&#x27;
       - condition: state
         entity_id: input_boolean.wfh_tomorrow
         state: &#x27;on&#x27;
@@ -2213,9 +2215,9 @@
           state: &#x27;on&#x27;
         - condition: not
           conditions:
-          - condition: numeric_state
-            entity_id: calendar.ireland_bank_holidays
-            below: 1
+          - condition: state
+            entity_id: calendar.ireland
+            state: &#x27;on&#x27;
         - condition: state
           entity_id: input_boolean.wfh_tomorrow
           state: &#x27;off&#x27;
