@@ -2453,26 +2453,18 @@
         weekday:
         - sat
       - condition: template
-        value_template: >
-          {% set next = state_attr('calendar.ireland', 'start_time') %}
-          {% if next %}
-            {{ as_datetime(next).date() == (now().date() + timedelta(days=2)) }}
-          {% else %}
-            false
-          {% endif %}
+        value_template: "{% set next = state_attr('calendar.ireland', 'start_time')
+          %} {% if next %}\n  {{ as_datetime(next).date() == (now().date() + timedelta(days=2))
+          }}\n{% else %}\n  false\n{% endif %}\n"
     - condition: and
       conditions:
       - condition: time
         weekday:
         - mon
       - condition: template
-        value_template: >
-          {% set next = state_attr('calendar.ireland', 'start_time') %}
-          {% if next %}
-            {{ as_datetime(next).date() != now().date() }}
-          {% else %}
-            true
-          {% endif %}
+        value_template: "{% set next = state_attr('calendar.ireland', 'start_time')
+          %} {% if next %}\n  {{ as_datetime(next).date() != now().date() }}\n{% else
+          %}\n  true\n{% endif %}\n"
   action:
   - action: input_text.set_value
     target:
@@ -2481,7 +2473,6 @@
       value: "{% if states('input_text.bin_collection_type') == 'General Waste' %}\n
         \ Recycling\n{% elif states('input_text.bin_collection_type') == 'Recycling'
         %}\n  General Waste\n{% else %}\n  Unknown\n{% endif %}\n"
-
 - id: '1717237084062'
   alias: Sync Google Mini Volumes
   description: Adjust all Google Minis to have the same volume when one changes
@@ -2722,7 +2713,6 @@
           entity_id: input_boolean.remote_work_logged_today
         action: input_boolean.turn_off
   mode: restart
-
 - id: '1720953328203'
   alias: Redirect Display Audio to Stereo Group
   description: Redirect audio to hugh_room_stereo if it plays only on the display
@@ -3918,6 +3908,7 @@
   - condition: time
     weekday:
     - fri
+    - mon
   actions:
   - target:
       entity_id: input_boolean.wfh_tomorrow
