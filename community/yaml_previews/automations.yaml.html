@@ -1613,10 +1613,6 @@
       entity_id: input_boolean.wake_up_alarm_running
     data: {}
     action: input_boolean.turn_off
-  - data: {}
-    action: input_boolean.turn_off
-    target:
-      entity_id: input_boolean.wfh_tomorrow
   - choose:
     - conditions:
       - condition: state
