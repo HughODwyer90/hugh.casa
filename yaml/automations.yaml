@@ -3920,12 +3920,12 @@
   alias: Disable WFH
   description: ''
   triggers:
-  - at: 00:00:00
+  - at: '11:00:00'
     trigger: time
   conditions:
   - condition: time
     weekday:
-    - tue
+    - mon
   actions:
   - action: input_boolean.turn_off
     target:
