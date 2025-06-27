@@ -398,18 +398,19 @@ update_entities_html:
 play_spotify_playlist_2:
   alias: Play Spotify Playlist
   sequence:
-  - action: spotcast.start
-    metadata: {}
+  - target:
+      entity_id:
+      - media_player.hugh_room_stereo
+      area_id: hugh_room
     data:
-      force_playback: true
-      random_song: true
-      repeat: &#x27;off&#x27;
-      shuffle: true
-      ignore_fully_played: false
-      start_volume: 10
+      media_content_id: spotify:playlist:7Gtodbwg48bzliqflc1BE9
+      media_content_type: music
+    action: media_player.play_media
+  - target:
       entity_id: media_player.hugh_room_stereo
-      uri: spotify:playlist:7Gtodbwg48bzliqflc1BE9
-    enabled: false
+    data:
+      volume_level: 0.1
+    action: media_player.volume_set
   icon: mdi:spotify
   mode: single
   description: &#x27;&#x27;
