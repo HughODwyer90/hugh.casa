@@ -2880,13 +2880,16 @@
 - id: '1722250261847'
   alias: Umail Account Renewal Notification
   description: Sends a notification to renew umail account every 11 months.
-  trigger:
+  triggers:
   - trigger: template
     value_template: '{{ (states(''input_datetime.umail_account_expiration'') | as_datetime
       - timedelta(days=1)).strftime(''%Y-%m-%d %H:%M:%S'') == now().strftime(''%Y-%m-%d
       %H:%M:%S'') }}'
-  condition: []
-  action:
+  - trigger: state
+    entity_id:
+    - sensor.umail_account_expiration
+  conditions: []
+  actions:
   - action: notify.notifications
     data:
       message: It's time to renew your umail account.
