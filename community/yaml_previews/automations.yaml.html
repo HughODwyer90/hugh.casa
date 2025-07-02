@@ -1083,7 +1083,7 @@
 - id: &#x27;1707173529009&#x27;
   alias: Hugh Room Stereo Play Toggle
   description: &#x27;&#x27;
-  trigger:
+  triggers:
   - trigger: device
     domain: mqtt
     device_id: 105dad18f2a2a0ceab0b94b61060ee0d
@@ -1094,8 +1094,8 @@
     entity_id:
     - sensor.hugh_room_aqara_door_button_action
     to: hold
-  condition: []
-  action:
+  conditions: []
+  actions:
   - choose:
     - conditions:
       - condition: state
@@ -1116,7 +1116,8 @@
           entity_id: media_player.universal_player
         data: {}
     default:
-    - action: script.play_spotify_playlist
+    - action: script.play_spotify_playlist_2
+      metadata: {}
       data: {}
   mode: single
 - id: &#x27;1707218902478&#x27;
@@ -3189,13 +3190,13 @@
 - id: &#x27;1724803091046&#x27;
   alias: IR Remote Button 8H
   description: &#x27;&#x27;
-  trigger:
+  triggers:
   - trigger: state
     entity_id:
     - binary_sensor.ollny_8h
     to: &#x27;on&#x27;
-  condition: []
-  action:
+  conditions: []
+  actions:
   - choose:
     - conditions:
       - condition: state
@@ -3216,8 +3217,9 @@
         data: {}
         action: media_player.media_play
     default:
-    - data: {}
-      action: script.play_spotify_playlist
+    - action: script.play_spotify_playlist_2
+      metadata: {}
+      data: {}
   mode: single
 - id: &#x27;1725046410793&#x27;
   alias: IR Remote Button Ollny Sequential
