@@ -52,16 +52,16 @@ execute_alarm_actions:
   - delay:
       minutes: 5
   - action: music_assistant.play_media
-    target:
-      device_id: 12d2e4cba7d1bf0af02ec1759b5c91b7
     data:
       media_type: radio
       media_id: library://radio/3
+    target:
+      device_id: 61df364729816b14e75f325311b07257
   - data:
       volume_level: 0.15
-    target:
-      device_id: 12d2e4cba7d1bf0af02ec1759b5c91b7
     action: media_player.volume_set
+    target:
+      device_id: 61df364729816b14e75f325311b07257
   - choose:
     - conditions:
       - condition: state
@@ -422,7 +422,7 @@ play_spotify_playlist_2:
       media_content_type: music
       enqueue: replace
     target:
-      device_id: 12d2e4cba7d1bf0af02ec1759b5c91b7
+      device_id: 61df364729816b14e75f325311b07257
   alias: Play Spotify Playlist
   description: &#x27;&#x27;
 </pre>
