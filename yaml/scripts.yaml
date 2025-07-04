@@ -40,12 +40,12 @@ execute_alarm_actions:
       media_content_id: media-source://radio_browser/d0a1da9f-46b3-11e9-aa55-52543be04c81
       media_content_type: audio/mpeg
     target:
-      entity_id: media_player.hugh_room_stereo
+      device_id: 12d2e4cba7d1bf0af02ec1759b5c91b7
     action: media_player.play_media
   - data:
       volume_level: 0.15
     target:
-      entity_id: media_player.hugh_room_stereo
+      device_id: 12d2e4cba7d1bf0af02ec1759b5c91b7
     action: media_player.volume_set
   - choose:
     - conditions:
