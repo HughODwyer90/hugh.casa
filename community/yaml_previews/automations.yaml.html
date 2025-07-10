@@ -2074,22 +2074,6 @@
           notification_icon: mdi:recycle
       action: notify.notifications
   mode: single
-- id: &#x27;1715102099827&#x27;
-  alias: Navigate Home from Work
-  description: &#x27;&#x27;
-  trigger:
-  - trigger: state
-    entity_id: binary_sensor.hugh_phone_android_auto
-    to: &#x27;on&#x27;
-  condition:
-  - condition: zone
-    entity_id: device_tracker.hugh_phone
-    zone: zone.work
-  action:
-  - action: notify.notifications
-    data:
-      title: Navigate
-      message: https://waze.com/ul?ll=51.89205914117974,-8.485000580549242&amp;navigate=yes
 - id: &#x27;1715361346211&#x27;
   alias: Calculate Next Pay Day
   triggers:
@@ -2377,32 +2361,6 @@
     data: {}
   - action: shopping_list.clear_completed_items
     data: {}
-- id: &#x27;1716378487561&#x27;
-  alias: Navigate to Work
-  description: &#x27;Trigger navigation to work zone when connected to Android Auto between
-    8-9 AM on weekdays.
-
-    &#x27;
-  trigger:
-  - trigger: state
-    entity_id: binary_sensor.hugh_phone_android_auto
-    to: &#x27;on&#x27;
-  condition:
-  - condition: time
-    after: 08:00:00
-    before: 09:00:00
-  - condition: time
-    weekday:
-    - mon
-    - tue
-    - wed
-    - thu
-    - fri
-  action:
-  - action: notify.notifications
-    data:
-      title: Navigate
-      message: https://waze.com/ul?ll=51.901507743453344,-8.351508378982546&amp;navigate=yes
 - id: &#x27;1716420785913&#x27;
   alias: Air Purifier Filter Warning
   description: &#x27;&#x27;
@@ -3053,17 +3011,20 @@
       value: &#x27;{{ states(&#x27;&#x27;sensor.car_fuel_quantity&#x27;&#x27;) | float }}&#x27;
     action: input_number.set_value
 - id: &#x27;1723126078057&#x27;
-  alias: Renew Car data
-  description: Sends a notification to renew car data every 11 months.
-  trigger:
-  - trigger: template
-    value_template: &#x27;{{ (states(&#x27;&#x27;input_datetime.car_data_expiration&#x27;&#x27;) | as_datetime
-      - timedelta(days=1)).strftime(&#x27;&#x27;%Y-%m-%d %H:%M:%S&#x27;&#x27;) == now().strftime(&#x27;&#x27;%Y-%m-%d
-      %H:%M:%S&#x27;&#x27;) }}&#x27;
-  condition: []
-  action:
+  alias: Renew Car Data
+  description: Sends a notification to renew car data on the day it expires.
+  triggers:
+  - at: 00:10:00
+    trigger: time
+  conditions:
+  - condition: template
+    value_template: &#x27;{{ now().date() == (states(&#x27;&#x27;input_datetime.car_data_expiration&#x27;&#x27;)
+      | as_datetime).date() }}
+
+      &#x27;
+  actions:
   - data:
-      message: It&#x27;s time to renew your car data.
+      message: Today is the day to renew your car data.
       data:
         actions:
         - action: RENEWED_CAR
