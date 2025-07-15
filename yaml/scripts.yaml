@@ -414,11 +414,13 @@ run_z2m_update_sequence:
   alias: Run Z2M Update Sequence
   sequence:
   - action: shell_command.get_z2m_update_entities
+    data: {}
   - delay:
       hours: 0
       minutes: 0
       seconds: 5
       milliseconds: 0
   - action: python_script.z2m_sequential_update
+    data: {}
   mode: single
   icon: mdi:update
