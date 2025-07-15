@@ -425,6 +425,14 @@ play_spotify_playlist_2:
       device_id: 61df364729816b14e75f325311b07257
   alias: Play Spotify Playlist
   description: &#x27;&#x27;
+run_z2m_update_sequence:
+  alias: Run Z2M Update Sequence
+  sequence:
+  - action: shell_command.get_z2m_update_entities
+  - delay: 1
+  - action: python_script.z2m_sequential_update
+  mode: single
+  icon: mdi:update
 </pre>
             </div>
             <script>
