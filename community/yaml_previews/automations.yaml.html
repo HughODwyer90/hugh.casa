@@ -3915,6 +3915,18 @@
       - input_boolean.wfh_tomorrow
     data: {}
   mode: single
+- id: &#x27;1752569710433&#x27;
+  alias: Z2M Update
+  description: &#x27;&#x27;
+  triggers:
+  - entity_id:
+    - input_button.update_z2m_devices
+    trigger: state
+  conditions: []
+  actions:
+  - action: script.run_z2m_update_sequence
+    data: {}
+  mode: single
 </pre>
             </div>
             <script>
