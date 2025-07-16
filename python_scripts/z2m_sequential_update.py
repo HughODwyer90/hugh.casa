@@ -1,17 +1,28 @@
+import os
+import re
 import yaml
 import time
 import requests
 
 # === Configuration ===
-TMP_FILE = "/config/tmp/z2m_update_list.txt"
-LOG_FILE = "/config/tmp/z2m_update_log.txt"
+LOG_BASE = "/config/zigbee2mqtt/log"
+TMP_DIR = "/config/tmp"
+LOG_FILE = os.path.join(TMP_DIR, "z2m_update_log.txt")
 SECRETS_FILE = "/config/secrets.yaml"
-HA_URL = "http://homeassistant.local:8123"  # Replace with your actual HA address
+HA_URL = "http://homeassistant.local:8123"
 
 MAX_WAIT_MINUTES = 60
 POLL_INTERVAL = 60  # seconds
 
-# === Load token from secrets.yaml ===
+# === Ensure tmp dir exists ===
+os.makedirs(TMP_DIR, exist_ok=True)
+
+log_lines = []
+def log(msg):
+    print(msg)
+    log_lines.append(msg)
+
+# === Load HA token from secrets.yaml ===
 try:
     with open(SECRETS_FILE, "r") as f:
         secrets = yaml.safe_load(f)
@@ -27,12 +38,6 @@ HEADERS = {
     "Content-Type": "application/json"
 }
 
-log_lines = []
-
-def log(msg):
-    print(msg)
-    log_lines.append(msg)
-
 def get_state(entity_id):
     try:
         resp = requests.get(f"{HA_URL}/api/states/{entity_id}", headers=HEADERS)
@@ -44,17 +49,46 @@ def get_state(entity_id):
         log(f"⚠️ Exception while fetching state for {entity_id}: {e}")
     return None
 
-# === Load entity list ===
-try:
-    with open(TMP_FILE, "r") as f:
-        entity_ids = [line.strip() for line in f if line.strip()]
-    log(f"✅ Loaded {len(entity_ids)} update entities.")
-except Exception as e:
-    log(f"❌ Failed to read update list: {e}")
-    entity_ids = []
+# === Step 1: Find latest Zigbee2MQTT log ===
+log_dirs = [d for d in os.listdir(LOG_BASE) if os.path.isdir(os.path.join(LOG_BASE, d))]
+log_dirs.sort()
+if not log_dirs:
+    log("❌ No log directories found.")
+    exit(1)
 
-# === Process updates one-by-one ===
-for entity_id in entity_ids:
+latest_dir = log_dirs[-1]
+log_path = os.path.join(LOG_BASE, latest_dir, "log.log")
+if not os.path.exists(log_path):
+    log(f"❌ log.log not found in: {log_path}")
+    exit(1)
+
+log(f"📄 Using log file: {log_path}")
+
+# === Step 2: Parse log for update-available devices ===
+topic_re = re.compile(r"zigbee2mqtt/([^']+)")
+entities = set()
+
+with open(log_path, "r", encoding="utf-8") as f:
+    for line in f:
+        if "zigbee2mqtt/" in line and '"state":"available"' in line:
+            topic_match = topic_re.search(line)
+            if topic_match:
+                name = topic_match.group(1).strip().lower().replace(" ", "_")
+                entity_id = f"update.{name}"
+                entities.add(entity_id)
+
+for eid in sorted(entities):
+    log(f"✅ Found update candidate: {eid}")
+
+if not entities:
+    log("⚠️ No update entities found in log.")
+    with open(LOG_FILE, "w") as f:
+        for line in log_lines:
+            f.write(line + "\n")
+    exit(0)
+
+# === Step 3: Trigger and wait sequentially ===
+for entity_id in sorted(entities):
     state = get_state(entity_id)
     if not state:
         log(f"❌ Skipping {entity_id}: state not found")
@@ -70,7 +104,7 @@ for entity_id in entity_ids:
 
     log(f"🚀 Starting update: {entity_id} (installed: {installed}, latest: {latest})")
 
-    # Trigger the update
+    # Trigger update.install service
     resp = requests.post(
         f"{HA_URL}/api/services/update/install",
         headers=HEADERS,
@@ -83,7 +117,7 @@ for entity_id in entity_ids:
     else:
         log(f"📤 Update triggered for {entity_id}")
 
-    # Wait until update completes
+    # Wait for update to complete
     for minute in range(MAX_WAIT_MINUTES):
         time.sleep(POLL_INTERVAL)
         state = get_state(entity_id)
@@ -99,11 +133,11 @@ for entity_id in entity_ids:
             log(f"✅ Update complete for {entity_id} (installed: {installed_now})")
             break
 
-        log(f"⏳ Still updating {entity_id} (minute {minute + 1}): state={current_state}")
+        log(f"⏳ Still updating {entity_id} (minute {minute + 1}) — state={current_state}")
     else:
         log(f"⚠️ Timeout: {entity_id} did not finish after {MAX_WAIT_MINUTES} minutes")
 
-# === Write log file ===
+# === Step 4: Write log file ===
 try:
     with open(LOG_FILE, "w") as f:
         for line in log_lines:
