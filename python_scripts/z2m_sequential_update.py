@@ -1,76 +1,113 @@
-import os
+import yaml
 import time
+import requests
+
+# === Configuration ===
+TMP_FILE = "/config/tmp/z2m_update_list.txt"
+LOG_FILE = "/config/tmp/z2m_update_log.txt"
+SECRETS_FILE = "/config/secrets.yaml"
+HA_URL = "http://homeassistant.local:8123"  # Replace with your actual HA address
 
 MAX_WAIT_MINUTES = 60
-POLL_INTERVAL = 60
-TMP_DIR = "/config/tmp"
-TMP_FILE = f"{TMP_DIR}/z2m_update_list.txt"
-LOG_FILE = f"{TMP_DIR}/z2m_update_log.txt"
+POLL_INTERVAL = 60  # seconds
 
-inside_ha = "hass" in globals()
+# === Load token from secrets.yaml ===
+try:
+    with open(SECRETS_FILE, "r") as f:
+        secrets = yaml.safe_load(f)
+        TOKEN = secrets.get("ha_access_token")
+        if not TOKEN:
+            raise ValueError("ha_access_token not found in secrets.yaml")
+except Exception as e:
+    print(f"❌ Failed to load token: {e}")
+    exit(1)
+
+HEADERS = {
+    "Authorization": f"Bearer {TOKEN}",
+    "Content-Type": "application/json"
+}
+
 log_lines = []
 
 def log(msg):
-    if inside_ha:
-        logger.info(msg)
-    else:
-        print(msg)
+    print(msg)
     log_lines.append(msg)
 
-# Read update list
+def get_state(entity_id):
+    try:
+        resp = requests.get(f"{HA_URL}/api/states/{entity_id}", headers=HEADERS)
+        if resp.status_code == 200:
+            return resp.json()
+        else:
+            log(f"⚠️ Failed to fetch state for {entity_id}: {resp.text}")
+    except Exception as e:
+        log(f"⚠️ Exception while fetching state for {entity_id}: {e}")
+    return None
+
+# === Load entity list ===
 try:
     with open(TMP_FILE, "r") as f:
         entity_ids = [line.strip() for line in f if line.strip()]
+    log(f"✅ Loaded {len(entity_ids)} update entities.")
 except Exception as e:
-    msg = f"❌ Could not read update list: {e}"
-    log(msg)
+    log(f"❌ Failed to read update list: {e}")
     entity_ids = []
 
-if not inside_ha:
-    log("ℹ️ Skipping update execution — not running inside Home Assistant.")
-else:
-    for entity_id in entity_ids:
-        state = hass.states.get(entity_id)
-        if not state:
-            log(f"❌ {entity_id}: Entity not found")
-            continue
-        if state.state != "on":
-            log(f"⏩ {entity_id}: No update available (state = {state.state})")
-            continue
-        if state.attributes.get("in_progress"):
-            log(f"⏳ {entity_id}: Already updating, skipping")
-            continue
+# === Process updates one-by-one ===
+for entity_id in entity_ids:
+    state = get_state(entity_id)
+    if not state:
+        log(f"❌ Skipping {entity_id}: state not found")
+        continue
 
-        log(f"🚀 Starting update: {entity_id}")
-        hass.services.call("update", "install", {"entity_id": entity_id}, blocking=True)
+    if state["state"] != "on":
+        log(f"⏩ Skipping {entity_id}: no update available (state = {state['state']})")
+        continue
 
-        for _ in range(MAX_WAIT_MINUTES):
-            state = hass.states.get(entity_id)
-            if not state.attributes.get("in_progress", False):
-                log(f"✅ Finished: {entity_id}")
-                break
-            time.sleep(POLL_INTERVAL)
-        else:
-            log(f"⚠️ Timeout waiting for: {entity_id}")
+    attrs = state.get("attributes", {})
+    installed = attrs.get("installed_version")
+    latest = attrs.get("latest_version")
 
-# Final log file output
-try:
-    with open(LOG_FILE, "w") as f_out:
-        for line in log_lines:
-            f_out.write(line + "\n")
-except Exception as e:
-    err = f"❌ Failed to write update log: {e}"
-    if inside_ha:
-        logger.error(err)
-    else:
-        print(err)
+    log(f"🚀 Starting update: {entity_id} (installed: {installed}, latest: {latest})")
 
-# Optional notification inside HA
-if inside_ha and log_lines:
-    hass.services.call(
-        "persistent_notification/create",
-        {
-            "title": "Z2M Update Summary",
-            "message": "\n".join(log_lines),
-        }
+    # Trigger the update
+    resp = requests.post(
+        f"{HA_URL}/api/services/update/install",
+        headers=HEADERS,
+        json={"entity_id": entity_id}
     )
+
+    if resp.status_code != 200:
+        log(f"❌ Failed to start update for {entity_id}: {resp.text}")
+        continue
+    else:
+        log(f"📤 Update triggered for {entity_id}")
+
+    # Wait until update completes
+    for minute in range(MAX_WAIT_MINUTES):
+        time.sleep(POLL_INTERVAL)
+        state = get_state(entity_id)
+        if not state:
+            continue
+
+        current_state = state.get("state")
+        attrs = state.get("attributes", {})
+        installed_now = attrs.get("installed_version")
+        latest_now = attrs.get("latest_version")
+
+        if current_state == "off" or installed_now == latest_now:
+            log(f"✅ Update complete for {entity_id} (installed: {installed_now})")
+            break
+
+        log(f"⏳ Still updating {entity_id} (minute {minute + 1}): state={current_state}")
+    else:
+        log(f"⚠️ Timeout: {entity_id} did not finish after {MAX_WAIT_MINUTES} minutes")
+
+# === Write log file ===
+try:
+    with open(LOG_FILE, "w") as f:
+        for line in log_lines:
+            f.write(line + "\n")
+    log(f"📄 Log written to {LOG_FILE}")
+except Exception as e:
+    print(f"❌ Failed to write log file: {e}")
