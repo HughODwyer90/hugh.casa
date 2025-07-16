@@ -410,28 +410,3 @@ play_spotify_playlist_2:
       device_id: 61df364729816b14e75f325311b07257
   alias: Play Spotify Playlist
   description: ''
-run_z2m_update_sequence:
-  alias: Run Z2M Update Sequence
-  sequence:
-  - action: shell_command.get_z2m_update_entities
-    data: {}
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 5
-      milliseconds: 0
-  - action: shell_command.run_z2m_update_sequence
-    data: {}
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 5
-      milliseconds: 0
-  - action: notify.persistent_notification
-    data:
-      title: Z2M Update
-      message: 'Update sequence triggered. Check log file at /config/tmp/z2m_update_log.txt
-
-        '
-  mode: single
-  icon: mdi:update
