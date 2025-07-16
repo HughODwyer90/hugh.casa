@@ -1,18 +1,29 @@
 [
     {
         "entity_id": "media_player.universal_player",
-        "state": "off",
+        "state": "playing",
         "attributes": {
+            "volume_level": 0.15000000596046448,
+            "is_volume_muted": false,
+            "media_content_id": "http://192.168.0.254:8097/flow/JSZ6Hkmk/media_player.hugh_room_stereo/18c647fb90f64f74997991a8178772fa.mp3",
+            "media_content_type": "music",
+            "media_position": 0,
+            "media_position_updated_at": "2025-07-16T06:15:06.151655+00:00",
+            "media_title": "Music Assistant",
+            "app_id": "CC1AD845",
+            "app_name": "Default Media Receiver",
+            "active_child": "media_player.hugh_room_stereo",
+            "entity_picture": "https://github.com/home-assistant/brands/raw/master/custom_integrations/mass/icon%402x.png",
             "friendly_name": "universal_player",
-            "supported_features": 0
+            "supported_features": 152463
         },
-        "last_changed": "2025-07-15T16:30:01.276818+00:00",
-        "last_reported": "2025-07-15T16:30:49.813763+00:00",
-        "last_updated": "2025-07-15T16:30:01.276818+00:00",
+        "last_changed": "2025-07-16T06:15:06.157428+00:00",
+        "last_reported": "2025-07-16T06:15:06.157428+00:00",
+        "last_updated": "2025-07-16T06:15:06.157428+00:00",
         "context": {
-            "id": "01K07EQX1WRF0B4JNNW79165JM",
+            "id": "01K08XYHS7R4P2RKCXK6S06A6S",
             "parent_id": null,
-            "user_id": null
+            "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
     },
     {
@@ -577,35 +588,35 @@
     },
     {
         "entity_id": "sensor.network_scanner_devices_list",
-        "state": "23",
+        "state": "18",
         "attributes": {
-            "devices": "IP: 192.168.0.70  | MAC: 5C:85:7E:34:04:49  Vendor: Cable Matters ..................................................................... IP: 192.168.0.27  | MAC: E0:5A:1B:D7:19:B0  Vendor: Espressif ..................................................................... IP: 192.168.0.35  | MAC: 0C:B8:15:3A:64:1C  Vendor: Espressif ..................................................................... IP: 192.168.0.96  | MAC: C8:2B:96:CA:9A:61  Vendor: Espressif ..................................................................... IP: 192.168.0.200 | MAC: 34:94:54:AB:1D:70  Vendor: Espressif ..................................................................... IP: 192.168.0.201 | MAC: C8:2E:18:16:E9:04  Vendor: Espressif ..................................................................... IP: 192.168.0.10  | MAC: 14:C1:4E:0A:C0:AF  Vendor: Google ..................................................................... IP: 192.168.0.38  | MAC: 90:CA:FA:B6:EC:76  Vendor: Google ..................................................................... IP: 192.168.0.99  | MAC: 20:DF:B9:7B:EC:50  Vendor: Google ..................................................................... IP: 192.168.0.144 | MAC: 1C:53:F9:18:96:1E  Vendor: Google ..................................................................... IP: 192.168.0.175 | MAC: D4:F5:47:96:2A:2B  Vendor: Google ..................................................................... IP: 192.168.0.194 | MAC: 14:C1:4E:CA:57:8A  Vendor: Google ..................................................................... IP: 192.168.0.226 | MAC: 14:C1:4E:3E:60:A3  Vendor: Google ..................................................................... IP: 192.168.0.228 | MAC: F8:0F:F9:44:35:E9  Vendor: Google ..................................................................... IP: 192.168.0.255 | MAC: 14:C1:4E:3E:60:A3  Vendor: Google ..................................................................... IP: 192.168.0.192 | MAC: D0:73:D5:5B:C1:BA  Vendor: Lifi Labs Management ..................................................................... IP: 192.168.0.80  | MAC: B8:8A:EC:C1:4D:9C  Vendor: Nintendo ..................................................................... IP: 192.168.0.152 | MAC: 00:C3:F4:DF:EE:2E  Vendor: Samsung Electronics ..................................................................... IP: 192.168.0.1   | MAC: 14:EB:B6:DE:E8:C4  Vendor: TP-Link Limited ..................................................................... IP: 192.168.0.90  | MAC: 0C:80:63:13:65:7D  Vendor: TP-Link Technologies ..................................................................... IP: 192.168.0.30  | MAC: 10:5A:17:E0:40:F5  Vendor: Tuya Smart ..................................................................... IP: 192.168.0.207 | MAC: 14:1B:A0:86:C9:41  Vendor: Unknown ..................................................................... IP: 192.168.0.211 | MAC: DE:D5:92:46:73:DD  Vendor: Unknown .....................................................................",
+            "devices": "IP: 192.168.0.70  | MAC: 5C:85:7E:34:04:49  Vendor: Cable Matters ..................................................................... IP: 192.168.0.27  | MAC: E0:5A:1B:D7:19:B0  Vendor: Espressif ..................................................................... IP: 192.168.0.35  | MAC: 0C:B8:15:3A:64:1C  Vendor: Espressif ..................................................................... IP: 192.168.0.96  | MAC: C8:2B:96:CA:9A:61  Vendor: Espressif ..................................................................... IP: 192.168.0.200 | MAC: 34:94:54:AB:1D:70  Vendor: Espressif ..................................................................... IP: 192.168.0.201 | MAC: C8:2E:18:16:E9:04  Vendor: Espressif ..................................................................... IP: 192.168.0.10  | MAC: 14:C1:4E:0A:C0:AF  Vendor: Google ..................................................................... IP: 192.168.0.38  | MAC: 90:CA:FA:B6:EC:76  Vendor: Google ..................................................................... IP: 192.168.0.99  | MAC: 20:DF:B9:7B:EC:50  Vendor: Google ..................................................................... IP: 192.168.0.144 | MAC: 1C:53:F9:18:96:1E  Vendor: Google ..................................................................... IP: 192.168.0.226 | MAC: 14:C1:4E:3E:60:A3  Vendor: Google ..................................................................... IP: 192.168.0.228 | MAC: F8:0F:F9:44:35:E9  Vendor: Google ..................................................................... IP: 192.168.0.255 | MAC: 1C:53:F9:B5:6B:C7  Vendor: Google ..................................................................... IP: 192.168.0.80  | MAC: B8:8A:EC:C1:4D:9C  Vendor: Nintendo ..................................................................... IP: 192.168.0.1   | MAC: 14:EB:B6:DE:E8:C4  Vendor: TP-Link Limited ..................................................................... IP: 192.168.0.90  | MAC: 0C:80:63:13:65:7D  Vendor: TP-Link Technologies ..................................................................... IP: 192.168.0.30  | MAC: 10:5A:17:E0:40:F5  Vendor: Tuya Smart ..................................................................... IP: 192.168.0.211 | MAC: DE:D5:92:46:73:DD  Vendor: Unknown .....................................................................",
             "unit_of_measurement": "devices",
             "icon": "mdi:lan-connect",
             "friendly_name": "Network Scanner Devices List"
         },
-        "last_changed": "2025-07-16T03:15:59.394211+00:00",
-        "last_reported": "2025-07-16T03:30:57.384615+00:00",
-        "last_updated": "2025-07-16T03:30:57.384615+00:00",
+        "last_changed": "2025-07-16T06:30:56.496541+00:00",
+        "last_reported": "2025-07-16T06:30:56.496541+00:00",
+        "last_updated": "2025-07-16T06:30:56.496541+00:00",
         "context": {
-            "id": "01K08MJ3Q52GP24C7BWXBNBW0P",
+            "id": "01K08YVNQDHKEP5G6Y2KCHC09V",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.air_purifier_lifetime",
-        "state": "5",
+        "state": "4",
         "attributes": {
             "unit_of_measurement": "%",
             "icon": "mdi:air-filter",
             "friendly_name": "Air Purifier Filter Life"
         },
-        "last_changed": "2025-07-15T16:30:56.789027+00:00",
-        "last_reported": "2025-07-15T16:30:56.789027+00:00",
-        "last_updated": "2025-07-15T16:30:56.789027+00:00",
+        "last_changed": "2025-07-16T05:31:16.774216+00:00",
+        "last_reported": "2025-07-16T05:31:16.774216+00:00",
+        "last_updated": "2025-07-16T05:31:16.774216+00:00",
         "context": {
-            "id": "01K07ESK8N7E90TKWP18MGR74E",
+            "id": "01K08VEDX4DDYABNBWW3JK4YJX",
             "parent_id": null,
             "user_id": null
         }
@@ -628,18 +639,18 @@
     },
     {
         "entity_id": "sensor.air_purifier_speed",
-        "state": "66",
+        "state": "33",
         "attributes": {
             "unit_of_measurement": "%",
             "icon": "mdi:fan",
             "friendly_name": "Air Purifier Fan Speed"
         },
-        "last_changed": "2025-07-15T23:03:52.354128+00:00",
-        "last_reported": "2025-07-15T23:03:52.354128+00:00",
-        "last_updated": "2025-07-15T23:03:52.354128+00:00",
+        "last_changed": "2025-07-16T06:15:06.846654+00:00",
+        "last_reported": "2025-07-16T06:15:06.846654+00:00",
+        "last_updated": "2025-07-16T06:15:06.846654+00:00",
         "context": {
-            "id": "01K08591MMP98N0Q2693KHVW03",
-            "parent_id": "01K08591MJJ47F4JAHM9QJN4GK",
+            "id": "01K08XYNNEPA6AZGXHJ0SV3DKN",
+            "parent_id": "01K08XYHS7R4P2RKCXK6S06A6S",
             "user_id": null
         }
     },
@@ -661,17 +672,17 @@
     },
     {
         "entity_id": "sensor.previous_bathroom_humidity",
-        "state": "63.10%",
+        "state": "62.85%",
         "attributes": {
             "icon": "mdi:water-percent",
             "friendly_name": "Aqara Humidity (previous)"
         },
-        "last_changed": "2025-07-16T03:24:13.824870+00:00",
-        "last_reported": "2025-07-16T03:24:13.824870+00:00",
-        "last_updated": "2025-07-16T03:24:13.824870+00:00",
+        "last_changed": "2025-07-16T06:18:36.611086+00:00",
+        "last_reported": "2025-07-16T06:18:36.611086+00:00",
+        "last_updated": "2025-07-16T06:18:36.611086+00:00",
         "context": {
-            "id": "01K08M5FV66PN5P8SGM0FG1BK5",
-            "parent_id": "01K08M5FV4TH4FECYNC3WZWWJF",
+            "id": "01K08Y4SDAKV7QPC7NH412TYFY",
+            "parent_id": "01K08Y4SD9JKHASX2PJK2C1YSV",
             "user_id": null
         }
     },
@@ -954,20 +965,20 @@
             "sunset": "Today at 21:46",
             "daylight_minutes": 974,
             "daylight_percent": "67.6%",
-            "is_daylight": false,
-            "previous_sunrise": "Yesterday at 05:31",
+            "is_daylight": true,
+            "previous_sunrise": "Today at 05:32",
             "previous_sunset": "Yesterday at 21:47",
-            "next_sunrise": "Today at 05:32",
+            "next_sunrise": "Tomorrow at 05:33",
             "next_sunset": "Today at 21:46",
             "unit_of_measurement": "h",
             "icon": "mdi:weather-sunny",
             "friendly_name": "Daylight Duration"
         },
         "last_changed": "2025-07-15T23:00:15.317133+00:00",
-        "last_reported": "2025-07-15T23:00:15.317133+00:00",
-        "last_updated": "2025-07-15T23:00:15.317133+00:00",
+        "last_reported": "2025-07-16T04:33:00.927511+00:00",
+        "last_updated": "2025-07-16T04:33:00.927511+00:00",
         "context": {
-            "id": "01K0852EAB7K8JCA65P2RZV9VS",
+            "id": "01K08R3QZZGBKW6BW2QR0AF19P",
             "parent_id": null,
             "user_id": null
         }
@@ -1076,11 +1087,11 @@
             "icon": "mdi:counter",
             "friendly_name": "Total Entities"
         },
-        "last_changed": "2025-07-16T03:41:00.932630+00:00",
-        "last_reported": "2025-07-16T03:41:00.932630+00:00",
-        "last_updated": "2025-07-16T03:41:00.932630+00:00",
+        "last_changed": "2025-07-16T06:33:50.282619+00:00",
+        "last_reported": "2025-07-16T06:33:50.282619+00:00",
+        "last_updated": "2025-07-16T06:33:50.282619+00:00",
         "context": {
-            "id": "01K08N4H44FBNGN32GJWPPGSC8",
+            "id": "01K08Z0ZE96J2M6K3RBKAH13JH",
             "parent_id": null,
             "user_id": null
         }
@@ -1356,7 +1367,7 @@
     },
     {
         "entity_id": "scene.living_room_all_lights_off",
-        "state": "2025-07-16T03:41:00.936935+00:00",
+        "state": "2025-07-16T06:33:50.287368+00:00",
         "attributes": {
             "entity_id": [
                 "light.living_room_ceiling",
@@ -1366,12 +1377,12 @@
             "id": "1702948036144",
             "friendly_name": "Living Room All Lights Off"
         },
-        "last_changed": "2025-07-16T03:41:00.937008+00:00",
-        "last_reported": "2025-07-16T03:41:00.937008+00:00",
-        "last_updated": "2025-07-16T03:41:00.937008+00:00",
+        "last_changed": "2025-07-16T06:33:50.287449+00:00",
+        "last_reported": "2025-07-16T06:33:50.287449+00:00",
+        "last_updated": "2025-07-16T06:33:50.287449+00:00",
         "context": {
-            "id": "01K08N4H3ZXAJ8RN4SGZN16AWE",
-            "parent_id": "01K08N4H3VVV2PXMH6XY5KF87W",
+            "id": "01K08Z0ZE0JJK4B5FHZKNYM8WB",
+            "parent_id": "01K08Z0ZDZ0SPAH530QCPCA4JK",
             "user_id": null
         }
     },
@@ -1437,17 +1448,17 @@
         "entity_id": "script.execute_alarm_actions",
         "state": "off",
         "attributes": {
-            "last_triggered": "2025-07-15T06:10:00.758881+00:00",
+            "last_triggered": "2025-07-16T06:10:00.934635+00:00",
             "mode": "single",
             "current": 0,
             "icon": "mdi:alarm-bell",
             "friendly_name": "Execute Alarm Actions"
         },
-        "last_changed": "2025-07-15T16:30:17.963526+00:00",
-        "last_reported": "2025-07-15T16:30:17.963526+00:00",
-        "last_updated": "2025-07-15T16:30:17.963526+00:00",
+        "last_changed": "2025-07-16T06:15:02.649844+00:00",
+        "last_reported": "2025-07-16T06:15:02.649844+00:00",
+        "last_updated": "2025-07-16T06:15:02.649844+00:00",
         "context": {
-            "id": "01K07ERDBB9AK69KN35WGZ0XS4",
+            "id": "01K08XYJ7SJCMAAGPC6WDD6C8V",
             "parent_id": null,
             "user_id": null
         }
@@ -1642,16 +1653,16 @@
         "entity_id": "script.blinds_alarm_open",
         "state": "off",
         "attributes": {
-            "last_triggered": "2025-07-15T06:15:02.393174+00:00",
+            "last_triggered": "2025-07-16T06:15:02.644812+00:00",
             "mode": "single",
             "current": 0,
             "friendly_name": "Blinds alarm open"
         },
-        "last_changed": "2025-07-15T16:30:17.967837+00:00",
-        "last_reported": "2025-07-15T16:30:17.967837+00:00",
-        "last_updated": "2025-07-15T16:30:17.967837+00:00",
+        "last_changed": "2025-07-16T06:15:02.656671+00:00",
+        "last_reported": "2025-07-16T06:15:02.656671+00:00",
+        "last_updated": "2025-07-16T06:15:02.656671+00:00",
         "context": {
-            "id": "01K07ERDBFDAR2DVV15CVWHXXB",
+            "id": "01K08XNBK2JGAY9J8FV73YFM5S",
             "parent_id": null,
             "user_id": null
         }
@@ -1678,17 +1689,17 @@
         "entity_id": "script.update_entities_html",
         "state": "on",
         "attributes": {
-            "last_triggered": "2025-07-16T03:41:00.940552+00:00",
+            "last_triggered": "2025-07-16T06:33:50.289681+00:00",
             "mode": "single",
             "current": 1,
             "friendly_name": "Github Backup"
         },
-        "last_changed": "2025-07-16T03:41:00.940613+00:00",
-        "last_reported": "2025-07-16T03:41:00.940613+00:00",
-        "last_updated": "2025-07-16T03:41:00.940613+00:00",
+        "last_changed": "2025-07-16T06:33:50.289737+00:00",
+        "last_reported": "2025-07-16T06:33:50.289737+00:00",
+        "last_updated": "2025-07-16T06:33:50.289737+00:00",
         "context": {
-            "id": "01K08N4H4B9NQH9ZRHWHNN4QJ0",
-            "parent_id": "01K08N31R6396ZT3J053ZD5089",
+            "id": "01K08Z0ZEGRK8MSSQZ7CJXY0T2",
+            "parent_id": "01K08YZGH8SQ4W1A17ZE7T63SK",
             "user_id": null
         }
     },
@@ -1714,17 +1725,17 @@
         "entity_id": "script.run_z2m_update_sequence",
         "state": "off",
         "attributes": {
-            "last_triggered": "2025-07-15T20:14:30.119123+00:00",
+            "last_triggered": "2025-07-16T06:17:54.691272+00:00",
             "mode": "single",
             "current": 0,
             "icon": "mdi:update",
             "friendly_name": "Run Z2M Update Sequence"
         },
-        "last_changed": "2025-07-15T20:14:35.458261+00:00",
-        "last_reported": "2025-07-15T20:14:35.458261+00:00",
-        "last_updated": "2025-07-15T20:14:35.458261+00:00",
+        "last_changed": "2025-07-16T06:18:00.137868+00:00",
+        "last_reported": "2025-07-16T06:18:00.137868+00:00",
+        "last_updated": "2025-07-16T06:18:00.137868+00:00",
         "context": {
-            "id": "01K07VK3E21ZNZ166DMR0TPT17",
+            "id": "01K08Y3ZJ92PM5S0E65YD04K5D",
             "parent_id": null,
             "user_id": null
         }
@@ -1833,24 +1844,24 @@
     },
     {
         "entity_id": "input_button.update_z2m_devices",
-        "state": "2025-07-15T20:14:30.115215+00:00",
+        "state": "2025-07-16T06:17:54.687172+00:00",
         "attributes": {
             "editable": true,
             "icon": "mdi:update",
             "friendly_name": "Update Z2M Devices"
         },
-        "last_changed": "2025-07-15T20:14:30.115384+00:00",
-        "last_reported": "2025-07-15T20:14:30.115384+00:00",
-        "last_updated": "2025-07-15T20:14:30.115384+00:00",
+        "last_changed": "2025-07-16T06:17:54.687382+00:00",
+        "last_reported": "2025-07-16T06:17:54.687382+00:00",
+        "last_updated": "2025-07-16T06:17:54.687382+00:00",
         "context": {
-            "id": "01K07VJY72BV8XPEY7DWTWEEPG",
+            "id": "01K08Y3T7X8YWVZAM60B93ERWB",
             "parent_id": null,
             "user_id": "f84f7cbfe32b4f3091c5defa1be3974b"
         }
     },
     {
         "entity_id": "input_number.previous_bathroom_humidity",
-        "state": "63.1",
+        "state": "62.85",
         "attributes": {
             "initial": null,
             "editable": true,
@@ -1862,18 +1873,18 @@
             "icon": "mdi:water-percent",
             "friendly_name": "Previous Bathroom Humidity"
         },
-        "last_changed": "2025-07-16T03:24:13.819369+00:00",
-        "last_reported": "2025-07-16T03:24:13.819369+00:00",
-        "last_updated": "2025-07-16T03:24:13.819369+00:00",
+        "last_changed": "2025-07-16T06:18:36.607324+00:00",
+        "last_reported": "2025-07-16T06:18:36.607324+00:00",
+        "last_updated": "2025-07-16T06:18:36.607324+00:00",
         "context": {
-            "id": "01K08M5FV66PN5P8SGM0FG1BK5",
-            "parent_id": "01K08M5FV4TH4FECYNC3WZWWJF",
+            "id": "01K08Y4SDAKV7QPC7NH412TYFY",
+            "parent_id": "01K08Y4SD9JKHASX2PJK2C1YSV",
             "user_id": null
         }
     },
     {
         "entity_id": "input_number.hugh_room_blinds_position",
-        "state": "13.0",
+        "state": "29.0",
         "attributes": {
             "initial": null,
             "editable": true,
@@ -1884,12 +1895,12 @@
             "icon": "mdi:blinds-horizontal",
             "friendly_name": "Hugh Room Blinds Position"
         },
-        "last_changed": "2025-07-15T20:08:17.160933+00:00",
-        "last_reported": "2025-07-15T20:08:17.160933+00:00",
-        "last_updated": "2025-07-15T20:08:17.160933+00:00",
+        "last_changed": "2025-07-16T06:15:07.681911+00:00",
+        "last_reported": "2025-07-16T06:15:07.681911+00:00",
+        "last_updated": "2025-07-16T06:15:07.681911+00:00",
         "context": {
-            "id": "01K07V7D3TGDCWSJKWQ7GFG79D",
-            "parent_id": "01K07V7D3STZHY53CTZR1SEXMV",
+            "id": "01K08XYJ8NPQ1RF3CZQ2EY256V",
+            "parent_id": "01K08XNBK2JGAY9J8FV73YFM5S",
             "user_id": null
         }
     },
@@ -2134,7 +2145,7 @@
     },
     {
         "entity_id": "input_number.previous_bathroom_temperature",
-        "state": "21.38",
+        "state": "21.21",
         "attributes": {
             "initial": null,
             "editable": true,
@@ -2146,12 +2157,12 @@
             "icon": "mdi:temperature-celsius",
             "friendly_name": "Previous Bathroom Temperature"
         },
-        "last_changed": "2025-07-16T03:24:13.822285+00:00",
-        "last_reported": "2025-07-16T03:24:13.822285+00:00",
-        "last_updated": "2025-07-16T03:24:13.822285+00:00",
+        "last_changed": "2025-07-16T06:09:11.633200+00:00",
+        "last_reported": "2025-07-16T06:09:11.633200+00:00",
+        "last_updated": "2025-07-16T06:09:11.633200+00:00",
         "context": {
-            "id": "01K08M5FV66PN5P8SGM0FG1BK5",
-            "parent_id": "01K08M5FV4TH4FECYNC3WZWWJF",
+            "id": "01K08XKHNSJWZ0ZBWQ1SHJXW24",
+            "parent_id": "01K08XKHNRXS16QEAA2J88YSVF",
             "user_id": null
         }
     },
@@ -2278,17 +2289,17 @@
     },
     {
         "entity_id": "input_boolean.wake_up_alarm_running",
-        "state": "off",
+        "state": "on",
         "attributes": {
             "editable": true,
             "icon": "mdi:alarm-bell",
             "friendly_name": "Alarm Running"
         },
-        "last_changed": "2025-07-15T16:30:18.015913+00:00",
-        "last_reported": "2025-07-15T16:30:18.015913+00:00",
-        "last_updated": "2025-07-15T16:30:18.015913+00:00",
+        "last_changed": "2025-07-16T06:10:00.936118+00:00",
+        "last_reported": "2025-07-16T06:10:00.936118+00:00",
+        "last_updated": "2025-07-16T06:10:00.936118+00:00",
         "context": {
-            "id": "01K07ERDCZ9ZSD45R094XWJG8N",
+            "id": "01K08XNBK2JGAY9J8FV73YFM5S",
             "parent_id": null,
             "user_id": null
         }
@@ -2860,25 +2871,25 @@
     },
     {
         "entity_id": "input_datetime.previous_sunrise",
-        "state": "2025-07-15 05:31:26",
+        "state": "2025-07-16 05:32:40",
         "attributes": {
             "has_date": true,
             "has_time": true,
             "editable": true,
             "year": 2025,
             "month": 7,
-            "day": 15,
+            "day": 16,
             "hour": 5,
-            "minute": 31,
-            "second": 26,
-            "timestamp": 1752553886.0,
+            "minute": 32,
+            "second": 40,
+            "timestamp": 1752640360.0,
             "friendly_name": "Previous Sunrise"
         },
-        "last_changed": "2025-07-15T16:30:20.840107+00:00",
-        "last_reported": "2025-07-15T16:30:20.840107+00:00",
-        "last_updated": "2025-07-15T16:30:20.840107+00:00",
+        "last_changed": "2025-07-16T04:32:40.256382+00:00",
+        "last_reported": "2025-07-16T04:32:40.256382+00:00",
+        "last_updated": "2025-07-16T04:32:40.256382+00:00",
         "context": {
-            "id": "01K07ERG58RNTRTQBP9Y3ACQVZ",
+            "id": "01K08R33SXDF1JQCZFXZEZJ2JP",
             "parent_id": null,
             "user_id": null
         }
@@ -3021,40 +3032,40 @@
     },
     {
         "entity_id": "sun.sun",
-        "state": "below_horizon",
+        "state": "above_horizon",
         "attributes": {
-            "next_dawn": "2025-07-16T03:46:40.288613+00:00",
+            "next_dawn": "2025-07-17T03:48:10.816355+00:00",
             "next_dusk": "2025-07-16T21:32:25.703224+00:00",
             "next_midnight": "2025-07-17T00:40:09+00:00",
             "next_noon": "2025-07-16T12:40:01+00:00",
-            "next_rising": "2025-07-16T04:32:40.242034+00:00",
+            "next_rising": "2025-07-17T04:33:55.731269+00:00",
             "next_setting": "2025-07-16T20:46:42.116101+00:00",
-            "elevation": -6.84,
-            "azimuth": 41.62,
+            "elevation": 15.64,
+            "azimuth": 75.18,
             "rising": true,
             "friendly_name": "Sun"
         },
-        "last_changed": "2025-07-15T20:49:46.130286+00:00",
-        "last_reported": "2025-07-16T03:40:25.126425+00:00",
-        "last_updated": "2025-07-16T03:40:16.624157+00:00",
+        "last_changed": "2025-07-16T04:32:40.250639+00:00",
+        "last_reported": "2025-07-16T06:33:11.223010+00:00",
+        "last_updated": "2025-07-16T06:33:09.861181+00:00",
         "context": {
-            "id": "01K08N35VGW0PT64VSWDJWAWPR",
+            "id": "01K08YZQZ5MHRHY2CTN5KFKV91",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.sun_next_dawn",
-        "state": "2025-07-16T03:46:40+00:00",
+        "state": "2025-07-17T03:48:10+00:00",
         "attributes": {
             "device_class": "timestamp",
             "friendly_name": "Sun Next dawn"
         },
-        "last_changed": "2025-07-15T16:30:36.890637+00:00",
-        "last_reported": "2025-07-15T16:30:36.890637+00:00",
-        "last_updated": "2025-07-15T16:30:36.890637+00:00",
+        "last_changed": "2025-07-16T03:46:40.298251+00:00",
+        "last_reported": "2025-07-16T03:46:40.298251+00:00",
+        "last_updated": "2025-07-16T03:46:40.298251+00:00",
         "context": {
-            "id": "01K07ERZTTQMG61FZNMYRNQJMS",
+            "id": "01K08NEWHAT5A0K3XCB67CNJNF",
             "parent_id": null,
             "user_id": null
         }
@@ -3109,16 +3120,16 @@
     },
     {
         "entity_id": "sensor.sun_next_rising",
-        "state": "2025-07-16T04:32:40+00:00",
+        "state": "2025-07-17T04:33:55+00:00",
         "attributes": {
             "device_class": "timestamp",
             "friendly_name": "Sun Next rising"
         },
-        "last_changed": "2025-07-15T16:30:36.893603+00:00",
-        "last_reported": "2025-07-15T16:30:36.893603+00:00",
-        "last_updated": "2025-07-15T16:30:36.893603+00:00",
+        "last_changed": "2025-07-16T04:32:40.252424+00:00",
+        "last_reported": "2025-07-16T04:32:40.252424+00:00",
+        "last_updated": "2025-07-16T04:32:40.252424+00:00",
         "context": {
-            "id": "01K07ERZTXAGNR3RY4DQTC318A",
+            "id": "01K08R33SWSESKJHQAH2KQFN42",
             "parent_id": null,
             "user_id": null
         }
@@ -3141,16 +3152,16 @@
     },
     {
         "entity_id": "sensor.date_time_iso",
-        "state": "2025-07-16T04:41:00",
+        "state": "2025-07-16T07:33:00",
         "attributes": {
             "icon": "mdi:calendar-clock",
             "friendly_name": "Date & Time (ISO)"
         },
-        "last_changed": "2025-07-16T03:41:00.002790+00:00",
-        "last_reported": "2025-07-16T03:41:00.004461+00:00",
-        "last_updated": "2025-07-16T03:41:00.002790+00:00",
+        "last_changed": "2025-07-16T06:33:00.001000+00:00",
+        "last_reported": "2025-07-16T06:33:00.002565+00:00",
+        "last_updated": "2025-07-16T06:33:00.001000+00:00",
         "context": {
-            "id": "01K08N4G72ZNSP03B82T91AKJZ",
+            "id": "01K08YZEB1X6DT9CKPH8NNN068",
             "parent_id": null,
             "user_id": null
         }
@@ -3209,33 +3220,33 @@
         "attributes": {
             "configuration": {},
             "manual_control": [],
-            "brightness_pct": 60.396949640414945,
-            "color_temp_kelvin": 2000,
-            "color_temp_mired": 500,
+            "brightness_pct": 100,
+            "color_temp_kelvin": 3505,
+            "color_temp_mired": 285,
             "rgb_color": [
                 255,
-                136.86832541739756,
-                13.904070298965905
+                192.67575672548344,
+                141.10334241473885
             ],
             "xy_color": [
-                0.598,
-                0.383
+                0.453,
+                0.374
             ],
             "hs_color": [
-                30.504,
-                93.333
+                27.08,
+                44.314
             ],
-            "sun_position": -0.4000308117129804,
+            "sun_position": 0.43048300352543956,
             "force_rgb_color": false,
             "autoreset_time_remaining": {},
             "icon": "mdi:theme-light-dark",
             "friendly_name": "Adaptive Lighting: Hallways"
         },
         "last_changed": "2025-07-15T16:30:41.723087+00:00",
-        "last_reported": "2025-07-16T03:40:57.690989+00:00",
-        "last_updated": "2025-07-16T03:40:44.502110+00:00",
+        "last_reported": "2025-07-16T06:32:42.452005+00:00",
+        "last_updated": "2025-07-16T06:32:42.452005+00:00",
         "context": {
-            "id": "01K08N412PNJTMY1SCCM81Q88S",
+            "id": "01K08YYX6MA013B4PPFBKYHZBR",
             "parent_id": null,
             "user_id": null
         }
@@ -3294,33 +3305,33 @@
         "attributes": {
             "configuration": {},
             "manual_control": [],
-            "brightness_pct": 73.19800877031187,
-            "color_temp_kelvin": 2000,
-            "color_temp_mired": 500,
+            "brightness_pct": 100,
+            "color_temp_kelvin": 3505,
+            "color_temp_mired": 285,
             "rgb_color": [
                 255,
-                136.86832541739756,
-                13.904070298965905
+                192.67575672548344,
+                141.10334241473885
             ],
             "xy_color": [
-                0.598,
-                0.383
+                0.453,
+                0.374
             ],
             "hs_color": [
-                30.504,
-                93.333
+                27.08,
+                44.314
             ],
-            "sun_position": -0.4000297198460915,
+            "sun_position": 0.43048363618992336,
             "force_rgb_color": false,
             "autoreset_time_remaining": {},
             "icon": "mdi:theme-light-dark",
             "friendly_name": "Adaptive Lighting: Bathroom"
         },
         "last_changed": "2025-07-15T16:30:41.736407+00:00",
-        "last_reported": "2025-07-16T03:40:57.691853+00:00",
-        "last_updated": "2025-07-16T03:40:44.510860+00:00",
+        "last_reported": "2025-07-16T06:32:42.462684+00:00",
+        "last_updated": "2025-07-16T06:32:42.462684+00:00",
         "context": {
-            "id": "01K08N412YE89F25G3SYAEBBRF",
+            "id": "01K08YYX6YN56XT619TMG0EXH7",
             "parent_id": null,
             "user_id": null
         }
@@ -4759,7 +4770,7 @@
     },
     {
         "entity_id": "sensor.home_cloud_ceiling",
-        "state": "3505.0",
+        "state": "518.0",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "m",
@@ -4767,36 +4778,36 @@
             "device_class": "distance",
             "friendly_name": "Home Cloud ceiling"
         },
-        "last_changed": "2025-07-16T02:30:49.588269+00:00",
-        "last_reported": "2025-07-16T02:30:49.588269+00:00",
-        "last_updated": "2025-07-16T02:30:49.588269+00:00",
+        "last_changed": "2025-07-16T05:50:49.578604+00:00",
+        "last_reported": "2025-07-16T05:50:49.578604+00:00",
+        "last_updated": "2025-07-16T05:50:49.578604+00:00",
         "context": {
-            "id": "01K08H40FM9WBFJC6XGCCTPGDQ",
+            "id": "01K08WJ77AT398W3AFQ3YFW7E6",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_cloud_cover",
-        "state": "91",
+        "state": "95",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "%",
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Cloud cover"
         },
-        "last_changed": "2025-07-16T03:10:49.610111+00:00",
-        "last_reported": "2025-07-16T03:10:49.610111+00:00",
-        "last_updated": "2025-07-16T03:10:49.610111+00:00",
+        "last_changed": "2025-07-16T06:30:49.597093+00:00",
+        "last_reported": "2025-07-16T06:30:49.597093+00:00",
+        "last_updated": "2025-07-16T06:30:49.597093+00:00",
         "context": {
-            "id": "01K08KD88A08E5BYZTSMNJZGDF",
+            "id": "01K08YVEZX4D0WD23K0K3G8E4C",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_realfeel_temperature",
-        "state": "13.0",
+        "state": "13.6",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
@@ -4804,11 +4815,11 @@
             "device_class": "temperature",
             "friendly_name": "Outside Temp (Real Feel)"
         },
-        "last_changed": "2025-07-16T02:30:49.589302+00:00",
-        "last_reported": "2025-07-16T02:30:49.589302+00:00",
-        "last_updated": "2025-07-16T02:30:49.589302+00:00",
+        "last_changed": "2025-07-16T06:30:49.597691+00:00",
+        "last_reported": "2025-07-16T06:30:49.597691+00:00",
+        "last_updated": "2025-07-16T06:30:49.597691+00:00",
         "context": {
-            "id": "01K08H40FNPP59HXFN0ECT5NSN",
+            "id": "01K08YVEZXTDX47Q00E4ZJ9H18",
             "parent_id": null,
             "user_id": null
         }
@@ -4823,11 +4834,11 @@
             "device_class": "humidity",
             "friendly_name": "Home Humidity"
         },
-        "last_changed": "2025-07-16T00:30:49.643505+00:00",
-        "last_reported": "2025-07-16T00:30:49.643505+00:00",
-        "last_updated": "2025-07-16T00:30:49.643505+00:00",
+        "last_changed": "2025-07-16T06:30:49.598440+00:00",
+        "last_reported": "2025-07-16T06:30:49.598440+00:00",
+        "last_updated": "2025-07-16T06:30:49.598440+00:00",
         "context": {
-            "id": "01K08A899BPY8ZX1KTRZDEE7BE",
+            "id": "01K08YVEZYD8A4Q2C7BZAHN0CD",
             "parent_id": null,
             "user_id": null
         }
@@ -4843,11 +4854,11 @@
             "device_class": "precipitation_intensity",
             "friendly_name": "Home Precipitation"
         },
-        "last_changed": "2025-07-15T16:30:49.015906+00:00",
-        "last_reported": "2025-07-15T16:30:49.015906+00:00",
-        "last_updated": "2025-07-15T16:30:49.015906+00:00",
+        "last_changed": "2025-07-16T05:50:49.581156+00:00",
+        "last_reported": "2025-07-16T05:50:49.581156+00:00",
+        "last_updated": "2025-07-16T05:50:49.581156+00:00",
         "context": {
-            "id": "01K07ESBNQ8ZAQXG1M4Z4BRBMW",
+            "id": "01K08WJ77DAMV9180FBBC9R6WB",
             "parent_id": null,
             "user_id": null
         }
@@ -4865,18 +4876,18 @@
             "device_class": "enum",
             "friendly_name": "Home Pressure tendency"
         },
-        "last_changed": "2025-07-16T02:30:49.590010+00:00",
-        "last_reported": "2025-07-16T02:30:49.590010+00:00",
-        "last_updated": "2025-07-16T02:30:49.590010+00:00",
+        "last_changed": "2025-07-16T05:50:49.581544+00:00",
+        "last_reported": "2025-07-16T05:50:49.581544+00:00",
+        "last_updated": "2025-07-16T05:50:49.581544+00:00",
         "context": {
-            "id": "01K08H40FPZY29QF33XBD46Z9Y",
+            "id": "01K08WJ77D476K7H0MWFVNGZRA",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_temperature",
-        "state": "12.8",
+        "state": "13.9",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
@@ -4884,18 +4895,18 @@
             "device_class": "temperature",
             "friendly_name": "Home Temperature"
         },
-        "last_changed": "2025-07-15T23:50:49.588470+00:00",
-        "last_reported": "2025-07-15T23:50:49.588470+00:00",
-        "last_updated": "2025-07-15T23:50:49.588470+00:00",
+        "last_changed": "2025-07-16T06:30:49.599246+00:00",
+        "last_reported": "2025-07-16T06:30:49.599246+00:00",
+        "last_updated": "2025-07-16T06:30:49.599246+00:00",
         "context": {
-            "id": "01K087Z1FMBVG1EN4TB4ZARP4K",
+            "id": "01K08YVEZZPY0N7A4PR2MEG6TZ",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_wind_speed",
-        "state": "5.6",
+        "state": "7.4",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "km/h",
@@ -4903,11 +4914,11 @@
             "device_class": "wind_speed",
             "friendly_name": "Home Wind speed"
         },
-        "last_changed": "2025-07-16T02:30:49.590409+00:00",
-        "last_reported": "2025-07-16T02:30:49.590409+00:00",
-        "last_updated": "2025-07-16T02:30:49.590409+00:00",
+        "last_changed": "2025-07-16T06:30:49.599903+00:00",
+        "last_reported": "2025-07-16T06:30:49.599903+00:00",
+        "last_updated": "2025-07-16T06:30:49.599903+00:00",
         "context": {
-            "id": "01K08H40FP21611KCR555YE8WH",
+            "id": "01K08YVEZZZGYMXP3CYGSKMBEM",
             "parent_id": null,
             "user_id": null
         }
@@ -4938,163 +4949,163 @@
     },
     {
         "entity_id": "sensor.home_hours_of_sun_day_0",
-        "state": "2.6",
+        "state": "2.1",
         "attributes": {
             "unit_of_measurement": "h",
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Hours of sun day 0"
         },
-        "last_changed": "2025-07-15T22:30:49.584172+00:00",
-        "last_reported": "2025-07-15T22:30:49.584172+00:00",
-        "last_updated": "2025-07-15T22:30:49.584172+00:00",
+        "last_changed": "2025-07-16T04:30:49.538176+00:00",
+        "last_reported": "2025-07-16T04:30:49.538176+00:00",
+        "last_updated": "2025-07-16T04:30:49.538176+00:00",
         "context": {
-            "id": "01K083CHZGN868W9CNY7K54HA8",
+            "id": "01K08QZQP2V8JYNZRKBCZYRNNC",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_condition_day_0",
-        "state": "Overcast with winds gradually subsiding; rain and drizzle this morning followed by brief showers this afternoon",
+        "state": "Mostly cloudy with scattered showers",
         "attributes": {
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Condition day 0"
         },
-        "last_changed": "2025-07-15T16:30:49.020537+00:00",
-        "last_reported": "2025-07-15T16:30:49.020537+00:00",
-        "last_updated": "2025-07-15T16:30:49.020537+00:00",
+        "last_changed": "2025-07-16T04:30:49.538621+00:00",
+        "last_reported": "2025-07-16T04:30:49.538621+00:00",
+        "last_updated": "2025-07-16T04:30:49.538621+00:00",
         "context": {
-            "id": "01K07ESBNWJRQKP8YZMBWJ95HJ",
+            "id": "01K08QZQP28D9K564D56DS58E6",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_condition_night_0",
-        "state": "Overcast with a couple of showers around, mainly later",
+        "state": "Mostly cloudy with scattered showers",
         "attributes": {
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Condition night 0"
         },
-        "last_changed": "2025-07-15T22:30:49.584845+00:00",
-        "last_reported": "2025-07-15T22:30:49.584845+00:00",
-        "last_updated": "2025-07-15T22:30:49.584845+00:00",
+        "last_changed": "2025-07-16T04:30:49.538918+00:00",
+        "last_reported": "2025-07-16T04:30:49.538918+00:00",
+        "last_updated": "2025-07-16T04:30:49.538918+00:00",
         "context": {
-            "id": "01K083CHZGSQ8S41HRB6FBB4D4",
+            "id": "01K08QZQP2BFRX796KX1V0EN7T",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_realfeel_temperature_max_day_0",
-        "state": "15.8",
+        "state": "17.4",
         "attributes": {
             "unit_of_measurement": "\u00b0C",
             "attribution": "Data provided by AccuWeather",
             "device_class": "temperature",
             "friendly_name": "Home RealFeel temperature max day 0"
         },
-        "last_changed": "2025-07-15T16:30:49.021861+00:00",
-        "last_reported": "2025-07-15T16:30:49.021861+00:00",
-        "last_updated": "2025-07-15T16:30:49.021861+00:00",
+        "last_changed": "2025-07-16T04:30:49.539199+00:00",
+        "last_reported": "2025-07-16T04:30:49.539199+00:00",
+        "last_updated": "2025-07-16T04:30:49.539199+00:00",
         "context": {
-            "id": "01K07ESBNX943AP3E9ZQ17GSYG",
+            "id": "01K08QZQP398DF70D4S0RJNF5C",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_realfeel_temperature_min_day_0",
-        "state": "10.3",
+        "state": "13.0",
         "attributes": {
             "unit_of_measurement": "\u00b0C",
             "attribution": "Data provided by AccuWeather",
             "device_class": "temperature",
             "friendly_name": "Home RealFeel temperature min day 0"
         },
-        "last_changed": "2025-07-15T22:30:49.585424+00:00",
-        "last_reported": "2025-07-15T22:30:49.585424+00:00",
-        "last_updated": "2025-07-15T22:30:49.585424+00:00",
+        "last_changed": "2025-07-16T04:30:49.539780+00:00",
+        "last_reported": "2025-07-16T04:30:49.539780+00:00",
+        "last_updated": "2025-07-16T04:30:49.539780+00:00",
         "context": {
-            "id": "01K083CHZHQTQT2B7MHBAJNESP",
+            "id": "01K08QZQP3GMGVQ6358F4GD275",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_thunderstorm_probability_day_0",
-        "state": "19",
+        "state": "18",
         "attributes": {
             "unit_of_measurement": "%",
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Thunderstorm probability day 0"
         },
-        "last_changed": "2025-07-15T16:30:49.040468+00:00",
-        "last_reported": "2025-07-15T16:30:49.040468+00:00",
-        "last_updated": "2025-07-15T16:30:49.040468+00:00",
+        "last_changed": "2025-07-16T04:30:49.540447+00:00",
+        "last_reported": "2025-07-16T04:30:49.540447+00:00",
+        "last_updated": "2025-07-16T04:30:49.540447+00:00",
         "context": {
-            "id": "01K07ESBPG1WRAYHAEPGY5X6MY",
+            "id": "01K08QZQP4R9YPETEFSYR1BR2G",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_thunderstorm_probability_night_0",
-        "state": "18",
+        "state": "17",
         "attributes": {
             "unit_of_measurement": "%",
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Thunderstorm probability night 0"
         },
-        "last_changed": "2025-07-15T22:30:49.586193+00:00",
-        "last_reported": "2025-07-15T22:30:49.586193+00:00",
-        "last_updated": "2025-07-15T22:30:49.586193+00:00",
+        "last_changed": "2025-07-16T04:30:49.540744+00:00",
+        "last_reported": "2025-07-16T04:30:49.540744+00:00",
+        "last_updated": "2025-07-16T04:30:49.540744+00:00",
         "context": {
-            "id": "01K083CHZJH8QE35NQ7GJG0B9C",
+            "id": "01K08QZQP4GNHA7XGBVGEAW5KW",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_uv_index_day_0",
-        "state": "3",
+        "state": "2",
         "attributes": {
-            "level": "moderate",
+            "level": "low",
             "unit_of_measurement": "UV index",
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home UV index day 0"
         },
-        "last_changed": "2025-07-15T16:30:49.041597+00:00",
-        "last_reported": "2025-07-15T16:30:49.041597+00:00",
-        "last_updated": "2025-07-15T16:30:49.041597+00:00",
+        "last_changed": "2025-07-16T04:30:49.540969+00:00",
+        "last_reported": "2025-07-16T04:30:49.540969+00:00",
+        "last_updated": "2025-07-16T04:30:49.540969+00:00",
         "context": {
-            "id": "01K07ESBPH2676MX31VXK1SBCK",
+            "id": "01K08QZQP4ARBTW027SDNWXESK",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_wind_speed_day_0",
-        "state": "27.8",
+        "state": "11.1",
         "attributes": {
-            "direction": "WSW",
+            "direction": "SE",
             "unit_of_measurement": "km/h",
             "attribution": "Data provided by AccuWeather",
             "device_class": "wind_speed",
             "friendly_name": "Home Wind speed day 0"
         },
-        "last_changed": "2025-07-15T16:30:49.042472+00:00",
-        "last_reported": "2025-07-15T16:30:49.042472+00:00",
-        "last_updated": "2025-07-15T16:30:49.042472+00:00",
+        "last_changed": "2025-07-16T04:30:49.541277+00:00",
+        "last_reported": "2025-07-16T04:30:49.541277+00:00",
+        "last_updated": "2025-07-16T04:30:49.541277+00:00",
         "context": {
-            "id": "01K07ESBPJ5Y0WHTR8GY1THKF3",
+            "id": "01K08QZQP5S4R1NTN6P4MHSSS8",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_wind_speed_night_0",
-        "state": "9.3",
+        "state": "13.0",
         "attributes": {
             "direction": "SW",
             "unit_of_measurement": "km/h",
@@ -5102,11 +5113,11 @@
             "device_class": "wind_speed",
             "friendly_name": "Home Wind speed night 0"
         },
-        "last_changed": "2025-07-15T16:30:49.042961+00:00",
-        "last_reported": "2025-07-15T16:30:49.042961+00:00",
-        "last_updated": "2025-07-15T16:30:49.042961+00:00",
+        "last_changed": "2025-07-16T04:30:49.544719+00:00",
+        "last_reported": "2025-07-16T04:30:49.544719+00:00",
+        "last_updated": "2025-07-16T04:30:49.544719+00:00",
         "context": {
-            "id": "01K07ESBPJ4A8SA3CAVC2S0BZ3",
+            "id": "01K08QZQP8KYWYJA5XR5EXFH14",
             "parent_id": null,
             "user_id": null
         }
@@ -5137,119 +5148,119 @@
     },
     {
         "entity_id": "sensor.home_hours_of_sun_day_1",
-        "state": "2.1",
+        "state": "3.4",
         "attributes": {
             "unit_of_measurement": "h",
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Hours of sun day 1"
         },
-        "last_changed": "2025-07-15T16:30:49.044552+00:00",
-        "last_reported": "2025-07-15T16:30:49.044552+00:00",
-        "last_updated": "2025-07-15T16:30:49.044552+00:00",
+        "last_changed": "2025-07-16T04:30:49.545373+00:00",
+        "last_reported": "2025-07-16T04:30:49.545373+00:00",
+        "last_updated": "2025-07-16T04:30:49.545373+00:00",
         "context": {
-            "id": "01K07ESBPM2EE3XDXPCPEACA95",
+            "id": "01K08QZQP9AB3931YKD9JHWZME",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_condition_day_1",
-        "state": "Mostly cloudy with scattered showers",
+        "state": "Cloudy; a little rain in the morning followed by drizzle in the afternoon",
         "attributes": {
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Condition day 1"
         },
-        "last_changed": "2025-07-15T16:30:49.045016+00:00",
-        "last_reported": "2025-07-15T16:30:49.045016+00:00",
-        "last_updated": "2025-07-15T16:30:49.045016+00:00",
+        "last_changed": "2025-07-16T04:30:49.545640+00:00",
+        "last_reported": "2025-07-16T04:30:49.545640+00:00",
+        "last_updated": "2025-07-16T04:30:49.545640+00:00",
         "context": {
-            "id": "01K07ESBPNYG1NKGH3519Q8X8Q",
+            "id": "01K08QZQP9ME5DRXAQZXQ3CGN3",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_condition_night_1",
-        "state": "Mostly cloudy with scattered showers",
+        "state": "Mainly clear",
         "attributes": {
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Condition night 1"
         },
-        "last_changed": "2025-07-15T16:30:49.045424+00:00",
-        "last_reported": "2025-07-15T16:30:49.045424+00:00",
-        "last_updated": "2025-07-15T16:30:49.045424+00:00",
+        "last_changed": "2025-07-16T04:30:49.545889+00:00",
+        "last_reported": "2025-07-16T04:30:49.545889+00:00",
+        "last_updated": "2025-07-16T04:30:49.545889+00:00",
         "context": {
-            "id": "01K07ESBPNR19H8KC9NT4KTC91",
+            "id": "01K08QZQP9T8K01DHAX32CT40K",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_realfeel_temperature_max_day_1",
-        "state": "17.4",
+        "state": "17.0",
         "attributes": {
             "unit_of_measurement": "\u00b0C",
             "attribution": "Data provided by AccuWeather",
             "device_class": "temperature",
             "friendly_name": "Home RealFeel temperature max day 1"
         },
-        "last_changed": "2025-07-15T16:30:49.046228+00:00",
-        "last_reported": "2025-07-15T16:30:49.046228+00:00",
-        "last_updated": "2025-07-15T16:30:49.046228+00:00",
+        "last_changed": "2025-07-16T04:30:49.546163+00:00",
+        "last_reported": "2025-07-16T04:30:49.546163+00:00",
+        "last_updated": "2025-07-16T04:30:49.546163+00:00",
         "context": {
-            "id": "01K07ESBPPD5RGAAH2GDH1T83Y",
+            "id": "01K08QZQPAERC213BZW3K879RT",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_realfeel_temperature_min_day_1",
-        "state": "13.0",
+        "state": "11.9",
         "attributes": {
             "unit_of_measurement": "\u00b0C",
             "attribution": "Data provided by AccuWeather",
             "device_class": "temperature",
             "friendly_name": "Home RealFeel temperature min day 1"
         },
-        "last_changed": "2025-07-15T22:30:49.587298+00:00",
-        "last_reported": "2025-07-15T22:30:49.587298+00:00",
-        "last_updated": "2025-07-15T22:30:49.587298+00:00",
+        "last_changed": "2025-07-16T04:30:49.546679+00:00",
+        "last_reported": "2025-07-16T04:30:49.546679+00:00",
+        "last_updated": "2025-07-16T04:30:49.546679+00:00",
         "context": {
-            "id": "01K083CHZKHZ6YC7VKXGKCKW5C",
+            "id": "01K08QZQPAG0HTYVR063GVEDHT",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_thunderstorm_probability_day_1",
-        "state": "18",
+        "state": "11",
         "attributes": {
             "unit_of_measurement": "%",
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Thunderstorm probability day 1"
         },
-        "last_changed": "2025-07-15T16:30:49.047873+00:00",
-        "last_reported": "2025-07-15T16:30:49.047873+00:00",
-        "last_updated": "2025-07-15T16:30:49.047873+00:00",
+        "last_changed": "2025-07-16T04:30:49.547122+00:00",
+        "last_reported": "2025-07-16T04:30:49.547122+00:00",
+        "last_updated": "2025-07-16T04:30:49.547122+00:00",
         "context": {
-            "id": "01K07ESBPQXCNNT69JFDN09XP5",
+            "id": "01K08QZQPBZFKVMK9K8Y88S9F0",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_thunderstorm_probability_night_1",
-        "state": "17",
+        "state": "0",
         "attributes": {
             "unit_of_measurement": "%",
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Thunderstorm probability night 1"
         },
-        "last_changed": "2025-07-15T16:30:49.048311+00:00",
-        "last_reported": "2025-07-15T16:30:49.048311+00:00",
-        "last_updated": "2025-07-15T16:30:49.048311+00:00",
+        "last_changed": "2025-07-16T04:30:49.547416+00:00",
+        "last_reported": "2025-07-16T04:30:49.547416+00:00",
+        "last_updated": "2025-07-16T04:30:49.547416+00:00",
         "context": {
-            "id": "01K07ESBPR1AXM2R03Y0ZPC26S",
+            "id": "01K08QZQPBMMM5GG6WB0665GKW",
             "parent_id": null,
             "user_id": null
         }
@@ -5274,26 +5285,26 @@
     },
     {
         "entity_id": "sensor.home_wind_speed_day_1",
-        "state": "11.1",
+        "state": "18.5",
         "attributes": {
-            "direction": "SE",
+            "direction": "SSW",
             "unit_of_measurement": "km/h",
             "attribution": "Data provided by AccuWeather",
             "device_class": "wind_speed",
             "friendly_name": "Home Wind speed day 1"
         },
-        "last_changed": "2025-07-15T16:30:49.049884+00:00",
-        "last_reported": "2025-07-15T16:30:49.049884+00:00",
-        "last_updated": "2025-07-15T16:30:49.049884+00:00",
+        "last_changed": "2025-07-16T04:30:49.547849+00:00",
+        "last_reported": "2025-07-16T04:30:49.547849+00:00",
+        "last_updated": "2025-07-16T04:30:49.547849+00:00",
         "context": {
-            "id": "01K07ESBPS09S8MW6WHD01MZKX",
+            "id": "01K08QZQPBXXSEQ9RW18W59EA6",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_wind_speed_night_1",
-        "state": "13.0",
+        "state": "11.1",
         "attributes": {
             "direction": "SW",
             "unit_of_measurement": "km/h",
@@ -5301,11 +5312,11 @@
             "device_class": "wind_speed",
             "friendly_name": "Home Wind speed night 1"
         },
-        "last_changed": "2025-07-15T16:30:49.050380+00:00",
-        "last_reported": "2025-07-15T16:30:49.050380+00:00",
-        "last_updated": "2025-07-15T16:30:49.050380+00:00",
+        "last_changed": "2025-07-16T04:30:49.548189+00:00",
+        "last_reported": "2025-07-16T04:30:49.548189+00:00",
+        "last_updated": "2025-07-16T04:30:49.548189+00:00",
         "context": {
-            "id": "01K07ESBPTC5D0XEPPB629JRE6",
+            "id": "01K08QZQPCMSA711SMS3KPGFVH",
             "parent_id": null,
             "user_id": null
         }
@@ -5336,156 +5347,156 @@
     },
     {
         "entity_id": "sensor.home_hours_of_sun_day_2",
-        "state": "3.4",
+        "state": "2.2",
         "attributes": {
             "unit_of_measurement": "h",
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Hours of sun day 2"
         },
-        "last_changed": "2025-07-15T16:30:49.051747+00:00",
-        "last_reported": "2025-07-15T16:30:49.051747+00:00",
-        "last_updated": "2025-07-15T16:30:49.051747+00:00",
+        "last_changed": "2025-07-16T04:30:49.548541+00:00",
+        "last_reported": "2025-07-16T04:30:49.548541+00:00",
+        "last_updated": "2025-07-16T04:30:49.548541+00:00",
         "context": {
-            "id": "01K07ESBPVKV909G0R44V44J59",
+            "id": "01K08QZQPC65MC3K6TJYCQ1Z2S",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_condition_day_2",
-        "state": "Cloudy; a little rain in the morning followed by drizzle in the afternoon",
+        "state": "A passing morning shower or two; otherwise, cloudy",
         "attributes": {
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Condition day 2"
         },
-        "last_changed": "2025-07-15T16:30:49.052192+00:00",
-        "last_reported": "2025-07-15T16:30:49.052192+00:00",
-        "last_updated": "2025-07-15T16:30:49.052192+00:00",
+        "last_changed": "2025-07-16T04:30:49.548790+00:00",
+        "last_reported": "2025-07-16T04:30:49.548790+00:00",
+        "last_updated": "2025-07-16T04:30:49.548790+00:00",
         "context": {
-            "id": "01K07ESBPWGZS1WTWCQ08S3MQK",
+            "id": "01K08QZQPC9WFHC5D143XVXANF",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_condition_night_2",
-        "state": "Mainly clear",
+        "state": "Cloudy with scattered showers",
         "attributes": {
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Condition night 2"
         },
-        "last_changed": "2025-07-15T16:30:49.052601+00:00",
-        "last_reported": "2025-07-15T16:30:49.052601+00:00",
-        "last_updated": "2025-07-15T16:30:49.052601+00:00",
+        "last_changed": "2025-07-16T04:30:49.549023+00:00",
+        "last_reported": "2025-07-16T04:30:49.549023+00:00",
+        "last_updated": "2025-07-16T04:30:49.549023+00:00",
         "context": {
-            "id": "01K07ESBPWG38HYRKQVSQRTS7R",
+            "id": "01K08QZQPD8VCGB7G96HKGSVK9",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_realfeel_temperature_max_day_2",
-        "state": "17.0",
+        "state": "20.0",
         "attributes": {
             "unit_of_measurement": "\u00b0C",
             "attribution": "Data provided by AccuWeather",
             "device_class": "temperature",
             "friendly_name": "Home RealFeel temperature max day 2"
         },
-        "last_changed": "2025-07-15T22:30:49.588713+00:00",
-        "last_reported": "2025-07-15T22:30:49.588713+00:00",
-        "last_updated": "2025-07-15T22:30:49.588713+00:00",
+        "last_changed": "2025-07-16T04:30:49.549296+00:00",
+        "last_reported": "2025-07-16T04:30:49.549296+00:00",
+        "last_updated": "2025-07-16T04:30:49.549296+00:00",
         "context": {
-            "id": "01K083CHZMCR6SA8JVD1KA4PSD",
+            "id": "01K08QZQPDYYMT6TF7PZAGCJB6",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_realfeel_temperature_min_day_2",
-        "state": "11.9",
+        "state": "10.1",
         "attributes": {
             "unit_of_measurement": "\u00b0C",
             "attribution": "Data provided by AccuWeather",
             "device_class": "temperature",
             "friendly_name": "Home RealFeel temperature min day 2"
         },
-        "last_changed": "2025-07-15T22:30:49.591372+00:00",
-        "last_reported": "2025-07-15T22:30:49.591372+00:00",
-        "last_updated": "2025-07-15T22:30:49.591372+00:00",
+        "last_changed": "2025-07-16T04:30:49.549920+00:00",
+        "last_reported": "2025-07-16T04:30:49.549920+00:00",
+        "last_updated": "2025-07-16T04:30:49.549920+00:00",
         "context": {
-            "id": "01K083CHZQQ28W7QS17JZ55WGW",
+            "id": "01K08QZQPD17VHRKCW5C76JD89",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_thunderstorm_probability_day_2",
-        "state": "11",
+        "state": "12",
         "attributes": {
             "unit_of_measurement": "%",
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Thunderstorm probability day 2"
         },
-        "last_changed": "2025-07-15T16:30:49.056318+00:00",
-        "last_reported": "2025-07-15T16:30:49.056318+00:00",
-        "last_updated": "2025-07-15T16:30:49.056318+00:00",
+        "last_changed": "2025-07-16T04:30:49.550402+00:00",
+        "last_reported": "2025-07-16T04:30:49.550402+00:00",
+        "last_updated": "2025-07-16T04:30:49.550402+00:00",
         "context": {
-            "id": "01K07ESBQ0F1VQQK3ZAFPB7BDX",
+            "id": "01K08QZQPED9HF43VRDTZ4DB4N",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_thunderstorm_probability_night_2",
-        "state": "0",
+        "state": "17",
         "attributes": {
             "unit_of_measurement": "%",
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Thunderstorm probability night 2"
         },
-        "last_changed": "2025-07-15T16:30:49.056839+00:00",
-        "last_reported": "2025-07-15T16:30:49.056839+00:00",
-        "last_updated": "2025-07-15T16:30:49.056839+00:00",
+        "last_changed": "2025-07-16T04:30:49.550677+00:00",
+        "last_reported": "2025-07-16T04:30:49.550677+00:00",
+        "last_updated": "2025-07-16T04:30:49.550677+00:00",
         "context": {
-            "id": "01K07ESBQ0F0RGAR2ATPP0SVZN",
+            "id": "01K08QZQPETJQF2KQMYWCZCB3V",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_uv_index_day_2",
-        "state": "2",
+        "state": "4",
         "attributes": {
-            "level": "low",
+            "level": "moderate",
             "unit_of_measurement": "UV index",
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home UV index day 2"
         },
-        "last_changed": "2025-07-15T16:30:49.057434+00:00",
-        "last_reported": "2025-07-15T16:30:49.057434+00:00",
-        "last_updated": "2025-07-15T16:30:49.057434+00:00",
+        "last_changed": "2025-07-16T04:30:49.550927+00:00",
+        "last_reported": "2025-07-16T04:30:49.550927+00:00",
+        "last_updated": "2025-07-16T04:30:49.550927+00:00",
         "context": {
-            "id": "01K07ESBQ1XE11G47BQQ4QTBSJ",
+            "id": "01K08QZQPE1AW8V4MPN9XFZ0V2",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_wind_speed_day_2",
-        "state": "18.5",
+        "state": "14.8",
         "attributes": {
-            "direction": "SSW",
+            "direction": "WSW",
             "unit_of_measurement": "km/h",
             "attribution": "Data provided by AccuWeather",
             "device_class": "wind_speed",
             "friendly_name": "Home Wind speed day 2"
         },
-        "last_changed": "2025-07-15T16:30:49.058289+00:00",
-        "last_reported": "2025-07-15T16:30:49.058289+00:00",
-        "last_updated": "2025-07-15T16:30:49.058289+00:00",
+        "last_changed": "2025-07-16T04:30:49.551236+00:00",
+        "last_reported": "2025-07-16T04:30:49.551236+00:00",
+        "last_updated": "2025-07-16T04:30:49.551236+00:00",
         "context": {
-            "id": "01K07ESBQ2J2PPCGEJBC7N5KJ4",
+            "id": "01K08QZQPFKS0C5AGVK02HH4XF",
             "parent_id": null,
             "user_id": null
         }
@@ -5535,156 +5546,156 @@
     },
     {
         "entity_id": "sensor.home_hours_of_sun_day_3",
-        "state": "2.2",
+        "state": "1.5",
         "attributes": {
             "unit_of_measurement": "h",
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Hours of sun day 3"
         },
-        "last_changed": "2025-07-15T16:30:49.060189+00:00",
-        "last_reported": "2025-07-15T16:30:49.060189+00:00",
-        "last_updated": "2025-07-15T16:30:49.060189+00:00",
+        "last_changed": "2025-07-16T04:30:49.551686+00:00",
+        "last_reported": "2025-07-16T04:30:49.551686+00:00",
+        "last_updated": "2025-07-16T04:30:49.551686+00:00",
         "context": {
-            "id": "01K07ESBQ4D2STE6JFFJC5RHEA",
+            "id": "01K08QZQPFN28Y5KCV66S07MRE",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_condition_day_3",
-        "state": "A passing morning shower or two; otherwise, cloudy",
+        "state": "Cloudy with a little rain at times",
         "attributes": {
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Condition day 3"
         },
-        "last_changed": "2025-07-15T16:30:49.060797+00:00",
-        "last_reported": "2025-07-15T16:30:49.060797+00:00",
-        "last_updated": "2025-07-15T16:30:49.060797+00:00",
+        "last_changed": "2025-07-16T04:30:49.552033+00:00",
+        "last_reported": "2025-07-16T04:30:49.552033+00:00",
+        "last_updated": "2025-07-16T04:30:49.552033+00:00",
         "context": {
-            "id": "01K07ESBQ4R9PD2EM28YVGTD8Q",
+            "id": "01K08QZQPGTBB8A241DFYZPF09",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_condition_night_3",
-        "state": "Cloudy with scattered showers",
+        "state": "A little rain at times in the evening; otherwise, broken intervals",
         "attributes": {
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Condition night 3"
         },
-        "last_changed": "2025-07-15T16:30:49.061225+00:00",
-        "last_reported": "2025-07-15T16:30:49.061225+00:00",
-        "last_updated": "2025-07-15T16:30:49.061225+00:00",
+        "last_changed": "2025-07-16T04:30:49.552295+00:00",
+        "last_reported": "2025-07-16T04:30:49.552295+00:00",
+        "last_updated": "2025-07-16T04:30:49.552295+00:00",
         "context": {
-            "id": "01K07ESBQ5GWXFW6YSK7HC07V4",
+            "id": "01K08QZQPGC1PCAGW7RH6HAWWK",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_realfeel_temperature_max_day_3",
-        "state": "20.0",
+        "state": "15.7",
         "attributes": {
             "unit_of_measurement": "\u00b0C",
             "attribution": "Data provided by AccuWeather",
             "device_class": "temperature",
             "friendly_name": "Home RealFeel temperature max day 3"
         },
-        "last_changed": "2025-07-15T22:30:49.593009+00:00",
-        "last_reported": "2025-07-15T22:30:49.593009+00:00",
-        "last_updated": "2025-07-15T22:30:49.593009+00:00",
+        "last_changed": "2025-07-16T04:30:49.552555+00:00",
+        "last_reported": "2025-07-16T04:30:49.552555+00:00",
+        "last_updated": "2025-07-16T04:30:49.552555+00:00",
         "context": {
-            "id": "01K083CHZS55VQ0H7D4CYQW940",
+            "id": "01K08QZQPGR79KC2VPAV47XR6B",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_realfeel_temperature_min_day_3",
-        "state": "10.1",
+        "state": "10.6",
         "attributes": {
             "unit_of_measurement": "\u00b0C",
             "attribution": "Data provided by AccuWeather",
             "device_class": "temperature",
             "friendly_name": "Home RealFeel temperature min day 3"
         },
-        "last_changed": "2025-07-15T22:30:49.593698+00:00",
-        "last_reported": "2025-07-15T22:30:49.593698+00:00",
-        "last_updated": "2025-07-15T22:30:49.593698+00:00",
+        "last_changed": "2025-07-16T04:30:49.553021+00:00",
+        "last_reported": "2025-07-16T04:30:49.553021+00:00",
+        "last_updated": "2025-07-16T04:30:49.553021+00:00",
         "context": {
-            "id": "01K083CHZSS53SSF9KQYHF7QPK",
+            "id": "01K08QZQPHM7SMFCKCDZN9X1AC",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_thunderstorm_probability_day_3",
-        "state": "12",
+        "state": "7",
         "attributes": {
             "unit_of_measurement": "%",
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Thunderstorm probability day 3"
         },
-        "last_changed": "2025-07-15T16:30:49.063629+00:00",
-        "last_reported": "2025-07-15T16:30:49.063629+00:00",
-        "last_updated": "2025-07-15T16:30:49.063629+00:00",
+        "last_changed": "2025-07-16T04:30:49.553466+00:00",
+        "last_reported": "2025-07-16T04:30:49.553466+00:00",
+        "last_updated": "2025-07-16T04:30:49.553466+00:00",
         "context": {
-            "id": "01K07ESBQ7M2HZBDGSDE60WFF2",
+            "id": "01K08QZQPH5FD9K6GNY0T3Q4W4",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_thunderstorm_probability_night_3",
-        "state": "17",
+        "state": "0",
         "attributes": {
             "unit_of_measurement": "%",
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Thunderstorm probability night 3"
         },
-        "last_changed": "2025-07-15T16:30:49.064093+00:00",
-        "last_reported": "2025-07-15T16:30:49.064093+00:00",
-        "last_updated": "2025-07-15T16:30:49.064093+00:00",
+        "last_changed": "2025-07-16T04:30:49.553732+00:00",
+        "last_reported": "2025-07-16T04:30:49.553732+00:00",
+        "last_updated": "2025-07-16T04:30:49.553732+00:00",
         "context": {
-            "id": "01K07ESBQ8ERXY8MYGSNCAC84G",
+            "id": "01K08QZQPHCVGRSE8FDB3AMVXV",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_uv_index_day_3",
-        "state": "4",
+        "state": "2",
         "attributes": {
-            "level": "moderate",
+            "level": "low",
             "unit_of_measurement": "UV index",
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home UV index day 3"
         },
-        "last_changed": "2025-07-15T16:30:49.064684+00:00",
-        "last_reported": "2025-07-15T16:30:49.064684+00:00",
-        "last_updated": "2025-07-15T16:30:49.064684+00:00",
+        "last_changed": "2025-07-16T04:30:49.553972+00:00",
+        "last_reported": "2025-07-16T04:30:49.553972+00:00",
+        "last_updated": "2025-07-16T04:30:49.553972+00:00",
         "context": {
-            "id": "01K07ESBQ8YNPEE07Q998RDX6D",
+            "id": "01K08QZQPHQAGFKEZRRDRNRMPC",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_wind_speed_day_3",
-        "state": "14.8",
+        "state": "16.7",
         "attributes": {
-            "direction": "WSW",
+            "direction": "W",
             "unit_of_measurement": "km/h",
             "attribution": "Data provided by AccuWeather",
             "device_class": "wind_speed",
             "friendly_name": "Home Wind speed day 3"
         },
-        "last_changed": "2025-07-15T16:30:49.065731+00:00",
-        "last_reported": "2025-07-15T16:30:49.065731+00:00",
-        "last_updated": "2025-07-15T16:30:49.065731+00:00",
+        "last_changed": "2025-07-16T04:30:49.554259+00:00",
+        "last_reported": "2025-07-16T04:30:49.554259+00:00",
+        "last_updated": "2025-07-16T04:30:49.554259+00:00",
         "context": {
-            "id": "01K07ESBQ9VBFZBD57KSX9VPJN",
+            "id": "01K08QZQPJ8XESGMH8X4ZV73JY",
             "parent_id": null,
             "user_id": null
         }
@@ -5693,17 +5704,17 @@
         "entity_id": "sensor.home_wind_speed_night_3",
         "state": "11.1",
         "attributes": {
-            "direction": "SW",
+            "direction": "WNW",
             "unit_of_measurement": "km/h",
             "attribution": "Data provided by AccuWeather",
             "device_class": "wind_speed",
             "friendly_name": "Home Wind speed night 3"
         },
         "last_changed": "2025-07-15T16:30:49.066351+00:00",
-        "last_reported": "2025-07-15T16:30:49.066351+00:00",
-        "last_updated": "2025-07-15T16:30:49.066351+00:00",
+        "last_reported": "2025-07-16T04:30:49.555339+00:00",
+        "last_updated": "2025-07-16T04:30:49.555339+00:00",
         "context": {
-            "id": "01K07ESBQA83RTJC98YKDDE6N8",
+            "id": "01K08QZQPKF102HDVATBJ4DMGE",
             "parent_id": null,
             "user_id": null
         }
@@ -5734,163 +5745,163 @@
     },
     {
         "entity_id": "sensor.home_hours_of_sun_day_4",
-        "state": "1.5",
+        "state": "3.5",
         "attributes": {
             "unit_of_measurement": "h",
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Hours of sun day 4"
         },
-        "last_changed": "2025-07-15T16:30:49.067750+00:00",
-        "last_reported": "2025-07-15T16:30:49.067750+00:00",
-        "last_updated": "2025-07-15T16:30:49.067750+00:00",
+        "last_changed": "2025-07-16T04:30:49.555955+00:00",
+        "last_reported": "2025-07-16T04:30:49.555955+00:00",
+        "last_updated": "2025-07-16T04:30:49.555955+00:00",
         "context": {
-            "id": "01K07ESBQBPSPP33VT90SYQPVR",
+            "id": "01K08QZQPKMXH6GEK46E50K5P2",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_condition_day_4",
-        "state": "Cloudy with a little rain at times",
+        "state": "Broken intervals; breezy in the afternoon with showers",
         "attributes": {
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Condition day 4"
         },
-        "last_changed": "2025-07-15T16:30:49.068222+00:00",
-        "last_reported": "2025-07-15T16:30:49.068222+00:00",
-        "last_updated": "2025-07-15T16:30:49.068222+00:00",
+        "last_changed": "2025-07-16T04:30:49.556232+00:00",
+        "last_reported": "2025-07-16T04:30:49.556232+00:00",
+        "last_updated": "2025-07-16T04:30:49.556232+00:00",
         "context": {
-            "id": "01K07ESBQCN0JN8GRMK1M9V1MP",
+            "id": "01K08QZQPM4PHYC8RHNVGZSCZ3",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_condition_night_4",
-        "state": "A little rain at times in the evening; otherwise, broken intervals",
+        "state": "Broken intervals",
         "attributes": {
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Condition night 4"
         },
-        "last_changed": "2025-07-15T16:30:49.068655+00:00",
-        "last_reported": "2025-07-15T16:30:49.068655+00:00",
-        "last_updated": "2025-07-15T16:30:49.068655+00:00",
+        "last_changed": "2025-07-16T04:30:49.556500+00:00",
+        "last_reported": "2025-07-16T04:30:49.556500+00:00",
+        "last_updated": "2025-07-16T04:30:49.556500+00:00",
         "context": {
-            "id": "01K07ESBQCN1930TNKSY2BR6MV",
+            "id": "01K08QZQPM4HNN8QBJPNE09QE8",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_realfeel_temperature_max_day_4",
-        "state": "15.7",
+        "state": "18.9",
         "attributes": {
             "unit_of_measurement": "\u00b0C",
             "attribution": "Data provided by AccuWeather",
             "device_class": "temperature",
             "friendly_name": "Home RealFeel temperature max day 4"
         },
-        "last_changed": "2025-07-15T22:30:49.594962+00:00",
-        "last_reported": "2025-07-15T22:30:49.594962+00:00",
-        "last_updated": "2025-07-15T22:30:49.594962+00:00",
+        "last_changed": "2025-07-16T04:30:49.556764+00:00",
+        "last_reported": "2025-07-16T04:30:49.556764+00:00",
+        "last_updated": "2025-07-16T04:30:49.556764+00:00",
         "context": {
-            "id": "01K083CHZT2EVVZ7S5R0HMWE2D",
+            "id": "01K08QZQPMMV74NCTPZ111YF24",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_realfeel_temperature_min_day_4",
-        "state": "10.6",
+        "state": "10.9",
         "attributes": {
             "unit_of_measurement": "\u00b0C",
             "attribution": "Data provided by AccuWeather",
             "device_class": "temperature",
             "friendly_name": "Home RealFeel temperature min day 4"
         },
-        "last_changed": "2025-07-15T22:30:49.595509+00:00",
-        "last_reported": "2025-07-15T22:30:49.595509+00:00",
-        "last_updated": "2025-07-15T22:30:49.595509+00:00",
+        "last_changed": "2025-07-16T04:30:49.557403+00:00",
+        "last_reported": "2025-07-16T04:30:49.557403+00:00",
+        "last_updated": "2025-07-16T04:30:49.557403+00:00",
         "context": {
-            "id": "01K083CHZVDKNQJK0NC3RT4ZZD",
+            "id": "01K08QZQPN0FCAKWC2PDA44VMM",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_thunderstorm_probability_day_4",
-        "state": "7",
+        "state": "19",
         "attributes": {
             "unit_of_measurement": "%",
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Thunderstorm probability day 4"
         },
-        "last_changed": "2025-07-15T16:30:49.071338+00:00",
-        "last_reported": "2025-07-15T16:30:49.071338+00:00",
-        "last_updated": "2025-07-15T16:30:49.071338+00:00",
+        "last_changed": "2025-07-16T04:30:49.557837+00:00",
+        "last_reported": "2025-07-16T04:30:49.557837+00:00",
+        "last_updated": "2025-07-16T04:30:49.557837+00:00",
         "context": {
-            "id": "01K07ESBQFAP381SM755MFDS4E",
+            "id": "01K08QZQPNN3H3QQV60CE380HJ",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_thunderstorm_probability_night_4",
-        "state": "0",
+        "state": "3",
         "attributes": {
             "unit_of_measurement": "%",
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home Thunderstorm probability night 4"
         },
-        "last_changed": "2025-07-15T16:30:49.071861+00:00",
-        "last_reported": "2025-07-15T16:30:49.071861+00:00",
-        "last_updated": "2025-07-15T16:30:49.071861+00:00",
+        "last_changed": "2025-07-16T04:30:49.558089+00:00",
+        "last_reported": "2025-07-16T04:30:49.558089+00:00",
+        "last_updated": "2025-07-16T04:30:49.558089+00:00",
         "context": {
-            "id": "01K07ESBQFPP72J98GWC94KHKY",
+            "id": "01K08QZQPP5GB34T1KYN5DBZGQ",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_uv_index_day_4",
-        "state": "2",
+        "state": "7",
         "attributes": {
-            "level": "low",
+            "level": "high",
             "unit_of_measurement": "UV index",
             "attribution": "Data provided by AccuWeather",
             "friendly_name": "Home UV index day 4"
         },
-        "last_changed": "2025-07-15T16:30:49.072479+00:00",
-        "last_reported": "2025-07-15T16:30:49.072479+00:00",
-        "last_updated": "2025-07-15T16:30:49.072479+00:00",
+        "last_changed": "2025-07-16T04:30:49.558326+00:00",
+        "last_reported": "2025-07-16T04:30:49.558326+00:00",
+        "last_updated": "2025-07-16T04:30:49.558326+00:00",
         "context": {
-            "id": "01K07ESBQGKSZ1TKMV6X4619KW",
+            "id": "01K08QZQPPMQ34MZNKD47W3QFK",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_wind_speed_day_4",
-        "state": "16.7",
+        "state": "20.4",
         "attributes": {
-            "direction": "W",
+            "direction": "NW",
             "unit_of_measurement": "km/h",
             "attribution": "Data provided by AccuWeather",
             "device_class": "wind_speed",
             "friendly_name": "Home Wind speed day 4"
         },
-        "last_changed": "2025-07-15T16:30:49.073395+00:00",
-        "last_reported": "2025-07-15T16:30:49.073395+00:00",
-        "last_updated": "2025-07-15T16:30:49.073395+00:00",
+        "last_changed": "2025-07-16T04:30:49.558655+00:00",
+        "last_reported": "2025-07-16T04:30:49.558655+00:00",
+        "last_updated": "2025-07-16T04:30:49.558655+00:00",
         "context": {
-            "id": "01K07ESBQHRM223BEXZ9ARNEXY",
+            "id": "01K08QZQPPASVN6CC4DXQMGV2Q",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.home_wind_speed_night_4",
-        "state": "11.1",
+        "state": "14.8",
         "attributes": {
             "direction": "WNW",
             "unit_of_measurement": "km/h",
@@ -5898,11 +5909,11 @@
             "device_class": "wind_speed",
             "friendly_name": "Home Wind speed night 4"
         },
-        "last_changed": "2025-07-15T16:30:49.074605+00:00",
-        "last_reported": "2025-07-15T16:30:49.074605+00:00",
-        "last_updated": "2025-07-15T16:30:49.074605+00:00",
+        "last_changed": "2025-07-16T04:30:49.558937+00:00",
+        "last_reported": "2025-07-16T04:30:49.558937+00:00",
+        "last_updated": "2025-07-16T04:30:49.558937+00:00",
         "context": {
-            "id": "01K07ESBQJ4QZJSKHWYDEJN0K6",
+            "id": "01K08QZQPPA30JZHBT5NHSQ6EZ",
             "parent_id": null,
             "user_id": null
         }
@@ -5911,18 +5922,18 @@
         "entity_id": "weather.home",
         "state": "cloudy",
         "attributes": {
-            "temperature": 12.8,
-            "apparent_temperature": 16.1,
-            "dew_point": 12.2,
+            "temperature": 13.9,
+            "apparent_temperature": 17.2,
+            "dew_point": 12.8,
             "temperature_unit": "\u00b0C",
             "humidity": 93,
-            "cloud_coverage": 91,
-            "uv_index": 0,
+            "cloud_coverage": 95,
+            "uv_index": 1,
             "pressure": 1016.0,
             "pressure_unit": "hPa",
-            "wind_bearing": 338,
-            "wind_gust_speed": 5.6,
-            "wind_speed": 5.6,
+            "wind_bearing": 90,
+            "wind_gust_speed": 7.4,
+            "wind_speed": 7.4,
             "wind_speed_unit": "km/h",
             "visibility": 16.1,
             "visibility_unit": "km",
@@ -5931,11 +5942,11 @@
             "friendly_name": "Home",
             "supported_features": 1
         },
-        "last_changed": "2025-07-15T21:10:49.637519+00:00",
-        "last_reported": "2025-07-16T03:10:49.612121+00:00",
-        "last_updated": "2025-07-16T03:10:49.612121+00:00",
+        "last_changed": "2025-07-16T05:50:49.582313+00:00",
+        "last_reported": "2025-07-16T06:30:49.600583+00:00",
+        "last_updated": "2025-07-16T06:30:49.600583+00:00",
         "context": {
-            "id": "01K08KD88CJRXKHD56T5XMRGQJ",
+            "id": "01K08YVF00716KTFQ0WT9BR2QZ",
             "parent_id": null,
             "user_id": null
         }
@@ -5948,7 +5959,7 @@
                 "auto",
                 "sleep"
             ],
-            "percentage": 66,
+            "percentage": 33,
             "percentage_step": 33.333333333333336,
             "preset_mode": null,
             "screen_status": false,
@@ -5959,11 +5970,11 @@
             "supported_features": 57
         },
         "last_changed": "2025-07-15T16:30:49.117502+00:00",
-        "last_reported": "2025-07-15T23:03:52.350102+00:00",
-        "last_updated": "2025-07-15T23:03:52.350102+00:00",
+        "last_reported": "2025-07-16T06:15:17.715300+00:00",
+        "last_updated": "2025-07-16T06:15:06.843689+00:00",
         "context": {
-            "id": "01K08591MMP98N0Q2693KHVW03",
-            "parent_id": "01K08591MJJ47F4JAHM9QJN4GK",
+            "id": "01K08XYNNEPA6AZGXHJ0SV3DKN",
+            "parent_id": "01K08XYHS7R4P2RKCXK6S06A6S",
             "user_id": null
         }
     },
@@ -6005,52 +6016,74 @@
     },
     {
         "entity_id": "media_player.battery_speaker",
-        "state": "off",
+        "state": "playing",
         "attributes": {
+            "volume_level": 0.15000000596046448,
+            "is_volume_muted": false,
+            "media_content_id": "http://192.168.0.254:8097/flow/JSZ6Hkmk/media_player.hugh_room_stereo/18c647fb90f64f74997991a8178772fa.mp3",
+            "media_content_type": "music",
+            "media_position": 0,
+            "media_position_updated_at": "2025-07-16T06:15:06.151561+00:00",
+            "media_title": "Music Assistant",
+            "app_id": "705D30C6",
+            "app_name": "Default Media Receiver",
+            "entity_picture_local": "/api/media_player_proxy/media_player.battery_speaker?token=c7659be2c80da592ad2e53b0b6454eb61ddfb358f60a0b933adbe8c4088f47fd&cache=9a0c9e15dfda643e",
             "device_class": "speaker",
+            "entity_picture": "https://github.com/home-assistant/brands/raw/master/custom_integrations/mass/icon%402x.png",
             "friendly_name": "Battery Speaker",
-            "supported_features": 152461
+            "supported_features": 152463
         },
-        "last_changed": "2025-07-16T02:02:16.766784+00:00",
-        "last_reported": "2025-07-16T02:02:16.871469+00:00",
-        "last_updated": "2025-07-16T02:02:16.766784+00:00",
+        "last_changed": "2025-07-16T06:15:06.153343+00:00",
+        "last_reported": "2025-07-16T06:15:06.153343+00:00",
+        "last_updated": "2025-07-16T06:15:06.153343+00:00",
         "context": {
-            "id": "01K08FFQSYT6VARWS8VF23H1FB",
-            "parent_id": null,
+            "id": "01K08XYHQ38NBAB2ASBAF7RJ2X",
+            "parent_id": "01K08XYHQ0QJ5P16F62SZMQHQM",
             "user_id": null
         }
     },
     {
         "entity_id": "media_player.hugh_room_speaker_2",
-        "state": "off",
+        "state": "playing",
         "attributes": {
+            "volume_level": 0.15000000596046448,
+            "is_volume_muted": false,
+            "media_content_id": "http://192.168.0.254:8097/flow/JSZ6Hkmk/media_player.hugh_room_stereo/18c647fb90f64f74997991a8178772fa.mp3",
+            "media_content_type": "music",
+            "media_position": 0,
+            "media_position_updated_at": "2025-07-16T06:15:06.151623+00:00",
+            "media_title": "Music Assistant",
+            "app_id": "705D30C6",
+            "app_name": "Default Media Receiver",
+            "entity_picture_local": "/api/media_player_proxy/media_player.hugh_room_speaker_2?token=55dcee16a38cfaf59ba6045f4c6e089e59c1859f512d5ef444ba6b94559d14ca&cache=9a0c9e15dfda643e",
             "device_class": "speaker",
+            "entity_picture": "https://github.com/home-assistant/brands/raw/master/custom_integrations/mass/icon%402x.png",
             "friendly_name": "Hugh Room Speaker 2",
-            "supported_features": 152461
+            "supported_features": 152463
         },
-        "last_changed": "2025-07-16T03:37:01.768518+00:00",
-        "last_reported": "2025-07-16T03:37:01.833678+00:00",
-        "last_updated": "2025-07-16T03:37:01.768518+00:00",
+        "last_changed": "2025-07-16T06:15:06.154912+00:00",
+        "last_reported": "2025-07-16T06:15:06.154912+00:00",
+        "last_updated": "2025-07-16T06:15:06.154912+00:00",
         "context": {
-            "id": "01K08MX7J8KX00GH26BMXAT9TV",
-            "parent_id": null,
+            "id": "01K08XYHQ38NBAB2ASBAF7RJ2X",
+            "parent_id": "01K08XYHQ0QJ5P16F62SZMQHQM",
             "user_id": null
         }
     },
     {
         "entity_id": "weather.forecast_home",
-        "state": "cloudy",
+        "state": "rainy",
         "attributes": {
-            "temperature": 11.5,
-            "dew_point": 11.3,
+            "temperature": 13.5,
+            "dew_point": 12.8,
             "temperature_unit": "\u00b0C",
-            "humidity": 99,
+            "humidity": 96,
             "cloud_coverage": 100.0,
-            "uv_index": 0.0,
-            "pressure": 1015.8,
+            "uv_index": 0.3,
+            "pressure": 1015.9,
             "pressure_unit": "hPa",
-            "wind_bearing": 14.0,
-            "wind_speed": 2.5,
+            "wind_bearing": 88.4,
+            "wind_speed": 7.9,
             "wind_speed_unit": "km/h",
             "visibility_unit": "km",
             "precipitation_unit": "mm",
@@ -6058,28 +6091,28 @@
             "friendly_name": "Forecast Home",
             "supported_features": 3
         },
-        "last_changed": "2025-07-16T02:35:49.218908+00:00",
-        "last_reported": "2025-07-16T03:30:49.218360+00:00",
-        "last_updated": "2025-07-16T03:30:49.218360+00:00",
+        "last_changed": "2025-07-16T05:20:49.206990+00:00",
+        "last_reported": "2025-07-16T06:15:49.217823+00:00",
+        "last_updated": "2025-07-16T06:15:49.217823+00:00",
         "context": {
-            "id": "01K08MHVR2FBX21H78567WYVRY",
+            "id": "01K08XZZQ1F0QQPHVR0KZ0THA7",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.air_purifier_filter_lifetime",
-        "state": "5",
+        "state": "4",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "%",
             "friendly_name": "Air Purifier Filter lifetime"
         },
-        "last_changed": "2025-07-15T16:30:49.626947+00:00",
-        "last_reported": "2025-07-15T16:31:01.520447+00:00",
-        "last_updated": "2025-07-15T16:30:49.626947+00:00",
+        "last_changed": "2025-07-16T05:31:16.772343+00:00",
+        "last_reported": "2025-07-16T05:31:16.772343+00:00",
+        "last_updated": "2025-07-16T05:31:16.772343+00:00",
         "context": {
-            "id": "01K07ESC8TTSFS6Z8FTCGM8Q7J",
+            "id": "01K08VEDX4DDYABNBWW3JK4YJX",
             "parent_id": null,
             "user_id": null
         }
@@ -6119,33 +6152,55 @@
     },
     {
         "entity_id": "media_player.hugh_room_stereo",
-        "state": "off",
+        "state": "playing",
         "attributes": {
+            "volume_level": 0.15000000596046448,
+            "is_volume_muted": false,
+            "media_content_id": "http://192.168.0.254:8097/flow/JSZ6Hkmk/media_player.hugh_room_stereo/18c647fb90f64f74997991a8178772fa.mp3",
+            "media_content_type": "music",
+            "media_position": 0,
+            "media_position_updated_at": "2025-07-16T06:15:06.151655+00:00",
+            "media_title": "Music Assistant",
+            "app_id": "CC1AD845",
+            "app_name": "Default Media Receiver",
+            "entity_picture_local": "/api/media_player_proxy/media_player.hugh_room_stereo?token=4a8fad68655df793391d4efca5714041c20b43b264ea3dce51c37aebf8febf26&cache=9a0c9e15dfda643e",
             "device_class": "speaker",
+            "entity_picture": "https://github.com/home-assistant/brands/raw/master/custom_integrations/mass/icon%402x.png",
             "friendly_name": "Hugh Room Stereo",
-            "supported_features": 152461
+            "supported_features": 152463
         },
-        "last_changed": "2025-07-16T02:21:19.048324+00:00",
-        "last_reported": "2025-07-16T02:21:19.086609+00:00",
-        "last_updated": "2025-07-16T02:21:19.048324+00:00",
+        "last_changed": "2025-07-16T06:15:06.156172+00:00",
+        "last_reported": "2025-07-16T06:15:06.156172+00:00",
+        "last_updated": "2025-07-16T06:15:06.156172+00:00",
         "context": {
-            "id": "01K08GJKA8KAMDDG8XM1KB3C9S",
+            "id": "01K08XYHS7R4P2RKCXK6S06A6S",
             "parent_id": null,
-            "user_id": null
+            "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
     },
     {
         "entity_id": "media_player.hugh_room_display",
-        "state": "off",
+        "state": "playing",
         "attributes": {
+            "volume_level": 0.15000000596046448,
+            "is_volume_muted": false,
+            "media_content_id": "http://192.168.0.254:8097/flow/JSZ6Hkmk/media_player.hugh_room_stereo/18c647fb90f64f74997991a8178772fa.mp3",
+            "media_content_type": "music",
+            "media_position": 0,
+            "media_position_updated_at": "2025-07-16T06:15:06.149405+00:00",
+            "media_title": "Music Assistant",
+            "app_id": "531A4F84",
+            "app_name": "Default Media Receiver",
+            "entity_picture_local": "/api/media_player_proxy/media_player.hugh_room_display?token=47274cf8300080862c2c4c904276a6bae183ed05a708eed08f599ffb2f29c127&cache=9a0c9e15dfda643e",
+            "entity_picture": "https://github.com/home-assistant/brands/raw/master/custom_integrations/mass/icon%402x.png",
             "friendly_name": "Hugh Room Display",
-            "supported_features": 152461
+            "supported_features": 152463
         },
-        "last_changed": "2025-07-16T02:19:23.005193+00:00",
-        "last_reported": "2025-07-16T02:19:28.064990+00:00",
-        "last_updated": "2025-07-16T02:19:23.005193+00:00",
+        "last_changed": "2025-07-16T06:15:06.150017+00:00",
+        "last_reported": "2025-07-16T06:15:06.150017+00:00",
+        "last_updated": "2025-07-16T06:15:06.150017+00:00",
         "context": {
-            "id": "01K08GF1ZX1P2YCJWG2718ZT4D",
+            "id": "01K08XYNN6W2C2ZXVHT3N9AYZ2",
             "parent_id": null,
             "user_id": null
         }
@@ -6190,40 +6245,51 @@
             "is_volume_muted": false,
             "media_content_id": "",
             "media_content_type": "video",
-            "media_duration": 1494,
-            "media_position": 16.163,
-            "media_position_updated_at": "2025-07-16T03:39:31.504054+00:00",
-            "media_title": "SAO Abridged Parody: Episode 14",
-            "media_artist": "Something Witty Ente\u2026",
+            "media_duration": 2507,
+            "media_position": 0.009,
+            "media_position_updated_at": "2025-07-16T06:27:14.373956+00:00",
+            "media_title": "this is a gigantic haikyuu dub compilation",
+            "media_artist": "picopond",
             "app_id": "AndroidNativeApp",
             "app_name": "SmartTube beta",
             "entity_picture_local": null,
             "friendly_name": "Rory Room TV",
             "supported_features": 152499
         },
-        "last_changed": "2025-07-16T03:39:31.498755+00:00",
-        "last_reported": "2025-07-16T03:39:31.504913+00:00",
-        "last_updated": "2025-07-16T03:39:31.504913+00:00",
+        "last_changed": "2025-07-16T06:27:14.363010+00:00",
+        "last_reported": "2025-07-16T06:27:14.375009+00:00",
+        "last_updated": "2025-07-16T06:27:14.375009+00:00",
         "context": {
-            "id": "01K08N1SSGRE6DEG2V5SKMT9Y2",
+            "id": "01K08YMWT7CJPVZQ2GJXRZKJ0Y",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "media_player.hugh_room_speaker",
-        "state": "off",
+        "state": "playing",
         "attributes": {
+            "volume_level": 0.15000000596046448,
+            "is_volume_muted": false,
+            "media_content_id": "http://192.168.0.254:8097/flow/JSZ6Hkmk/media_player.hugh_room_stereo/18c647fb90f64f74997991a8178772fa.mp3",
+            "media_content_type": "music",
+            "media_position": 0,
+            "media_position_updated_at": "2025-07-16T06:15:06.149487+00:00",
+            "media_title": "Music Assistant",
+            "app_id": "705D30C6",
+            "app_name": "Default Media Receiver",
+            "entity_picture_local": "/api/media_player_proxy/media_player.hugh_room_speaker?token=c1b821db93934c4b0126c1baef59569ac00f1595872bf898b24a3dc56a1d5dfe&cache=9a0c9e15dfda643e",
             "device_class": "speaker",
+            "entity_picture": "https://github.com/home-assistant/brands/raw/master/custom_integrations/mass/icon%402x.png",
             "friendly_name": "Hugh Room Speaker",
-            "supported_features": 152461
+            "supported_features": 152463
         },
-        "last_changed": "2025-07-16T01:32:32.566636+00:00",
-        "last_reported": "2025-07-16T01:32:32.743571+00:00",
-        "last_updated": "2025-07-16T01:32:32.566636+00:00",
+        "last_changed": "2025-07-16T06:15:06.150990+00:00",
+        "last_reported": "2025-07-16T06:15:06.150990+00:00",
+        "last_updated": "2025-07-16T06:15:06.150990+00:00",
         "context": {
-            "id": "01K08DS9DP9SF4NV7CS529JX68",
-            "parent_id": null,
+            "id": "01K08XYHQ38NBAB2ASBAF7RJ2X",
+            "parent_id": "01K08XYHQ0QJ5P16F62SZMQHQM",
             "user_id": null
         }
     },
@@ -6625,20 +6691,31 @@
     },
     {
         "entity_id": "media_player.hugh_room_stereo_2",
-        "state": "off",
+        "state": "playing",
         "attributes": {
+            "volume_level": 0.15,
+            "media_content_id": "library://radio/3",
+            "media_content_type": "music",
+            "media_position": 0,
+            "media_position_updated_at": "2025-07-16T06:15:06.015800+00:00",
+            "media_title": "Today FM",
+            "app_id": "music_assistant",
+            "shuffle": false,
+            "repeat": "off",
+            "entity_picture_local": "/api/media_player_proxy/media_player.hugh_room_stereo_2?token=8efec982b8f23f6ad3fa3def211c774696a7307496892d44fed696a229a2be8d&cache=84f138d8c04e70fd",
             "mass_player_type": "player",
             "active_queue": "media_player.hugh_room_stereo",
             "device_class": "speaker",
+            "entity_picture": "https://img.resized.co/shuffle/eyJkYXRhIjoie1widXJsXCI6XCJodHRwczovL21lZGlhLmdvbG91ZG5vdy5jb20vdXBsb2Fkcy8xNzIxMTQ0MzY1L1RERk1fUHVibGlzaGVyLnBuZ1wiLFwid2lkdGhcIjpcIjEyMFwiLFwiaGVpZ2h0XCI6XCIxMjBcIixcImRlZmF1bHRcIjpcImh0dHBzOi8vd3d3LmdvbG91ZG5vdy5jb20vaW1hZ2VzL2xvZ28uc3ZnXCJ9IiwiaGFzaCI6Ijk0ODdkMDVlMzI5Yjg3MzRkYjhlYWZhNmE5MGNjN2E4ZmNiYzVlZWIifQ==/TDFM_Publisher.png",
             "icon": "mdi:speaker",
             "friendly_name": "Hugh Room Stereo",
             "supported_features": 7796671
         },
-        "last_changed": "2025-07-16T02:21:19.062983+00:00",
-        "last_reported": "2025-07-16T02:21:19.062983+00:00",
-        "last_updated": "2025-07-16T02:21:19.062983+00:00",
+        "last_changed": "2025-07-16T06:15:06.048475+00:00",
+        "last_reported": "2025-07-16T06:15:06.052243+00:00",
+        "last_updated": "2025-07-16T06:15:06.048475+00:00",
         "context": {
-            "id": "01K08GJKAPEBGFTZK1B8NXDMGD",
+            "id": "01K08XYNJ04DEXZ8PE5W69G24A",
             "parent_id": null,
             "user_id": null
         }
@@ -6730,8 +6807,14 @@
     },
     {
         "entity_id": "media_player.battery_speaker_2",
-        "state": "off",
+        "state": "playing",
         "attributes": {
+            "volume_level": 0.15,
+            "media_content_type": "music",
+            "app_id": "music_assistant",
+            "shuffle": false,
+            "repeat": "off",
+            "entity_picture_local": null,
             "mass_player_type": "player",
             "active_queue": "media_player.battery_speaker",
             "device_class": "speaker",
@@ -6739,11 +6822,11 @@
             "friendly_name": "Battery Speaker",
             "supported_features": 7796671
         },
-        "last_changed": "2025-07-16T02:02:16.780643+00:00",
-        "last_reported": "2025-07-16T02:02:16.780643+00:00",
-        "last_updated": "2025-07-16T02:02:16.780643+00:00",
+        "last_changed": "2025-07-16T06:15:06.027045+00:00",
+        "last_reported": "2025-07-16T06:15:06.027045+00:00",
+        "last_updated": "2025-07-16T06:15:06.027045+00:00",
         "context": {
-            "id": "01K08FFQTCEBX0H4D6AMWZ8E11",
+            "id": "01K08XYNHBMD3640BCYP51MFND",
             "parent_id": null,
             "user_id": null
         }
@@ -6785,7 +6868,7 @@
     },
     {
         "entity_id": "sensor.network_scanner",
-        "state": "23",
+        "state": "18",
         "attributes": {
             "devices": [
                 {
@@ -6885,38 +6968,6 @@
                     "hostname": ""
                 },
                 {
-                    "ip": "192.168.0.152",
-                    "mac": "00:C3:F4:DF:EE:2E",
-                    "name": "Unknown Device",
-                    "type": "Unknown Device",
-                    "vendor": "Samsung Electronics",
-                    "hostname": ""
-                },
-                {
-                    "ip": "192.168.0.175",
-                    "mac": "D4:F5:47:96:2A:2B",
-                    "name": "Unknown Device",
-                    "type": "Unknown Device",
-                    "vendor": "Google",
-                    "hostname": ""
-                },
-                {
-                    "ip": "192.168.0.192",
-                    "mac": "D0:73:D5:5B:C1:BA",
-                    "name": "Unknown Device",
-                    "type": "Unknown Device",
-                    "vendor": "Lifi Labs Management",
-                    "hostname": ""
-                },
-                {
-                    "ip": "192.168.0.194",
-                    "mac": "14:C1:4E:CA:57:8A",
-                    "name": "Unknown Device",
-                    "type": "Unknown Device",
-                    "vendor": "Google",
-                    "hostname": ""
-                },
-                {
                     "ip": "192.168.0.200",
                     "mac": "34:94:54:AB:1D:70",
                     "name": "Unknown Device",
@@ -6930,14 +6981,6 @@
                     "name": "Unknown Device",
                     "type": "Unknown Device",
                     "vendor": "Espressif",
-                    "hostname": ""
-                },
-                {
-                    "ip": "192.168.0.207",
-                    "mac": "14:1B:A0:86:C9:41",
-                    "name": "Unknown Device",
-                    "type": "Unknown Device",
-                    "vendor": "Unknown",
                     "hostname": ""
                 },
                 {
@@ -6966,7 +7009,7 @@
                 },
                 {
                     "ip": "192.168.0.255",
-                    "mac": "14:C1:4E:3E:60:A3",
+                    "mac": "1C:53:F9:B5:6B:C7",
                     "name": "Unknown Device",
                     "type": "Unknown Device",
                     "vendor": "Google",
@@ -6976,11 +7019,11 @@
             "unit_of_measurement": "Devices",
             "friendly_name": "Network Scanner"
         },
-        "last_changed": "2025-07-16T03:15:59.389404+00:00",
-        "last_reported": "2025-07-16T03:30:57.381428+00:00",
-        "last_updated": "2025-07-16T03:30:57.381428+00:00",
+        "last_changed": "2025-07-16T06:30:56.493797+00:00",
+        "last_reported": "2025-07-16T06:30:56.493797+00:00",
+        "last_updated": "2025-07-16T06:30:56.493797+00:00",
         "context": {
-            "id": "01K08MJ3Q52GP24C7BWXBNBW0P",
+            "id": "01K08YVNQDHKEP5G6Y2KCHC09V",
             "parent_id": null,
             "user_id": null
         }
@@ -7454,11 +7497,11 @@
             "device_class": "occupancy",
             "friendly_name": "EPOne Occupancy"
         },
-        "last_changed": "2025-07-16T03:41:00.923512+00:00",
-        "last_reported": "2025-07-16T03:41:00.923512+00:00",
-        "last_updated": "2025-07-16T03:41:00.923512+00:00",
+        "last_changed": "2025-07-16T06:33:50.271510+00:00",
+        "last_reported": "2025-07-16T06:33:50.271510+00:00",
+        "last_updated": "2025-07-16T06:33:50.271510+00:00",
         "context": {
-            "id": "01K08N4H3VVV2PXMH6XY5KF87W",
+            "id": "01K08Z0ZDZ0SPAH530QCPCA4JK",
             "parent_id": null,
             "user_id": null
         }
@@ -7470,11 +7513,11 @@
             "device_class": "occupancy",
             "friendly_name": "EPOne mmWave"
         },
-        "last_changed": "2025-07-16T03:40:44.390930+00:00",
-        "last_reported": "2025-07-16T03:40:44.390930+00:00",
-        "last_updated": "2025-07-16T03:40:44.390930+00:00",
+        "last_changed": "2025-07-16T06:33:34.240140+00:00",
+        "last_reported": "2025-07-16T06:33:34.240140+00:00",
+        "last_updated": "2025-07-16T06:33:34.240140+00:00",
         "context": {
-            "id": "01K08N40Z67THMHED6HEPBS7NC",
+            "id": "01K08Z0FS02MGJFNYPH7B1TH5S",
             "parent_id": null,
             "user_id": null
         }
@@ -7496,36 +7539,36 @@
     },
     {
         "entity_id": "sensor.living_room_epone_temperature",
-        "state": "24.2553253173828",
+        "state": "24.0497131347656",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
             "device_class": "temperature",
             "friendly_name": "EPOne Temperature"
         },
-        "last_changed": "2025-07-16T03:40:27.166115+00:00",
-        "last_reported": "2025-07-16T03:40:27.166115+00:00",
-        "last_updated": "2025-07-16T03:40:27.166115+00:00",
+        "last_changed": "2025-07-16T06:33:27.662649+00:00",
+        "last_reported": "2025-07-16T06:33:27.662649+00:00",
+        "last_updated": "2025-07-16T06:33:27.662649+00:00",
         "context": {
-            "id": "01K08N3G4Y0872WFPAXZJ768KE",
+            "id": "01K08Z09BE3A9225T2SW6V5M9P",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.living_room_epone_illuminance",
-        "state": "5.3552360534668",
+        "state": "6.66256856918335",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "lx",
             "device_class": "illuminance",
             "friendly_name": "EPOne Illuminance"
         },
-        "last_changed": "2025-07-16T03:41:01.675495+00:00",
-        "last_reported": "2025-07-16T03:41:01.675495+00:00",
-        "last_updated": "2025-07-16T03:41:01.675495+00:00",
+        "last_changed": "2025-07-16T06:33:50.938900+00:00",
+        "last_reported": "2025-07-16T06:33:50.938900+00:00",
+        "last_updated": "2025-07-16T06:33:50.938900+00:00",
         "context": {
-            "id": "01K08N4HVB4R64SF1DN9XXJCG3",
+            "id": "01K08Z102TAZ9DQNDAQEV60WDF",
             "parent_id": null,
             "user_id": null
         }
@@ -7549,18 +7592,18 @@
     },
     {
         "entity_id": "sensor.living_room_epone_humidity",
-        "state": "50.062255859375",
+        "state": "50.2392578125",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "%",
             "device_class": "humidity",
             "friendly_name": "EPOne Humidity"
         },
-        "last_changed": "2025-07-16T03:40:27.167364+00:00",
-        "last_reported": "2025-07-16T03:40:27.167364+00:00",
-        "last_updated": "2025-07-16T03:40:27.167364+00:00",
+        "last_changed": "2025-07-16T06:33:27.667511+00:00",
+        "last_reported": "2025-07-16T06:33:27.667511+00:00",
+        "last_updated": "2025-07-16T06:33:27.667511+00:00",
         "context": {
-            "id": "01K08N3G4ZW5YQ8E97G6Q2RG8D",
+            "id": "01K08Z09BKGYFPMW9HSY9RC0TK",
             "parent_id": null,
             "user_id": null
         }
@@ -8116,17 +8159,17 @@
     },
     {
         "entity_id": "sensor.watchman_last_updated",
-        "state": "2025-07-16T03:37:01+00:00",
+        "state": "2025-07-16T06:00:00+00:00",
         "attributes": {
             "device_class": "timestamp",
             "icon": "mdi:shield-half-full",
             "friendly_name": "Last Updated"
         },
-        "last_changed": "2025-07-16T03:37:01.772940+00:00",
-        "last_reported": "2025-07-16T03:37:01.773664+00:00",
-        "last_updated": "2025-07-16T03:37:01.772940+00:00",
+        "last_changed": "2025-07-16T06:00:00.928159+00:00",
+        "last_reported": "2025-07-16T06:00:00.928535+00:00",
+        "last_updated": "2025-07-16T06:00:00.928159+00:00",
         "context": {
-            "id": "01K08MX7JC4GHNDKK00PEG5VP2",
+            "id": "01K08X31N0KZ830NC49X0BDBW6",
             "parent_id": null,
             "user_id": null
         }
@@ -8209,11 +8252,11 @@
             "icon": "mdi:toothbrush",
             "friendly_name": "Toothbrush"
         },
-        "last_changed": "2025-07-16T03:41:00.315050+00:00",
-        "last_reported": "2025-07-16T03:41:00.315050+00:00",
-        "last_updated": "2025-07-16T03:41:00.315050+00:00",
+        "last_changed": "2025-07-16T06:31:00.314866+00:00",
+        "last_reported": "2025-07-16T06:31:00.314866+00:00",
+        "last_updated": "2025-07-16T06:31:00.314866+00:00",
         "context": {
-            "id": "01K08N4GGVC10J7ECYK9WGKXEV",
+            "id": "01K08YVSETR2HYB65VV2KK98V7",
             "parent_id": null,
             "user_id": null
         }
@@ -8427,17 +8470,17 @@
         "entity_id": "cover.hugh_room_blinds",
         "state": "open",
         "attributes": {
-            "current_position": 13,
+            "current_position": 29,
             "device_class": "blind",
             "friendly_name": "Hugh Room Blinds",
             "supported_features": 15
         },
         "last_changed": "2025-07-15T20:08:12.297027+00:00",
-        "last_reported": "2025-07-15T23:16:11.015128+00:00",
-        "last_updated": "2025-07-15T23:16:11.015128+00:00",
+        "last_reported": "2025-07-16T06:15:06.085667+00:00",
+        "last_updated": "2025-07-16T06:15:06.085667+00:00",
         "context": {
-            "id": "01K085ZFYJ52TJ7QSKQC00Z7CA",
-            "parent_id": "01K085ZFYH4P9J045KYWBSRW0R",
+            "id": "01K08XNBK2JGAY9J8FV73YFM5S",
+            "parent_id": null,
             "user_id": null
         }
     },
@@ -8481,25 +8524,25 @@
     },
     {
         "entity_id": "sensor.snake_plant_signal_strength",
-        "state": "-77",
+        "state": "-74",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "dBm",
             "device_class": "signal_strength",
             "friendly_name": "Snake Plant Signal Strength"
         },
-        "last_changed": "2025-07-16T03:40:57.990452+00:00",
-        "last_reported": "2025-07-16T03:40:57.990452+00:00",
-        "last_updated": "2025-07-16T03:40:57.990452+00:00",
+        "last_changed": "2025-07-16T06:33:32.863196+00:00",
+        "last_reported": "2025-07-16T06:33:32.863196+00:00",
+        "last_updated": "2025-07-16T06:33:32.863196+00:00",
         "context": {
-            "id": "01K08N4E86MZV565ZH1YM6JBM9",
+            "id": "01K08Z0EDZ6W11GR68CYWMXVS1",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.snake_plant_illuminance",
-        "state": "75",
+        "state": "101",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "lx",
@@ -8507,11 +8550,11 @@
             "icon": "mdi:brightness-7",
             "friendly_name": "Snake Plant Illuminance"
         },
-        "last_changed": "2025-07-16T03:40:04.966968+00:00",
-        "last_reported": "2025-07-16T03:40:04.966968+00:00",
-        "last_updated": "2025-07-16T03:40:04.966968+00:00",
+        "last_changed": "2025-07-16T06:06:42.733604+00:00",
+        "last_reported": "2025-07-16T06:06:42.733604+00:00",
+        "last_updated": "2025-07-16T06:06:42.733604+00:00",
         "context": {
-            "id": "01K08N2TF6R62NR4QE1KB0T7ST",
+            "id": "01K08XFA1DXARZN56G9KTPVKJS",
             "parent_id": null,
             "user_id": null
         }
@@ -8536,36 +8579,36 @@
     },
     {
         "entity_id": "sensor.snake_plant_conductivity",
-        "state": "139",
+        "state": "142",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b5S/cm",
             "device_class": "conductivity",
             "friendly_name": "Snake Plant Conductivity"
         },
-        "last_changed": "2025-07-16T03:40:21.954379+00:00",
-        "last_reported": "2025-07-16T03:40:21.954379+00:00",
-        "last_updated": "2025-07-16T03:40:21.954379+00:00",
+        "last_changed": "2025-07-16T06:33:41.671428+00:00",
+        "last_reported": "2025-07-16T06:33:41.671428+00:00",
+        "last_updated": "2025-07-16T06:33:41.671428+00:00",
         "context": {
-            "id": "01K08N3B22DNCK27A7BNT659V5",
+            "id": "01K08Z0Q17T5ED0RANESGQA99B",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.snake_plant_temperature",
-        "state": "23.2",
+        "state": "23.0",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
             "device_class": "temperature",
             "friendly_name": "Snake Plant Temperature"
         },
-        "last_changed": "2025-07-16T03:40:36.076781+00:00",
-        "last_reported": "2025-07-16T03:40:36.076781+00:00",
-        "last_updated": "2025-07-16T03:40:36.076781+00:00",
+        "last_changed": "2025-07-16T06:06:36.768515+00:00",
+        "last_reported": "2025-07-16T06:06:36.768515+00:00",
+        "last_updated": "2025-07-16T06:06:36.768515+00:00",
         "context": {
-            "id": "01K08N3RVC8RY1BDMHV6B3HKZ2",
+            "id": "01K08XF470Z4N93B5Z6N8C7T7T",
             "parent_id": null,
             "user_id": null
         }
@@ -8836,16 +8879,16 @@
         "state": "on",
         "attributes": {
             "id": "1701712590192",
-            "last_triggered": "2025-07-15T06:00:00.801817+00:00",
+            "last_triggered": "2025-07-16T06:00:00.925212+00:00",
             "mode": "single",
             "current": 0,
             "friendly_name": "Admin Generate Watchman Report"
         },
         "last_changed": "2025-07-15T16:30:55.560257+00:00",
-        "last_reported": "2025-07-15T16:30:55.560257+00:00",
-        "last_updated": "2025-07-15T16:30:55.560257+00:00",
+        "last_reported": "2025-07-16T06:00:01.036459+00:00",
+        "last_updated": "2025-07-16T06:00:01.036459+00:00",
         "context": {
-            "id": "01K07ESJ28VN6SZ3SM2FVZG504",
+            "id": "01K08X31MXP0G81ECXPTMH00HA",
             "parent_id": null,
             "user_id": null
         }
@@ -8893,17 +8936,17 @@
         "state": "on",
         "attributes": {
             "id": "1702818164083",
-            "last_triggered": "2025-07-16T03:41:00.928627+00:00",
+            "last_triggered": "2025-07-16T06:33:50.273563+00:00",
             "mode": "restart",
             "current": 0,
             "friendly_name": "Living Room Lights Occupied"
         },
         "last_changed": "2025-07-15T16:30:55.561420+00:00",
-        "last_reported": "2025-07-16T03:41:00.956136+00:00",
-        "last_updated": "2025-07-16T03:41:00.956136+00:00",
+        "last_reported": "2025-07-16T06:33:50.305779+00:00",
+        "last_updated": "2025-07-16T06:33:50.305779+00:00",
         "context": {
-            "id": "01K08N4H3ZXAJ8RN4SGZN16AWE",
-            "parent_id": "01K08N4H3VVV2PXMH6XY5KF87W",
+            "id": "01K08Z0ZE0JJK4B5FHZKNYM8WB",
+            "parent_id": "01K08Z0ZDZ0SPAH530QCPCA4JK",
             "user_id": null
         }
     },
@@ -9672,16 +9715,16 @@
         "state": "on",
         "attributes": {
             "id": "1713039340245",
-            "last_triggered": "2025-07-16T03:40:00.926142+00:00",
+            "last_triggered": "2025-07-16T06:20:00.928840+00:00",
             "mode": "single",
             "current": 0,
             "friendly_name": "Bathroom Previous Readings"
         },
         "last_changed": "2025-07-15T16:30:55.578475+00:00",
-        "last_reported": "2025-07-16T03:40:10.932494+00:00",
-        "last_updated": "2025-07-16T03:40:10.932494+00:00",
+        "last_reported": "2025-07-16T06:20:10.939079+00:00",
+        "last_updated": "2025-07-16T06:20:10.939079+00:00",
         "context": {
-            "id": "01K08N309M23J0DQVRG2HH24VF",
+            "id": "01K08Y7Z9VP63MM7R7SM6ZJJK1",
             "parent_id": null,
             "user_id": null
         }
@@ -9729,16 +9772,16 @@
         "state": "on",
         "attributes": {
             "id": "1715594297562",
-            "last_triggered": "2025-07-15T06:10:00.755867+00:00",
+            "last_triggered": "2025-07-16T06:10:00.931230+00:00",
             "mode": "single",
             "current": 0,
             "friendly_name": "Alarm Start"
         },
         "last_changed": "2025-07-15T16:30:55.579932+00:00",
-        "last_reported": "2025-07-15T16:30:55.579932+00:00",
-        "last_updated": "2025-07-15T16:30:55.579932+00:00",
+        "last_reported": "2025-07-16T06:15:02.657734+00:00",
+        "last_updated": "2025-07-16T06:15:02.657734+00:00",
         "context": {
-            "id": "01K07ESJ2VF5Z67G9CFN24T178",
+            "id": "01K08XYJ81KXK3GT4TVX5PBZY0",
             "parent_id": null,
             "user_id": null
         }
@@ -9900,17 +9943,17 @@
         "state": "on",
         "attributes": {
             "id": "1717237084062",
-            "last_triggered": "2025-07-15T06:45:06.967442+00:00",
+            "last_triggered": "2025-07-16T06:15:02.116184+00:00",
             "mode": "single",
             "current": 0,
             "friendly_name": "Sync Google Mini Volumes"
         },
         "last_changed": "2025-07-15T16:30:55.583228+00:00",
-        "last_reported": "2025-07-15T16:30:55.583228+00:00",
-        "last_updated": "2025-07-15T16:30:55.583228+00:00",
+        "last_reported": "2025-07-16T06:15:03.202511+00:00",
+        "last_updated": "2025-07-16T06:15:03.202511+00:00",
         "context": {
-            "id": "01K07ESJ2ZGW0VQRS3MM5F4X71",
-            "parent_id": null,
+            "id": "01K08XYHS5BH2SYPR47CX85R16",
+            "parent_id": "01K08XYHQ38NBAB2ASBAF7RJ2X",
             "user_id": null
         }
     },
@@ -9976,17 +10019,17 @@
         "state": "on",
         "attributes": {
             "id": "1717761028586",
-            "last_triggered": "2025-07-15T23:16:07.300542+00:00",
+            "last_triggered": "2025-07-16T06:15:02.677977+00:00",
             "mode": "single",
             "current": 0,
             "friendly_name": "Sync Blinds Position with Slider"
         },
         "last_changed": "2025-07-15T16:30:55.585095+00:00",
-        "last_reported": "2025-07-15T23:16:12.305345+00:00",
-        "last_updated": "2025-07-15T23:16:12.305345+00:00",
+        "last_reported": "2025-07-16T06:15:07.682752+00:00",
+        "last_updated": "2025-07-16T06:15:07.682752+00:00",
         "context": {
-            "id": "01K085ZMWHECVTPWR1SBVPDMM7",
-            "parent_id": null,
+            "id": "01K08XYNK67Y9JQHQVAMDXA7AZ",
+            "parent_id": "01K08XNBK2JGAY9J8FV73YFM5S",
             "user_id": null
         }
     },
@@ -10642,17 +10685,17 @@
         "state": "on",
         "attributes": {
             "id": "1728775622846",
-            "last_triggered": "2025-07-15T06:40:06.755328+00:00",
+            "last_triggered": "2025-07-16T06:15:06.159208+00:00",
             "mode": "single",
             "current": 0,
             "friendly_name": "Music Playing/Stopped Purifier Control"
         },
         "last_changed": "2025-07-15T16:30:55.599687+00:00",
-        "last_reported": "2025-07-15T16:30:55.599687+00:00",
-        "last_updated": "2025-07-15T16:30:55.599687+00:00",
+        "last_reported": "2025-07-16T06:15:06.850596+00:00",
+        "last_updated": "2025-07-16T06:15:06.850596+00:00",
         "context": {
-            "id": "01K07ESJ3FEWS1M4YQ8J4XWMHQ",
-            "parent_id": null,
+            "id": "01K08XYNNEPA6AZGXHJ0SV3DKN",
+            "parent_id": "01K08XYHS7R4P2RKCXK6S06A6S",
             "user_id": null
         }
     },
@@ -10737,16 +10780,16 @@
         "state": "on",
         "attributes": {
             "id": "1733756303140",
-            "last_triggered": "2025-07-16T03:40:00.310886+00:00",
+            "last_triggered": "2025-07-16T06:30:00.311448+00:00",
             "mode": "single",
             "current": 0,
             "friendly_name": "Refresh Toothbrush Tracker"
         },
         "last_changed": "2025-07-15T16:30:55.601686+00:00",
-        "last_reported": "2025-07-16T03:40:00.317766+00:00",
-        "last_updated": "2025-07-16T03:40:00.317766+00:00",
+        "last_reported": "2025-07-16T06:30:00.316693+00:00",
+        "last_updated": "2025-07-16T06:30:00.316693+00:00",
         "context": {
-            "id": "01K08N2NXPF5NENW5HV2VTDKWA",
+            "id": "01K08YSYVQBNVW5ZVYGED5MX0D",
             "parent_id": null,
             "user_id": null
         }
@@ -10775,17 +10818,17 @@
         "state": "on",
         "attributes": {
             "id": "1734951741728",
-            "last_triggered": "2025-07-16T03:41:00.939385+00:00",
+            "last_triggered": "2025-07-16T06:33:50.288679+00:00",
             "mode": "single",
             "current": 1,
             "friendly_name": "Update Entity List on Entity Count Change"
         },
         "last_changed": "2025-07-15T16:30:55.602413+00:00",
-        "last_reported": "2025-07-16T03:41:00.939432+00:00",
-        "last_updated": "2025-07-16T03:41:00.939432+00:00",
+        "last_reported": "2025-07-16T06:33:50.288725+00:00",
+        "last_updated": "2025-07-16T06:33:50.288725+00:00",
         "context": {
-            "id": "01K08N4H4B9NQH9ZRHWHNN4QJ0",
-            "parent_id": "01K08N31R6396ZT3J053ZD5089",
+            "id": "01K08Z0ZEGRK8MSSQZ7CJXY0T2",
+            "parent_id": "01K08YZGH8SQ4W1A17ZE7T63SK",
             "user_id": null
         }
     },
@@ -10927,16 +10970,16 @@
         "state": "on",
         "attributes": {
             "id": "1743536268804",
-            "last_triggered": "2025-07-15T04:31:26.387293+00:00",
+            "last_triggered": "2025-07-16T04:32:40.254233+00:00",
             "mode": "single",
             "current": 0,
             "friendly_name": "Store Previous Sunrise After Sunrise"
         },
         "last_changed": "2025-07-15T16:30:55.605380+00:00",
-        "last_reported": "2025-07-15T16:30:55.605380+00:00",
-        "last_updated": "2025-07-15T16:30:55.605380+00:00",
+        "last_reported": "2025-07-16T04:32:40.258658+00:00",
+        "last_updated": "2025-07-16T04:32:40.258658+00:00",
         "context": {
-            "id": "01K07ESJ3N3FJ2AEKCCRYVAD09",
+            "id": "01K08R33SXDF1JQCZFXZEZJ2JP",
             "parent_id": null,
             "user_id": null
         }
@@ -11079,16 +11122,16 @@
         "state": "on",
         "attributes": {
             "id": "1752569710433",
-            "last_triggered": "2025-07-15T20:14:30.117251+00:00",
+            "last_triggered": "2025-07-16T06:17:54.689316+00:00",
             "mode": "single",
             "current": 0,
             "friendly_name": "Z2M Update Devices"
         },
         "last_changed": "2025-07-15T16:30:55.611446+00:00",
-        "last_reported": "2025-07-15T20:14:35.460396+00:00",
-        "last_updated": "2025-07-15T20:14:35.460396+00:00",
+        "last_reported": "2025-07-16T06:18:00.139954+00:00",
+        "last_updated": "2025-07-16T06:18:00.139954+00:00",
         "context": {
-            "id": "01K07VK3E4DBW62GSPAZKHTF04",
+            "id": "01K08Y3ZJB4RT053Z20A1DX60T",
             "parent_id": null,
             "user_id": null
         }
@@ -11152,7 +11195,7 @@
     },
     {
         "entity_id": "light.hugh_room_lamp",
-        "state": "off",
+        "state": "on",
         "attributes": {
             "min_color_temp_kelvin": 2000,
             "max_color_temp_kelvin": 6535,
@@ -11175,22 +11218,32 @@
                 "xy"
             ],
             "effect": null,
-            "color_mode": null,
-            "brightness": null,
-            "color_temp_kelvin": null,
-            "color_temp": null,
-            "hs_color": null,
-            "rgb_color": null,
-            "xy_color": null,
+            "color_mode": "color_temp",
+            "brightness": 255,
+            "color_temp_kelvin": 2000,
+            "color_temp": 500,
+            "hs_color": [
+                30.601,
+                94.547
+            ],
+            "rgb_color": [
+                255,
+                137,
+                14
+            ],
+            "xy_color": [
+                0.598,
+                0.383
+            ],
             "friendly_name": "Light Desk Lamp",
             "supported_features": 44
         },
-        "last_changed": "2025-07-15T23:16:07.352509+00:00",
-        "last_reported": "2025-07-15T23:16:07.352509+00:00",
-        "last_updated": "2025-07-15T23:16:07.352509+00:00",
+        "last_changed": "2025-07-16T06:10:01.045045+00:00",
+        "last_reported": "2025-07-16T06:10:01.045045+00:00",
+        "last_updated": "2025-07-16T06:10:01.045045+00:00",
         "context": {
-            "id": "01K085ZFYJ52TJ7QSKQC00Z7CA",
-            "parent_id": "01K085ZFYH4P9J045KYWBSRW0R",
+            "id": "01K08XNBK2JGAY9J8FV73YFM5S",
+            "parent_id": null,
             "user_id": null
         }
     },
@@ -11379,12 +11432,12 @@
             "friendly_name": "Light Floor Back",
             "supported_features": 44
         },
-        "last_changed": "2025-07-16T03:41:00.992367+00:00",
-        "last_reported": "2025-07-16T03:41:00.992367+00:00",
-        "last_updated": "2025-07-16T03:41:00.992367+00:00",
+        "last_changed": "2025-07-16T06:33:50.344895+00:00",
+        "last_reported": "2025-07-16T06:33:50.344895+00:00",
+        "last_updated": "2025-07-16T06:33:50.344895+00:00",
         "context": {
-            "id": "01K08N4H3ZXAJ8RN4SGZN16AWE",
-            "parent_id": "01K08N4H3VVV2PXMH6XY5KF87W",
+            "id": "01K08Z0ZE0JJK4B5FHZKNYM8WB",
+            "parent_id": "01K08Z0ZDZ0SPAH530QCPCA4JK",
             "user_id": null
         }
     },
@@ -11423,12 +11476,12 @@
             "friendly_name": "Light Floor Front",
             "supported_features": 44
         },
-        "last_changed": "2025-07-16T03:41:01.067550+00:00",
-        "last_reported": "2025-07-16T03:41:01.067550+00:00",
-        "last_updated": "2025-07-16T03:41:01.067550+00:00",
+        "last_changed": "2025-07-16T06:33:50.368079+00:00",
+        "last_reported": "2025-07-16T06:33:50.368079+00:00",
+        "last_updated": "2025-07-16T06:33:50.368079+00:00",
         "context": {
-            "id": "01K08N4H3ZXAJ8RN4SGZN16AWE",
-            "parent_id": "01K08N4H3VVV2PXMH6XY5KF87W",
+            "id": "01K08Z0ZE0JJK4B5FHZKNYM8WB",
+            "parent_id": "01K08Z0ZDZ0SPAH530QCPCA4JK",
             "user_id": null
         }
     },
@@ -12188,18 +12241,18 @@
     },
     {
         "entity_id": "sensor.hall_motion_temperature",
-        "state": "20.82",
+        "state": "20.9",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
             "device_class": "temperature",
             "friendly_name": "Hue Temperature"
         },
-        "last_changed": "2025-07-16T02:44:28.795333+00:00",
-        "last_reported": "2025-07-16T02:44:28.795333+00:00",
-        "last_updated": "2025-07-16T02:44:28.795333+00:00",
+        "last_changed": "2025-07-16T05:44:47.956556+00:00",
+        "last_reported": "2025-07-16T05:44:47.956556+00:00",
+        "last_updated": "2025-07-16T05:44:47.956556+00:00",
         "context": {
-            "id": "01K08HX0FVWNEW40VCQM0ABWH6",
+            "id": "01K08W762M15QZSS3NAQMBB0WY",
             "parent_id": null,
             "user_id": null
         }
@@ -12258,18 +12311,18 @@
     },
     {
         "entity_id": "sensor.bathroom_motion_temperature",
-        "state": "20.89",
+        "state": "20.68",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
             "device_class": "temperature",
             "friendly_name": "Hue Temperature"
         },
-        "last_changed": "2025-07-16T03:26:15.018398+00:00",
-        "last_reported": "2025-07-16T03:26:15.018398+00:00",
-        "last_updated": "2025-07-16T03:26:15.018398+00:00",
+        "last_changed": "2025-07-16T06:25:36.779345+00:00",
+        "last_reported": "2025-07-16T06:25:36.779345+00:00",
+        "last_updated": "2025-07-16T06:25:36.779345+00:00",
         "context": {
-            "id": "01K08M9FZAY3TN4A6A0R3PWDAQ",
+            "id": "01K08YHXGBC8ZGEH5M3EYAD463",
             "parent_id": null,
             "user_id": null
         }
@@ -12337,11 +12390,11 @@
             "device_class": "power",
             "friendly_name": "PC Plug Power"
         },
-        "last_changed": "2025-07-16T03:35:28.121203+00:00",
-        "last_reported": "2025-07-16T03:35:28.121203+00:00",
-        "last_updated": "2025-07-16T03:35:28.121203+00:00",
+        "last_changed": "2025-07-16T06:33:13.852249+00:00",
+        "last_reported": "2025-07-16T06:33:13.852249+00:00",
+        "last_updated": "2025-07-16T06:33:13.852249+00:00",
         "context": {
-            "id": "01K08MTC3S77MQ0FPAVBS7K021",
+            "id": "01K08YZVVWNXZR6TYC5J2QV8BF",
             "parent_id": null,
             "user_id": null
         }
@@ -12400,54 +12453,54 @@
     },
     {
         "entity_id": "sensor.bathroom_aqara_temperature",
-        "state": "21.38",
+        "state": "21.21",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
             "device_class": "temperature",
             "friendly_name": "Aqara Temperature"
         },
-        "last_changed": "2025-07-16T03:24:03.812481+00:00",
-        "last_reported": "2025-07-16T03:24:03.812481+00:00",
-        "last_updated": "2025-07-16T03:24:03.812481+00:00",
+        "last_changed": "2025-07-16T06:09:01.624220+00:00",
+        "last_reported": "2025-07-16T06:09:01.624220+00:00",
+        "last_updated": "2025-07-16T06:09:01.624220+00:00",
         "context": {
-            "id": "01K08M5FV4TH4FECYNC3WZWWJF",
+            "id": "01K08XKHNRXS16QEAA2J88YSVF",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.bathroom_aqara_humidity",
-        "state": "63.1",
+        "state": "62.85",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "%",
             "device_class": "humidity",
             "friendly_name": "Aqara Humidity"
         },
-        "last_changed": "2025-07-16T03:24:03.813455+00:00",
-        "last_reported": "2025-07-16T03:24:03.813455+00:00",
-        "last_updated": "2025-07-16T03:24:03.813455+00:00",
+        "last_changed": "2025-07-16T06:18:26.601856+00:00",
+        "last_reported": "2025-07-16T06:18:26.601856+00:00",
+        "last_updated": "2025-07-16T06:18:26.601856+00:00",
         "context": {
-            "id": "01K08M5FV52M7PRGVHVJXBD2XJ",
+            "id": "01K08Y4SD9JKHASX2PJK2C1YSV",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.bathroom_aqara_pressure",
-        "state": "1011.8",
+        "state": "1012.3",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "hPa",
             "device_class": "atmospheric_pressure",
             "friendly_name": "Bathroom Aqara Atmospheric pressure"
         },
-        "last_changed": "2025-07-16T03:19:01.194097+00:00",
-        "last_reported": "2025-07-16T03:19:01.194097+00:00",
-        "last_updated": "2025-07-16T03:19:01.194097+00:00",
+        "last_changed": "2025-07-16T06:18:26.612497+00:00",
+        "last_reported": "2025-07-16T06:18:26.612497+00:00",
+        "last_updated": "2025-07-16T06:18:26.612497+00:00",
         "context": {
-            "id": "01K08KW8AA1BTM6D4GGP06Y88R",
+            "id": "01K08Y4SDME7SKFHSEAT0PJ08Q",
             "parent_id": null,
             "user_id": null
         }
@@ -12551,11 +12604,11 @@
             "device_class": "temperature",
             "friendly_name": "Living Room Aqara Button Temperature"
         },
-        "last_changed": "2025-07-16T03:38:59.210284+00:00",
-        "last_reported": "2025-07-16T03:38:59.210284+00:00",
-        "last_updated": "2025-07-16T03:38:59.210284+00:00",
+        "last_changed": "2025-07-16T06:09:39.620725+00:00",
+        "last_reported": "2025-07-16T06:09:39.620725+00:00",
+        "last_updated": "2025-07-16T06:09:39.620725+00:00",
         "context": {
-            "id": "01K08N0T8AJQJEBQHQY85H7PSM",
+            "id": "01K08XMPS4YM7WP66JMRPV41CE",
             "parent_id": null,
             "user_id": null
         }
@@ -12648,18 +12701,18 @@
     },
     {
         "entity_id": "sensor.hugh_room_aqara_door_button_device_temperature",
-        "state": "29",
+        "state": "28",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
             "device_class": "temperature",
             "friendly_name": "Hugh Room Aqara Door Button Temperature"
         },
-        "last_changed": "2025-07-15T16:31:07.030344+00:00",
-        "last_reported": "2025-07-15T16:31:07.030344+00:00",
-        "last_updated": "2025-07-15T16:31:07.030344+00:00",
+        "last_changed": "2025-07-16T05:19:40.496696+00:00",
+        "last_reported": "2025-07-16T05:19:40.496696+00:00",
+        "last_updated": "2025-07-16T05:19:40.496696+00:00",
         "context": {
-            "id": "01K07ESX8P1ES3RADS3TE2CA4P",
+            "id": "01K08TS5YG7Q297PA852GWFVDC",
             "parent_id": null,
             "user_id": null
         }
@@ -12739,11 +12792,11 @@
             "device_class": "temperature",
             "friendly_name": "Bathroom Vibration Sensor Temperature"
         },
-        "last_changed": "2025-07-16T01:43:40.452923+00:00",
-        "last_reported": "2025-07-16T01:43:40.452923+00:00",
-        "last_updated": "2025-07-16T01:43:40.452923+00:00",
+        "last_changed": "2025-07-16T06:32:54.739859+00:00",
+        "last_reported": "2025-07-16T06:32:54.739859+00:00",
+        "last_updated": "2025-07-16T06:32:54.739859+00:00",
         "context": {
-            "id": "01K08EDNN4T13VC6CD625T7JX8",
+            "id": "01K08YZ96K09PQWFZQQ5X48BB7",
             "parent_id": null,
             "user_id": null
         }
@@ -12947,36 +13000,36 @@
     },
     {
         "entity_id": "sensor.hugh_room_plug_blanket_current",
-        "state": "0",
+        "state": "0.01",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "A",
             "device_class": "current",
             "friendly_name": "Hugh Room Plug Blanket Current"
         },
-        "last_changed": "2025-07-16T03:40:32.619407+00:00",
-        "last_reported": "2025-07-16T03:40:32.619407+00:00",
-        "last_updated": "2025-07-16T03:40:32.619407+00:00",
+        "last_changed": "2025-07-16T06:20:53.363517+00:00",
+        "last_reported": "2025-07-16T06:20:53.363517+00:00",
+        "last_updated": "2025-07-16T06:20:53.363517+00:00",
         "context": {
-            "id": "01K08N3NFBKXPFFZTPKJZQAF8B",
+            "id": "01K08Y98QK0ZW93EGRNN2W1H4Z",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.hugh_room_plug_blanket_voltage",
-        "state": "239",
+        "state": "233",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "V",
             "device_class": "voltage",
             "friendly_name": "Hugh Room Plug Blanket Voltage"
         },
-        "last_changed": "2025-07-16T03:35:31.957832+00:00",
-        "last_reported": "2025-07-16T03:35:31.957832+00:00",
-        "last_updated": "2025-07-16T03:35:31.957832+00:00",
+        "last_changed": "2025-07-16T06:32:54.964161+00:00",
+        "last_reported": "2025-07-16T06:32:54.964161+00:00",
+        "last_updated": "2025-07-16T06:32:54.964161+00:00",
         "context": {
-            "id": "01K08MTFVNY8PCDCAQ7HHATEEA",
+            "id": "01K08YZ9DM0ZK31TFY05VXXEHS",
             "parent_id": null,
             "user_id": null
         }
@@ -13019,36 +13072,36 @@
     },
     {
         "entity_id": "sensor.hugh_room_plug_fan_bed_current",
-        "state": "0.02",
+        "state": "0.01",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "A",
             "device_class": "current",
             "friendly_name": "Hugh Room Plug Fan Bed Current"
         },
-        "last_changed": "2025-07-16T03:40:32.418376+00:00",
-        "last_reported": "2025-07-16T03:40:32.418376+00:00",
-        "last_updated": "2025-07-16T03:40:32.418376+00:00",
+        "last_changed": "2025-07-16T06:24:53.785834+00:00",
+        "last_reported": "2025-07-16T06:24:53.785834+00:00",
+        "last_updated": "2025-07-16T06:24:53.785834+00:00",
         "context": {
-            "id": "01K08N3N92PEPM8M1999HGBRSB",
+            "id": "01K08YGKGSDN93BMYR7Y127G2X",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.hugh_room_plug_fan_bed_voltage",
-        "state": "239",
+        "state": "234",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "V",
             "device_class": "voltage",
             "friendly_name": "Hugh Room Plug Fan Bed Voltage"
         },
-        "last_changed": "2025-07-16T02:55:26.663796+00:00",
-        "last_reported": "2025-07-16T02:55:26.663796+00:00",
-        "last_updated": "2025-07-16T02:55:26.663796+00:00",
+        "last_changed": "2025-07-16T06:29:54.448583+00:00",
+        "last_reported": "2025-07-16T06:29:54.448583+00:00",
+        "last_updated": "2025-07-16T06:29:54.448583+00:00",
         "context": {
-            "id": "01K08JH2Y77E0AWF18ZFKH8QKK",
+            "id": "01K08YSS4GNN8C8701KH0X2MB1",
             "parent_id": null,
             "user_id": null
         }
@@ -14705,42 +14758,48 @@
     },
     {
         "entity_id": "media_player.universal_player_2",
-        "state": "unavailable",
+        "state": "playing",
         "attributes": {
-            "restored": true,
+            "volume_level": 0.15,
+            "media_content_type": "music",
+            "app_id": "music_assistant",
+            "shuffle": false,
+            "repeat": "off",
+            "entity_picture_local": null,
+            "mass_player_type": "player",
+            "active_queue": "media_player.universal_player",
             "device_class": "speaker",
             "icon": "mdi:speaker",
+            "friendly_name": "universal_player",
             "supported_features": 7796671
         },
-        "last_changed": "2025-07-15T16:30:56.759230+00:00",
-        "last_reported": "2025-07-15T16:30:56.759230+00:00",
-        "last_updated": "2025-07-15T16:30:56.759230+00:00",
+        "last_changed": "2025-07-16T06:15:06.052856+00:00",
+        "last_reported": "2025-07-16T06:15:06.052856+00:00",
+        "last_updated": "2025-07-16T06:15:06.052856+00:00",
         "context": {
-            "id": "01K07ESK7QQXV091B11WBA34J8",
+            "id": "01K08XYNJ48JHMNZQ1G25ADW3E",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "button.universal_player_favorite_current_song",
-        "state": "unavailable",
+        "state": "unknown",
         "attributes": {
-            "restored": true,
-            "friendly_name": "Favorite current song",
-            "supported_features": 0
+            "friendly_name": "universal_player Favorite current song"
         },
-        "last_changed": "2025-07-15T16:30:56.759338+00:00",
-        "last_reported": "2025-07-15T16:30:56.759338+00:00",
-        "last_updated": "2025-07-15T16:30:56.759338+00:00",
+        "last_changed": "2025-07-16T06:15:02.386607+00:00",
+        "last_reported": "2025-07-16T06:15:06.052476+00:00",
+        "last_updated": "2025-07-16T06:15:02.386607+00:00",
         "context": {
-            "id": "01K07ESK7Q1BQ0SAV4RYKSDQ1J",
+            "id": "01K08XYHZJ5JEV021R2CC883FT",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "scene.living_room_lights_last_state",
-        "state": "2025-07-16T03:40:12.430076+00:00",
+        "state": "2025-07-16T06:33:02.258007+00:00",
         "attributes": {
             "entity_id": [
                 "light.living_room_ceiling",
@@ -14750,11 +14809,11 @@
             ],
             "friendly_name": "living_room_lights_last_state"
         },
-        "last_changed": "2025-07-16T03:41:00.932200+00:00",
-        "last_reported": "2025-07-16T03:41:00.932200+00:00",
-        "last_updated": "2025-07-16T03:41:00.932200+00:00",
+        "last_changed": "2025-07-16T06:33:50.281877+00:00",
+        "last_reported": "2025-07-16T06:33:50.281877+00:00",
+        "last_updated": "2025-07-16T06:33:50.281877+00:00",
         "context": {
-            "id": "01K08N4H44FBNGN32GJWPPGSC8",
+            "id": "01K08Z0ZE96J2M6K3RBKAH13JH",
             "parent_id": null,
             "user_id": null
         }
