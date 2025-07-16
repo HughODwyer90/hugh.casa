@@ -437,6 +437,17 @@ run_z2m_update_sequence:
       milliseconds: 0
   - action: shell_command.run_z2m_update_sequence
     data: {}
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
+  - action: notify.persistent_notification
+    data:
+      title: Z2M Update
+      message: &#x27;Update sequence triggered. Check log file at /config/tmp/z2m_update_log.txt
+
+        &#x27;
   mode: single
   icon: mdi:update
 </pre>
