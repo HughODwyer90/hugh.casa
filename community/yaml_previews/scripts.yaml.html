@@ -61,7 +61,8 @@ execute_alarm_actions:
       volume_level: 0.15
     action: media_player.volume_set
     target:
-      device_id: 61df364729816b14e75f325311b07257
+      entity_id:
+      - media_player.hugh_room_stereo_2
   - choose:
     - conditions:
       - condition: state
