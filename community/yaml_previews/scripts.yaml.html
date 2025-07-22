@@ -51,6 +51,12 @@ execute_alarm_actions:
     action: light.turn_on
   - delay:
       minutes: 5
+  - action: music_assistant.play_media
+    data:
+      media_type: radio
+      media_id: Today FM
+    target:
+      device_id: 61df364729816b14e75f325311b07257
   - action: media_player.volume_set
     data:
       volume_level: 0.2
@@ -60,12 +66,6 @@ execute_alarm_actions:
       - media_player.hugh_room_speaker
       - media_player.hugh_room_speaker_2
       - media_player.hugh_room_display
-  - action: music_assistant.play_media
-    data:
-      media_type: radio
-      media_id: Today FM
-    target:
-      device_id: 61df364729816b14e75f325311b07257
   - choose:
     - conditions:
       - condition: state
