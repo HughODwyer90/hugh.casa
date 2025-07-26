@@ -20,20 +20,17 @@ hugh_room_stereo_volume_down:
 execute_alarm_actions:
   alias: Execute Alarm Actions
   sequence:
-  - target:
+  - action: input_boolean.turn_on
+    target:
       entity_id: input_boolean.wake_up_alarm_running
-    data: {}
-    action: input_boolean.turn_on
   - condition: template
     value_template: '{{ now() <= state_attr(''sun.sun'', ''next_rising'') | as_datetime
-      }}
-
-      '
-  - data:
+      }}'
+  - action: light.turn_on
+    data:
       transition: 300
     target:
       entity_id: light.hugh_room_lamp
-    action: light.turn_on
   - delay:
       minutes: 5
   - action: music_assistant.play_media
@@ -42,6 +39,41 @@ execute_alarm_actions:
       media_id: Today FM
     target:
       device_id: 61df364729816b14e75f325311b07257
+  - wait_template: '{{ is_state(''media_player.hugh_room_speaker'', ''playing'') }}'
+    timeout: 00:00:08
+    continue_on_timeout: true
+  - choose:
+    - conditions:
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: media_player.hugh_room_speaker
+          state: playing
+      sequence:
+      - action: music_assistant.play_media
+        data:
+          media_type: radio
+          media_id: Today FM
+        target:
+          device_id: 61df364729816b14e75f325311b07257
+      - wait_template: '{{ is_state(''media_player.hugh_room_speaker'', ''playing'')
+          }}'
+        timeout: 00:00:05
+        continue_on_timeout: true
+      - choose:
+        - conditions:
+          - condition: not
+            conditions:
+            - condition: state
+              entity_id: media_player.hugh_room_speaker
+              state: playing
+          sequence:
+          - action: media_player.play_media
+            data:
+              media_content_id: media-source://radio_browser/d0a1da9f-46b3-11e9-aa55-52543be04c81
+              media_content_type: audio/mpeg
+            target:
+              entity_id: media_player.hugh_room_speaker
   - action: media_player.volume_set
     data:
       volume_level: 0.2
@@ -57,7 +89,8 @@ execute_alarm_actions:
         entity_id: sensor.windscreen_freeze_risk
         state: Likely Frozen
       sequence:
-      - data:
+      - action: notify.notifications
+        data:
           title: Wake Up Alarm
           message: "Good morning! \U0001F976 Prepare to de-ice your car!"
           data:
@@ -67,13 +100,13 @@ execute_alarm_actions:
             - action: SNOOZE_ALARM
               title: Snooze Alarm
             notification_icon: mdi:snowflake
-        action: notify.notifications
     - conditions:
       - condition: state
         entity_id: sensor.windscreen_freeze_risk
         state: Not Frozen
       sequence:
-      - data:
+      - action: notify.notifications
+        data:
           title: Wake Up Alarm
           message: "Good morning! \U0001F31E"
           data:
@@ -83,13 +116,9 @@ execute_alarm_actions:
             - action: SNOOZE_ALARM
               title: Snooze Alarm
             notification_icon: mdi:alarm
-        action: notify.notifications
   - action: script.turn_on
-    metadata: {}
-    data: {}
     target:
-      entity_id:
-      - script.blinds_alarm_open
+      entity_id: script.blinds_alarm_open
   - choose:
     - conditions:
       - condition: state
