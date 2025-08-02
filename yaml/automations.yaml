@@ -1568,6 +1568,10 @@
   - entity_id: binary_sensor.rug_sensor
     to: 'on'
     trigger: state
+  - trigger: state
+    entity_id:
+    - media_player.monitor
+    to: 'on'
   conditions:
   - condition: state
     entity_id: input_boolean.wake_up_alarm_running
