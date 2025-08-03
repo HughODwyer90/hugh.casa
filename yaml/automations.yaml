@@ -3917,3 +3917,39 @@
     metadata: {}
     data: {}
   mode: single
+- id: '1754209322914'
+  alias: Alarm Dismiss (TV on)
+  description: Turns off the alarm when the "Turn Off Alarm" button is pressed or
+    when the rug sensor is activated, but only if the alarm is currently running.
+  triggers:
+  - trigger: state
+    entity_id:
+    - media_player.monitor
+    to: 'On'
+  conditions:
+  - condition: state
+    entity_id: input_boolean.wake_up_alarm_running
+    state: 'on'
+  actions:
+  - choose:
+    - conditions:
+      - condition: state
+        state: playing
+        entity_id: media_player.universal_player
+      sequence:
+      - data: {}
+        target:
+          entity_id: media_player.universal_player
+        action: media_player.media_stop
+    default: []
+  - target:
+      entity_id: input_boolean.wake_up_alarm_running
+    data: {}
+    action: input_boolean.turn_off
+  - action: fan.set_percentage
+    metadata: {}
+    data:
+      percentage: 33
+    target:
+      entity_id: fan.air_purifier
+  mode: single
