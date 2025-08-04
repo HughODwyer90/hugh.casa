@@ -3514,18 +3514,18 @@
     - sensor.liverpool_comp
     trigger: state
   - entity_id: sensor.liverpool_score
-    to: Score unavailable
+    to: Scores unavailable
     trigger: state
   conditions:
-  - condition: template
-    value_template: '{{ is_state_attr(''sensor.liverpool_score'', ''hidden'', true)
-      }}'
+  - condition: state
+    entity_id: sensor.liverpool_score
+    state: Scores unavailable
   actions:
-  - action: script.turn_on
-    metadata: {}
-    data: {}
-    target:
+  - target:
       entity_id: script.update_liverpool_sensors
+    action: script.turn_on
+    data: {}
+  mode: single
 - id: '1733432457753'
   alias: Enable Sensors and Display Score
   description: Enables relevant sensors and displays the score before and during the
