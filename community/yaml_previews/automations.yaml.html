@@ -1351,21 +1351,21 @@
         value_template: &#x27;{{ states(&#x27;&#x27;input_number.hugh_room_blinds_position&#x27;&#x27;) | int
           &lt; 20 }}&#x27;
       sequence:
-      - action: script.turn_on
-        metadata: {}
-        data: {}
+      - action: input_select.select_option
         target:
-          entity_id: script.open_blinds
+          entity_id: input_select.hugh_room_blinds_mode
+        data:
+          option: Open
     - conditions:
       - condition: template
         value_template: &#x27;{{ states(&#x27;&#x27;input_number.hugh_room_blinds_position&#x27;&#x27;) | int
           &gt; 20 }}&#x27;
       sequence:
-      - action: script.turn_on
-        metadata: {}
-        data: {}
+      - action: input_select.select_option
         target:
-          entity_id: script.close_blinds
+          entity_id: input_select.hugh_room_blinds_mode
+        data:
+          option: Closed
   mode: single
 - id: &#x27;1709319124924&#x27;
   alias: Hugh Room Pressure Bed
@@ -2699,11 +2699,11 @@
     entity_id: binary_sensor.bed_sensor
     state: &#x27;off&#x27;
   actions:
-  - action: script.turn_on
-    metadata: {}
-    data: {}
+  - action: input_select.select_option
     target:
-      entity_id: script.open_blinds
+      entity_id: input_select.hugh_room_blinds_mode
+    data:
+      option: Open
   mode: single
 - id: &#x27;1721393948523&#x27;
   alias: Initialize Previous Odometer and Fuel Quantity
@@ -2757,22 +2757,21 @@
         value_template: &#x27;{{ states(&#x27;&#x27;input_number.hugh_room_blinds_position&#x27;&#x27;) | int
           &lt; 20 }}&#x27;
       sequence:
-      - action: script.turn_on
-        metadata: {}
-        data: {}
+      - action: input_select.select_option
         target:
-          entity_id:
-          - script.open_blinds
+          entity_id: input_select.hugh_room_blinds_mode
+        data:
+          option: Open
     - conditions:
       - condition: template
         value_template: &#x27;{{ states(&#x27;&#x27;input_number.hugh_room_blinds_position&#x27;&#x27;) | int
           &gt; 20 }}&#x27;
       sequence:
-      - action: script.turn_on
-        metadata: {}
-        data: {}
+      - action: input_select.select_option
         target:
-          entity_id: script.close_blinds
+          entity_id: input_select.hugh_room_blinds_mode
+        data:
+          option: Closed
   mode: single
 - id: &#x27;1722191781948&#x27;
   alias: PC Turn On
@@ -3023,11 +3022,11 @@
     trigger: state
   conditions: []
   actions:
-  - action: script.turn_on
-    metadata: {}
-    data: {}
+  - action: input_select.select_option
     target:
-      entity_id: script.open_blinds
+      entity_id: input_select.hugh_room_blinds_mode
+    data:
+      option: Open
   mode: single
 - id: &#x27;1724800619943&#x27;
   alias: IR Remote Button Off
