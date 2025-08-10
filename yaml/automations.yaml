@@ -503,11 +503,11 @@
       - condition: template
         value_template: '{{ states(''input_number.hugh_room_blinds_position'') | int
           > 20 }}'
-      - action: script.turn_on
-        metadata: {}
-        data: {}
+      - action: input_select.select_option
         target:
-          entity_id: script.close_blinds
+          entity_id: input_select.hugh_room_blinds_mode
+        data:
+          option: Closed
     - conditions:
       - condition: state
         entity_id: light.hugh_room_lamp
@@ -518,11 +518,11 @@
       - condition: template
         value_template: '{{ states(''input_number.hugh_room_blinds_position'') | int
           > 20 }}'
-      - action: script.turn_on
-        metadata: {}
-        data: {}
+      - action: input_select.select_option
         target:
-          entity_id: script.close_blinds
+          entity_id: input_select.hugh_room_blinds_mode
+        data:
+          option: Closed
     - conditions:
       - condition: state
         entity_id: light.hugh_room_lamp
