@@ -4045,3 +4045,55 @@
     OPEN: 50
     HALF_POS: 74
     TOL: 5
+- id: '1754848084910'
+  alias: Blinds mode 2
+  description: ''
+  triggers:
+  - entity_id: input_select.hugh_room_blinds_mode
+    trigger: state
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ is_state(''input_select.hugh_room_blinds_mode'', ''Open'')
+          }}'
+      sequence:
+      - action: cover.set_cover_position
+        target:
+          entity_id: cover.hugh_room_blinds
+        data:
+          position: '{{ OPEN }}'
+    - conditions:
+      - condition: template
+        value_template: '{{ is_state(''input_select.hugh_room_blinds_mode'', ''Half'')
+          }}'
+      sequence:
+      - action: cover.set_cover_position
+        target:
+          entity_id: cover.hugh_room_blinds
+        data:
+          position: '{{ HALF_POS }}'
+    - conditions:
+      - condition: template
+        value_template: '{{ is_state(''input_select.hugh_room_blinds_mode'', ''Closed'')
+          }}'
+      sequence:
+      - action: cover.set_cover_position
+        target:
+          entity_id: cover.hugh_room_blinds
+        data:
+          position: '{{ CLOSED }}'
+  - wait_template: '{% set current = state_attr(''cover.hugh_room_blinds'',''current_position'')
+      %} {% set prev = wait.trigger.to_state.attributes.current_position if wait.trigger
+      else None %} {{ current == prev }}
+
+      '
+    timeout: 00:00:15
+    continue_on_timeout: true
+  mode: restart
+  variables:
+    CLOSED: 13
+    OPEN: 50
+    HALF_POS: 74
+    TOL: 5
