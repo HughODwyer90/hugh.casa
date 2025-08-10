@@ -38,6 +38,7 @@ execute_alarm_actions:
   - action: input_boolean.turn_on
     target:
       entity_id: input_boolean.wake_up_alarm_running
+    data: {}
   - condition: template
     value_template: &#x27;{{ now() &lt;= state_attr(&#x27;&#x27;sun.sun&#x27;&#x27;, &#x27;&#x27;next_rising&#x27;&#x27;) | as_datetime
       }}&#x27;
@@ -131,9 +132,11 @@ execute_alarm_actions:
             - action: SNOOZE_ALARM
               title: Snooze Alarm
             notification_icon: mdi:alarm
-  - action: script.turn_on
+  - action: input_select.select_option
     target:
-      entity_id: script.blinds_alarm_open
+      entity_id: input_select.hugh_room_blinds_mode
+    data:
+      option: Half
   - choose:
     - conditions:
       - condition: state
