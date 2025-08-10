@@ -2288,12 +2288,11 @@
       entity_id: input_boolean.wake_up_alarm_running
     data: {}
     action: input_boolean.turn_off
-  - action: script.turn_on
-    metadata: {}
-    data: {}
+  - action: input_select.select_option
     target:
-      entity_id:
-      - script.close_blinds
+      entity_id: input_select.hugh_room_blinds_mode
+    data:
+      option: Closed
   - delay:
       minutes: 5
   - condition: state
