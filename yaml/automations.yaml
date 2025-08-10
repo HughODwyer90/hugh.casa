@@ -3949,3 +3949,38 @@
     target:
       entity_id: fan.air_purifier
   mode: single
+- id: '1754809462445'
+  alias: Set Hugh Room Blinds from Mode
+  description: ''
+  triggers:
+  - entity_id: input_select.hugh_room_blinds_mode
+    trigger: state
+  actions:
+  - choose:
+    - conditions: '{{ is_state(''input_select.hugh_room_blinds_mode'', ''Open'') }}'
+      sequence:
+      - target:
+          entity_id: cover.hugh_room_blinds
+        data:
+          position: '{{ OPEN }}'
+        action: cover.set_cover_position
+    - conditions: '{{ is_state(''input_select.hugh_room_blinds_mode'', ''Half'') }}'
+      sequence:
+      - target:
+          entity_id: cover.hugh_room_blinds
+        data:
+          position: '{{ MID }}'
+        action: cover.set_cover_position
+    - conditions: '{{ is_state(''input_select.hugh_room_blinds_mode'', ''Closed'')
+        }}'
+      sequence:
+      - target:
+          entity_id: cover.hugh_room_blinds
+        data:
+          position: '{{ CLOSED }}'
+        action: cover.set_cover_position
+  mode: single
+  variables:
+    CLOSED: 13
+    OPEN: 79
+    MID: '{{ ((CLOSED + OPEN) / 2) | round(0) }}'
