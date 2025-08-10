@@ -4060,6 +4060,58 @@
     OPEN: 50
     HALF_POS: 74
     TOL: 5
+- id: &#x27;1754848084910&#x27;
+  alias: Blinds mode 2
+  description: &#x27;&#x27;
+  triggers:
+  - entity_id: input_select.hugh_room_blinds_mode
+    trigger: state
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ is_state(&#x27;&#x27;input_select.hugh_room_blinds_mode&#x27;&#x27;, &#x27;&#x27;Open&#x27;&#x27;)
+          }}&#x27;
+      sequence:
+      - action: cover.set_cover_position
+        target:
+          entity_id: cover.hugh_room_blinds
+        data:
+          position: &#x27;{{ OPEN }}&#x27;
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ is_state(&#x27;&#x27;input_select.hugh_room_blinds_mode&#x27;&#x27;, &#x27;&#x27;Half&#x27;&#x27;)
+          }}&#x27;
+      sequence:
+      - action: cover.set_cover_position
+        target:
+          entity_id: cover.hugh_room_blinds
+        data:
+          position: &#x27;{{ HALF_POS }}&#x27;
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ is_state(&#x27;&#x27;input_select.hugh_room_blinds_mode&#x27;&#x27;, &#x27;&#x27;Closed&#x27;&#x27;)
+          }}&#x27;
+      sequence:
+      - action: cover.set_cover_position
+        target:
+          entity_id: cover.hugh_room_blinds
+        data:
+          position: &#x27;{{ CLOSED }}&#x27;
+  - wait_template: &#x27;{% set current = state_attr(&#x27;&#x27;cover.hugh_room_blinds&#x27;&#x27;,&#x27;&#x27;current_position&#x27;&#x27;)
+      %} {% set prev = wait.trigger.to_state.attributes.current_position if wait.trigger
+      else None %} {{ current == prev }}
+
+      &#x27;
+    timeout: 00:00:15
+    continue_on_timeout: true
+  mode: restart
+  variables:
+    CLOSED: 13
+    OPEN: 50
+    HALF_POS: 74
+    TOL: 5
 </pre>
             </div>
             <script>
