@@ -274,36 +274,6 @@ update_car_data_expiration:
   icon: mdi:calendar-alert
   mode: single
   description: &#x27;&#x27;
-close_blinds:
-  alias: Blinds close
-  sequence:
-  - action: cover.set_cover_position
-    metadata: {}
-    data:
-      position: 14
-    target:
-      entity_id: cover.hugh_room_blinds
-  description: &#x27;&#x27;
-open_blinds:
-  alias: Blinds open
-  sequence:
-  - action: cover.set_cover_position
-    metadata: {}
-    data:
-      position: 71
-    target:
-      entity_id: cover.hugh_room_blinds
-  description: &#x27;&#x27;
-blinds_alarm_open:
-  alias: Blinds alarm open
-  sequence:
-  - action: cover.set_cover_position
-    metadata: {}
-    data:
-      position: 29
-    target:
-      entity_id: cover.hugh_room_blinds
-  description: &#x27;&#x27;
 update_liverpool_sensors:
   alias: Update Liverpool Sensors
   sequence:
