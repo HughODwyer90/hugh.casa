@@ -3925,6 +3925,11 @@
   - entity_id: input_select.hugh_room_blinds_mode
     trigger: state
   actions:
+  - variables:
+      CLOSED: &#x27;{{ states(&#x27;&#x27;input_number.blinds_closed_pos&#x27;&#x27;) | int }}&#x27;
+      OPEN: &#x27;{{ states(&#x27;&#x27;input_number.blinds_open_pos&#x27;&#x27;) | int }}&#x27;
+      HALF_POS: &#x27;{{ states(&#x27;&#x27;input_number.blinds_half_pos&#x27;&#x27;) | int }}&#x27;
+      TOL: &#x27;{{ states(&#x27;&#x27;input_number.blinds_tol&#x27;&#x27;) | int }}&#x27;
   - choose:
     - conditions:
       - condition: template
@@ -3964,14 +3969,8 @@
     timeout: 00:00:15
     continue_on_timeout: true
   mode: restart
-  variables:
-    CLOSED: 13
-    OPEN: 50
-    HALF_POS: 75
-    TOL: 5
 - id: &#x27;1754809515058&#x27;
   alias: Sync Hugh Room Blinds Mode
-  description: &#x27;&#x27;
   triggers:
   - entity_id: cover.hugh_room_blinds
     attribute: current_position
@@ -3985,7 +3984,11 @@
     timeout: 00:00:15
     continue_on_timeout: true
   - variables:
-      pos: &#x27;{{ state_attr(&#x27;&#x27;cover.hugh_room_blinds&#x27;&#x27;,&#x27;&#x27;current_position&#x27;&#x27;)|int(0)
+      CLOSED: &#x27;{{ states(&#x27;&#x27;input_number.blinds_closed_pos&#x27;&#x27;) | int }}&#x27;
+      OPEN: &#x27;{{ states(&#x27;&#x27;input_number.blinds_open_pos&#x27;&#x27;) | int }}&#x27;
+      HALF_POS: &#x27;{{ states(&#x27;&#x27;input_number.blinds_half_pos&#x27;&#x27;) | int }}&#x27;
+      TOL: &#x27;{{ states(&#x27;&#x27;input_number.blinds_tol&#x27;&#x27;) | int }}&#x27;
+      pos: &#x27;{{ state_attr(&#x27;&#x27;cover.hugh_room_blinds&#x27;&#x27;,&#x27;&#x27;current_position&#x27;&#x27;) | int(0)
         }}&#x27;
       is_closed: &#x27;{{ pos &lt;= (CLOSED + TOL) }}&#x27;
       is_half: &#x27;{{ pos &gt;= (HALF_POS - TOL) }}&#x27;
@@ -4009,11 +4012,6 @@
     data:
       value: &#x27;{{ mode_value | int }}&#x27;
   mode: restart
-  variables:
-    CLOSED: 13
-    OPEN: 50
-    HALF_POS: 75
-    TOL: 5
 - id: &#x27;1754848013514&#x27;
   alias: Sync blinds 2
   description: &#x27;&#x27;
