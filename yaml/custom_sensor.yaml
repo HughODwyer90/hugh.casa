@@ -918,7 +918,12 @@
       {% if events %}
         {% set game = events[0] %}
         {% if 'seasonType' in game and 'name' in game['seasonType'] %}
-          {{ game['seasonType']['name'] }}
+          {% set stage_name = game['seasonType']['name'] %}
+          {% if 'Community Shield' in stage_name %}
+            FA Community Shield
+          {% else %}
+            {{ stage_name }}
+          {% endif %}
         {% else %}
           Invalid game data
         {% endif %}
