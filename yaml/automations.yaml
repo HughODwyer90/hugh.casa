@@ -3911,28 +3911,36 @@
     trigger: state
   actions:
   - choose:
-    - conditions: '{{ is_state(''input_select.hugh_room_blinds_mode'', ''Open'') }}'
+    - conditions:
+      - condition: template
+        value_template: '{{ is_state(''input_select.hugh_room_blinds_mode'', ''Open'')
+          }}'
       sequence:
-      - target:
+      - action: cover.set_cover_position
+        target:
           entity_id: cover.hugh_room_blinds
         data:
           position: '{{ OPEN }}'
-        action: cover.set_cover_position
-    - conditions: '{{ is_state(''input_select.hugh_room_blinds_mode'', ''Half'') }}'
+    - conditions:
+      - condition: template
+        value_template: '{{ is_state(''input_select.hugh_room_blinds_mode'', ''Half'')
+          }}'
       sequence:
-      - target:
+      - action: cover.set_cover_position
+        target:
           entity_id: cover.hugh_room_blinds
         data:
-          position: '{{ MID }}'
-        action: cover.set_cover_position
-    - conditions: '{{ is_state(''input_select.hugh_room_blinds_mode'', ''Closed'')
-        }}'
+          position: '{{ HALF_POS }}'
+    - conditions:
+      - condition: template
+        value_template: '{{ is_state(''input_select.hugh_room_blinds_mode'', ''Closed'')
+          }}'
       sequence:
-      - target:
+      - action: cover.set_cover_position
+        target:
           entity_id: cover.hugh_room_blinds
         data:
           position: '{{ CLOSED }}'
-        action: cover.set_cover_position
   - wait_template: '{% set current = state_attr(''cover.hugh_room_blinds'',''current_position'')
       %} {% set prev = wait.trigger.to_state.attributes.current_position if wait.trigger
       else None %} {{ current == prev }}
@@ -3943,11 +3951,12 @@
   mode: restart
   variables:
     CLOSED: 13
-    OPEN: 79
-    MID: '{{ ((CLOSED + OPEN) / 2) | round(0) }}'
+    OPEN: 50
+    HALF_POS: 75
     TOL: 5
 - id: '1754809515058'
   alias: Sync Hugh Room Blinds Mode
+  description: ''
   triggers:
   - entity_id: cover.hugh_room_blinds
     attribute: current_position
@@ -3963,24 +3972,30 @@
   - variables:
       pos: '{{ state_attr(''cover.hugh_room_blinds'',''current_position'')|int(0)
         }}'
-      new_mode: '{{ ''Open'' if pos >= (OPEN - TOL) else (''Closed'' if pos <= (CLOSED
-        + TOL) else ''Half'') }}'
+      is_closed: '{{ pos <= (CLOSED + TOL) }}'
+      is_half: '{{ pos >= (HALF_POS - TOL) }}'
+      new_mode: '{{ ''Closed'' if is_closed else (''Half'' if is_half else ''Open'')
+        }}'
       mode_value: '{{ pos }}'
   - choose:
-    - conditions: '{{ states(''input_select.hugh_room_blinds_mode'') != new_mode }}'
+    - conditions:
+      - condition: template
+        value_template: '{{ states(''input_select.hugh_room_blinds_mode'') != new_mode
+          }}'
       sequence:
-      - target:
+      - action: input_select.select_option
+        target:
           entity_id: input_select.hugh_room_blinds_mode
         data:
           option: '{{ new_mode }}'
-        action: input_select.select_option
-  - target:
+  - action: input_number.set_value
+    target:
       entity_id: input_number.hugh_room_blinds_position
     data:
       value: '{{ mode_value | int }}'
-    action: input_number.set_value
+  mode: restart
   variables:
     CLOSED: 13
-    OPEN: 79
+    OPEN: 50
+    HALF_POS: 75
     TOL: 5
-  mode: restart
