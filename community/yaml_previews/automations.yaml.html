@@ -3988,6 +3988,13 @@
     data:
       option: &#x27;{{ new_mode }}&#x27;
     action: input_select.select_option
+  - action: input_number.set_value
+    target:
+      entity_id: input_number.hugh_room_blinds_position
+    data:
+      value: &#x27;{% if new_mode == &#x27;&#x27;Open&#x27;&#x27; %} {{ OPEN }} {% elif new_mode == &#x27;&#x27;Closed&#x27;&#x27;
+        %} {{ CLOSED }} {% else %} {{ ((OPEN + CLOSED) / 2) | round(0) }} {% endif
+        %}&#x27;
   mode: restart
   variables:
     CLOSED: 13
