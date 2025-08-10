@@ -3980,44 +3980,25 @@
         }}&#x27;
       new_mode: &#x27;{{ &#x27;&#x27;Open&#x27;&#x27; if pos &gt;= (OPEN - TOL) else (&#x27;&#x27;Closed&#x27;&#x27; if pos &lt;= (CLOSED
         + TOL) else &#x27;&#x27;Half&#x27;&#x27;) }}&#x27;
-  - condition: template
-    value_template: &#x27;{{ states(&#x27;&#x27;input_select.hugh_room_blinds_mode&#x27;&#x27;) != new_mode
-      }}&#x27;
-  - target:
-      entity_id: input_select.hugh_room_blinds_mode
-    data:
-      option: &#x27;{{ new_mode }}&#x27;
-    action: input_select.select_option
+      mode_value: &#x27;{{ pos }}&#x27;
   - choose:
-    - conditions:
-      - condition: template
-        value_template: &#x27;{{ new_mode == &#x27;&#x27;Open&#x27;&#x27; }}&#x27;
+    - conditions: &#x27;{{ states(&#x27;&#x27;input_select.hugh_room_blinds_mode&#x27;&#x27;) != new_mode }}&#x27;
       sequence:
       - target:
-          entity_id: input_number.hugh_room_blinds_position
+          entity_id: input_select.hugh_room_blinds_mode
         data:
-          value: &#x27;{{ OPEN | int }}&#x27;
-        action: input_number.set_value
-    - conditions:
-      - condition: template
-        value_template: &#x27;{{ new_mode == &#x27;&#x27;Closed&#x27;&#x27; }}&#x27;
-      sequence:
-      - target:
-          entity_id: input_number.hugh_room_blinds_position
-        data:
-          value: &#x27;{{ CLOSED | int }}&#x27;
-        action: input_number.set_value
-    default:
-    - target:
-        entity_id: input_number.hugh_room_blinds_position
-      data:
-        value: &#x27;{{ ((OPEN + CLOSED) / 2) | round(0) | int }}&#x27;
-      action: input_number.set_value
-  mode: restart
+          option: &#x27;{{ new_mode }}&#x27;
+        action: input_select.select_option
+  - target:
+      entity_id: input_number.hugh_room_blinds_position
+    data:
+      value: &#x27;{{ mode_value | int }}&#x27;
+    action: input_number.set_value
   variables:
     CLOSED: 13
     OPEN: 79
     TOL: 5
+  mode: restart
 </pre>
             </div>
             <script>
