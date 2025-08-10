@@ -3966,7 +3966,6 @@
   mode: single
 - id: &#x27;1754809462445&#x27;
   alias: Set Hugh Room Blinds from Mode
-  description: &#x27;&#x27;
   triggers:
   - entity_id: input_select.hugh_room_blinds_mode
     trigger: state
@@ -3994,35 +3993,51 @@
         data:
           position: &#x27;{{ CLOSED }}&#x27;
         action: cover.set_cover_position
-  mode: single
+  - wait_template: &#x27;{% set current = state_attr(&#x27;&#x27;cover.hugh_room_blinds&#x27;&#x27;,&#x27;&#x27;current_position&#x27;&#x27;)
+      %} {% set prev = wait.trigger.to_state.attributes.current_position if wait.trigger
+      else None %} {{ current == prev }}
+
+      &#x27;
+    timeout: 00:00:15
+    continue_on_timeout: true
+  mode: restart
   variables:
     CLOSED: 13
     OPEN: 79
     MID: &#x27;{{ ((CLOSED + OPEN) / 2) | round(0) }}&#x27;
+    TOL: 5
 - id: &#x27;1754809515058&#x27;
   alias: Sync Hugh Room Blinds Mode
-  description: &#x27;&#x27;
   triggers:
   - entity_id: cover.hugh_room_blinds
     attribute: current_position
     trigger: state
-  conditions:
-  - &#x27;{{ states(&#x27;&#x27;input_select.hugh_room_blinds_mode&#x27;&#x27;) != new_mode }}&#x27;
   actions:
+  - wait_template: &#x27;{% set current = state_attr(&#x27;&#x27;cover.hugh_room_blinds&#x27;&#x27;,&#x27;&#x27;current_position&#x27;&#x27;)
+      %} {% set prev = wait.trigger.to_state.attributes.current_position if wait.trigger
+      else None %} {{ current == prev }}
+
+      &#x27;
+    timeout: 00:00:15
+    continue_on_timeout: true
+  - variables:
+      pos: &#x27;{{ state_attr(&#x27;&#x27;cover.hugh_room_blinds&#x27;&#x27;,&#x27;&#x27;current_position&#x27;&#x27;) | int(0)
+        }}&#x27;
+      new_mode: &#x27;{% if pos &gt;= (OPEN - TOL) %} Open {% elif pos &lt;= (CLOSED + TOL) %}
+        Closed {% else %} Half {% endif %}&#x27;
+  - condition: template
+    value_template: &#x27;{{ states(&#x27;&#x27;input_select.hugh_room_blinds_mode&#x27;&#x27;) != new_mode
+      }}&#x27;
   - target:
       entity_id: input_select.hugh_room_blinds_mode
     data:
       option: &#x27;{{ new_mode }}&#x27;
     action: input_select.select_option
-  mode: single
+  mode: restart
   variables:
     CLOSED: 13
     OPEN: 79
     TOL: 5
-    pos: &#x27;{{ state_attr(&#x27;&#x27;cover.hugh_room_blinds&#x27;&#x27;,&#x27;&#x27;current_position&#x27;&#x27;) | int(0)
-      }}&#x27;
-    new_mode: &#x27;{% if pos &gt;= (OPEN - TOL) %} Open {% elif pos &lt;= (CLOSED + TOL) %}
-      Closed {% else %} Half {% endif %}&#x27;
 </pre>
             </div>
             <script>
