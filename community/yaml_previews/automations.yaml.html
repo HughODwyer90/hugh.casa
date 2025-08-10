@@ -3964,6 +3964,41 @@
     target:
       entity_id: fan.air_purifier
   mode: single
+- id: &#x27;1754809462445&#x27;
+  alias: Set Hugh Room Blinds from Mode
+  description: &#x27;&#x27;
+  triggers:
+  - entity_id: input_select.hugh_room_blinds_mode
+    trigger: state
+  actions:
+  - choose:
+    - conditions: &#x27;{{ is_state(&#x27;&#x27;input_select.hugh_room_blinds_mode&#x27;&#x27;, &#x27;&#x27;Open&#x27;&#x27;) }}&#x27;
+      sequence:
+      - target:
+          entity_id: cover.hugh_room_blinds
+        data:
+          position: &#x27;{{ OPEN }}&#x27;
+        action: cover.set_cover_position
+    - conditions: &#x27;{{ is_state(&#x27;&#x27;input_select.hugh_room_blinds_mode&#x27;&#x27;, &#x27;&#x27;Half&#x27;&#x27;) }}&#x27;
+      sequence:
+      - target:
+          entity_id: cover.hugh_room_blinds
+        data:
+          position: &#x27;{{ MID }}&#x27;
+        action: cover.set_cover_position
+    - conditions: &#x27;{{ is_state(&#x27;&#x27;input_select.hugh_room_blinds_mode&#x27;&#x27;, &#x27;&#x27;Closed&#x27;&#x27;)
+        }}&#x27;
+      sequence:
+      - target:
+          entity_id: cover.hugh_room_blinds
+        data:
+          position: &#x27;{{ CLOSED }}&#x27;
+        action: cover.set_cover_position
+  mode: single
+  variables:
+    CLOSED: 13
+    OPEN: 79
+    MID: &#x27;{{ ((CLOSED + OPEN) / 2) | round(0) }}&#x27;
 </pre>
             </div>
             <script>
