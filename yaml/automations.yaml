@@ -3984,3 +3984,27 @@
     CLOSED: 13
     OPEN: 79
     MID: '{{ ((CLOSED + OPEN) / 2) | round(0) }}'
+- id: '1754809515058'
+  alias: Sync Hugh Room Blinds Mode
+  description: ''
+  triggers:
+  - entity_id: cover.hugh_room_blinds
+    attribute: current_position
+    trigger: state
+  conditions:
+  - '{{ states(''input_select.hugh_room_blinds_mode'') != new_mode }}'
+  actions:
+  - target:
+      entity_id: input_select.hugh_room_blinds_mode
+    data:
+      option: '{{ new_mode }}'
+    action: input_select.select_option
+  mode: single
+  variables:
+    CLOSED: 13
+    OPEN: 79
+    TOL: 5
+    pos: '{{ state_attr(''cover.hugh_room_blinds'',''current_position'') | int(0)
+      }}'
+    new_mode: '{% if pos >= (OPEN - TOL) %} Open {% elif pos <= (CLOSED + TOL) %}
+      Closed {% else %} Half {% endif %}'
