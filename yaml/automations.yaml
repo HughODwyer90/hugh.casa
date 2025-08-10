@@ -2992,11 +2992,11 @@
     to: 'on'
     trigger: state
   actions:
-  - action: script.turn_on
-    metadata: {}
-    data: {}
+  - action: input_select.select_option
     target:
-      entity_id: script.close_blinds
+      entity_id: input_select.hugh_room_blinds_mode
+    data:
+      option: Closed
 - id: '1724788680813'
   alias: IR Remote Blinds Plus
   description: ''
