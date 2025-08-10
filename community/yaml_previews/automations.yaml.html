@@ -3926,28 +3926,36 @@
     trigger: state
   actions:
   - choose:
-    - conditions: &#x27;{{ is_state(&#x27;&#x27;input_select.hugh_room_blinds_mode&#x27;&#x27;, &#x27;&#x27;Open&#x27;&#x27;) }}&#x27;
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ is_state(&#x27;&#x27;input_select.hugh_room_blinds_mode&#x27;&#x27;, &#x27;&#x27;Open&#x27;&#x27;)
+          }}&#x27;
       sequence:
-      - target:
+      - action: cover.set_cover_position
+        target:
           entity_id: cover.hugh_room_blinds
         data:
           position: &#x27;{{ OPEN }}&#x27;
-        action: cover.set_cover_position
-    - conditions: &#x27;{{ is_state(&#x27;&#x27;input_select.hugh_room_blinds_mode&#x27;&#x27;, &#x27;&#x27;Half&#x27;&#x27;) }}&#x27;
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ is_state(&#x27;&#x27;input_select.hugh_room_blinds_mode&#x27;&#x27;, &#x27;&#x27;Half&#x27;&#x27;)
+          }}&#x27;
       sequence:
-      - target:
+      - action: cover.set_cover_position
+        target:
           entity_id: cover.hugh_room_blinds
         data:
-          position: &#x27;{{ MID }}&#x27;
-        action: cover.set_cover_position
-    - conditions: &#x27;{{ is_state(&#x27;&#x27;input_select.hugh_room_blinds_mode&#x27;&#x27;, &#x27;&#x27;Closed&#x27;&#x27;)
-        }}&#x27;
+          position: &#x27;{{ HALF_POS }}&#x27;
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ is_state(&#x27;&#x27;input_select.hugh_room_blinds_mode&#x27;&#x27;, &#x27;&#x27;Closed&#x27;&#x27;)
+          }}&#x27;
       sequence:
-      - target:
+      - action: cover.set_cover_position
+        target:
           entity_id: cover.hugh_room_blinds
         data:
           position: &#x27;{{ CLOSED }}&#x27;
-        action: cover.set_cover_position
   - wait_template: &#x27;{% set current = state_attr(&#x27;&#x27;cover.hugh_room_blinds&#x27;&#x27;,&#x27;&#x27;current_position&#x27;&#x27;)
       %} {% set prev = wait.trigger.to_state.attributes.current_position if wait.trigger
       else None %} {{ current == prev }}
@@ -3958,11 +3966,12 @@
   mode: restart
   variables:
     CLOSED: 13
-    OPEN: 79
-    MID: &#x27;{{ ((CLOSED + OPEN) / 2) | round(0) }}&#x27;
+    OPEN: 50
+    HALF_POS: 75
     TOL: 5
 - id: &#x27;1754809515058&#x27;
   alias: Sync Hugh Room Blinds Mode
+  description: &#x27;&#x27;
   triggers:
   - entity_id: cover.hugh_room_blinds
     attribute: current_position
@@ -3978,27 +3987,33 @@
   - variables:
       pos: &#x27;{{ state_attr(&#x27;&#x27;cover.hugh_room_blinds&#x27;&#x27;,&#x27;&#x27;current_position&#x27;&#x27;)|int(0)
         }}&#x27;
-      new_mode: &#x27;{{ &#x27;&#x27;Open&#x27;&#x27; if pos &gt;= (OPEN - TOL) else (&#x27;&#x27;Closed&#x27;&#x27; if pos &lt;= (CLOSED
-        + TOL) else &#x27;&#x27;Half&#x27;&#x27;) }}&#x27;
+      is_closed: &#x27;{{ pos &lt;= (CLOSED + TOL) }}&#x27;
+      is_half: &#x27;{{ pos &gt;= (HALF_POS - TOL) }}&#x27;
+      new_mode: &#x27;{{ &#x27;&#x27;Closed&#x27;&#x27; if is_closed else (&#x27;&#x27;Half&#x27;&#x27; if is_half else &#x27;&#x27;Open&#x27;&#x27;)
+        }}&#x27;
       mode_value: &#x27;{{ pos }}&#x27;
   - choose:
-    - conditions: &#x27;{{ states(&#x27;&#x27;input_select.hugh_room_blinds_mode&#x27;&#x27;) != new_mode }}&#x27;
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ states(&#x27;&#x27;input_select.hugh_room_blinds_mode&#x27;&#x27;) != new_mode
+          }}&#x27;
       sequence:
-      - target:
+      - action: input_select.select_option
+        target:
           entity_id: input_select.hugh_room_blinds_mode
         data:
           option: &#x27;{{ new_mode }}&#x27;
-        action: input_select.select_option
-  - target:
+  - action: input_number.set_value
+    target:
       entity_id: input_number.hugh_room_blinds_position
     data:
       value: &#x27;{{ mode_value | int }}&#x27;
-    action: input_number.set_value
+  mode: restart
   variables:
     CLOSED: 13
-    OPEN: 79
+    OPEN: 50
+    HALF_POS: 75
     TOL: 5
-  mode: restart
 </pre>
             </div>
             <script>
