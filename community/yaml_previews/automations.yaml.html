@@ -1413,11 +1413,11 @@
         data:
           transition: 2
         action: scene.turn_on
-      - action: script.turn_on
-        metadata: {}
-        data: {}
+      - action: input_select.select_option
         target:
-          entity_id: script.close_blinds
+          entity_id: input_select.hugh_room_blinds_mode
+        data:
+          option: Closed
     - conditions:
       - condition: template
         value_template: &#x27;{{ trigger.to_state.state == &#x27;&#x27;off&#x27;&#x27; }}&#x27;
@@ -2682,11 +2682,11 @@
     trigger: time
   conditions: []
   actions:
-  - action: script.turn_on
-    metadata: {}
-    data: {}
+  - action: input_select.select_option
     target:
-      entity_id: script.close_blinds
+      entity_id: input_select.hugh_room_blinds_mode
+    data:
+      option: Closed
   mode: single
 - id: &#x27;1721255019657&#x27;
   alias: Hugh Room Day Blinds
