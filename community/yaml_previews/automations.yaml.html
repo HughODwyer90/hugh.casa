@@ -3976,25 +3976,25 @@
     timeout: 00:00:15
     continue_on_timeout: true
   - variables:
-      pos: &#x27;{{ state_attr(&#x27;&#x27;cover.hugh_room_blinds&#x27;&#x27;,&#x27;&#x27;current_position&#x27;&#x27;) | int(0)
+      pos: &#x27;{{ state_attr(&#x27;&#x27;cover.hugh_room_blinds&#x27;&#x27;,&#x27;&#x27;current_position&#x27;&#x27;)|int(0)
         }}&#x27;
-      new_mode: &#x27;{% if pos &gt;= (OPEN - TOL) %} Open {% elif pos &lt;= (CLOSED + TOL) %}
-        Closed {% else %} Half {% endif %}&#x27;
+      new_mode: &#x27;{{ &#x27;&#x27;Open&#x27;&#x27; if pos &gt;= (OPEN - TOL) else (&#x27;&#x27;Closed&#x27;&#x27; if pos &lt;= (CLOSED
+        + TOL) else &#x27;&#x27;Half&#x27;&#x27;) }}&#x27;
+      mode_value: &#x27;{{ OPEN if pos &gt;= (OPEN - TOL) else (CLOSED if pos &lt;= (CLOSED +
+        TOL) else ((OPEN + CLOSED)/2)|round(0)) }}&#x27;
   - condition: template
     value_template: &#x27;{{ states(&#x27;&#x27;input_select.hugh_room_blinds_mode&#x27;&#x27;) != new_mode
       }}&#x27;
-  - target:
+  - action: input_select.select_option
+    target:
       entity_id: input_select.hugh_room_blinds_mode
     data:
       option: &#x27;{{ new_mode }}&#x27;
-    action: input_select.select_option
   - action: input_number.set_value
     target:
       entity_id: input_number.hugh_room_blinds_position
     data:
-      value: &#x27;{% if new_mode == &#x27;&#x27;Open&#x27;&#x27; %} {{ OPEN }} {% elif new_mode == &#x27;&#x27;Closed&#x27;&#x27;
-        %} {{ CLOSED }} {% else %} {{ ((OPEN + CLOSED) / 2) | round(0) }} {% endif
-        %}&#x27;
+      value: &#x27;{{ mode_value }}&#x27;
   mode: restart
   variables:
     CLOSED: 13
