@@ -2497,46 +2497,6 @@
   - data: {}
     action: script.find_car
   mode: single
-- id: &#x27;1717760799122&#x27;
-  alias: Update Hugh Room Blinds Position
-  description: Update the cover position based on the slider value.
-  trigger:
-  - trigger: state
-    entity_id: input_number.hugh_room_blinds_position
-  condition:
-  - condition: template
-    value_template: &#x27;{{ states(&#x27;&#x27;input_number.hugh_room_blinds_position&#x27;&#x27;) | int !=
-      state_attr(&#x27;&#x27;cover.hugh_room_blinds&#x27;&#x27;, &#x27;&#x27;current_position&#x27;&#x27;) }}&#x27;
-  action:
-  - action: cover.set_cover_position
-    target:
-      entity_id: cover.hugh_room_blinds
-    data:
-      position: &#x27;{{ states(&#x27;&#x27;input_number.hugh_room_blinds_position&#x27;&#x27;) | int }}&#x27;
-  mode: single
-- id: &#x27;1717761028586&#x27;
-  alias: Sync Blinds Position with Slider
-  description: Update the slider value whenever the blinds position changes.
-  trigger:
-  - trigger: state
-    entity_id: cover.hugh_room_blinds
-    attribute: current_position
-  condition:
-  - condition: template
-    value_template: &#x27;{{ states(&#x27;&#x27;input_number.hugh_room_blinds_position&#x27;&#x27;) | int !=
-      state_attr(&#x27;&#x27;cover.hugh_room_blinds&#x27;&#x27;, &#x27;&#x27;current_position&#x27;&#x27;) }}&#x27;
-  action:
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 5
-      milliseconds: 0
-  - action: input_number.set_value
-    target:
-      entity_id: input_number.hugh_room_blinds_position
-    data:
-      value: &#x27;{{ state_attr(&#x27;&#x27;cover.hugh_room_blinds&#x27;&#x27;, &#x27;&#x27;current_position&#x27;&#x27;) }}&#x27;
-  mode: single
 - id: &#x27;1717788510529&#x27;
   alias: Universal Player Volume Up
   description: &#x27;&#x27;
