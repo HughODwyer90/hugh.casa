@@ -3915,44 +3915,28 @@
       OPEN: '{{ states(''input_number.blinds_open_pos'') | int }}'
       HALF_POS: '{{ states(''input_number.blinds_half_pos'') | int }}'
       TOL: '{{ states(''input_number.blinds_tol'') | int }}'
+      target_pos: "{% if is_state('input_select.hugh_room_blinds_mode', 'Open') %}\n
+        \ {{ OPEN }}\n{% elif is_state('input_select.hugh_room_blinds_mode', 'Half')
+        %}\n  {{ HALF_POS }}\n{% else %}\n  {{ CLOSED }}\n{% endif %}"
+      cur_pos: '{{ state_attr(''cover.hugh_room_blinds'',''current_position'') | int(0)
+        }}'
+      need_move: '{{ (cur_pos - target_pos) | abs > TOL }}'
   - choose:
     - conditions:
       - condition: template
-        value_template: '{{ is_state(''input_select.hugh_room_blinds_mode'', ''Open'')
-          }}'
+        value_template: '{{ need_move }}'
       sequence:
       - action: cover.set_cover_position
         target:
           entity_id: cover.hugh_room_blinds
         data:
-          position: '{{ OPEN }}'
-    - conditions:
-      - condition: template
-        value_template: '{{ is_state(''input_select.hugh_room_blinds_mode'', ''Half'')
-          }}'
-      sequence:
-      - action: cover.set_cover_position
-        target:
-          entity_id: cover.hugh_room_blinds
-        data:
-          position: '{{ HALF_POS }}'
-    - conditions:
-      - condition: template
-        value_template: '{{ is_state(''input_select.hugh_room_blinds_mode'', ''Closed'')
-          }}'
-      sequence:
-      - action: cover.set_cover_position
-        target:
-          entity_id: cover.hugh_room_blinds
-        data:
-          position: '{{ CLOSED }}'
-  - wait_template: '{% set current = state_attr(''cover.hugh_room_blinds'',''current_position'')
-      %} {% set prev = wait.trigger.to_state.attributes.current_position if wait.trigger
-      else None %} {{ current == prev }}
+          position: '{{ target_pos }}'
+      - wait_template: '{{ states(''cover.hugh_room_blinds'') not in [''opening'',''closing'']
+          }}
 
-      '
-    timeout: 00:00:15
-    continue_on_timeout: true
+          '
+        timeout: 00:00:20
+        continue_on_timeout: true
   mode: restart
 - id: '1754809515058'
   alias: Sync Hugh Room Blinds Mode
@@ -3960,14 +3944,8 @@
   - entity_id: cover.hugh_room_blinds
     attribute: current_position
     trigger: state
+    for: 00:00:02
   actions:
-  - wait_template: '{% set current = state_attr(''cover.hugh_room_blinds'',''current_position'')
-      %} {% set prev = wait.trigger.to_state.attributes.current_position if wait.trigger
-      else None %} {{ current == prev }}
-
-      '
-    timeout: 00:00:15
-    continue_on_timeout: true
   - variables:
       CLOSED: '{{ states(''input_number.blinds_closed_pos'') | int }}'
       OPEN: '{{ states(''input_number.blinds_open_pos'') | int }}'
@@ -3975,16 +3953,12 @@
       TOL: '{{ states(''input_number.blinds_tol'') | int }}'
       pos: '{{ state_attr(''cover.hugh_room_blinds'',''current_position'') | int(0)
         }}'
-      is_closed: '{{ pos <= (CLOSED + TOL) }}'
-      is_half: '{{ pos >= (HALF_POS - TOL) }}'
-      new_mode: '{{ ''Closed'' if is_closed else (''Half'' if is_half else ''Open'')
-        }}'
-      mode_value: '{{ pos }}'
-  - action: input_number.set_value
-    target:
-      entity_id: input_number.hugh_room_blinds_position
-    data:
-      value: '{{ mode_value | int }}'
+      near_closed: '{{ CLOSED - TOL <= pos <= CLOSED + TOL }}'
+      near_half: '{{ HALF_POS - TOL <= pos <= HALF_POS + TOL }}'
+      near_open: '{{ OPEN - TOL <= pos <= OPEN + TOL }}'
+      new_mode: '{% if near_closed %}Closed {% elif near_half %}Half {% elif near_open
+        %}Open {% else %}{{ states(''input_select.hugh_room_blinds_mode'') }} {% endif
+        %}'
   - choose:
     - conditions:
       - condition: template
@@ -3996,4 +3970,9 @@
           entity_id: input_select.hugh_room_blinds_mode
         data:
           option: '{{ new_mode }}'
+  - action: input_number.set_value
+    target:
+      entity_id: input_number.hugh_room_blinds_position
+    data:
+      value: '{{ pos }}'
   mode: restart
