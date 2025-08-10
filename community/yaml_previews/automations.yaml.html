@@ -1757,11 +1757,11 @@
       - condition: template
         value_template: &#x27;{{ states(&#x27;&#x27;input_number.hugh_room_blinds_position&#x27;&#x27;) | int
           &gt; 20 }}&#x27;
-      - action: script.turn_on
-        metadata: {}
-        data: {}
+      - action: input_select.select_option
         target:
-          entity_id: script.close_blinds
+          entity_id: input_select.hugh_room_blinds_mode
+        data:
+          option: Closed
     - conditions:
       - condition: numeric_state
         entity_id: sensor.snake_plant_illuminance
@@ -1775,20 +1775,18 @@
       - condition: template
         value_template: &#x27;{{ states(&#x27;&#x27;input_number.hugh_room_blinds_position&#x27;&#x27;) | int
           &lt; 20 }}&#x27;
-      - action: script.turn_on
-        metadata: {}
-        data: {}
+      - action: input_select.select_option
         target:
-          entity_id:
-          - script.open_blinds
+          entity_id: input_select.hugh_room_blinds_mode
+        data:
+          option: Open
     - conditions: []
       sequence:
-      - action: script.turn_on
-        metadata: {}
-        data: {}
+      - action: input_select.select_option
         target:
-          entity_id:
-          - script.open_blinds
+          entity_id: input_select.hugh_room_blinds_mode
+        data:
+          option: Open
   mode: restart
 - id: &#x27;1711199503084&#x27;
   alias: Hugh Room Occupied Off
@@ -1811,12 +1809,11 @@
     data:
       percentage: 100
     action: fan.set_percentage
-  - action: script.turn_on
-    metadata: {}
-    data: {}
+  - action: input_select.select_option
     target:
-      entity_id:
-      - script.open_blinds
+      entity_id: input_select.hugh_room_blinds_mode
+    data:
+      option: Open
   - target:
       entity_id:
       - switch.hugh_room_plug_fan_bed
