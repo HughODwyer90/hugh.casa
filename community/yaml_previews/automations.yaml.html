@@ -3991,6 +3991,53 @@
     data:
       value: &#x27;{{ pos }}&#x27;
   mode: restart
+- id: &#x27;1754898110296&#x27;
+  alias: Hugh Room Blinds (Day/Dusk/Night)
+  description: &#x27;&#x27;
+  triggers:
+  - id: day
+    trigger: time
+    at: &#x27;10:00:00&#x27;
+  - id: dusk
+    trigger: sun
+    event: sunset
+  - id: night
+    trigger: time
+    at: &#x27;23:00:00&#x27;
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: day
+      - condition: state
+        entity_id: binary_sensor.bed_sensor
+        state: &#x27;off&#x27;
+      sequence:
+      - action: input_select.select_option
+        target:
+          entity_id: input_select.hugh_room_blinds_mode
+        data:
+          option: Open
+    - conditions:
+      - condition: trigger
+        id: dusk
+      sequence:
+      - action: input_select.select_option
+        target:
+          entity_id: input_select.hugh_room_blinds_mode
+        data:
+          option: Half
+    - conditions:
+      - condition: trigger
+        id: night
+      sequence:
+      - action: input_select.select_option
+        target:
+          entity_id: input_select.hugh_room_blinds_mode
+        data:
+          option: Closed
+  mode: single
 </pre>
             </div>
             <script>
