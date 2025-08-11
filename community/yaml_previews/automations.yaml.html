@@ -2674,37 +2674,6 @@
       entity_id: media_player.hugh_room_stereo
       volume_level: &#x27;{{ state_attr(&#x27;&#x27;media_player.hugh_room_display&#x27;&#x27;, &#x27;&#x27;volume_level&#x27;&#x27;)
         }}&#x27;
-- id: &#x27;1721254933984&#x27;
-  alias: Hugh Room Night Blinds
-  description: &#x27;&#x27;
-  triggers:
-  - at: &#x27;23:00:00&#x27;
-    trigger: time
-  conditions: []
-  actions:
-  - action: input_select.select_option
-    target:
-      entity_id: input_select.hugh_room_blinds_mode
-    data:
-      option: Closed
-  mode: single
-- id: &#x27;1721255019657&#x27;
-  alias: Hugh Room Day Blinds
-  description: &#x27;&#x27;
-  triggers:
-  - at: &#x27;10:00:00&#x27;
-    trigger: time
-  conditions:
-  - condition: state
-    entity_id: binary_sensor.bed_sensor
-    state: &#x27;off&#x27;
-  actions:
-  - action: input_select.select_option
-    target:
-      entity_id: input_select.hugh_room_blinds_mode
-    data:
-      option: Open
-  mode: single
 - id: &#x27;1721393948523&#x27;
   alias: Initialize Previous Odometer and Fuel Quantity
   trigger:
