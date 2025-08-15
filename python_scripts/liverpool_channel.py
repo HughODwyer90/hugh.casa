@@ -8,7 +8,7 @@ HOME_ASSISTANT_URL = "http://homeassistant.local:8123"  # Replace with your Home
 ENTITY_ID = "input_text.liverpool_tv_channel"  # Replace with your input_text entity ID
 ACCESS_TOKEN = secrets['ha_access_token']
 # Define channels to exclude
-excluded_keywords = {"Viaplay", "Discovery", "Ziggo"}
+excluded_keywords = {"Viaplay", "Discovery", "Ziggo", "Caliente", "Diema"}
 # URL of the main page
 base_url = "https://www.livescore.com/football/team/liverpool/3340/fixtures"
 
