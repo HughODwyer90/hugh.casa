@@ -498,13 +498,15 @@
       supported_color_modes:
       - color_temp
       - hs
+      effect:
       color_mode:
+      brightness:
       color_temp_kelvin:
+      color_temp:
       hs_color:
       rgb_color:
       xy_color:
-      effect:
-      friendly_name: Hugh Room Ceiling
+      friendly_name: Light Ceiling
       supported_features: 36
       state: 'off'
     light.hugh_room_lamp:
@@ -526,17 +528,33 @@
       supported_color_modes:
       - color_temp
       - xy
-      friendly_name: Hugh Room Lamp
-      supported_features: 44
+      effect:
       color_mode:
+      brightness:
       color_temp_kelvin:
+      color_temp:
       hs_color:
       rgb_color:
       xy_color:
-      linkquality: 120
-      update:
-        installed_version: 16786696
-        latest_version: 16786696
-        state: idle
+      friendly_name: Light Desk Lamp
+      supported_features: 44
       state: 'off'
-  metadata: {}
+    light.aroma_diffuser:
+      effect_list:
+      - Mood
+      - 'off'
+      supported_color_modes:
+      - hs
+      - white
+      effect:
+      color_mode:
+      brightness:
+      hs_color:
+      rgb_color:
+      xy_color:
+      friendly_name: Aroma diffuser
+      supported_features: 4
+      state: 'off'
+  metadata:
+    light.aroma_diffuser:
+      entity_only: true
