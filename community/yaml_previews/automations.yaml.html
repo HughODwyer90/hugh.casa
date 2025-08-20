@@ -2223,8 +2223,7 @@
   - condition: template
     value_template: &#x27;{% set sender = states(&#x27;&#x27;input_text.payslip_sender&#x27;&#x27;) %}
 
-      {{ &quot;Payslip for&quot; in trigger.event.data.subject and sender in trigger.event.data.from
-      }}&#x27;
+      {{ sender in trigger.event.data.from }}&#x27;
   actions:
   - data:
       title: &quot;\U0001F4E9 Payslip Received&quot;
@@ -3770,22 +3769,6 @@
       entity_id: input_boolean.check_payslip_email
     action: input_boolean.turn_on
   mode: single
-- id: &#x27;1748353073218&#x27;
-  alias: Disable Payslip Email Checking
-  triggers:
-  - at: 03:00:00
-    trigger: time
-  conditions:
-  - condition: template
-    value_template: &#x27;{{ now().date() - (states(&#x27;&#x27;input_datetime.next_pay_day&#x27;&#x27;) |
-      as_datetime).date() == timedelta(days=1) }}
-
-      &#x27;
-  actions:
-  - target:
-      entity_id: input_boolean.check_payslip_email
-    action: input_boolean.turn_off
-  mode: single
 - id: &#x27;1748355187479&#x27;
   alias: Auto Calculate Last Day of Month
   description: &#x27;&#x27;
@@ -4009,23 +3992,6 @@
   mode: single
 - id: enable_payslip_email_checking
   alias: Enable Payslip Email Checking
-  triggers:
-  - at: 03:00:00
-    trigger: time
-  conditions:
-  - condition: template
-    value_template: &#x27;{{ (states(&#x27;&#x27;input_datetime.next_pay_day&#x27;&#x27;) | as_datetime).date()
-      - now().date() == timedelta(days=1) }}
-
-      &#x27;
-  actions:
-  - target:
-      entity_id: input_boolean.check_payslip_email
-    action: input_boolean.turn_on
-  mode: single
-- id: &#x27;1755695807985&#x27;
-  alias: Enable Payslip Email Checking
-  description: &#x27;&#x27;
   triggers:
   - at: 03:00:00
     trigger: time
