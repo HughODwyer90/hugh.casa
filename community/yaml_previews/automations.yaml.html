@@ -3753,7 +3753,6 @@
     data: {}
     action: input_boolean.turn_off
   mode: single
-
 - id: &#x27;1748355187479&#x27;
   alias: Auto Calculate Last Day of Month
   description: &#x27;&#x27;
@@ -3766,25 +3765,6 @@
   actions:
   - action: script.calculate_last_day_of_month
   mode: single
-  
-- id: enable_wfh_friday_3am
-  alias: Enable WFH
-  description: &#x27;&#x27;
-  triggers:
-  - at: &#x27;11:00:00&#x27;
-    trigger: time
-  conditions:
-  - condition: time
-    weekday:
-    - sun
-    - thu
-  actions:
-  - target:
-      entity_id: input_boolean.wfh_tomorrow
-    action: input_boolean.turn_on
-    data: {}
-  mode: single
-
 - id: &#x27;1749450015672&#x27;
   alias: Disable WFH
   description: &#x27;&#x27;
@@ -3970,7 +3950,8 @@
           entity_id: input_select.hugh_room_blinds_mode
         data:
           option: Closed
-  mode: single</pre>
+  mode: single
+</pre>
             </div>
             <script>
                 (function fixPaths() {
