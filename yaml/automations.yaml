@@ -3936,3 +3936,20 @@
         data:
           option: Closed
   mode: single
+- id: '1755779238287'
+  alias: Enable WFH
+  description: ''
+  triggers:
+  - at: '11:00:00'
+    trigger: time
+  conditions:
+  - condition: time
+    weekday:
+    - sun
+    - thu
+  actions:
+  - target:
+      entity_id: input_boolean.wfh_tomorrow
+    action: input_boolean.turn_on
+    data: {}
+  mode: single
