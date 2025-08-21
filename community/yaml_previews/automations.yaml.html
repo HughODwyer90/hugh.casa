@@ -3753,22 +3753,7 @@
     data: {}
     action: input_boolean.turn_off
   mode: single
-- id: enable_payslip_email_checking
-  alias: Enable Payslip Email Checking
-  triggers:
-  - at: 03:00:00
-    trigger: time
-  conditions:
-  - condition: template
-    value_template: &#x27;{{ (states(&#x27;&#x27;input_datetime.next_pay_day&#x27;&#x27;) | as_datetime).date()
-      - now().date() == timedelta(days=1) }}
 
-      &#x27;
-  actions:
-  - target:
-      entity_id: input_boolean.check_payslip_email
-    action: input_boolean.turn_on
-  mode: single
 - id: &#x27;1748355187479&#x27;
   alias: Auto Calculate Last Day of Month
   description: &#x27;&#x27;
@@ -3781,8 +3766,8 @@
   actions:
   - action: script.calculate_last_day_of_month
   mode: single
-- &amp;id001
-  id: enable_wfh_friday_3am
+  
+- id: enable_wfh_friday_3am
   alias: Enable WFH
   description: &#x27;&#x27;
   triggers:
@@ -3799,11 +3784,7 @@
     action: input_boolean.turn_on
     data: {}
   mode: single
-- *id001
-- *id001
-- *id001
-- *id001
-- *id001
+
 - id: &#x27;1749450015672&#x27;
   alias: Disable WFH
   description: &#x27;&#x27;
@@ -3989,24 +3970,7 @@
           entity_id: input_select.hugh_room_blinds_mode
         data:
           option: Closed
-  mode: single
-- id: enable_payslip_email_checking
-  alias: Enable Payslip Email Checking
-  triggers:
-  - at: 03:00:00
-    trigger: time
-  conditions:
-  - condition: template
-    value_template: &#x27;{{ (states(&#x27;&#x27;input_datetime.next_pay_day&#x27;&#x27;) | as_datetime).date()
-      - now().date() == timedelta(days=1) }}
-
-      &#x27;
-  actions:
-  - target:
-      entity_id: input_boolean.check_payslip_email
-    action: input_boolean.turn_on
-  mode: single
-</pre>
+  mode: single</pre>
             </div>
             <script>
                 (function fixPaths() {
