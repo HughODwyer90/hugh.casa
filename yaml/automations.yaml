@@ -3738,7 +3738,6 @@
     data: {}
     action: input_boolean.turn_off
   mode: single
-
 - id: '1748355187479'
   alias: Auto Calculate Last Day of Month
   description: ''
@@ -3751,25 +3750,6 @@
   actions:
   - action: script.calculate_last_day_of_month
   mode: single
-  
-- id: enable_wfh_friday_3am
-  alias: Enable WFH
-  description: ''
-  triggers:
-  - at: '11:00:00'
-    trigger: time
-  conditions:
-  - condition: time
-    weekday:
-    - sun
-    - thu
-  actions:
-  - target:
-      entity_id: input_boolean.wfh_tomorrow
-    action: input_boolean.turn_on
-    data: {}
-  mode: single
-
 - id: '1749450015672'
   alias: Disable WFH
   description: ''
