@@ -303,6 +303,26 @@
       icon_template: &quot;{{ &#x27;mdi:fuel&#x27; }}&quot;
       unique_id: &quot;car_fuel_tank_remaining_sensor&quot;
 
+    car_new_engine_distance:
+      friendly_name: &quot;Car Engine Distance&quot;
+      unique_id: &quot;car_engine_distance_sensor&quot;
+      unit_of_measurement: &quot;km&quot;
+      icon_template: &quot;{{ &#x27;mdi:engine&#x27; }}&quot;
+      value_template: &gt;
+        {% set engine_replacement_km = 68899 %}
+        {% set current_mileage = states(&#x27;sensor.car_mileage&#x27;) %}
+        {% if current_mileage not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
+          {% set current_mileage = current_mileage | float %}
+          {% set distance = current_mileage - engine_replacement_km %}
+          {% if distance == distance | round(0) %}
+            {{ distance | int }}
+          {% else %}
+            {{ distance | round(2) }}
+          {% endif %}
+        {% else %}
+          0
+        {% endif %}
+
     yearly_distance_traveled:
       friendly_name: &quot;Car YTD Distance&quot;
       unit_of_measurement: &quot;km&quot;
