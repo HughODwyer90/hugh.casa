@@ -3968,6 +3968,29 @@
     action: input_boolean.turn_on
     data: {}
   mode: single
+- id: &#x27;1756239594858&#x27;
+  alias: Notify on Payslip Email (subject)
+  description: &#x27;&#x27;
+  triggers:
+  - event_type: imap_content
+    trigger: event
+  conditions:
+  - condition: template
+    value_template: &#x27;{% set sender = states(&#x27;&#x27;input_text.payslip_sender&#x27;&#x27;) | lower
+      %} {% set from_addr = trigger.event.data.from | lower %} {% set subject = trigger.event.data.subject
+      | lower %} {{ &#x27;&#x27;payslip&#x27;&#x27; in subject or sender in from_addr }}
+
+      &#x27;
+  actions:
+  - action: notify.notifications
+    data:
+      title: &quot;\U0001F4E9 Payslip Received&quot;
+      message: Your payslip email has arrived.
+      data:
+        notification_icon: mdi:currency-eur
+        clickAction: https://mail.google.com/mail/u/0/#inbox
+        tag: payslip_notification
+  mode: single
 </pre>
             </div>
             <script>
