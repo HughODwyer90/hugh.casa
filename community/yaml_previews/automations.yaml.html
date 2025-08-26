@@ -2214,38 +2214,6 @@
         action: script.execute_alarm_actions
     default: []
   mode: single
-- id: &#x27;1715822596053&#x27;
-  alias: Notify on Payslip Email (via IMAP Event)
-  triggers:
-  - event_type: imap_content
-    trigger: event
-  conditions:
-  - condition: template
-    value_template: &#x27;{% set sender = states(&#x27;&#x27;input_text.payslip_sender&#x27;&#x27;) %}
-
-      {{ sender in trigger.event.data.from }}&#x27;
-  actions:
-  - data:
-      title: &quot;\U0001F4E9 Payslip Received&quot;
-      message: Your payslip email has arrived.
-      data:
-        notification_icon: mdi:currency-eur
-        clickAction: https://mail.google.com/mail/u/0/#inbox
-        tag: payslip_notification
-    action: notify.notifications
-  - target:
-      entity_id: input_datetime.last_day_of_month
-    data:
-      date: &#x27;{% set today = now() %} {% set next_month = (today.month % 12) + 1 %}
-        {% set year = today.year if next_month &gt; 1 else today.year + 1 %} {% set first_day_next_month
-        = strptime(year ~ &#x27;&#x27;-&#x27;&#x27; ~ next_month ~ &#x27;&#x27;-01&#x27;&#x27;, &#x27;&#x27;%Y-%m-%d&#x27;&#x27;) %} {% set first_day_after_next_month
-        = first_day_next_month + timedelta(days=31) %} {% set last_day_next_month
-        = first_day_after_next_month.replace(day=1) - timedelta(days=1) %} {{ last_day_next_month.strftime(&#x27;&#x27;%Y-%m-%d&#x27;&#x27;)
-        }}
-
-        &#x27;
-    action: input_datetime.set_datetime
-  mode: single
 - id: &#x27;1715936038206&#x27;
   alias: Alarm Snooze
   description: Snoozes the alarm when the &quot;Snooze Alarm&quot; button is pressed, but only
