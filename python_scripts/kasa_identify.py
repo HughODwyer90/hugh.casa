@@ -1,61 +1,105 @@
-import requests
-import yaml
-from secret_manager import SecretsManager  # Import the SecretsManager class
+import requests, json
+from secret_manager import SecretsManager
 
 secrets = SecretsManager()
-# TP-Link Kasa cloud credentials
-CLOUD_USERNAME = secrets["ha_email"]
-CLOUD_PASSWORD = secrets["ha_pass"]
-TERMINAL_UUID = secrets["terminal_uuid"]
-API_URL = secrets["tp_api_url"]
+EMAIL = secrets["ha_email"].strip()
+PASS  = secrets["ha_pass"]
+UUID  = secrets["terminal_uuid"]
+BASE  = "https://eu-wap.tplinkcloud.com"  # EU region
 
-def get_token():
-    """Authenticate with TP-Link cloud and retrieve the token."""
+def kasa_login():
     payload = {
         "method": "login",
         "params": {
-            "appType": "Kasa_Android",
-            "cloudPassword": CLOUD_PASSWORD,
-            "cloudUserName": CLOUD_USERNAME,
-            "terminalUUID": TERMINAL_UUID,
+            "appType": "Tapo_Ios",   # required for API to work
+            "cloudUserName": EMAIL,
+            "cloudPassword": PASS,
+            "terminalUUID": UUID,
+            "locale": "en_US",
         }
     }
-    response = requests.post(API_URL, json=payload)
-    response_data = response.json()
-    if response_data.get("error_code") == 0:
-        return response_data["result"]["token"]
-    else:
-        raise Exception(f"Error during login: {response_data.get('msg', 'Unknown error')}")
+    r = requests.post(BASE, json=payload, timeout=15)
+    r.raise_for_status()
+    data = r.json()
+    if data.get("error_code") != 0:
+        raise RuntimeError(f"Login failed: {data}")
+    token = data["result"]["token"]
+    print(f"\n== Login successful ==")
+    print("Token:", token)
+    return token
 
-def list_devices():
-    """Ensure token is always up-to-date and list all devices linked to the TP-Link account."""
-    token = get_token()
-    list_payload = {
-        "method": "getDeviceList"
+def api(token, payload):
+    url = f"{BASE}/?token={token}"
+    r = requests.post(url, json=payload, timeout=20)
+    r.raise_for_status()
+    return r.json()
+
+def get_device_list(token):
+    data = api(token, {"method": "getDeviceList"})
+    if data.get("error_code") != 0:
+        raise RuntimeError(f"getDeviceList error: {data}")
+    return data["result"]["deviceList"]
+
+def check_fw(token, device_id):
+    payload = {
+        "method": "passthrough",
+        "params": {
+            "deviceId": device_id,
+            "requestData": json.dumps({
+                "system": {"get_sysinfo": {}},
+                "cnCloud": {"getFirmwareList": {}}
+            })
+        }
     }
-    url_with_token = f"{API_URL}/?token={token}"
-    response = requests.post(url_with_token, json=list_payload)
-    response_data = response.json()
-    if response_data.get("error_code") == 0:
-        devices = response_data["result"]["deviceList"]
-        print(f"Token: {token}")
-        print("Devices found:")
-        for device in devices:
-            print(f"Name: {device['alias']}")
-            print(f"Device ID: {device['deviceId']}")
-            print(f"Type: {device['deviceType']}")
-            print(f"Status: {'Online' if device['status'] == 1 else 'Offline'}")
-            print(f"IP Address: {device.get('ip', 'Unknown')}")
-            print("=" * 40)
-    else:
-        raise Exception(f"Error retrieving device list: {response_data.get('msg', 'Unknown error')}")
+    data = api(token, payload)
+    res = data.get("result", {})
+    if "responseData" not in res:
+        return None
+    inner = json.loads(res["responseData"])
+    return inner  # full dump (contains sysinfo + fw info)
 
 def main():
-    try:
-        print("Logging into TP-Link Kasa cloud and fetching device list...")
-        list_devices()
-    except Exception as e:
-        print(f"An error occurred: {e}")
+    token = kasa_login()
+    devices = get_device_list(token)
+
+    if not devices:
+        print("No devices found.")
+        return
+
+    print(f"\n== Devices found ({len(devices)}) ==")
+    for d in devices:
+        alias = d.get("alias")
+        dev_id = d.get("deviceId")
+        dtype  = d.get("deviceType")
+        model  = d.get("deviceModel") or dtype
+        status = "Online" if d.get("status") == 1 else "Offline"
+        ip     = d.get("ip", "Unknown")
+
+        print(f"\n{alias} [{model}]")
+        print(f"  Device ID : {dev_id}")
+        print(f"  Type      : {dtype}")
+        print(f"  Status    : {status}")
+        print(f"  IP        : {ip}")
+
+        try:
+            fwdata = check_fw(token, dev_id)
+            if not fwdata:
+                print("  Firmware  : not available (offline or unsupported)")
+                continue
+            sysinfo = fwdata.get("system", {}).get("get_sysinfo", {})
+            fwinfo  = fwdata.get("cnCloud", {}).get("getFirmwareList", {})
+            cur = sysinfo.get("sw_ver")
+            latest = fwinfo.get("fwList", [{}])[0].get("version") if fwinfo else None
+            notes  = fwinfo.get("fwList", [{}])[0].get("release_note") if fwinfo else None
+            print(f"  Current FW: {cur}")
+            print(f"  Latest FW : {latest or '—'}")
+            print(f"  Update?   : {'YES' if latest and latest != cur else 'No'}")
+            if notes:
+                print(f"  Notes     : {notes[:150]}{'…' if len(notes) > 150 else ''}")
+            # dump raw JSON too
+            print("  Raw fwdata:", json.dumps(fwdata, indent=2)[:600], "...")
+        except Exception as e:
+            print(f"  Firmware check failed: {e}")
 
 if __name__ == "__main__":
     main()
