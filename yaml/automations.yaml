@@ -1211,30 +1211,30 @@
         action: input_boolean.turn_off
   mode: restart
 - id: '1708005514284'
-  alias: Water Snake Plant
-  description: ''
-  trigger:
+  alias: Snake Plant – Needs Water
+  triggers:
   - trigger: numeric_state
-    entity_id:
-    - sensor.snake_plant_moisture
-    below: 10
-  condition:
+    entity_id: sensor.snake_plant_moisture
+    below: 6
+    for: 00:30:00
+  conditions:
   - condition: state
     entity_id: input_boolean.patrick_needs_water
     state: 'off'
-  action:
+  actions:
   - choose:
     - conditions:
-      - condition: template
-        value_template: '{{ is_state(''sensor.snake_plant_growing_season'', ''True'')
-          }}'
+      - condition: state
+        entity_id: sensor.snake_plant_growing_season
+        state: 'on'
       sequence:
       - action: script.feed_patrick
-        data: {}
     - conditions: []
       sequence:
       - action: script.water_patrick
-        data: {}
+  - action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.patrick_needs_water
   mode: single
 - id: '1708033575791'
   alias: Hugh Phone Unplugged
@@ -2422,17 +2422,16 @@
       entity_id: input_number.universal_player_volume
       value: '{{ (state_attr(trigger.entity_id, ''volume_level'') * 10) | int }}'
 - id: '1717497134228'
-  alias: Reset Plant Water Notification
-  description: ''
+  alias: Snake Plant – Reset Notification
   triggers:
   - trigger: numeric_state
-    entity_id:
-    - sensor.snake_plant_moisture
-    above: 20
-  conditions: []
+    entity_id: sensor.snake_plant_moisture
+    above: 12
+    for: 00:10:00
   actions:
   - action: input_boolean.turn_off
-    entity_id: input_boolean.patrick_needs_water
+    target:
+      entity_id: input_boolean.patrick_needs_water
   mode: single
 - id: '1717703405900'
   alias: Find Car
