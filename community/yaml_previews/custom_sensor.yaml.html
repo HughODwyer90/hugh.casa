@@ -873,32 +873,31 @@
   unique_id: &quot;liverpool_premier_league_position_sensor&quot;
   resource: &quot;https://site.web.api.espn.com/apis/v2/sports/soccer/eng.1/standings?region=uk&amp;lang=en&quot;
   value_template: &gt;
-    {% set entries = value_json.get(&#x27;children&#x27;, [])[0].get(&#x27;standings&#x27;, {}).get(&#x27;entries&#x27;, []) %}
+    {% set children = value_json.get(&#x27;children&#x27;, []) %}
+    {% set entries = (children[0].standings.entries if children and children[0].get(&#x27;standings&#x27;) else []) %}
     {% set total_games = 38 %}
     {% set liverpool = entries | selectattr(&#x27;team.displayName&#x27;, &#x27;equalto&#x27;, &#x27;Liverpool&#x27;) | list | first %}
     {% if liverpool %}
       {% set lfc_points = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
       {% set lfc_played = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;gamesPlayed&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
       {% set rank = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;rank&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
-      {% set suffix = 
+      {% set suffix =
         &#x27;th&#x27; if rank in [11, 12, 13] else
         &#x27;st&#x27; if rank % 10 == 1 else
         &#x27;nd&#x27; if rank % 10 == 2 else
         &#x27;rd&#x27; if rank % 10 == 3 else
         &#x27;th&#x27; %}
       {% if rank == 1 %}
-        {% set lfc_remaining = total_games - lfc_played %}
-        {% set challengers = entries | rejectattr(&#x27;team.displayName&#x27;, &#x27;equalto&#x27;, &#x27;Liverpool&#x27;) %}
-        {% set uncatchable = true %}
-        {% for team in challengers %}
+        {% set ns = namespace(uncatchable=true) %}
+        {% for team in entries if team.team.displayName != &#x27;Liverpool&#x27; %}
           {% set pts = team[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
           {% set played = team[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;gamesPlayed&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
           {% set max_possible = pts + (total_games - played) * 3 %}
-          {% if max_possible &gt;= lfc_points %}
-            {% set uncatchable = false %}
+          {% if max_possible &gt; lfc_points %}
+            {% set ns.uncatchable = false %}
           {% endif %}
         {% endfor %}
-        {{ rank }}{{ suffix }}{% if uncatchable %} (Champions){% endif %}
+        {{ rank }}{{ suffix }}{% if ns.uncatchable %} (Champions){% endif %}
       {% else %}
         {{ rank }}{{ suffix }}
       {% endif %}
