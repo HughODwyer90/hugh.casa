@@ -887,6 +887,7 @@
         &#x27;nd&#x27; if rank % 10 == 2 else
         &#x27;rd&#x27; if rank % 10 == 3 else
         &#x27;th&#x27; %}
+
       {% if rank == 1 %}
         {% set ns = namespace(uncatchable=true) %}
         {% for team in entries if team.team.displayName != &#x27;Liverpool&#x27; %}
@@ -897,9 +898,17 @@
             {% set ns.uncatchable = false %}
           {% endif %}
         {% endfor %}
-        {{ rank }}{{ suffix }}{% if ns.uncatchable %} (Champions){% endif %}
+        {% if ns.uncatchable %}
+          {{ rank }}{{ suffix }} (Champions)
+        {% else %}
+          {% set runner_up = (entries | rejectattr(&#x27;team.displayName&#x27;,&#x27;equalto&#x27;,&#x27;Liverpool&#x27;) | sort(attribute=&#x27;stats[2].value&#x27;, reverse=true) | first) %}
+          {% set runner_points = runner_up[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+          {{ rank }}{{ suffix }} (+{{ lfc_points - runner_points }} pts)
+        {% endif %}
       {% else %}
-        {{ rank }}{{ suffix }}
+        {% set leader = (entries | sort(attribute=&#x27;stats[2].value&#x27;, reverse=true) | first) %}
+        {% set leader_points = leader[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+        {{ rank }}{{ suffix }} (-{{ leader_points - lfc_points }} pts)
       {% endif %}
     {% else %}
       Liverpool not found
