@@ -858,32 +858,31 @@
   unique_id: "liverpool_premier_league_position_sensor"
   resource: "https://site.web.api.espn.com/apis/v2/sports/soccer/eng.1/standings?region=uk&lang=en"
   value_template: >
-    {% set entries = value_json.get('children', [])[0].get('standings', {}).get('entries', []) %}
+    {% set children = value_json.get('children', []) %}
+    {% set entries = (children[0].standings.entries if children and children[0].get('standings') else []) %}
     {% set total_games = 38 %}
     {% set liverpool = entries | selectattr('team.displayName', 'equalto', 'Liverpool') | list | first %}
     {% if liverpool %}
       {% set lfc_points = liverpool['stats'] | selectattr('name', 'equalto', 'points') | map(attribute='value') | list | first | int %}
       {% set lfc_played = liverpool['stats'] | selectattr('name', 'equalto', 'gamesPlayed') | map(attribute='value') | list | first | int %}
       {% set rank = liverpool['stats'] | selectattr('name', 'equalto', 'rank') | map(attribute='value') | list | first | int %}
-      {% set suffix = 
+      {% set suffix =
         'th' if rank in [11, 12, 13] else
         'st' if rank % 10 == 1 else
         'nd' if rank % 10 == 2 else
         'rd' if rank % 10 == 3 else
         'th' %}
       {% if rank == 1 %}
-        {% set lfc_remaining = total_games - lfc_played %}
-        {% set challengers = entries | rejectattr('team.displayName', 'equalto', 'Liverpool') %}
-        {% set uncatchable = true %}
-        {% for team in challengers %}
+        {% set ns = namespace(uncatchable=true) %}
+        {% for team in entries if team.team.displayName != 'Liverpool' %}
           {% set pts = team['stats'] | selectattr('name', 'equalto', 'points') | map(attribute='value') | list | first | int %}
           {% set played = team['stats'] | selectattr('name', 'equalto', 'gamesPlayed') | map(attribute='value') | list | first | int %}
           {% set max_possible = pts + (total_games - played) * 3 %}
-          {% if max_possible >= lfc_points %}
-            {% set uncatchable = false %}
+          {% if max_possible > lfc_points %}
+            {% set ns.uncatchable = false %}
           {% endif %}
         {% endfor %}
-        {{ rank }}{{ suffix }}{% if uncatchable %} (Champions){% endif %}
+        {{ rank }}{{ suffix }}{% if ns.uncatchable %} (Champions){% endif %}
       {% else %}
         {{ rank }}{{ suffix }}
       {% endif %}
