@@ -872,6 +872,7 @@
         'nd' if rank % 10 == 2 else
         'rd' if rank % 10 == 3 else
         'th' %}
+
       {% if rank == 1 %}
         {% set ns = namespace(uncatchable=true) %}
         {% for team in entries if team.team.displayName != 'Liverpool' %}
@@ -882,9 +883,17 @@
             {% set ns.uncatchable = false %}
           {% endif %}
         {% endfor %}
-        {{ rank }}{{ suffix }}{% if ns.uncatchable %} (Champions){% endif %}
+        {% if ns.uncatchable %}
+          {{ rank }}{{ suffix }} (Champions)
+        {% else %}
+          {% set runner_up = (entries | rejectattr('team.displayName','equalto','Liverpool') | sort(attribute='stats[2].value', reverse=true) | first) %}
+          {% set runner_points = runner_up['stats'] | selectattr('name','equalto','points') | map(attribute='value') | list | first | int %}
+          {{ rank }}{{ suffix }} (+{{ lfc_points - runner_points }} pts)
+        {% endif %}
       {% else %}
-        {{ rank }}{{ suffix }}
+        {% set leader = (entries | sort(attribute='stats[2].value', reverse=true) | first) %}
+        {% set leader_points = leader['stats'] | selectattr('name','equalto','points') | map(attribute='value') | list | first | int %}
+        {{ rank }}{{ suffix }} (-{{ leader_points - lfc_points }} pts)
       {% endif %}
     {% else %}
       Liverpool not found
