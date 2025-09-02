@@ -244,14 +244,14 @@
       icon_template: "{{ 'mdi:map-marker-distance' }}"
       unique_id: "car_daily_distance_traveled_sensor"
       value_template: >
-        {% set current = states('sensor.car_mileage') %}
-        {% set previous = states('input_number.previous_odometer_reading') %}
-        {% if current is number and previous is number %}
-          {% set distance = current | float - previous | float %}
-          {{ distance | round(2) }}
+        {% set current = states('sensor.car_mileage') | float(default=none) %}
+        {% set previous = states('input_number.previous_odometer_reading') | float(default=none) %}
+        {% if current is not none and previous is not none %}
+          {% set distance = current - previous %}
         {% else %}
-          states('sensor.daily_distance_traveled') | float(default=0)
+          {% set distance = states('sensor.daily_distance_traveled') | float(default=0) %}
         {% endif %}
+        {{ distance | round(2) }}
 
     fuel_tank_remaining:
       friendly_name: "Car Fuel Remaining"
@@ -289,13 +289,15 @@
       icon_template: "{{ 'mdi:engine' }}"
       value_template: >
         {% set engine_replacement_km = 68899 %}
-        {% set current_mileage = states('sensor.car_mileage') %}
-        {% if current_mileage is number %}
-          {% set distance = current_mileage | float - engine_replacement_km %}
-          {{ distance | round(2) }}
+        {% set current_mileage = states('sensor.car_mileage') | float(default=none) %}
+
+        {% if current_mileage is not none %}
+          {% set distance = current_mileage - engine_replacement_km %}
         {% else %}
-          states('sensor.car_new_engine_distance') | float(default=0)
+          {% set distance = states('sensor.car_new_engine_distance') | float(default=0) %}
         {% endif %}
+
+        {{ distance | round(2) }}
 
     yearly_distance_traveled:
       friendly_name: "Car YTD Distance"
@@ -303,14 +305,16 @@
       unique_id: "car_yearly_distance_traveled_sensor"
       icon_template: "{{ 'mdi:map-marker-distance' }}"
       value_template: >
-        {% set previous_year = states('input_number.previous_year_mileage') %}
-        {% set current = states('sensor.car_mileage') %}
-        {% if previous_year is number and current is number %}
-          {% set distance = current | float - previous_year | float %}
-          {{ distance | round(2) }}
+        {% set previous_year = states('input_number.previous_year_mileage') | float(default=none) %}
+        {% set current = states('sensor.car_mileage') | float(default=none) %}
+
+        {% if previous_year is not none and current is not none %}
+          {% set distance = current - previous_year %}
         {% else %}
-          states('sensor.yearly_distance_traveled') | float(default=0)
+          {% set distance = states('sensor.yearly_distance_traveled') | float(default=0) %}
         {% endif %}
+
+        {{ distance | round(2) }}
 
     car_daily_driving_time:
       friendly_name: "Today Driving Time"
