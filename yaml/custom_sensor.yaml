@@ -241,23 +241,17 @@
     daily_distance_traveled:
       friendly_name: "Car Today Distance"
       unit_of_measurement: "km"
-      value_template: >
-        {% set car_mileage = states('sensor.car_mileage') %}
-        {% set previous_odometer_reading = states('input_number.previous_odometer_reading') %}
-        {% if car_mileage not in ['unknown', 'unavailable'] and previous_odometer_reading not in ['unknown', 'unavailable'] %}
-          {% set car_mileage = car_mileage | float %}
-          {% set previous_odometer_reading = previous_odometer_reading | float %}
-          {% set distance_traveled = car_mileage - previous_odometer_reading %}
-          {% if distance_traveled == distance_traveled | round(0) %}
-            {{ distance_traveled | int }}
-          {% else %}
-            {{ distance_traveled | round(2) }}
-          {% endif %}
-        {% else %}
-          0
-        {% endif %}
       icon_template: "{{ 'mdi:map-marker-distance' }}"
       unique_id: "car_daily_distance_traveled_sensor"
+      value_template: >
+        {% set current = states('sensor.car_mileage') %}
+        {% set previous = states('input_number.previous_odometer_reading') %}
+        {% if current is number and previous is number %}
+          {% set distance = current | float - previous | float %}
+          {{ distance | round(2) }}
+        {% else %}
+          states('sensor.daily_distance_traveled')  # Preserve last known value to avoid graph dropouts
+        {% endif %}
 
     fuel_tank_remaining:
       friendly_name: "Car Fuel Remaining"
@@ -296,16 +290,11 @@
       value_template: >
         {% set engine_replacement_km = 68899 %}
         {% set current_mileage = states('sensor.car_mileage') %}
-        {% if current_mileage not in ['unknown', 'unavailable'] %}
-          {% set current_mileage = current_mileage | float %}
-          {% set distance = current_mileage - engine_replacement_km %}
-          {% if distance == distance | round(0) %}
-            {{ distance | int }}
-          {% else %}
-            {{ distance | round(2) }}
-          {% endif %}
+        {% if current_mileage is number %}
+          {% set distance = current_mileage | float - engine_replacement_km %}
+          {{ distance | round(2) }}
         {% else %}
-          0
+          states('sensor.car_new_engine_distance')  # Preserve last known value
         {% endif %}
 
     yearly_distance_traveled:
@@ -314,19 +303,13 @@
       unique_id: "car_yearly_distance_traveled_sensor"
       icon_template: "{{ 'mdi:map-marker-distance' }}"
       value_template: >
-        {% set previous_year_mileage = states('input_number.previous_year_mileage') %}
-        {% set current_mileage = states('sensor.car_mileage') %}
-        {% if previous_year_mileage not in ['unknown', 'unavailable'] and current_mileage not in ['unknown', 'unavailable'] %}
-          {% set previous_year_mileage = previous_year_mileage | float %}
-          {% set current_mileage = current_mileage | float %}
-          {% set distance_traveled = current_mileage - previous_year_mileage %}
-          {% if distance_traveled == distance_traveled | round(0) %}
-            {{ distance_traveled | int }}
-          {% else %}
-            {{ distance_traveled | round(2) }}
-          {% endif %}
+        {% set previous_year = states('input_number.previous_year_mileage') %}
+        {% set current = states('sensor.car_mileage') %}
+        {% if previous_year is number and current is number %}
+          {% set distance = current | float - previous_year | float %}
+          {{ distance | round(2) }}
         {% else %}
-          0
+          states('sensor.yearly_distance_traveled')  # Preserve last known value
         {% endif %}
 
     car_daily_driving_time:
