@@ -877,6 +877,7 @@
     {% set entries = (children[0].standings.entries if children and children[0].get(&#x27;standings&#x27;) else []) %}
     {% set total_games = 38 %}
     {% set liverpool = entries | selectattr(&#x27;team.displayName&#x27;, &#x27;equalto&#x27;, &#x27;Liverpool&#x27;) | list | first %}
+
     {% if liverpool %}
       {% set lfc_points = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
       {% set lfc_played = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;gamesPlayed&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
@@ -898,15 +899,26 @@
             {% set ns.uncatchable = false %}
           {% endif %}
         {% endfor %}
+
         {% if ns.uncatchable %}
           {{ rank }}{{ suffix }} (Champions)
         {% else %}
-          {% set runner_up = (entries | rejectattr(&#x27;team.displayName&#x27;,&#x27;equalto&#x27;,&#x27;Liverpool&#x27;) | sort(attribute=&#x27;stats[2].value&#x27;, reverse=true) | first) %}
+          {% set runner_up = (
+            entries
+            | rejectattr(&#x27;team.displayName&#x27;,&#x27;equalto&#x27;,&#x27;Liverpool&#x27;)
+            | sort(attribute=&#x27;stats&#x27; | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first, reverse=true)
+            | first
+          ) %}
           {% set runner_points = runner_up[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
           {{ rank }}{{ suffix }} (+{{ lfc_points - runner_points }} pts)
         {% endif %}
       {% else %}
-        {% set leader = (entries | sort(attribute=&#x27;stats[2].value&#x27;, reverse=true) | first) %}
+        {% set leader = (
+          entries
+          | rejectattr(&#x27;team.displayName&#x27;,&#x27;equalto&#x27;,&#x27;Liverpool&#x27;)
+          | sort(attribute=&#x27;stats&#x27; | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first, reverse=true)
+          | first
+        ) %}
         {% set leader_points = leader[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
         {{ rank }}{{ suffix }} (-{{ leader_points - lfc_points }} pts)
       {% endif %}
