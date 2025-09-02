@@ -256,23 +256,17 @@
     daily_distance_traveled:
       friendly_name: &quot;Car Today Distance&quot;
       unit_of_measurement: &quot;km&quot;
-      value_template: &gt;
-        {% set car_mileage = states(&#x27;sensor.car_mileage&#x27;) %}
-        {% set previous_odometer_reading = states(&#x27;input_number.previous_odometer_reading&#x27;) %}
-        {% if car_mileage not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] and previous_odometer_reading not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
-          {% set car_mileage = car_mileage | float %}
-          {% set previous_odometer_reading = previous_odometer_reading | float %}
-          {% set distance_traveled = car_mileage - previous_odometer_reading %}
-          {% if distance_traveled == distance_traveled | round(0) %}
-            {{ distance_traveled | int }}
-          {% else %}
-            {{ distance_traveled | round(2) }}
-          {% endif %}
-        {% else %}
-          0
-        {% endif %}
       icon_template: &quot;{{ &#x27;mdi:map-marker-distance&#x27; }}&quot;
       unique_id: &quot;car_daily_distance_traveled_sensor&quot;
+      value_template: &gt;
+        {% set current = states(&#x27;sensor.car_mileage&#x27;) %}
+        {% set previous = states(&#x27;input_number.previous_odometer_reading&#x27;) %}
+        {% if current is number and previous is number %}
+          {% set distance = current | float - previous | float %}
+          {{ distance | round(2) }}
+        {% else %}
+          states(&#x27;sensor.daily_distance_traveled&#x27;)  # Preserve last known value to avoid graph dropouts
+        {% endif %}
 
     fuel_tank_remaining:
       friendly_name: &quot;Car Fuel Remaining&quot;
@@ -311,16 +305,11 @@
       value_template: &gt;
         {% set engine_replacement_km = 68899 %}
         {% set current_mileage = states(&#x27;sensor.car_mileage&#x27;) %}
-        {% if current_mileage not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
-          {% set current_mileage = current_mileage | float %}
-          {% set distance = current_mileage - engine_replacement_km %}
-          {% if distance == distance | round(0) %}
-            {{ distance | int }}
-          {% else %}
-            {{ distance | round(2) }}
-          {% endif %}
+        {% if current_mileage is number %}
+          {% set distance = current_mileage | float - engine_replacement_km %}
+          {{ distance | round(2) }}
         {% else %}
-          0
+          states(&#x27;sensor.car_new_engine_distance&#x27;)  # Preserve last known value
         {% endif %}
 
     yearly_distance_traveled:
@@ -329,19 +318,13 @@
       unique_id: &quot;car_yearly_distance_traveled_sensor&quot;
       icon_template: &quot;{{ &#x27;mdi:map-marker-distance&#x27; }}&quot;
       value_template: &gt;
-        {% set previous_year_mileage = states(&#x27;input_number.previous_year_mileage&#x27;) %}
-        {% set current_mileage = states(&#x27;sensor.car_mileage&#x27;) %}
-        {% if previous_year_mileage not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] and current_mileage not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
-          {% set previous_year_mileage = previous_year_mileage | float %}
-          {% set current_mileage = current_mileage | float %}
-          {% set distance_traveled = current_mileage - previous_year_mileage %}
-          {% if distance_traveled == distance_traveled | round(0) %}
-            {{ distance_traveled | int }}
-          {% else %}
-            {{ distance_traveled | round(2) }}
-          {% endif %}
+        {% set previous_year = states(&#x27;input_number.previous_year_mileage&#x27;) %}
+        {% set current = states(&#x27;sensor.car_mileage&#x27;) %}
+        {% if previous_year is number and current is number %}
+          {% set distance = current | float - previous_year | float %}
+          {{ distance | round(2) }}
         {% else %}
-          0
+          states(&#x27;sensor.yearly_distance_traveled&#x27;)  # Preserve last known value
         {% endif %}
 
     car_daily_driving_time:
