@@ -250,7 +250,7 @@
           {% set distance = current | float - previous | float %}
           {{ distance | round(2) }}
         {% else %}
-          states('sensor.daily_distance_traveled')  # Preserve last known value to avoid graph dropouts
+          states('sensor.daily_distance_traveled') | float(default=0)
         {% endif %}
 
     fuel_tank_remaining:
@@ -294,7 +294,7 @@
           {% set distance = current_mileage | float - engine_replacement_km %}
           {{ distance | round(2) }}
         {% else %}
-          states('sensor.car_new_engine_distance')  # Preserve last known value
+          states('sensor.car_new_engine_distance') | float(default=0)
         {% endif %}
 
     yearly_distance_traveled:
@@ -309,7 +309,7 @@
           {% set distance = current | float - previous_year | float %}
           {{ distance | round(2) }}
         {% else %}
-          states('sensor.yearly_distance_traveled')  # Preserve last known value
+          states('sensor.yearly_distance_traveled') | float(default=0)
         {% endif %}
 
     car_daily_driving_time:
