@@ -862,6 +862,7 @@
     {% set entries = (children[0].standings.entries if children and children[0].get('standings') else []) %}
     {% set total_games = 38 %}
     {% set liverpool = entries | selectattr('team.displayName', 'equalto', 'Liverpool') | list | first %}
+
     {% if liverpool %}
       {% set lfc_points = liverpool['stats'] | selectattr('name', 'equalto', 'points') | map(attribute='value') | list | first | int %}
       {% set lfc_played = liverpool['stats'] | selectattr('name', 'equalto', 'gamesPlayed') | map(attribute='value') | list | first | int %}
@@ -883,15 +884,26 @@
             {% set ns.uncatchable = false %}
           {% endif %}
         {% endfor %}
+
         {% if ns.uncatchable %}
           {{ rank }}{{ suffix }} (Champions)
         {% else %}
-          {% set runner_up = (entries | rejectattr('team.displayName','equalto','Liverpool') | sort(attribute='stats[2].value', reverse=true) | first) %}
+          {% set runner_up = (
+            entries
+            | rejectattr('team.displayName','equalto','Liverpool')
+            | sort(attribute='stats' | selectattr('name', 'equalto', 'points') | map(attribute='value') | list | first, reverse=true)
+            | first
+          ) %}
           {% set runner_points = runner_up['stats'] | selectattr('name','equalto','points') | map(attribute='value') | list | first | int %}
           {{ rank }}{{ suffix }} (+{{ lfc_points - runner_points }} pts)
         {% endif %}
       {% else %}
-        {% set leader = (entries | sort(attribute='stats[2].value', reverse=true) | first) %}
+        {% set leader = (
+          entries
+          | rejectattr('team.displayName','equalto','Liverpool')
+          | sort(attribute='stats' | selectattr('name', 'equalto', 'points') | map(attribute='value') | list | first, reverse=true)
+          | first
+        ) %}
         {% set leader_points = leader['stats'] | selectattr('name','equalto','points') | map(attribute='value') | list | first | int %}
         {{ rank }}{{ suffix }} (-{{ leader_points - lfc_points }} pts)
       {% endif %}
