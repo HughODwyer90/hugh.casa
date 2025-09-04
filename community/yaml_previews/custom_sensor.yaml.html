@@ -1315,6 +1315,11 @@
     {% set season = y if now().month &gt;= 7 else y - 1 %}
     https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v2/competitions/8/seasons/{{season}}/players/stats/leaderboard?_sort=goal_assists:desc&amp;_limit=5
   method: GET
+  headers:
+    User-Agent: &quot;Mozilla/5.0&quot;
+    Origin: &quot;https://www.premierleague.com&quot;
+    Referer: &quot;https://www.premierleague.com/&quot;
+    Accept: &quot;application/json&quot;
   timeout: 5
   scan_interval: 7200
   value_template: &gt;
@@ -1335,6 +1340,11 @@
     {% set season = y if now().month &gt;= 7 else y - 1 %}
     https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v2/competitions/8/seasons/{{season}}/players/stats/leaderboard?_sort=clean_sheets:desc&amp;_limit=5
   method: GET
+  headers:
+    User-Agent: &quot;Mozilla/5.0&quot;
+    Origin: &quot;https://www.premierleague.com&quot;
+    Referer: &quot;https://www.premierleague.com/&quot;
+    Accept: &quot;application/json&quot;
   timeout: 5
   scan_interval: 7200
   value_template: &gt;
