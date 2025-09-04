@@ -780,7 +780,7 @@
       API unavailable
     {% endif %}
   scan_interval: 9000
-  timeout: 10
+  timeout: 5
 
 - platform: rest
   name: "Liverpool (venue)"
@@ -815,7 +815,7 @@
       API unavailable
     {% endif %}
   scan_interval: 9000
-  timeout: 10
+  timeout: 5
 
 - platform: rest
   name: "Liverpool (comp)"
@@ -839,7 +839,7 @@
       API unavailable
     {% endif %}
   scan_interval: 9000
-  timeout: 10
+  timeout: 5
 
 - platform: rest
   name: "Liverpool (Premier League Position)"
@@ -899,7 +899,7 @@
       Liverpool not found
     {% endif %}
   scan_interval: 9000
-  timeout: 10
+  timeout: 5
 
 - platform: rest
   name: "Liverpool (Champions League Position)"
@@ -1007,7 +1007,7 @@
       API unavailable or invalid response
     {% endif %}
   scan_interval: 9000
-  timeout: 10
+  timeout: 5
 
 - platform: rest
   name: "Liverpool (Generic Stage)"
@@ -1035,7 +1035,7 @@
       API unavailable
     {% endif %}
   scan_interval: 9000
-  timeout: 10
+  timeout: 5
 
 - platform: rest
   name: "Liverpool (Premier League Stage)"
@@ -1059,7 +1059,7 @@
       API unavailable or invalid response
     {% endif %}
   scan_interval: 9000
-  timeout: 10
+  timeout: 5
 
 - platform: rest
   name: "Liverpool (European Stage)"
@@ -1091,7 +1091,7 @@
       API unavailable
     {% endif %}
   scan_interval: 9000
-  timeout: 10
+  timeout: 5
 
 - platform: rest
   name: "Liverpool (Premier League Record)"
@@ -1127,7 +1127,7 @@
       API unavailable
     {% endif %}
   scan_interval: 9000
-  timeout: 10
+  timeout: 5
 
 - platform: rest
   name: "Liverpool (Champions League Record)"
@@ -1150,7 +1150,7 @@
       API unavailable
     {% endif %}
   scan_interval: 9000
-  timeout: 10
+  timeout: 5
 
 - platform: rest
   name: "Liverpool (UTC)"
@@ -1173,7 +1173,7 @@
       API unavailable
     {% endif %}
   scan_interval: 9000
-  timeout: 10
+  timeout: 5
 
 - platform: rest
   name: "Home Team Score"
@@ -1196,7 +1196,7 @@
       API unavailable
     {% endif %}
   scan_interval: 10
-  timeout: 10
+  timeout: 5
 
 - platform: rest
   name: "Away Team Score"
@@ -1219,7 +1219,7 @@
       API unavailable
     {% endif %}
   scan_interval: 10
-  timeout: 10
+  timeout: 5
 
 - platform: rest
   name: "Minutes Played"
@@ -1234,4 +1234,28 @@
       API unavailable
     {% endif %}
   scan_interval: 10
-  timeout: 10
+  timeout: 5
+
+# GOALS — top 5
+- platform: command_line
+  name: "PL Leaders – Goals (raw)"
+  unique_id: pl_leaders_goals_cmd
+  command: >
+    bash -lc '
+      y=$(date +%Y); m=$(date +%m);
+      if [ "$m" -lt 7 ]; then season=$((y-1)); else season=$y; fi;
+      curl -sS --connect-timeout 2 --max-time 4 \
+        -H "Origin: https://www.premierleague.com" \
+        -H "Referer: https://www.premierleague.com/" \
+        -H "User-Agent: Mozilla/5.0" \
+        "https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v2/competitions/8/seasons/${season}/players/stats/leaderboard?_sort=goals:desc&_limit=5" \
+      || echo "{\"stats\":[]}"
+    '
+  scan_interval: 7200
+  value_template: >
+    {% set j = value | from_json(default={}) %}
+    {% set s = j.stats | default([]) %}
+    {% if s|length > 0 %}{{ s[0].player.name.display }} ({{ s[0].value }})
+    {% else %}unavailable{% endif %}
+  json_attributes:
+    - stats
