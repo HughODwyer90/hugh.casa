@@ -1236,26 +1236,22 @@
   scan_interval: 10
   timeout: 5
 
-# GOALS — top 5
-- platform: command_line
+# GOALS (top 5)
+- platform: rest
   name: "PL Leaders – Goals (raw)"
-  unique_id: pl_leaders_goals_cmd
-  command: >
-    bash -lc '
-      y=$(date +%Y); m=$(date +%m);
-      if [ "$m" -lt 7 ]; then season=$((y-1)); else season=$y; fi;
-      curl -sS --connect-timeout 2 --max-time 4 \
-        -H "Origin: https://www.premierleague.com" \
-        -H "Referer: https://www.premierleague.com/" \
-        -H "User-Agent: Mozilla/5.0" \
-        "https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v2/competitions/8/seasons/${season}/players/stats/leaderboard?_sort=goals:desc&_limit=5" \
-      || echo "{\"stats\":[]}"
-    '
-  scan_interval: 7200
+  unique_id: pl_leaders_goals_rest
+  resource_template: >
+    {% set y = now().year %}
+    {% set season = y if now().month >= 7 else y - 1 %}
+    https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v2/competitions/8/seasons/{{season}}/players/stats/leaderboard?_sort=goals:desc&_limit=5
+  method: GET
+  timeout: 5
+  scan_interval: 9000
   value_template: >
-    {% set j = value | from_json(default={}) %}
-    {% set s = j.stats | default([]) %}
-    {% if s|length > 0 %}{{ s[0].player.name.display }} ({{ s[0].value }})
-    {% else %}unavailable{% endif %}
+    {% set arr = value_json.get('data', []) if value_json else [] %}
+    {{ arr|length }}
+  availability: >
+    {{ value_json is not none and (value_json.get('data')|default([]))|length > 0 }}
+  json_attributes_path: "$"
   json_attributes:
-    - stats
+    - data
