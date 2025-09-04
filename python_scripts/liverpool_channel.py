@@ -16,6 +16,28 @@ TOP_SCORER_ENTITY = "input_text.top_scorer_epl"
 excluded_keywords = {"Viaplay", "Discovery", "Ziggo", "Caliente", "Diema"}
 base_url = "https://www.livescore.com/football/team/liverpool/3340/fixtures"
 
+# ---------------- Helper for surnames ---------------- #
+SURNAME_PARTICLES = {
+    "da","de","del","della","di","do","dos","du",
+    "la","le","van","von","der","den","ter","ten",
+    "bin","ibn","al","el","st","st."
+}
+
+def extract_surname(full_name: str) -> str:
+    """Return the surname (incl. particles like 'van', 'de', 'von')."""
+    if not full_name:
+        return ""
+    # keep letters, accents, apostrophes, hyphens, and periods (for St.)
+    parts = re.findall(r"[A-Za-zÀ-ÖØ-öø-ÿ'.-]+", full_name.strip())
+    if not parts:
+        return full_name.strip()
+    surname_parts = [parts[-1]]
+    i = len(parts) - 2
+    while i >= 0 and parts[i].lower().strip(".") in SURNAME_PARTICLES:
+        surname_parts.insert(0, parts[i])
+        i -= 1
+    return " ".join(surname_parts)
+
 def post_state(entity_id: str, state: str, attributes: dict | None = None):
     """Create/update an entity state in Home Assistant via the REST API."""
     url = f"{HOME_ASSISTANT_URL}/api/states/{entity_id}"
@@ -171,11 +193,11 @@ def find_team_top(data: list, team_id=LIVERPOOL_TEAM_ID, team_names=LIVERPOOL_TE
         md = x.get("playerMetadata", {}) or {}
         tm = md.get("currentTeam", {}) or {}
         if tm.get("id") == team_id or tm.get("shortName") in team_names or tm.get("name") in team_names:
-            name = md.get("name")
+            full_name = md.get("name")
             team = tm.get("shortName") or tm.get("name")
             value = int((x.get("stats", {}) or {}).get(metric_key, 0))
-            if name:
-                return {"name": name, "team": team, "value": value}
+            if full_name:
+                return {"name": extract_surname(full_name), "team": team, "value": value}
     return None
 
 def fmt_multiline(items):
@@ -194,7 +216,7 @@ def update_pl_leaders_sensor():
             md = x.get("playerMetadata", {}) or {}
             tm = md.get("currentTeam", {}) or {}
             out.append({
-                "name": md.get("name"),
+                "name": extract_surname(md.get("name", "")),   # surname only
                 "team": tm.get("shortName") or tm.get("name"),
                 "value": int((x.get("stats", {}) or {}).get(key, 0)),
             })
@@ -211,11 +233,10 @@ def update_pl_leaders_sensor():
     league_top = goals5[0] if goals5 else None
     season = current_pl_season_year()
 
-    # ---- State text per your spec ----
+    # ---- State text ----
     def pretty(p): return f"{p['name']}: {p['value']}" if p else "unavailable"
 
     if lfc_top and league_top and lfc_top["name"] == league_top["name"] and lfc_top["team"] == league_top["team"]:
-        # LFC is top; compare to 2nd overall if available
         second = goals5[1] if len(goals5) > 1 else None
         if second:
             diff = max(lfc_top["value"] - second["value"], 0)
@@ -224,19 +245,18 @@ def update_pl_leaders_sensor():
             state = f"{pretty(lfc_top)}"
     elif league_top and lfc_top:
         diff = max(league_top["value"] - lfc_top["value"], 0)
-        state = f"{pretty(league_top)} (+{diff} {lfc_top['name']})"
+        state = f"{pretty(league_top)} (-{diff} {lfc_top['name']})"
     elif league_top:
         state = f"{pretty(league_top)} (LFC top unknown)"
     elif lfc_top:
         state = f"{pretty(lfc_top)} (2nd unknown)"
     else:
         state = "unavailable"
-    # ----------------------------------
 
     attrs = {
-        "friendly_name": "Player Stats (EPL)",  # or "Top Scorer (EPL)" if you prefer
+        "friendly_name": "Player Stats (EPL)",
         "icon": "mdi:trophy",
-        "goals_top5": fmt_multiline(goals5),         # one player per line
+        "goals_top5": fmt_multiline(goals5),
         "assists_top5": fmt_multiline(assists5),
         "clean_sheets_top5": fmt_multiline(sheets5)
     }
