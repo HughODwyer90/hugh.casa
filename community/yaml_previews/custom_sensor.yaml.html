@@ -1286,25 +1286,40 @@
   scan_interval: 10
   timeout: 5
 
-# GOALS (top 5)
+# REST — Goals Top 5 (attributes built from `data`)
 - platform: rest
-  name: &quot;PL Leaders – Goals (raw)&quot;
-  unique_id: pl_leaders_goals_rest
+  name: &quot;PL Leaders – Goals (top5)&quot;
+  unique_id: pl_leaders_goals_top5
   resource_template: &gt;
     {% set y = now().year %}
     {% set season = y if now().month &gt;= 7 else y - 1 %}
     https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v2/competitions/8/seasons/{{season}}/players/stats/leaderboard?_sort=goals:desc&amp;_limit=5
   method: GET
-  timeout: 5
+  headers:
+    User-Agent: Mozilla/5.0
+    Origin: https://www.premierleague.com
+    Referer: https://www.premierleague.com/
+    Accept: application/json
+    Accept-Encoding: identity
+  timeout: 6
   scan_interval: 7200
+
+  # keep the state small but useful
   value_template: &gt;
-    {% set arr = value_json.get(&#x27;data&#x27;, []) if value_json else [] %}
-    {{ arr|length }}
-  availability: &gt;
-    {{ value_json is not none and (value_json.get(&#x27;data&#x27;)|default([]))|length &gt; 0 }}
-  json_attributes_path: &quot;$&quot;
-  json_attributes:
-    - data
+    {% set a = value_json.data | default([]) %}
+    {{ a[0].playerMetadata.name ~ &#x27; (&#x27; ~ (a[0].stats.goals|int) ~ &#x27;)&#x27; if a else &#x27;unavailable&#x27; }}
+
+  # build attributes directly (must return a JSON object)
+  json_attributes_template: &gt;
+    {% set a = value_json.data | default([]) %}
+    {
+      &quot;goals_top5&quot;: {{ a[:5] | map(attribute=&#x27;playerMetadata.name&#x27;) | list | tojson }},
+      &quot;goals_top5_with_teams&quot;: {{
+        a[:5] | map(attribute=&#x27;playerMetadata&#x27;) | list
+        | map(attribute=&#x27;name&#x27;) | list | tojson
+      }},
+      &quot;goals_top5_full&quot;: {{ a[:5] | tojson }}
+    }
 
 # ASSISTS (top 5)  -&gt; stats.goalAssists
 - platform: rest
