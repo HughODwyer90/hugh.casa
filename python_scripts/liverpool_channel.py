@@ -116,7 +116,7 @@ def fetch_tv_channel():
 # ---------------- Premier League leaders (Top 5) ---------------- #
 
 PULSE_BASE = "https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v2"
-VERBOSE = True
+VERBOSE = False
 
 LIVERPOOL_TEAM_ID = "14"
 LIVERPOOL_TEAM_NAMES = {"Liverpool"}  # belt & braces
@@ -203,36 +203,45 @@ def update_pl_leaders_sensor():
     assists5 = compact(assists5_raw, "goalAssists")
     sheets5  = compact(sheets5_raw,  "cleanSheets")
 
-    # Find Liverpool's top scorer (scan a deeper list to be safe)
+    # Find Liverpool's top scorer (scan deeper to be safe)
     lfc_scan = fetch_pl_leaderboard_raw("goals", 120)
-    lfc_top  = find_team_top(lfc_scan, metric_key="goals")
+    lfc_top  = find_team_top(lfc_scan, metric_key="goals")   # {'name','team','value'} or None
 
-    # Fallback: league top if LFC not found
     league_top = goals5[0] if goals5 else None
     season = current_pl_season_year()
-    if lfc_top:
-        state = f"{lfc_top['name']} ({lfc_top['value']})"
-        if league_top:
-            print(f"Top Scorer (EPL) [{season}]: LFC {state} | League {league_top['name']} ({league_top['value']})")
+
+    # ---- State text per your spec ----
+    def pretty(p): return f"{p['name']}: {p['value']}" if p else "unavailable"
+
+    if lfc_top and league_top and lfc_top["name"] == league_top["name"] and lfc_top["team"] == league_top["team"]:
+        # LFC is top; compare to 2nd overall if available
+        second = goals5[1] if len(goals5) > 1 else None
+        if second:
+            diff = max(lfc_top["value"] - second["value"], 0)
+            state = f"{pretty(lfc_top)} (+{diff} {second['name']})"
         else:
-            print(f"Top Scorer (EPL) [{season}]: LFC {state}")
+            state = f"{pretty(lfc_top)}"
+    elif league_top and lfc_top:
+        diff = max(league_top["value"] - lfc_top["value"], 0)
+        state = f"{pretty(league_top)} (+{diff} {lfc_top['name']})"
+    elif league_top:
+        state = f"{pretty(league_top)} (LFC top unknown)"
+    elif lfc_top:
+        state = f"{pretty(lfc_top)} (2nd unknown)"
     else:
-        state = f"{league_top['name']} ({league_top['value']})" if league_top else "unavailable"
-        print(f"Top Scorer (EPL) [{season}]: League {state} (LFC not found in scan)")
+        state = "unavailable"
+    # ----------------------------------
 
     attrs = {
-        "friendly_name": "Player Stats (EPL)",
+        "friendly_name": "Player Stats (EPL)",  # or "Top Scorer (EPL)" if you prefer
         "icon": "mdi:trophy",
-        # multiline strings (one player per line)
-        "goals_top5": fmt_multiline(goals5),
+        "goals_top5": fmt_multiline(goals5),         # one player per line
         "assists_top5": fmt_multiline(assists5),
         "clean_sheets_top5": fmt_multiline(sheets5),
     }
 
-    # Push sensor
     post_state("sensor.player_stats_epl", state, attrs)
-
-    # Console summary (fix: use correct variables)
+    print(f"Player Stats (EPL) [{season}]: {state}")
     print_pl_leaders(goals5, assists5, sheets5, season)
 
 # Run
