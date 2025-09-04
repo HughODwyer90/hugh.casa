@@ -740,6 +740,41 @@
           {{ game_time }}
         {% endif %}
 
+    pl_leaders_top5:
+      friendly_name: &quot;Player Stats (EPL)&quot;
+      value_template: &gt;
+        {% set g = state_attr(&#x27;sensor.pl_leaders_goals_rest&#x27;,&#x27;data&#x27;) | default([]) %}
+        {% if g %}{{ g[0].playerMetadata.name }} ({{ g[0].stats.goals|int }})
+        {% else %}unavailable{% endif %}
+      attribute_templates:
+        goals_top5: &gt;
+          {% set a = state_attr(&#x27;sensor.pl_leaders_goals_rest&#x27;,&#x27;data&#x27;) | default([]) %}
+          {{ a[:5] | map(attribute=&#x27;playerMetadata.name&#x27;) | list }}
+        goals_top5_with_teams: &gt;
+          {% set a = state_attr(&#x27;sensor.pl_leaders_goals_rest&#x27;,&#x27;data&#x27;) | default([]) %}
+          {% set out = [] %}
+          {% for x in a[:5] %}
+            {% set team = x.playerMetadata.currentTeam.shortName | default(x.playerMetadata.currentTeam.name) %}
+            {% set _ = out.append(x.playerMetadata.name ~ &#x27; – &#x27; ~ team ~ &#x27; (&#x27; ~ (x.stats.goals|int) ~ &#x27;)&#x27;) %}
+          {% endfor %}
+          {{ out | tojson }}
+        assists_top5: &gt;
+          {% set a = state_attr(&#x27;sensor.pl_leaders_assists_rest&#x27;,&#x27;data&#x27;) | default([]) %}
+          {% set out = [] %}
+          {% for x in a[:5] %}
+            {% set team = x.playerMetadata.currentTeam.shortName | default(x.playerMetadata.currentTeam.name) %}
+            {% set _ = out.append(x.playerMetadata.name ~ &#x27; – &#x27; ~ team ~ &#x27; (&#x27; ~ (x.stats.goalAssists|int) ~ &#x27;)&#x27;) %}
+          {% endfor %}
+          {{ out | tojson }}
+        clean_sheets_top5: &gt;
+          {% set a = state_attr(&#x27;sensor.pl_leaders_cs_rest&#x27;,&#x27;data&#x27;) | default([]) %}
+          {% set out = [] %}
+          {% for x in a[:5] %}
+            {% set team = x.playerMetadata.currentTeam.shortName | default(x.playerMetadata.currentTeam.name) %}
+            {% set _ = out.append(x.playerMetadata.name ~ &#x27; – &#x27; ~ team ~ &#x27; (&#x27; ~ (x.stats.cleanSheets|int) ~ &#x27;)&#x27;) %}
+          {% endfor %}
+          {{ out | tojson }}
+
     total_sensors_count:
       friendly_name: &quot;Total Sensors&quot;
       unique_id: &quot;total_sensors_count_sensor&quot;
@@ -1261,7 +1296,47 @@
     https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v2/competitions/8/seasons/{{season}}/players/stats/leaderboard?_sort=goals:desc&amp;_limit=5
   method: GET
   timeout: 5
-  scan_interval: 9000
+  scan_interval: 7200
+  value_template: &gt;
+    {% set arr = value_json.get(&#x27;data&#x27;, []) if value_json else [] %}
+    {{ arr|length }}
+  availability: &gt;
+    {{ value_json is not none and (value_json.get(&#x27;data&#x27;)|default([]))|length &gt; 0 }}
+  json_attributes_path: &quot;$&quot;
+  json_attributes:
+    - data
+
+# ASSISTS (top 5)  -&gt; stats.goalAssists
+- platform: rest
+  name: &quot;PL Leaders – Assists (raw)&quot;
+  unique_id: pl_leaders_assists_rest
+  resource_template: &gt;
+    {% set y = now().year %}
+    {% set season = y if now().month &gt;= 7 else y - 1 %}
+    https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v2/competitions/8/seasons/{{season}}/players/stats/leaderboard?_sort=goal_assists:desc&amp;_limit=5
+  method: GET
+  timeout: 5
+  scan_interval: 7200
+  value_template: &gt;
+    {% set arr = value_json.get(&#x27;data&#x27;, []) if value_json else [] %}
+    {{ arr|length }}
+  availability: &gt;
+    {{ value_json is not none and (value_json.get(&#x27;data&#x27;)|default([]))|length &gt; 0 }}
+  json_attributes_path: &quot;$&quot;
+  json_attributes:
+    - data
+
+# CLEAN SHEETS (top 5) -&gt; stats.cleanSheets
+- platform: rest
+  name: &quot;PL Leaders – Clean Sheets (raw)&quot;
+  unique_id: pl_leaders_cs_rest
+  resource_template: &gt;
+    {% set y = now().year %}
+    {% set season = y if now().month &gt;= 7 else y - 1 %}
+    https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v2/competitions/8/seasons/{{season}}/players/stats/leaderboard?_sort=clean_sheets:desc&amp;_limit=5
+  method: GET
+  timeout: 5
+  scan_interval: 7200
   value_template: &gt;
     {% set arr = value_json.get(&#x27;data&#x27;, []) if value_json else [] %}
     {{ arr|length }}
