@@ -690,14 +690,14 @@
       icon_template: "mdi:trophy"
       value_template: >
         {% set s = states('input_text.top_scorer_epl') %}
-        {{ s if s not in ['unknown','unavailable','None', None] and s|length > 0 else 'unavailable' }}
+        {{ s if s and s not in ['unknown','unavailable','None'] else 'unavailable' }}
       attribute_templates:
         goals_top5: >
-          {{ states('input_text.top_scorer_epl','goals_top5') or '-' }}
+          {{ state_attr('input_text.top_scorer_epl','goals_top5') | default('-', true) }}
         assists_top5: >
-          {{ states('input_text.top_scorer_epl','assists_top5') or '-' }}
+          {{ state_attr('input_text.top_scorer_epl','assists_top5') | default('-', true) }}
         clean_sheets_top5: >
-          {{ states('input_text.top_scorer_epl','clean_sheets_top5') or '-' }}
+          {{ state_attr('input_text.top_scorer_epl','clean_sheets_top5') | default('-', true) }}
 
     liverpool_score:
       friendly_name: "Liverpool Score"
