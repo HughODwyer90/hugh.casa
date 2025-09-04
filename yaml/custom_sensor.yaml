@@ -1271,39 +1271,39 @@
   scan_interval: 10
   timeout: 5
 
-# REST — Goals Top 5 (attributes built from `data`)
 - platform: rest
   name: "PL Leaders – Goals (top5)"
   unique_id: pl_leaders_goals_top5
   resource_template: >
     {% set y = now().year %}
     {% set season = y if now().month >= 7 else y - 1 %}
-    https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v2/competitions/8/seasons/{{season}}/players/stats/leaderboard?_sort=goals:desc&_limit=5
+    https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v2/competitions/8/seasons/{{ season }}/players/stats/leaderboard?_sort=goals:desc&_limit=5
   method: GET
   headers:
-    User-Agent: Mozilla/5.0
-    Origin: https://www.premierleague.com
-    Referer: https://www.premierleague.com/
-    Accept: application/json
-    Accept-Encoding: identity
-  timeout: 6
-  scan_interval: 7200
+    User-Agent: "Mozilla/5.0"
+    Origin: "https://www.premierleague.com"
+    Referer: "https://www.premierleague.com/"
+    Accept: "application/json"
+    Accept-Encoding: "identity"
+  timeout: 10
+  scan_interval: 3600
 
-  # keep the state small but useful
+  # State: safe even if the call fails or JSON missing
   value_template: >
-    {% set a = value_json.data | default([]) %}
-    {{ a[0].playerMetadata.name ~ ' (' ~ (a[0].stats.goals|int) ~ ')' if a else 'unavailable' }}
+    {% set a = (value_json.get('data') if value_json is not none else []) | default([], true) %}
+    {{ a | length }}
 
-  # build attributes directly (must return a JSON object)
+  # Build attributes from the payload (must return valid JSON)
   json_attributes_template: >
-    {% set a = value_json.data | default([]) %}
+    {% set a = (value_json.get('data') if value_json is not none else []) | default([], true) %}
     {
       "goals_top5": {{ a[:5] | map(attribute='playerMetadata.name') | list | tojson }},
       "goals_top5_with_teams": {{
-        a[:5] | map(attribute='playerMetadata') | list
-        | map(attribute='name') | list | tojson
+        ([x.playerMetadata.name ~ " – " ~
+          (x.playerMetadata.currentTeam.shortName | default(x.playerMetadata.currentTeam.name)) ~
+          " (" ~ (x.stats.goals | int) ~ ")" for x in a[:5]]) | tojson
       }},
-      "goals_top5_full": {{ a[:5] | tojson }}
+      "raw_top5": {{ a[:5] | tojson }}
     }
 
 # ASSISTS (top 5)  -> stats.goalAssists
