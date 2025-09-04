@@ -3,15 +3,18 @@ import re
 import time
 from datetime import datetime
 from secret_manager import SecretsManager  # Import the SecretsManager class
+
 secrets = SecretsManager()
-# Path to save only the TV channel names
-HOME_ASSISTANT_URL = "http://homeassistant.local:8123"  # Replace with your Home Assistant URL
-ENTITY_ID = "input_text.liverpool_tv_channel"  # Replace with your input_text entity ID
-ACCESS_TOKEN = secrets['ha_access_token']
-# Define channels to exclude
+
+# Home Assistant
+HOME_ASSISTANT_URL = "http://homeassistant.local:8123"
+ENTITY_ID = "input_text.liverpool_tv_channel"  # input_text target for TV channel
+ACCESS_TOKEN = secrets["ha_access_token"]
+
+# Livescore (TV channel) config
 excluded_keywords = {"Viaplay", "Discovery", "Ziggo", "Caliente", "Diema"}
-# URL of the main page
 base_url = "https://www.livescore.com/football/team/liverpool/3340/fixtures"
+
 def post_state(entity_id: str, state: str, attributes: dict | None = None):
     """Create/update an entity state in Home Assistant via the REST API."""
     url = f"{HOME_ASSISTANT_URL}/api/states/{entity_id}"
@@ -26,22 +29,25 @@ def post_state(entity_id: str, state: str, attributes: dict | None = None):
     r.raise_for_status()
     return r.json()
 
-
 def fetch_tv_channel():
     try:
         headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/91.0.4472.124 Safari/537.36"
+            )
         }
-        
-        # Get the main page
+
+        # Get main page
         response = requests.get(base_url, headers=headers, timeout=10)
         response.raise_for_status()
 
-        # Extract the build ID from <script> tags if needed
+        # Extract build ID
         build_id = None
-        script_tags = re.findall(r'<script.*?>(.*?)</script>', response.text, re.DOTALL)
+        script_tags = re.findall(r"<script.*?>(.*?)</script>", response.text, re.DOTALL)
         for script_content in script_tags:
-            match = re.search(r"[\"']([\w\-]+)[\"'],\s*'prod'", script_content)
+            match = re.search(r"['\"]([\w\-]+)['\"],\s*'prod'", script_content)
             if match:
                 build_id = match.group(1)
                 break
@@ -50,10 +56,14 @@ def fetch_tv_channel():
             print("No build ID found, skipping.")
             return
 
-        # Construct the API URL
-        api_url = f"https://www.livescore.com/_next/data/{build_id}/en/football/team/liverpool/3340/fixtures.json?sport=football&teamName=liverpool&teamId=3340"
+        # API URL
+        api_url = (
+            f"https://www.livescore.com/_next/data/{build_id}"
+            f"/en/football/team/liverpool/3340/fixtures.json"
+            f"?sport=football&teamName=liverpool&teamId=3340"
+        )
 
-        # Fetch the API data
+        # Fetch JSON
         response = requests.get(api_url, headers=headers, timeout=10)
         response.raise_for_status()
         data = response.json()
@@ -68,125 +78,54 @@ def fetch_tv_channel():
         ):
             events = data["pageProps"]["initialData"]["eventsByMatchType"][0]["Events"]
             if events:
-                now = time.time() * 1000  # Current time in milliseconds
-                next_game = next(
-                    (event for event in events if event.get("Esd") > now), None
-                )
+                now_ms = time.time() * 1000
+                next_game = next((e for e in events if e.get("Esd") > now_ms), None)
                 if next_game and "Media" in next_game and "112" in next_game["Media"]:
                     tv_channels = [
-                        media["eventId"]
-                        for media in next_game["Media"]["112"]
-                        if media.get("type") == "TV_CHANNEL"
+                        m["eventId"]
+                        for m in next_game["Media"]["112"]
+                        if m.get("type") == "TV_CHANNEL"
                     ]
                     if tv_channels:
-                        # Filter out channels that contain any of the excluded keywords
-                        filtered_channels = [
-                            channel for channel in tv_channels 
-                            if not any(keyword in channel for keyword in excluded_keywords)
+                        filtered = [
+                            ch
+                            for ch in tv_channels
+                            if not any(k in ch for k in excluded_keywords)
                         ]
-                        
-                        # Join up to 3 remaining channels
-                        result = ", ".join(filtered_channels[:3])  
+                        result = ", ".join(filtered[:3]) if filtered else "No TV channel listed"
 
-                        # Update the Home Assistant entity with the fetched TV channel info
-                        url = f"{HOME_ASSISTANT_URL}/api/states/{ENTITY_ID}"
-                        headers = {
-                            "Authorization": f"Bearer {ACCESS_TOKEN}",
-                            "Content-Type": "application/json",
-                        }
-                        data = {
-                            "state": result,  # Set the state with the filtered TV channels
-                        }
-                        response = requests.post(url, json=data, headers=headers)
-                        response.raise_for_status()  # Ensure the request is successful
+                        # Update input_text with channel(s)
+                        post_state(ENTITY_ID, result)
                         print(f"TV channels: {result}")
                     else:
-                        print("No TV channel listed for the next game.")
-                        # Set state as empty or specific fallback value, e.g., "No TV channel listed"
-                        url = f"{HOME_ASSISTANT_URL}/api/states/{ENTITY_ID}"
-                        headers = {
-                            "Authorization": f"Bearer {ACCESS_TOKEN}",
-                            "Content-Type": "application/json",
-                        }
-                        data = {
-                            "state": "No TV channel listed",  # Fallback value
-                        }
-                        response = requests.post(url, json=data, headers=headers)
-                        response.raise_for_status()
+                        post_state(ENTITY_ID, "No TV channel listed")
                         print("No TV channel listed for the next game.")
                 else:
+                    post_state(ENTITY_ID, "No TV channel information available")
                     print("No TV channel information available for the next game.")
-                    # Set state to fallback value if no media found
-                    url = f"{HOME_ASSISTANT_URL}/api/states/{ENTITY_ID}"
-                    headers = {
-                        "Authorization": f"Bearer {ACCESS_TOKEN}",
-                        "Content-Type": "application/json",
-                    }
-                    data = {
-                        "state": "No TV channel information available",  # Fallback value
-                    }
-                    response = requests.post(url, json=data, headers=headers)
-                    response.raise_for_status()
             else:
+                post_state(ENTITY_ID, "No upcoming games found")
                 print("No upcoming games found.")
-                # Set state to fallback value if no upcoming games found
-                url = f"{HOME_ASSISTANT_URL}/api/states/{ENTITY_ID}"
-                headers = {
-                    "Authorization": f"Bearer {ACCESS_TOKEN}",
-                    "Content-Type": "application/json",
-                }
-                data = {
-                    "state": "No upcoming games found",  # Fallback value
-                }
-                response = requests.post(url, json=data, headers=headers)
-                response.raise_for_status()
-
         else:
+            post_state(ENTITY_ID, "API data unavailable")
             print("API data unavailable.")
-            # Set state to fallback value if the API data is unavailable
-            url = f"{HOME_ASSISTANT_URL}/api/states/{ENTITY_ID}"
-            headers = {
-                "Authorization": f"Bearer {ACCESS_TOKEN}",
-                "Content-Type": "application/json",
-            }
-            data = {
-                "state": "API data unavailable",  # Fallback value
-            }
-            response = requests.post(url, json=data, headers=headers)
-            response.raise_for_status()
-
     except Exception as e:
-        print(f"Error: {str(e)}")
-        # If an error occurs, set a fallback value
-        url = f"{HOME_ASSISTANT_URL}/api/states/{ENTITY_ID}"
-        headers = {
-            "Authorization": f"Bearer {ACCESS_TOKEN}",
-            "Content-Type": "application/json",
-        }
-        data = {
-            "state": f"Error: {str(e)}",  # Fallback error message
-        }
-        response = requests.post(url, json=data, headers=headers)
-        response.raise_for_status()
+        post_state(ENTITY_ID, f"Error: {e}")
+        print(f"Error: {e}")
+
+# ---------------- Premier League leaders (Top 5) ---------------- #
 
 PULSE_BASE = "https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v2"
+VERBOSE = True
 
-# Pulselive sort param -> stats field mapping
-STAT_FIELD = {
-    "goals": "goals",
-    "goal_assists": "goalAssists",
-    "clean_sheets": "cleanSheets",
-}
-VERBOSE = True  # set True if you want the top-5 lists printed
+LIVERPOOL_TEAM_ID = "14"
+LIVERPOOL_TEAM_NAMES = {"Liverpool"}  # belt & braces
 
 def print_pl_leaders(goals, assists, sheets, season):
     g_top = f"{goals[0]['name']} ({goals[0]['value']})" if goals else "unavailable"
     a_top = f"{assists[0]['name']} ({assists[0]['value']})" if assists else "unavailable"
     c_top = f"{sheets[0]['name']} ({sheets[0]['value']})" if sheets else "unavailable"
-
-    # Simple summary (similar to your TV channels line)
     print(f"PL leaders [{season}]: Goals={g_top} | Assists={a_top} | Clean sheets={c_top}")
-
     if VERBOSE:
         def lines(title, items):
             print(title)
@@ -195,7 +134,6 @@ def print_pl_leaders(goals, assists, sheets, season):
                 return
             for i, x in enumerate(items[:5], 1):
                 print(f"  {i}. {x['name']} – {x.get('team') or ''} ({x['value']})")
-
         lines("Top 5 – Goals:", goals)
         lines("Top 5 – Assists:", assists)
         lines("Top 5 – Clean sheets:", sheets)
@@ -213,11 +151,6 @@ def pulselive_headers():
         "Accept-Encoding": "identity",
     }
 
-# --- constants (add near top) ---
-LIVERPOOL_TEAM_ID = "14"
-LIVERPOOL_TEAM_NAMES = {"Liverpool"}  # belt & braces
-
-
 def fetch_pl_leaderboard_raw(metric: str, limit: int = 5):
     season = current_pl_season_year()
     url = (
@@ -230,7 +163,6 @@ def fetch_pl_leaderboard_raw(metric: str, limit: int = 5):
         return r.json().get("data", [])[:limit]
     except Exception:
         return []
-
 
 def find_team_top(data: list, team_id=LIVERPOOL_TEAM_ID, team_names=LIVERPOOL_TEAM_NAMES, metric_key="goals"):
     """Return {'name','team','value'} for the first (highest) entry matching the team."""
@@ -245,11 +177,8 @@ def find_team_top(data: list, team_id=LIVERPOOL_TEAM_ID, team_names=LIVERPOOL_TE
                 return {"name": name, "team": team, "value": value}
     return None
 
-
 def fmt_lines(items):
-    return [f"{i+1}. {x['name']} – {x['team']} ({x['value']})"
-            for i, x in enumerate(items[:5])]
-
+    return [f"{i+1}. {x['name']} – {x['team']} ({x['value']})" for i, x in enumerate(items[:5])]
 
 def update_pl_leaders_sensor():
     # League leaders for attributes (top 5)
@@ -275,7 +204,7 @@ def update_pl_leaders_sensor():
     sheets5  = compact(sheets5_raw,  "cleanSheets")
 
     # Find Liverpool's top scorer (scan a deeper list to be safe)
-    lfc_scan = fetch_pl_leaderboard_raw("goals", 120)  # wider net so LFC shows even if not top 5
+    lfc_scan = fetch_pl_leaderboard_raw("goals", 120)
     lfc_top  = find_team_top(lfc_scan, metric_key="goals")
 
     # Fallback: league top if LFC not found
@@ -283,7 +212,10 @@ def update_pl_leaders_sensor():
     season = current_pl_season_year()
     if lfc_top:
         state = f"{lfc_top['name']} ({lfc_top['value']})"
-        print(f"Top Scorer (EPL) [{season}]: LFC {state} | League {league_top['name']} ({league_top['value']})" if league_top else f"Top Scorer (EPL) [{season}]: LFC {state}")
+        if league_top:
+            print(f"Top Scorer (EPL) [{season}]: LFC {state} | League {league_top['name']} ({league_top['value']})")
+        else:
+            print(f"Top Scorer (EPL) [{season}]: LFC {state}")
     else:
         state = f"{league_top['name']} ({league_top['value']})" if league_top else "unavailable"
         print(f"Top Scorer (EPL) [{season}]: League {state} (LFC not found in scan)")
@@ -298,11 +230,12 @@ def update_pl_leaders_sensor():
         "clean_sheets_top5": fmt_lines(sheets5),
     }
 
-    # entity id + name as requested
+    # Push sensor
     post_state("sensor.top_scorer_epl", state, attrs)
-    print_pl_leaders(goals, assists, sheets, attributes["season"])
 
+    # Console summary (fix: use correct variables)
+    print_pl_leaders(goals5, assists5, sheets5, season)
 
-# Run the function
+# Run
 fetch_tv_channel()
 update_pl_leaders_sensor()
