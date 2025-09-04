@@ -1289,10 +1289,7 @@
 - platform: rest
   name: &quot;PL Leaders – Goals (top5)&quot;
   unique_id: pl_leaders_goals_top5
-  resource_template: &gt;
-    {% set y = now().year %}
-    {% set season = y if now().month &gt;= 7 else y - 1 %}
-    https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v2/competitions/8/seasons/{{ season }}/players/stats/leaderboard?_sort=goals:desc&amp;_limit=5
+  resource: &quot;https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v2/competitions/8/seasons/2025/players/stats/leaderboard?_sort=goals:desc&amp;_limit=5&quot;
   method: GET
   headers:
     User-Agent: &quot;Mozilla/5.0&quot;
