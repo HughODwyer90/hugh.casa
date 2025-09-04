@@ -238,7 +238,7 @@ def update_pl_leaders_sensor():
         "icon": "mdi:trophy",
         "goals_top5": fmt_multiline(goals5),         # one player per line
         "assists_top5": fmt_multiline(assists5),
-        "clean_sheets_top5": fmt_multiline(sheets5),
+        "clean_sheets_top5": fmt_multiline(sheets5)
     }
 
     post_state(TOP_SCORER_ENTITY, state, attrs)
