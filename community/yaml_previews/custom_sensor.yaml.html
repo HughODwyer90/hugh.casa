@@ -705,14 +705,14 @@
       icon_template: &quot;mdi:trophy&quot;
       value_template: &gt;
         {% set s = states(&#x27;input_text.top_scorer_epl&#x27;) %}
-        {{ s if s not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;None&#x27;, None] and s|length &gt; 0 else &#x27;unavailable&#x27; }}
+        {{ s if s and s not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;None&#x27;] else &#x27;unavailable&#x27; }}
       attribute_templates:
         goals_top5: &gt;
-          {{ states(&#x27;input_text.top_scorer_epl&#x27;,&#x27;goals_top5&#x27;) or &#x27;-&#x27; }}
+          {{ state_attr(&#x27;input_text.top_scorer_epl&#x27;,&#x27;goals_top5&#x27;) | default(&#x27;-&#x27;, true) }}
         assists_top5: &gt;
-          {{ states(&#x27;input_text.top_scorer_epl&#x27;,&#x27;assists_top5&#x27;) or &#x27;-&#x27; }}
+          {{ state_attr(&#x27;input_text.top_scorer_epl&#x27;,&#x27;assists_top5&#x27;) | default(&#x27;-&#x27;, true) }}
         clean_sheets_top5: &gt;
-          {{ states(&#x27;input_text.top_scorer_epl&#x27;,&#x27;clean_sheets_top5&#x27;) or &#x27;-&#x27; }}
+          {{ state_attr(&#x27;input_text.top_scorer_epl&#x27;,&#x27;clean_sheets_top5&#x27;) | default(&#x27;-&#x27;, true) }}
 
     liverpool_score:
       friendly_name: &quot;Liverpool Score&quot;
