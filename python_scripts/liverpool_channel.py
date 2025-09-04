@@ -10,6 +10,7 @@ secrets = SecretsManager()
 HOME_ASSISTANT_URL = "http://homeassistant.local:8123"
 ENTITY_ID = "input_text.liverpool_tv_channel"  # input_text target for TV channel
 ACCESS_TOKEN = secrets["ha_access_token"]
+TOP_SCORER_ENTITY = "input_text.top_scorer_epl"
 
 # Livescore (TV channel) config
 excluded_keywords = {"Viaplay", "Discovery", "Ziggo", "Caliente", "Diema"}
@@ -240,7 +241,7 @@ def update_pl_leaders_sensor():
         "clean_sheets_top5": fmt_multiline(sheets5),
     }
 
-    post_state("sensor.player_stats_epl", state, attrs)
+    post_state(TOP_SCORER_ENTITY, state, attrs)
     print(f"Player Stats (EPL) [{season}]: {state}")
     print_pl_leaders(goals5, assists5, sheets5, season)
 
