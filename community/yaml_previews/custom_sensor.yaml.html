@@ -699,6 +699,21 @@
           &quot;No TV channel information&quot;
         {% endif %}
 
+    liverpool_top_scorer_epl:
+      friendly_name: &quot;Top Scorer (EPL)&quot;
+      unique_id: &quot;top_scorer_epl_sensor&quot;
+      icon_template: &quot;mdi:trophy&quot;
+      value_template: &gt;
+        {% set s = states(&#x27;input_text.top_scorer_epl&#x27;) %}
+        {{ s if s not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;None&#x27;, None] and s|length &gt; 0 else &#x27;unavailable&#x27; }}
+      attribute_templates:
+        goals_top5: &gt;
+          {{ states(&#x27;input_text.top_scorer_epl&#x27;,&#x27;goals_top5&#x27;) or &#x27;-&#x27; }}
+        assists_top5: &gt;
+          {{ states(&#x27;input_text.top_scorer_epl&#x27;,&#x27;assists_top5&#x27;) or &#x27;-&#x27; }}
+        clean_sheets_top5: &gt;
+          {{ states(&#x27;input_text.top_scorer_epl&#x27;,&#x27;clean_sheets_top5&#x27;) or &#x27;-&#x27; }}
+
     liverpool_score:
       friendly_name: &quot;Liverpool Score&quot;
       unique_id: &quot;liverpool_score_sensor&quot;
