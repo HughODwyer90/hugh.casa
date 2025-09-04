@@ -177,8 +177,8 @@ def find_team_top(data: list, team_id=LIVERPOOL_TEAM_ID, team_names=LIVERPOOL_TE
                 return {"name": name, "team": team, "value": value}
     return None
 
-def fmt_lines(items):
-    return [f"{i+1}. {x['name']} – {x['team']} ({x['value']})" for i, x in enumerate(items[:5])]
+def fmt_multiline(items):
+    return "\n".join(f"{i+1}. {x['name']} – {x['team']} ({x['value']})" for i, x in enumerate(items[:5]))
 
 def update_pl_leaders_sensor():
     # League leaders for attributes (top 5)
@@ -221,17 +221,16 @@ def update_pl_leaders_sensor():
         print(f"Top Scorer (EPL) [{season}]: League {state} (LFC not found in scan)")
 
     attrs = {
-        "friendly_name": "Top Scorer (EPL)",
+        "friendly_name": "Player Stats (EPL)",
         "icon": "mdi:trophy",
-        "season": season,
-        "updated": datetime.now().isoformat(timespec="seconds"),
-        "goals_top5": fmt_lines(goals5),
-        "assists_top5": fmt_lines(assists5),
-        "clean_sheets_top5": fmt_lines(sheets5),
+        # multiline strings (one player per line)
+        "goals_top5": fmt_multiline(goals5),
+        "assists_top5": fmt_multiline(assists5),
+        "clean_sheets_top5": fmt_multiline(sheets5),
     }
 
     # Push sensor
-    post_state("sensor.top_scorer_epl", state, attrs)
+    post_state("sensor.player_stats_epl", state, attrs)
 
     # Console summary (fix: use correct variables)
     print_pl_leaders(goals5, assists5, sheets5, season)
