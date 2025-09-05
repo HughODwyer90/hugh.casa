@@ -209,7 +209,7 @@ def stat_block(label, players):
     for p in players:
         out[p["name"]] = p["value"]
     return out
-    
+
 def update_pl_leaders_sensor():
     # League leaders for attributes (top 5)
     goals5_raw   = fetch_pl_leaderboard_raw("goals", 5)
