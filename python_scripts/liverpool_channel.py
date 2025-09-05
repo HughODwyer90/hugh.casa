@@ -255,27 +255,27 @@ def update_pl_leaders_sensor():
 
     
     def ranked_stat_line(player, stat_label):
-    return f"{player['name']} – {player['team']} – {player['value']} {stat_label}"
+        return f"{player['name']} – {player['team']} – {player['value']} {stat_label}"
 
     attrs = {
         "friendly_name": "Player Stats (EPL)",
         "icon": "mdi:trophy",
     }
 
-    # Add ranked goals
+    # Goals block
+    attrs["GOALS"] = ""
     for i, p in enumerate(goals5, 1):
-        key = f"goal_{i}"
-        attrs[key] = f"{p['name']} – {p['team']} – {p['value']} goals"
+        attrs[f"g{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
 
-    # Add ranked assists
+    # Assists block
+    attrs["ASSISTS"] = ""
     for i, p in enumerate(assists5, 1):
-        key = f"assist_{i}"
-        attrs[key] = f"{p['name']} – {p['team']} – {p['value']} assists"
+        attrs[f"a{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
 
-    # Add ranked clean sheets
+    # Clean Sheets block
+    attrs["CLEAN SHEETS"] = ""
     for i, p in enumerate(sheets5, 1):
-        key = f"clean_{i}"
-        attrs[key] = f"{p['name']} – {p['team']} – {p['value']} clean sheets"
+        attrs[f"c{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
 
     post_state(TOP_SCORER_ENTITY, state, attrs)
     print(f"Player Stats (EPL) [{season}]: {state}")
