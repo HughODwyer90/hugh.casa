@@ -203,6 +203,13 @@ def find_team_top(data: list, team_id=LIVERPOOL_TEAM_ID, team_names=LIVERPOOL_TE
 def fmt_multiline(items):
     return "\n".join(f"{i+1}. {x['name']} – {x['team']} ({x['value']})" for i, x in enumerate(items[:5]))
 
+def stat_block(label, players):
+    """Return a dict like {'Goals': '', 'Haaland': 3, 'Wood': 2, ...}"""
+    out = {label: ""}
+    for p in players:
+        out[p["name"]] = p["value"]
+    return out
+    
 def update_pl_leaders_sensor():
     # League leaders for attributes (top 5)
     goals5_raw   = fetch_pl_leaderboard_raw("goals", 5)
@@ -253,25 +260,14 @@ def update_pl_leaders_sensor():
     else:
         state = "unavailable"
 
+    
     attrs = {
-    "friendly_name": "Player Stats (EPL)",
-    "icon": "mdi:trophy",
+        "friendly_name": "Player Stats (EPL)",
+        "icon": "mdi:trophy",
+        **stat_block("Goals", goals5),
+        **stat_block("Assists", assists5),
+        **stat_block("Clean sheets", sheets5),
     }
-
-    # Goals
-    attrs["Goals"] = ""
-    for player in goals5:
-        attrs[player["name"]] = player["value"]
-
-    # Assists
-    attrs["Assists"] = ""
-    for player in assists5:
-        attrs[player["name"]] = player["value"]
-
-    # Clean Sheets
-    attrs["Clean sheets"] = ""
-    for player in sheets5:
-        attrs[player["name"]] = player["value"]
 
     post_state(TOP_SCORER_ENTITY, state, attrs)
     print(f"Player Stats (EPL) [{season}]: {state}")
