@@ -203,13 +203,6 @@ def find_team_top(data: list, team_id=LIVERPOOL_TEAM_ID, team_names=LIVERPOOL_TE
 def fmt_multiline(items):
     return "\n".join(f"{i+1}. {x['name']} – {x['team']} ({x['value']})" for i, x in enumerate(items[:5]))
 
-def stat_block(label, players):
-    """Return a dict like {'Goals': '', 'Haaland': 3, 'Wood': 2, ...}"""
-    out = {label: ""}
-    for p in players:
-        out[p["name"]] = p["value"]
-    return out
-
 def update_pl_leaders_sensor():
     # League leaders for attributes (top 5)
     goals5_raw   = fetch_pl_leaderboard_raw("goals", 5)
@@ -261,13 +254,28 @@ def update_pl_leaders_sensor():
         state = "unavailable"
 
     
+    def ranked_stat_line(player, stat_label):
+    return f"{player['name']} – {player['team']} – {player['value']} {stat_label}"
+
     attrs = {
         "friendly_name": "Player Stats (EPL)",
         "icon": "mdi:trophy",
-        **stat_block("Goals", goals5),
-        **stat_block("Assists", assists5),
-        **stat_block("Clean sheets", sheets5),
     }
+
+    # Add ranked goals
+    for i, p in enumerate(goals5, 1):
+        key = f"goal_{i}"
+        attrs[key] = f"{p['name']} – {p['team']} – {p['value']} goals"
+
+    # Add ranked assists
+    for i, p in enumerate(assists5, 1):
+        key = f"assist_{i}"
+        attrs[key] = f"{p['name']} – {p['team']} – {p['value']} assists"
+
+    # Add ranked clean sheets
+    for i, p in enumerate(sheets5, 1):
+        key = f"clean_{i}"
+        attrs[key] = f"{p['name']} – {p['team']} – {p['value']} clean sheets"
 
     post_state(TOP_SCORER_ENTITY, state, attrs)
     print(f"Player Stats (EPL) [{season}]: {state}")
