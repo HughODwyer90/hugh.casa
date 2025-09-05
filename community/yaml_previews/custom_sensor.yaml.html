@@ -708,36 +708,50 @@
         {{ s if s and s not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;None&#x27;] else &#x27;unavailable&#x27; }}
       attribute_templates:
         goals: &gt;
-          {% set attrs = state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;Goals&#x27;) %}
-          {% set ns = namespace(players=[]) %}
-          {% for k, v in state_attr(&#x27;input_text.top_scorer_epl&#x27;)|dictsort %}
-            {% if k not in [&#x27;friendly_name&#x27;, &#x27;icon&#x27;, &#x27;Assists&#x27;, &#x27;Goals&#x27;, &#x27;Clean sheets&#x27;] and v is number and
-                  state_attr(&#x27;input_text.top_scorer_epl&#x27;)[&#x27;Goals&#x27;] == &#x27;&#x27; and
-                  loop.previtem and loop.previtem[0] == &#x27;Goals&#x27; %}
-              {% set ns.players = ns.players + [k ~ &#x27; (&#x27; ~ v ~ &#x27;)&#x27;] %}
-            {% endif %}
-          {% endfor %}
-          {{ ns.players | join(&#x27;, &#x27;) }}
-    
+          {% set attrs = state_attr(&#x27;input_text.top_scorer_epl&#x27;) %}
+          {% if &#x27;Goals&#x27; in attrs %}
+            {% set ns = namespace(found=false, out=[]) %}
+            {% for k, v in attrs.items() %}
+              {% if k == &#x27;Goals&#x27; %}
+                {% set ns.found = true %}
+              {% elif k in [&#x27;Assists&#x27;, &#x27;Clean sheets&#x27;] %}
+                {% set ns.found = false %}
+              {% elif ns.found %}
+                {% set ns.out = ns.out + [k ~ &#x27; (&#x27; ~ v ~ &#x27;)&#x27;] %}
+              {% endif %}
+            {% endfor %}
+            {{ ns.out | join(&#x27;, &#x27;) }}
+          {% else %} unavailable {% endif %}
+
         assists: &gt;
-          {% set ns = namespace(players=[]) %}
-          {% for k, v in state_attr(&#x27;input_text.top_scorer_epl&#x27;)|dictsort %}
-            {% if k not in [&#x27;friendly_name&#x27;, &#x27;icon&#x27;, &#x27;Assists&#x27;, &#x27;Goals&#x27;, &#x27;Clean sheets&#x27;] and v is number and
-                  loop.previtem and loop.previtem[0] == &#x27;Assists&#x27; %}
-              {% set ns.players = ns.players + [k ~ &#x27; (&#x27; ~ v ~ &#x27;)&#x27;] %}
-            {% endif %}
-          {% endfor %}
-          {{ ns.players | join(&#x27;, &#x27;) }}
-    
+          {% set attrs = state_attr(&#x27;input_text.top_scorer_epl&#x27;) %}
+          {% if &#x27;Assists&#x27; in attrs %}
+            {% set ns = namespace(found=false, out=[]) %}
+            {% for k, v in attrs.items() %}
+              {% if k == &#x27;Assists&#x27; %}
+                {% set ns.found = true %}
+              {% elif k == &#x27;Clean sheets&#x27; %}
+                {% set ns.found = false %}
+              {% elif ns.found %}
+                {% set ns.out = ns.out + [k ~ &#x27; (&#x27; ~ v ~ &#x27;)&#x27;] %}
+              {% endif %}
+            {% endfor %}
+            {{ ns.out | join(&#x27;, &#x27;) }}
+          {% else %} unavailable {% endif %}
+
         clean_sheets: &gt;
-          {% set ns = namespace(players=[]) %}
-          {% for k, v in state_attr(&#x27;input_text.top_scorer_epl&#x27;)|dictsort %}
-            {% if k not in [&#x27;friendly_name&#x27;, &#x27;icon&#x27;, &#x27;Assists&#x27;, &#x27;Goals&#x27;, &#x27;Clean sheets&#x27;] and v is number and
-                  loop.previtem and loop.previtem[0] == &#x27;Clean sheets&#x27; %}
-              {% set ns.players = ns.players + [k ~ &#x27; (&#x27; ~ v ~ &#x27;)&#x27;] %}
-            {% endif %}
-          {% endfor %}
-          {{ ns.players | join(&#x27;, &#x27;) }}
+          {% set attrs = state_attr(&#x27;input_text.top_scorer_epl&#x27;) %}
+          {% if &#x27;Clean sheets&#x27; in attrs %}
+            {% set ns = namespace(found=false, out=[]) %}
+            {% for k, v in attrs.items() %}
+              {% if k == &#x27;Clean sheets&#x27; %}
+                {% set ns.found = true %}
+              {% elif ns.found %}
+                {% set ns.out = ns.out + [k ~ &#x27; (&#x27; ~ v ~ &#x27;)&#x27;] %}
+              {% endif %}
+            {% endfor %}
+            {{ ns.out | join(&#x27;, &#x27;) }}
+          {% else %} unavailable {% endif %}
 
     liverpool_score:
       friendly_name: &quot;Liverpool Score&quot;
