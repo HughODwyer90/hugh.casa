@@ -693,36 +693,50 @@
         {{ s if s and s not in ['unknown','unavailable','None'] else 'unavailable' }}
       attribute_templates:
         goals: >
-          {% set attrs = state_attr('input_text.top_scorer_epl', 'Goals') %}
-          {% set ns = namespace(players=[]) %}
-          {% for k, v in state_attr('input_text.top_scorer_epl')|dictsort %}
-            {% if k not in ['friendly_name', 'icon', 'Assists', 'Goals', 'Clean sheets'] and v is number and
-                  state_attr('input_text.top_scorer_epl')['Goals'] == '' and
-                  loop.previtem and loop.previtem[0] == 'Goals' %}
-              {% set ns.players = ns.players + [k ~ ' (' ~ v ~ ')'] %}
-            {% endif %}
-          {% endfor %}
-          {{ ns.players | join(', ') }}
-    
+          {% set attrs = state_attr('input_text.top_scorer_epl') %}
+          {% if 'Goals' in attrs %}
+            {% set ns = namespace(found=false, out=[]) %}
+            {% for k, v in attrs.items() %}
+              {% if k == 'Goals' %}
+                {% set ns.found = true %}
+              {% elif k in ['Assists', 'Clean sheets'] %}
+                {% set ns.found = false %}
+              {% elif ns.found %}
+                {% set ns.out = ns.out + [k ~ ' (' ~ v ~ ')'] %}
+              {% endif %}
+            {% endfor %}
+            {{ ns.out | join(', ') }}
+          {% else %} unavailable {% endif %}
+
         assists: >
-          {% set ns = namespace(players=[]) %}
-          {% for k, v in state_attr('input_text.top_scorer_epl')|dictsort %}
-            {% if k not in ['friendly_name', 'icon', 'Assists', 'Goals', 'Clean sheets'] and v is number and
-                  loop.previtem and loop.previtem[0] == 'Assists' %}
-              {% set ns.players = ns.players + [k ~ ' (' ~ v ~ ')'] %}
-            {% endif %}
-          {% endfor %}
-          {{ ns.players | join(', ') }}
-    
+          {% set attrs = state_attr('input_text.top_scorer_epl') %}
+          {% if 'Assists' in attrs %}
+            {% set ns = namespace(found=false, out=[]) %}
+            {% for k, v in attrs.items() %}
+              {% if k == 'Assists' %}
+                {% set ns.found = true %}
+              {% elif k == 'Clean sheets' %}
+                {% set ns.found = false %}
+              {% elif ns.found %}
+                {% set ns.out = ns.out + [k ~ ' (' ~ v ~ ')'] %}
+              {% endif %}
+            {% endfor %}
+            {{ ns.out | join(', ') }}
+          {% else %} unavailable {% endif %}
+
         clean_sheets: >
-          {% set ns = namespace(players=[]) %}
-          {% for k, v in state_attr('input_text.top_scorer_epl')|dictsort %}
-            {% if k not in ['friendly_name', 'icon', 'Assists', 'Goals', 'Clean sheets'] and v is number and
-                  loop.previtem and loop.previtem[0] == 'Clean sheets' %}
-              {% set ns.players = ns.players + [k ~ ' (' ~ v ~ ')'] %}
-            {% endif %}
-          {% endfor %}
-          {{ ns.players | join(', ') }}
+          {% set attrs = state_attr('input_text.top_scorer_epl') %}
+          {% if 'Clean sheets' in attrs %}
+            {% set ns = namespace(found=false, out=[]) %}
+            {% for k, v in attrs.items() %}
+              {% if k == 'Clean sheets' %}
+                {% set ns.found = true %}
+              {% elif ns.found %}
+                {% set ns.out = ns.out + [k ~ ' (' ~ v ~ ')'] %}
+              {% endif %}
+            {% endfor %}
+            {{ ns.out | join(', ') }}
+          {% else %} unavailable {% endif %}
 
     liverpool_score:
       friendly_name: "Liverpool Score"
