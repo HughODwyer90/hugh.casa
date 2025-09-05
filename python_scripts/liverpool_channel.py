@@ -254,12 +254,24 @@ def update_pl_leaders_sensor():
         state = "unavailable"
 
     attrs = {
-        "friendly_name": "Player Stats (EPL)",
-        "icon": "mdi:trophy",
-        "goals_top5": fmt_multiline(goals5),
-        "assists_top5": fmt_multiline(assists5),
-        "clean_sheets_top5": fmt_multiline(sheets5)
+    "friendly_name": "Player Stats (EPL)",
+    "icon": "mdi:trophy",
     }
+
+    # Goals
+    attrs["Goals"] = ""
+    for player in goals5:
+        attrs[player["name"]] = player["value"]
+
+    # Assists
+    attrs["Assists"] = ""
+    for player in assists5:
+        attrs[player["name"]] = player["value"]
+
+    # Clean Sheets
+    attrs["Clean sheets"] = ""
+    for player in sheets5:
+        attrs[player["name"]] = player["value"]
 
     post_state(TOP_SCORER_ENTITY, state, attrs)
     print(f"Player Stats (EPL) [{season}]: {state}")
