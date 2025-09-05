@@ -707,23 +707,26 @@
         {% set s = states(&#x27;input_text.top_scorer_epl&#x27;) %}
         {{ s if s and s not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;None&#x27;] else &#x27;unavailable&#x27; }}
       attribute_templates:
-        goal_1: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;goal_1&#x27;) }}&quot;
-        goal_2: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;goal_2&#x27;) }}&quot;
-        goal_3: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;goal_3&#x27;) }}&quot;
-        goal_4: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;goal_4&#x27;) }}&quot;
-        goal_5: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;goal_5&#x27;) }}&quot;
+        GOALS: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;GOALS&#x27;) }}&quot;
+        g1: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;g1&#x27;) }}&quot;
+        g2: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;g2&#x27;) }}&quot;
+        g3: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;g3&#x27;) }}&quot;
+        g4: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;g4&#x27;) }}&quot;
+        g5: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;g5&#x27;) }}&quot;
 
-        assist_1: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;assist_1&#x27;) }}&quot;
-        assist_2: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;assist_2&#x27;) }}&quot;
-        assist_3: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;assist_3&#x27;) }}&quot;
-        assist_4: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;assist_4&#x27;) }}&quot;
-        assist_5: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;assist_5&#x27;) }}&quot;
+        ASSISTS: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;ASSISTS&#x27;) }}&quot;
+        a1: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;a1&#x27;) }}&quot;
+        a2: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;a2&#x27;) }}&quot;
+        a3: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;a3&#x27;) }}&quot;
+        a4: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;a4&#x27;) }}&quot;
+        a5: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;a5&#x27;) }}&quot;
 
-        clean_1: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;clean_1&#x27;) }}&quot;
-        clean_2: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;clean_2&#x27;) }}&quot;
-        clean_3: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;clean_3&#x27;) }}&quot;
-        clean_4: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;clean_4&#x27;) }}&quot;
-        clean_5: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;clean_5&#x27;) }}&quot;
+        CLEAN SHEETS: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;CLEAN SHEETS&#x27;) }}&quot;
+        c1: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;c1&#x27;) }}&quot;
+        c2: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;c2&#x27;) }}&quot;
+        c3: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;c3&#x27;) }}&quot;
+        c4: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;c4&#x27;) }}&quot;
+        c5: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;c5&#x27;) }}&quot;
 
     liverpool_score:
       friendly_name: &quot;Liverpool Score&quot;
