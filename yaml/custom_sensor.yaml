@@ -692,12 +692,37 @@
         {% set s = states('input_text.top_scorer_epl') %}
         {{ s if s and s not in ['unknown','unavailable','None'] else 'unavailable' }}
       attribute_templates:
-        goals_top5: >
-          {{ state_attr('input_text.top_scorer_epl','goals_top5') | default('-', true) }}
-        assists_top5: >
-          {{ state_attr('input_text.top_scorer_epl','assists_top5') | default('-', true) }}
-        clean_sheets_top5: >
-          {{ state_attr('input_text.top_scorer_epl','clean_sheets_top5') | default('-', true) }}
+        goals: >
+          {% set attrs = state_attr('input_text.top_scorer_epl', 'Goals') %}
+          {% set ns = namespace(players=[]) %}
+          {% for k, v in state_attr('input_text.top_scorer_epl')|dictsort %}
+            {% if k not in ['friendly_name', 'icon', 'Assists', 'Goals', 'Clean sheets'] and v is number and
+                  state_attr('input_text.top_scorer_epl')['Goals'] == '' and
+                  loop.previtem and loop.previtem[0] == 'Goals' %}
+              {% set ns.players = ns.players + [k ~ ' (' ~ v ~ ')'] %}
+            {% endif %}
+          {% endfor %}
+          {{ ns.players | join(', ') }}
+    
+        assists: >
+          {% set ns = namespace(players=[]) %}
+          {% for k, v in state_attr('input_text.top_scorer_epl')|dictsort %}
+            {% if k not in ['friendly_name', 'icon', 'Assists', 'Goals', 'Clean sheets'] and v is number and
+                  loop.previtem and loop.previtem[0] == 'Assists' %}
+              {% set ns.players = ns.players + [k ~ ' (' ~ v ~ ')'] %}
+            {% endif %}
+          {% endfor %}
+          {{ ns.players | join(', ') }}
+    
+        clean_sheets: >
+          {% set ns = namespace(players=[]) %}
+          {% for k, v in state_attr('input_text.top_scorer_epl')|dictsort %}
+            {% if k not in ['friendly_name', 'icon', 'Assists', 'Goals', 'Clean sheets'] and v is number and
+                  loop.previtem and loop.previtem[0] == 'Clean sheets' %}
+              {% set ns.players = ns.players + [k ~ ' (' ~ v ~ ')'] %}
+            {% endif %}
+          {% endfor %}
+          {{ ns.players | join(', ') }}
 
     liverpool_score:
       friendly_name: "Liverpool Score"
