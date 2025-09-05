@@ -692,51 +692,23 @@
         {% set s = states('input_text.top_scorer_epl') %}
         {{ s if s and s not in ['unknown','unavailable','None'] else 'unavailable' }}
       attribute_templates:
-        goals: >
-          {% set attrs = state_attr('input_text.top_scorer_epl') %}
-          {% if 'Goals' in attrs %}
-            {% set ns = namespace(found=false, out=[]) %}
-            {% for k, v in attrs.items() %}
-              {% if k == 'Goals' %}
-                {% set ns.found = true %}
-              {% elif k in ['Assists', 'Clean sheets'] %}
-                {% set ns.found = false %}
-              {% elif ns.found %}
-                {% set ns.out = ns.out + [k ~ ' (' ~ v ~ ')'] %}
-              {% endif %}
-            {% endfor %}
-            {{ ns.out | join(', ') }}
-          {% else %} unavailable {% endif %}
+        goal_1: "{{ state_attr('input_text.top_scorer_epl', 'goal_1') }}"
+        goal_2: "{{ state_attr('input_text.top_scorer_epl', 'goal_2') }}"
+        goal_3: "{{ state_attr('input_text.top_scorer_epl', 'goal_3') }}"
+        goal_4: "{{ state_attr('input_text.top_scorer_epl', 'goal_4') }}"
+        goal_5: "{{ state_attr('input_text.top_scorer_epl', 'goal_5') }}"
 
-        assists: >
-          {% set attrs = state_attr('input_text.top_scorer_epl') %}
-          {% if 'Assists' in attrs %}
-            {% set ns = namespace(found=false, out=[]) %}
-            {% for k, v in attrs.items() %}
-              {% if k == 'Assists' %}
-                {% set ns.found = true %}
-              {% elif k == 'Clean sheets' %}
-                {% set ns.found = false %}
-              {% elif ns.found %}
-                {% set ns.out = ns.out + [k ~ ' (' ~ v ~ ')'] %}
-              {% endif %}
-            {% endfor %}
-            {{ ns.out | join(', ') }}
-          {% else %} unavailable {% endif %}
+        assist_1: "{{ state_attr('input_text.top_scorer_epl', 'assist_1') }}"
+        assist_2: "{{ state_attr('input_text.top_scorer_epl', 'assist_2') }}"
+        assist_3: "{{ state_attr('input_text.top_scorer_epl', 'assist_3') }}"
+        assist_4: "{{ state_attr('input_text.top_scorer_epl', 'assist_4') }}"
+        assist_5: "{{ state_attr('input_text.top_scorer_epl', 'assist_5') }}"
 
-        clean_sheets: >
-          {% set attrs = state_attr('input_text.top_scorer_epl') %}
-          {% if 'Clean sheets' in attrs %}
-            {% set ns = namespace(found=false, out=[]) %}
-            {% for k, v in attrs.items() %}
-              {% if k == 'Clean sheets' %}
-                {% set ns.found = true %}
-              {% elif ns.found %}
-                {% set ns.out = ns.out + [k ~ ' (' ~ v ~ ')'] %}
-              {% endif %}
-            {% endfor %}
-            {{ ns.out | join(', ') }}
-          {% else %} unavailable {% endif %}
+        clean_1: "{{ state_attr('input_text.top_scorer_epl', 'clean_1') }}"
+        clean_2: "{{ state_attr('input_text.top_scorer_epl', 'clean_2') }}"
+        clean_3: "{{ state_attr('input_text.top_scorer_epl', 'clean_3') }}"
+        clean_4: "{{ state_attr('input_text.top_scorer_epl', 'clean_4') }}"
+        clean_5: "{{ state_attr('input_text.top_scorer_epl', 'clean_5') }}"
 
     liverpool_score:
       friendly_name: "Liverpool Score"
