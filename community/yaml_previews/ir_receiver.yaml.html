@@ -16,16 +16,11 @@
                 <pre class="yaml-content">esphome:
   name: esphome-web-ab1d70
   friendly_name: IR Receiver
-  # Pin toolchain &amp; enlarge OTA-friendly app partitions
-  platformio_options:
-    platform: espressif32@6.6.0
-    board_build.partitions: min_spiffs.csv   # larger app slots, still supports OTA
 
 esp32:
   board: esp32dev
   framework:
     type: arduino
-    version: 2.0.14   # compiles much lighter than 3.x on HA Yellow
 
 wifi:
   ssid: !secret wifi_ssid
@@ -44,7 +39,6 @@ api:
 
 ota:
   platform: esphome
-
 
 remote_receiver:
   pin:
