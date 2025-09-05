@@ -707,51 +707,23 @@
         {% set s = states(&#x27;input_text.top_scorer_epl&#x27;) %}
         {{ s if s and s not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;None&#x27;] else &#x27;unavailable&#x27; }}
       attribute_templates:
-        goals: &gt;
-          {% set attrs = state_attr(&#x27;input_text.top_scorer_epl&#x27;) %}
-          {% if &#x27;Goals&#x27; in attrs %}
-            {% set ns = namespace(found=false, out=[]) %}
-            {% for k, v in attrs.items() %}
-              {% if k == &#x27;Goals&#x27; %}
-                {% set ns.found = true %}
-              {% elif k in [&#x27;Assists&#x27;, &#x27;Clean sheets&#x27;] %}
-                {% set ns.found = false %}
-              {% elif ns.found %}
-                {% set ns.out = ns.out + [k ~ &#x27; (&#x27; ~ v ~ &#x27;)&#x27;] %}
-              {% endif %}
-            {% endfor %}
-            {{ ns.out | join(&#x27;, &#x27;) }}
-          {% else %} unavailable {% endif %}
+        goal_1: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;goal_1&#x27;) }}&quot;
+        goal_2: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;goal_2&#x27;) }}&quot;
+        goal_3: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;goal_3&#x27;) }}&quot;
+        goal_4: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;goal_4&#x27;) }}&quot;
+        goal_5: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;goal_5&#x27;) }}&quot;
 
-        assists: &gt;
-          {% set attrs = state_attr(&#x27;input_text.top_scorer_epl&#x27;) %}
-          {% if &#x27;Assists&#x27; in attrs %}
-            {% set ns = namespace(found=false, out=[]) %}
-            {% for k, v in attrs.items() %}
-              {% if k == &#x27;Assists&#x27; %}
-                {% set ns.found = true %}
-              {% elif k == &#x27;Clean sheets&#x27; %}
-                {% set ns.found = false %}
-              {% elif ns.found %}
-                {% set ns.out = ns.out + [k ~ &#x27; (&#x27; ~ v ~ &#x27;)&#x27;] %}
-              {% endif %}
-            {% endfor %}
-            {{ ns.out | join(&#x27;, &#x27;) }}
-          {% else %} unavailable {% endif %}
+        assist_1: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;assist_1&#x27;) }}&quot;
+        assist_2: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;assist_2&#x27;) }}&quot;
+        assist_3: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;assist_3&#x27;) }}&quot;
+        assist_4: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;assist_4&#x27;) }}&quot;
+        assist_5: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;assist_5&#x27;) }}&quot;
 
-        clean_sheets: &gt;
-          {% set attrs = state_attr(&#x27;input_text.top_scorer_epl&#x27;) %}
-          {% if &#x27;Clean sheets&#x27; in attrs %}
-            {% set ns = namespace(found=false, out=[]) %}
-            {% for k, v in attrs.items() %}
-              {% if k == &#x27;Clean sheets&#x27; %}
-                {% set ns.found = true %}
-              {% elif ns.found %}
-                {% set ns.out = ns.out + [k ~ &#x27; (&#x27; ~ v ~ &#x27;)&#x27;] %}
-              {% endif %}
-            {% endfor %}
-            {{ ns.out | join(&#x27;, &#x27;) }}
-          {% else %} unavailable {% endif %}
+        clean_1: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;clean_1&#x27;) }}&quot;
+        clean_2: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;clean_2&#x27;) }}&quot;
+        clean_3: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;clean_3&#x27;) }}&quot;
+        clean_4: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;clean_4&#x27;) }}&quot;
+        clean_5: &quot;{{ state_attr(&#x27;input_text.top_scorer_epl&#x27;, &#x27;clean_5&#x27;) }}&quot;
 
     liverpool_score:
       friendly_name: &quot;Liverpool Score&quot;
