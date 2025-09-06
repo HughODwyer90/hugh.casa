@@ -431,22 +431,32 @@ calculate_last_day_of_next_month:
   icon: mdi:calendar
   description: ''
 update_tv_subscription_date_2:
-  sequence:
-  - action: input_datetime.set_datetime
-    data_template:
-      entity_id: input_datetime.tv_subscription
-      date: "{% set current_date = as_datetime(now()) %}\n        {% set new_month
-        = (current_date.month + 12) %}\n        {% set new_year = current_date.year
-        + (1 if new_month > 12 else 0) %}\n        {% set final_month = new_month
-        - 12 if new_month > 12 else new_month %}\n        {{ current_date.replace(year=new_year,
-        month=final_month).strftime('%Y-%m-%d') }}"
-      time: '{{ now().strftime(''%H:%M:%S'') }}'
-  - action: notify.notifications
-    data:
-      message: TV Subscription date updated.
-      data:
-        notification_icon: mdi:calendar-alert
   alias: Update TV Subscription date
+  description: ''
   icon: mdi:calendar-alert
   mode: single
-  description: ''
+  sequence:
+  - variables:
+      raw: '{{ states(''input_datetime.tv_subscription'') }}'
+      dt: "{% if raw not in ['unknown','unavailable','none',''] %}\n  {{ raw | as_datetime
+        | as_local }}\n{% else %}\n  {{ now() }}\n{% endif %}"
+      y: '{{ dt.year + 1 }}'
+      m: '{{ dt.month }}'
+      d: '{{ dt.day }}'
+      is_leap: '{{ (y|int % 4 == 0) and ((y|int % 100 != 0) or (y|int % 400 == 0))
+        }}'
+      new_day: '{{ 28 if (m|int == 2 and d|int == 29 and not is_leap) else d }}'
+      new_dt: '{{ dt.replace(year=y|int, month=m|int, day=new_day|int) }}'
+      new_date: '{{ new_dt.strftime(''%Y-%m-%d'') }}'
+      new_time: '{{ new_dt.strftime(''%H:%M:%S'') }}'
+  - target:
+      entity_id: input_datetime.tv_subscription
+    data:
+      date: '{{ new_date }}'
+      time: '{{ new_time }}'
+    action: input_datetime.set_datetime
+  - data:
+      message: TV Subscription date updated to {{ new_date }} {{ new_time }}.
+      data:
+        notification_icon: mdi:calendar-alert
+    action: notify.notifications
