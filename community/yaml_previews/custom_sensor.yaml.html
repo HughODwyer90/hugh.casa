@@ -184,6 +184,33 @@
           Unknown
         {% endif %}
 
+
+    tv_subscription:
+      friendly_name: &quot;TV Subscription&quot;
+      unique_id: &quot;tv_subscription_sensor&quot;
+      icon_template: &quot;{{ &#x27;mdi:calendar-clock&#x27; }}&quot;
+      value_template: &gt;
+        {% set expiration_date = states(&#x27;input_datetime.tv_subscription&#x27;) %}
+        {% if expiration_date not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
+          {% set expiration_dt = as_datetime(expiration_date) %}
+          {% set expiration_day = expiration_dt.date() %}
+          {% set today = now().date() %}
+          {% set days = (expiration_day - today).days %}
+          {% if days &lt; 0 %}
+            Expired
+          {% elif days == 0 %}
+            Today
+          {% elif days == 1 %}
+            Tomorrow
+          {% elif days &lt;= 7 %}
+            {{ expiration_day.strftime(&#x27;%A&#x27;) }}
+          {% else %}
+            {{ expiration_day.strftime(&#x27;%d/%m/%Y&#x27;) }}
+          {% endif %}
+        {% else %}
+          Unknown
+        {% endif %}
+        
     car_data_expiration:
       friendly_name: &quot;Car Data Expiration&quot;
       unique_id: &quot;car_data_expiration_sensor&quot;
