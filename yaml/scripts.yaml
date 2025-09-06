@@ -430,3 +430,23 @@ calculate_last_day_of_next_month:
   mode: single
   icon: mdi:calendar
   description: ''
+update_tv_subscription_date:
+  sequence:
+  - action: input_datetime.set_datetime
+    data_template:
+      entity_id: input_datetime.tv_subscription
+      date: "{% set current_date = as_datetime(now()) %}\n        {% set new_month
+        = (current_date.month + 11) %}\n        {% set new_year = current_date.year
+        + (1 if new_month > 12 else 0) %}\n        {% set final_month = new_month
+        - 12 if new_month > 12 else new_month %}\n        {{ current_date.replace(year=new_year,
+        month=final_month).strftime('%Y-%m-%d') }}"
+      time: '{{ now().strftime(''%H:%M:%S'') }}'
+  - action: notify.notifications
+    data:
+      message: TV Subscription date updated.
+      data:
+        notification_icon: mdi:calendar-alert
+  alias: Update TV Subscription date
+  icon: mdi:calendar-alert
+  mode: single
+  description: ''
