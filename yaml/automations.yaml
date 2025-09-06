@@ -3943,3 +3943,16 @@
   - action: script.calculate_last_day_of_next_month
     data: {}
   mode: single
+- id: '1757190236828'
+  alias: Handle TV Subscription update
+  description: ''
+  triggers:
+  - trigger: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: RENEWED_TV
+  conditions: []
+  actions:
+  - action: script.update_tv_subscription_date_2
+    data: {}
+  mode: single
