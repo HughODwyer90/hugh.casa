@@ -3968,22 +3968,24 @@
       action: RENEWED_TV
   conditions: []
   actions:
-  - action: script.update_tv_subscription_date_2
+  - action: script.update_tv_subscription_date
     data: {}
   mode: single
 - id: &#x27;1757190365144&#x27;
   alias: Renew TV Subscription notification
-  description: Sends a notification to renew TV subscription every 12 months.
+  description: Sends a notification the day before the TV subscription date.
   triggers:
-  - value_template: &quot;{% set exp = states(&#x27;input_datetime.tv_subscription&#x27;) %} {% if
-      exp not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}\n  {{ (exp | as_datetime - timedelta(days=1)).strftime(&#x27;%Y-%m-%d
-      %H:%M:%S&#x27;) ==\n     now().strftime(&#x27;%Y-%m-%d %H:%M:%S&#x27;) }}\n{% else %}\n  false\n{%
-      endif %}&quot;
-    trigger: template
-  conditions: []
+  - at: &#x27;19:00:00&#x27;
+    trigger: time
+  conditions:
+  - condition: template
+    value_template: &quot;{% set exp = states(&#x27;input_datetime.tv_subscription&#x27;) %} {% if
+      exp not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;None&#x27;,&#x27;&#x27;] %}\n  {{ (exp | as_datetime
+      | as_local - timedelta(days=1)).date() == now().date() }}\n{% else %}\n  false\n{%
+      endif %}\n&quot;
   actions:
   - data:
-      message: It&#x27;s time to renew your TV subscription.
+      message: It&#x27;s time to renew your TV subscription tomorrow.
       data:
         actions:
         - action: RENEWED_TV
