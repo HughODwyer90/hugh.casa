@@ -446,25 +446,35 @@ calculate_last_day_of_next_month:
   icon: mdi:calendar
   description: &#x27;&#x27;
 update_tv_subscription_date_2:
-  sequence:
-  - action: input_datetime.set_datetime
-    data_template:
-      entity_id: input_datetime.tv_subscription
-      date: &quot;{% set current_date = as_datetime(now()) %}\n        {% set new_month
-        = (current_date.month + 12) %}\n        {% set new_year = current_date.year
-        + (1 if new_month &gt; 12 else 0) %}\n        {% set final_month = new_month
-        - 12 if new_month &gt; 12 else new_month %}\n        {{ current_date.replace(year=new_year,
-        month=final_month).strftime(&#x27;%Y-%m-%d&#x27;) }}&quot;
-      time: &#x27;{{ now().strftime(&#x27;&#x27;%H:%M:%S&#x27;&#x27;) }}&#x27;
-  - action: notify.notifications
-    data:
-      message: TV Subscription date updated.
-      data:
-        notification_icon: mdi:calendar-alert
   alias: Update TV Subscription date
+  description: &#x27;&#x27;
   icon: mdi:calendar-alert
   mode: single
-  description: &#x27;&#x27;
+  sequence:
+  - variables:
+      raw: &#x27;{{ states(&#x27;&#x27;input_datetime.tv_subscription&#x27;&#x27;) }}&#x27;
+      dt: &quot;{% if raw not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;] %}\n  {{ raw | as_datetime
+        | as_local }}\n{% else %}\n  {{ now() }}\n{% endif %}&quot;
+      y: &#x27;{{ dt.year + 1 }}&#x27;
+      m: &#x27;{{ dt.month }}&#x27;
+      d: &#x27;{{ dt.day }}&#x27;
+      is_leap: &#x27;{{ (y|int % 4 == 0) and ((y|int % 100 != 0) or (y|int % 400 == 0))
+        }}&#x27;
+      new_day: &#x27;{{ 28 if (m|int == 2 and d|int == 29 and not is_leap) else d }}&#x27;
+      new_dt: &#x27;{{ dt.replace(year=y|int, month=m|int, day=new_day|int) }}&#x27;
+      new_date: &#x27;{{ new_dt.strftime(&#x27;&#x27;%Y-%m-%d&#x27;&#x27;) }}&#x27;
+      new_time: &#x27;{{ new_dt.strftime(&#x27;&#x27;%H:%M:%S&#x27;&#x27;) }}&#x27;
+  - target:
+      entity_id: input_datetime.tv_subscription
+    data:
+      date: &#x27;{{ new_date }}&#x27;
+      time: &#x27;{{ new_time }}&#x27;
+    action: input_datetime.set_datetime
+  - data:
+      message: TV Subscription date updated to {{ new_date }} {{ new_time }}.
+      data:
+        notification_icon: mdi:calendar-alert
+    action: notify.notifications
 </pre>
             </div>
             <script>
