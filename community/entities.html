@@ -11,13 +11,13 @@
         <body>
             <div class="fixed-header">
                 <h1>Home Assistant Entities</h1>
-                <p>Total Entities: 766 (Redacted: 16)</p>
-                <p>Version: 2025-09-06-194658</p>
+                <p>Total Entities: 767 (Redacted: 16)</p>
+                <p>Version: 2025-09-06-201724</p>
                 <div class="search-container">
                     <input type="text" id="entitySearch" class="search-box" placeholder="🔍 Search entities...">
                 </div>
                 <div>
-                    <p id="table-count">Search total: 766</p>
+                    <p id="table-count">Search total: 767</p>
                 </div>
                 <div class="filters">
                     <div id="filter-All" class="filter entity-filter active">All</div>
@@ -1056,7 +1056,7 @@
                 <td>binary_sensor.bathroom_motion_occupancy</td>
                 <td>Hue Motion</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -1614,10 +1614,10 @@
         
             <tr>
                 <td>button.universal_player_favorite_current_song</td>
-                <td>universal_player Favourite current song</td>
+                <td>Favourite current song</td>
                 <td>N/A</td>
-                <td>unknown</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -1888,7 +1888,7 @@
                 <td>input_boolean.shower_in_progress</td>
                 <td>Shower In Progress</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -2045,6 +2045,14 @@
             </tr>
         
             <tr>
+                <td>input_datetime.tv_subscription</td>
+                <td>TV Subscription</td>
+                <td>N/A</td>
+                <td>2025-09-06 00:00:00</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>input_datetime.umail_account_expiration</td>
                 <td>Umail Account Expiration</td>
                 <td>N/A</td>
@@ -2144,7 +2152,7 @@
                 <td>input_number.previous_bathroom_humidity</td>
                 <td>Previous Bathroom Humidity</td>
                 <td>%</td>
-                <td>94.82</td>
+                <td>85.53</td>
                 <td>Yes</td>
             </tr>
         
@@ -2152,7 +2160,7 @@
                 <td>input_number.previous_bathroom_temperature</td>
                 <td>Previous Bathroom Temperature</td>
                 <td>°C</td>
-                <td>23.44</td>
+                <td>21.33</td>
                 <td>Yes</td>
             </tr>
         
@@ -2304,7 +2312,7 @@
                 <td>light.bathroom_ceiling</td>
                 <td>Light Ceiling</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -2312,7 +2320,7 @@
                 <td>light.bathroom_color_strip</td>
                 <td>Light Occupancy</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -2496,7 +2504,7 @@
                 <td>media_player.monitor_2</td>
                 <td>Monitor</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>playing</td>
                 <td>Yes</td>
             </tr>
         
@@ -2504,7 +2512,7 @@
                 <td>media_player.monitor_google</td>
                 <td>Monitor</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>playing</td>
                 <td>Yes</td>
             </tr>
         
@@ -2542,10 +2550,10 @@
         
             <tr>
                 <td>media_player.universal_player_2</td>
-                <td>universal_player</td>
                 <td>N/A</td>
-                <td>off</td>
-                <td>Yes</td>
+                <td>N/A</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -2712,7 +2720,7 @@
                 <td>scene.bathroom_color_strip_1_red</td>
                 <td>Bathroom Color Strip Red</td>
                 <td>N/A</td>
-                <td>2025-09-06 19:46:24</td>
+                <td>2025-09-06 19:53:08</td>
                 <td>Yes</td>
             </tr>
         
@@ -2720,7 +2728,7 @@
                 <td>scene.bathroom_color_strip_2_off</td>
                 <td>Bathroom Color Strip Off</td>
                 <td>N/A</td>
-                <td>2025-09-06 19:33:26</td>
+                <td>2025-09-06 20:08:08</td>
                 <td>Yes</td>
             </tr>
         
@@ -2736,7 +2744,7 @@
                 <td>scene.hugh_room_all_lights_off</td>
                 <td>Hugh Room All Lights Off</td>
                 <td>N/A</td>
-                <td>2025-09-06 19:26:32</td>
+                <td>2025-09-06 20:01:02</td>
                 <td>Yes</td>
             </tr>
         
@@ -3280,7 +3288,7 @@
                 <td>sensor.bathroom_aqara_humidity</td>
                 <td>Aqara Humidity</td>
                 <td>%</td>
-                <td>94.82</td>
+                <td>85.53</td>
                 <td>Yes</td>
             </tr>
         
@@ -3288,7 +3296,7 @@
                 <td>sensor.bathroom_aqara_pressure</td>
                 <td>Bathroom Aqara Atmospheric pressure</td>
                 <td>hPa</td>
-                <td>996.6</td>
+                <td>995.9</td>
                 <td>Yes</td>
             </tr>
         
@@ -3296,7 +3304,7 @@
                 <td>sensor.bathroom_aqara_temperature</td>
                 <td>Aqara Temperature</td>
                 <td>°C</td>
-                <td>23.44</td>
+                <td>21.33</td>
                 <td>Yes</td>
             </tr>
         
@@ -3344,7 +3352,7 @@
                 <td>sensor.bathroom_motion_temperature</td>
                 <td>Hue Temperature</td>
                 <td>°C</td>
-                <td>20.14</td>
+                <td>21.74</td>
                 <td>Yes</td>
             </tr>
         
@@ -3632,7 +3640,7 @@
                 <td>sensor.date_time_iso</td>
                 <td>Date & Time (ISO)</td>
                 <td>N/A</td>
-                <td>2025-09-06 20:46:00</td>
+                <td>2025-09-06 21:17:00</td>
                 <td>Yes</td>
             </tr>
         
@@ -3688,7 +3696,7 @@
                 <td>sensor.entities</td>
                 <td>Home Assistant Entities</td>
                 <td>N/A</td>
-                <td>766</td>
+                <td>767</td>
                 <td>Yes</td>
             </tr>
         
@@ -3736,7 +3744,7 @@
                 <td>sensor.hall_motion_temperature</td>
                 <td>Hue Temperature</td>
                 <td>°C</td>
-                <td>19.72</td>
+                <td>20.37</td>
                 <td>Yes</td>
             </tr>
         
@@ -3920,7 +3928,7 @@
                 <td>sensor.home_humidity</td>
                 <td>Home Humidity</td>
                 <td>%</td>
-                <td>87</td>
+                <td>93</td>
                 <td>Yes</td>
             </tr>
         
@@ -3944,7 +3952,7 @@
                 <td>sensor.home_realfeel_temperature</td>
                 <td>Outside Temp (Real Feel)</td>
                 <td>°C</td>
-                <td>10.7</td>
+                <td>10.6</td>
                 <td>Yes</td>
             </tr>
         
@@ -4168,7 +4176,7 @@
                 <td>sensor.home_wind_speed</td>
                 <td>Home Wind speed</td>
                 <td>km/h</td>
-                <td>40.8</td>
+                <td>42.6</td>
                 <td>Yes</td>
             </tr>
         
@@ -4256,7 +4264,7 @@
                 <td>sensor.hugh_phone_battery_level</td>
                 <td>Hugh Phone Battery level</td>
                 <td>%</td>
-                <td>78</td>
+                <td>70</td>
                 <td>Yes</td>
             </tr>
         
@@ -4432,7 +4440,7 @@
                 <td>sensor.hugh_room_aqara_humidity</td>
                 <td>Aqara Humidity</td>
                 <td>%</td>
-                <td>67.35</td>
+                <td>68.12</td>
                 <td>Yes</td>
             </tr>
         
@@ -4440,7 +4448,7 @@
                 <td>sensor.hugh_room_aqara_pressure</td>
                 <td>Hugh Room Aqara Atmospheric pressure</td>
                 <td>hPa</td>
-                <td>996.5</td>
+                <td>996.2</td>
                 <td>Yes</td>
             </tr>
         
@@ -4448,7 +4456,7 @@
                 <td>sensor.hugh_room_aqara_temperature</td>
                 <td>Aqara Temperature</td>
                 <td>°C</td>
-                <td>21.47</td>
+                <td>21.46</td>
                 <td>Yes</td>
             </tr>
         
@@ -4568,7 +4576,7 @@
                 <td>sensor.hugh_room_plug_blanket_voltage</td>
                 <td>Hugh Room Plug Blanket Voltage</td>
                 <td>V</td>
-                <td>236</td>
+                <td>234</td>
                 <td>Yes</td>
             </tr>
         
@@ -4600,7 +4608,7 @@
                 <td>sensor.hugh_room_plug_fan_bed_voltage</td>
                 <td>Hugh Room Plug Fan Bed Voltage</td>
                 <td>V</td>
-                <td>236</td>
+                <td>234</td>
                 <td>Yes</td>
             </tr>
         
@@ -4672,7 +4680,7 @@
                 <td>sensor.input_datetimes</td>
                 <td>Home Assistant Input date/times</td>
                 <td>N/A</td>
-                <td>14</td>
+                <td>15</td>
                 <td>Yes</td>
             </tr>
         
@@ -4896,7 +4904,7 @@
                 <td>sensor.living_room_epone_humidity</td>
                 <td>EPOne Humidity</td>
                 <td>%</td>
-                <td>54.0814208984375</td>
+                <td>54.2630004882812</td>
                 <td>Yes</td>
             </tr>
         
@@ -4904,7 +4912,7 @@
                 <td>sensor.living_room_epone_illuminance</td>
                 <td>EPOne Illuminance</td>
                 <td>lx</td>
-                <td>5.9155216217041</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -4920,7 +4928,7 @@
                 <td>sensor.living_room_epone_temperature</td>
                 <td>EPOne Temperature</td>
                 <td>°C</td>
-                <td>22.9682464599609</td>
+                <td>22.9014892578125</td>
                 <td>Yes</td>
             </tr>
         
@@ -5016,7 +5024,7 @@
                 <td>sensor.network_scanner</td>
                 <td>Network Scanner</td>
                 <td>Devices</td>
-                <td>22</td>
+                <td>15</td>
                 <td>Yes</td>
             </tr>
         
@@ -5024,7 +5032,7 @@
                 <td>sensor.network_scanner_devices_list</td>
                 <td>Network Scanner Devices List</td>
                 <td>devices</td>
-                <td>22</td>
+                <td>15</td>
                 <td>Yes</td>
             </tr>
         
@@ -5128,7 +5136,7 @@
                 <td>sensor.previous_bathroom_humidity</td>
                 <td>Aqara Humidity (previous)</td>
                 <td>N/A</td>
-                <td>94.82%</td>
+                <td>85.53%</td>
                 <td>Yes</td>
             </tr>
         
@@ -5232,7 +5240,7 @@
                 <td>sensor.snake_plant_illuminance</td>
                 <td>Snake Plant Illuminance</td>
                 <td>lx</td>
-                <td>77</td>
+                <td>103</td>
                 <td>Yes</td>
             </tr>
         
@@ -5248,7 +5256,7 @@
                 <td>sensor.snake_plant_signal_strength</td>
                 <td>Snake Plant Signal Strength</td>
                 <td>dBm</td>
-                <td>-77</td>
+                <td>-79</td>
                 <td>Yes</td>
             </tr>
         
@@ -5256,7 +5264,7 @@
                 <td>sensor.snake_plant_temperature</td>
                 <td>Snake Plant Temperature</td>
                 <td>°C</td>
-                <td>22.2</td>
+                <td>22.4</td>
                 <td>Yes</td>
             </tr>
         
@@ -5352,7 +5360,7 @@
                 <td>sensor.total_sensors_count</td>
                 <td>Total Entities</td>
                 <td>sensors</td>
-                <td>766</td>
+                <td>767</td>
                 <td>Yes</td>
             </tr>
         
@@ -5392,7 +5400,7 @@
                 <td>sensor.watchman_last_updated</td>
                 <td>Last Updated</td>
                 <td>N/A</td>
-                <td>2025-09-06 19:33:35</td>
+                <td>2025-09-06 20:11:06</td>
                 <td>Yes</td>
             </tr>
         
@@ -5728,7 +5736,7 @@
                 <td>timer.shower_check</td>
                 <td>Shower Timer</td>
                 <td>N/A</td>
-                <td>active</td>
+                <td>idle</td>
                 <td>Yes</td>
             </tr>
         
@@ -6024,7 +6032,7 @@
                 <td>update.pressure_firmware</td>
                 <td>Pressure Firmware</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
