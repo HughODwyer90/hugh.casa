@@ -451,30 +451,54 @@ update_tv_subscription_date_2:
   icon: mdi:calendar-alert
   mode: single
   sequence:
-  - variables:
-      raw: &#x27;{{ states(&#x27;&#x27;input_datetime.tv_subscription&#x27;&#x27;) }}&#x27;
-      dt: &quot;{% if raw not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;] %}\n  {{ raw | as_datetime
-        | as_local }}\n{% else %}\n  {{ now() }}\n{% endif %}&quot;
-      y: &#x27;{{ dt.year + 1 }}&#x27;
-      m: &#x27;{{ dt.month }}&#x27;
-      d: &#x27;{{ dt.day }}&#x27;
-      is_leap: &#x27;{{ (y|int % 4 == 0) and ((y|int % 100 != 0) or (y|int % 400 == 0))
-        }}&#x27;
-      new_day: &#x27;{{ 28 if (m|int == 2 and d|int == 29 and not is_leap) else d }}&#x27;
-      new_dt: &#x27;{{ dt.replace(year=y|int, month=m|int, day=new_day|int) }}&#x27;
-      new_date: &#x27;{{ new_dt.strftime(&#x27;&#x27;%Y-%m-%d&#x27;&#x27;) }}&#x27;
-      new_time: &#x27;{{ new_dt.strftime(&#x27;&#x27;%H:%M:%S&#x27;&#x27;) }}&#x27;
-  - target:
+  - action: input_datetime.set_datetime
+    target:
       entity_id: input_datetime.tv_subscription
     data:
-      date: &#x27;{{ new_date }}&#x27;
-      time: &#x27;{{ new_time }}&#x27;
-    action: input_datetime.set_datetime
-  - data:
-      message: TV Subscription date updated to {{ new_date }} {{ new_time }}.
+      date: &#x27;{% set raw = states(&#x27;&#x27;input_datetime.tv_subscription&#x27;&#x27;) %} {% set dt
+        = raw | as_datetime | as_local if raw not in [&#x27;&#x27;unknown&#x27;&#x27;,&#x27;&#x27;unavailable&#x27;&#x27;,&#x27;&#x27;none&#x27;&#x27;,&#x27;&#x27;&#x27;&#x27;]
+        else now() %} {% set y = dt.year + 1 %} {% set m = dt.month %} {% set d =
+        dt.day %} {% set is_leap = (y % 4 == 0) and ((y % 100 != 0) or (y % 400 ==
+        0)) %} {% set new_day = 28 if (m == 2 and d == 29 and not is_leap) else d
+        %} {{ dt.replace(year=y, month=m, day=new_day).strftime(&#x27;&#x27;%Y-%m-%d&#x27;&#x27;) }}&#x27;
+      time: &#x27;{% set raw = states(&#x27;&#x27;input_datetime.tv_subscription&#x27;&#x27;) %} {% set dt
+        = raw | as_datetime | as_local if raw not in [&#x27;&#x27;unknown&#x27;&#x27;,&#x27;&#x27;unavailable&#x27;&#x27;,&#x27;&#x27;none&#x27;&#x27;,&#x27;&#x27;&#x27;&#x27;]
+        else now() %} {% set y = dt.year + 1 %} {% set m = dt.month %} {% set d =
+        dt.day %} {% set is_leap = (y % 4 == 0) and ((y % 100 != 0) or (y % 400 ==
+        0)) %} {% set new_day = 28 if (m == 2 and d == 29 and not is_leap) else d
+        %} {{ dt.replace(year=y, month=m, day=new_day).strftime(&#x27;&#x27;%H:%M:%S&#x27;&#x27;) }}&#x27;
+  - action: notify.notifications
+    data:
+      message: &quot;TV Subscription date updated to {{\n  (\n    (states(&#x27;input_datetime.tv_subscription&#x27;)
+        | as_datetime | as_local\n      if states(&#x27;input_datetime.tv_subscription&#x27;)
+        not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n      else now()\n    ).replace(\n
+        \     year=( (states(&#x27;input_datetime.tv_subscription&#x27;) | as_datetime | as_local).year\n
+        \            if states(&#x27;input_datetime.tv_subscription&#x27;) not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n
+        \            else now().year),\n      month=( (states(&#x27;input_datetime.tv_subscription&#x27;)
+        | as_datetime | as_local).month\n              if states(&#x27;input_datetime.tv_subscription&#x27;)
+        not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n              else now().month
+        ),\n      day=(28 if (\n              ( (states(&#x27;input_datetime.tv_subscription&#x27;)
+        | as_datetime | as_local).month\n                if states(&#x27;input_datetime.tv_subscription&#x27;)
+        not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n                else now().month
+        ) == 2\n              and\n              ( (states(&#x27;input_datetime.tv_subscription&#x27;)
+        | as_datetime | as_local).day\n                if states(&#x27;input_datetime.tv_subscription&#x27;)
+        not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n                else now().day
+        ) == 29\n              and not (\n                (( (states(&#x27;input_datetime.tv_subscription&#x27;)
+        | as_datetime | as_local).year\n                   if states(&#x27;input_datetime.tv_subscription&#x27;)
+        not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n                   else now().year)
+        % 4 == 0)\n                and (\n                  (( (states(&#x27;input_datetime.tv_subscription&#x27;)
+        | as_datetime | as_local).year\n                     if states(&#x27;input_datetime.tv_subscription&#x27;)
+        not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n                     else now().year
+        ) % 100 != 0)\n                  or\n                  (( (states(&#x27;input_datetime.tv_subscription&#x27;)
+        | as_datetime | as_local).year\n                     if states(&#x27;input_datetime.tv_subscription&#x27;)
+        not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n                     else now().year
+        ) % 400 == 0)\n                )\n              )\n            ) else (\n
+        \             (states(&#x27;input_datetime.tv_subscription&#x27;) | as_datetime | as_local).day\n
+        \             if states(&#x27;input_datetime.tv_subscription&#x27;) not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n
+        \             else now().day\n            )\n      )\n    )\n  ).strftime(&#x27;%Y-%m-%d
+        %H:%M:%S&#x27;)\n}}&quot;
       data:
-        notification_icon: mdi:calendar-alert
-    action: notify.notifications
+        notification_icon: mdi:television
 </pre>
             </div>
             <script>
