@@ -620,7 +620,7 @@
     - condition: template
       value_template: &#x27;{{ now().month in [11, 12, 1, 2] }}&#x27;
     - condition: numeric_state
-      entity_id: weather.home
+      entity_id: weather.forecast_home
       attribute: temperature
       below: 10
   - condition: time
