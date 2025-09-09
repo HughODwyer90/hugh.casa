@@ -447,43 +447,40 @@
       friendly_name: "Windscreen Freeze Risk"
       unique_id: "windscreen_freeze_risk_sensor"
       value_template: >
-        {% set real_feel = states('sensor.home_realfeel_temperature') | float %}
-        {% set temperature = states('sensor.home_temperature') | float %}
-        {% set humidity = states('sensor.home_humidity') | float %}
-        {% set cloud_cover = states('sensor.home_cloud_cover') | float %}
-        {% set wind_speed = states('sensor.home_wind_speed') | float %}
-
-        {# Get current time as a datetime.time object #}
-        {% set current_time = now().time() %}
-
-        {# Convert sunrise and sunset to datetime.time objects #}
-        {% set sunrise = as_timestamp(state_attr('sun.sun', 'next_rising')) | timestamp_custom('%H:%M:%S', false) %}
-        {% set sunset = as_timestamp(state_attr('sun.sun', 'next_setting')) | timestamp_custom('%H:%M:%S', false) %}
-        {% set sunrise_time = strptime(sunrise, '%H:%M:%S').time() %}
-        {% set sunset_time = strptime(sunset, '%H:%M:%S').time() %}
-
-        {# Determine if it's night #}
-        {% set is_night = current_time < sunrise_time or current_time >= sunset_time %}
-
-        {# Select the appropriate condition sensor for day_0 or night_0 #}
-        {% set condition = states('sensor.home_condition_night_0') if is_night else states('sensor.home_condition_day_0') %}
-
+        {% set real_feel = states('sensor.weather_feels_like_temperature') | float(999) %}
+        {% set temperature = states('sensor.weather_temperature') | float(999) %}
+        {% set humidity = states('sensor.weather_humidity') | float(0) %}
+        {% set cloud_cover = states('sensor.weather_cloud_coverage') | float(0) %}
+        {% set wind_speed = states('sensor.weather_wind_speed') | float(0) %}
+        {% set condition = states('sensor.weather_condition') | lower %}
+        {% set rain = states('sensor.weather_rain') | float(0) %}
+        {% set snow = states('sensor.weather_snow') | float(0) %}
+    
         {# Use real feel temperature if available, otherwise fallback to regular temperature #}
-        {% set temp_to_use = real_feel if real_feel not in [None, 'unavailable'] else temperature %}
-
-        {# Define keywords and check if any are in the condition #}
+        {% set temp_to_use = real_feel if real_feel != 999 else temperature %}
+    
+        {# Check precipitation: either from condition keywords OR actual rain/snow values #}
         {% set keywords = ['rain', 'snow', 'sleet', 'mist', 'drizzle', 'shower'] %}
-        {% set has_precipitation = false %}
-        {% for keyword in keywords %}
-          {% if keyword in condition.lower() %}
-            {% set has_precipitation = true %}
-          {% endif %}
-        {% endfor %}
-
-        {# Evaluate freeze risk #}
-        {% if temp_to_use <= 0 and humidity > 80 and cloud_cover < 40 and wind_speed < 20 %}
+        {% set has_precipitation =
+             (keywords | select('in', condition) | list | count > 0)
+             or (rain > 0 or snow > 0) %}
+    
+        {# Base freeze logic #}
+        {% set frozen_now = (
+            (temp_to_use <= 0 and humidity > 80 and cloud_cover < 40 and wind_speed < 20)
+            or (temp_to_use <= 0 and has_precipitation)
+        ) %}
+    
+        {# Previous state (to hold frozen) #}
+        {% set prev = states('sensor.windscreen_freeze_risk') %}
+    
+        {# Thawing conditions (above 2°C, low humidity, sun up) #}
+        {% set thawing = temp_to_use > 2 and humidity < 70 and is_state('sun.sun','above_horizon') %}
+    
+        {# Final evaluation #}
+        {% if frozen_now %}
           Likely Frozen
-        {% elif temp_to_use <= 0 and has_precipitation %}
+        {% elif prev == 'Likely Frozen' and not thawing %}
           Likely Frozen
         {% else %}
           Not Frozen
@@ -495,7 +492,7 @@
         {% else %}
           mdi:weather-sunny
         {% endif %}
-
+    
     pc_status:
       friendly_name: "PC status"
       unique_id: "pc_status_sensor"
