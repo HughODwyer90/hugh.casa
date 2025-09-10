@@ -461,9 +461,7 @@
     
         {# Check precipitation: either from condition keywords OR actual rain/snow values #}
         {% set keywords = ['rain', 'snow', 'sleet', 'mist', 'drizzle', 'shower'] %}
-        {% set has_precipitation =
-             (keywords | select('in', condition) | list | count > 0)
-             or (rain > 0 or snow > 0) %}
+        {% set has_precipitation = (keywords | select('in', condition) | list | count > 0) or (rain > 0 or snow > 0) %}
     
         {# Base freeze logic #}
         {% set frozen_now = (
