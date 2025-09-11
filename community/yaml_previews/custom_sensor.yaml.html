@@ -496,6 +496,18 @@
         {% else %}
           mdi:weather-sunny
         {% endif %}
+      attribute_templates:
+        temperature: &quot;{{ states(&#x27;sensor.weather_temperature&#x27;) }}&quot;
+        dew_point: &quot;{{ states(&#x27;sensor.weather_dew_point&#x27;) }}&quot;
+        humidity: &quot;{{ states(&#x27;sensor.weather_humidity&#x27;) }}&quot;
+        cloud_cover: &quot;{{ states(&#x27;sensor.weather_cloud_coverage&#x27;) }}&quot;
+        wind_speed: &quot;{{ states(&#x27;sensor.weather_wind_speed&#x27;) }}&quot;
+        condition: &quot;{{ states(&#x27;sensor.weather_condition&#x27;) }}&quot;
+        rain: &quot;{{ states(&#x27;sensor.weather_rain&#x27;) }}&quot;
+        snow: &quot;{{ states(&#x27;sensor.weather_snow&#x27;) }}&quot;
+        frost_core_pass: &quot;{{ (dp | float &lt;= 1 and temp | float &lt;= 3) or (temp | float &lt;= 0 and has_precip) }}&quot;
+        calm_clear_pass: &quot;{{ cloud | float &lt; 70 and wind | float &lt; 25 }}&quot;
+        thawing_conditions_met: &quot;{{ temp | float &gt; 4 and rh | float &lt; 80 and is_state(&#x27;sun.sun&#x27;,&#x27;above_horizon&#x27;) }}&quot;
 
     pc_status:
       friendly_name: &quot;PC status&quot;
