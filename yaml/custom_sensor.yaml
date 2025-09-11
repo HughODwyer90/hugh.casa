@@ -482,17 +482,20 @@
           mdi:weather-sunny
         {% endif %}
       attribute_templates:
-        temperature: "{{ states('sensor.weather_temperature') }}"
-        dew_point: "{{ states('sensor.weather_dew_point') }}"
-        humidity: "{{ states('sensor.weather_humidity') }}"
-        cloud_cover: "{{ states('sensor.weather_cloud_coverage') }}"
-        wind_speed: "{{ states('sensor.weather_wind_speed') }}"
-        condition: "{{ states('sensor.weather_condition') }}"
-        rain: "{{ states('sensor.weather_rain') }}"
-        snow: "{{ states('sensor.weather_snow') }}"
-        frost_core_pass: "{{ (dp | float <= 1 and temp | float <= 3) or (temp | float <= 0 and has_precip) }}"
-        calm_clear_pass: "{{ cloud | float < 70 and wind | float < 25 }}"
-        thawing_conditions_met: "{{ temp | float > 4 and rh | float < 80 and is_state('sun.sun','above_horizon') }}"
+        Frozen?: >-
+          {% if (frost_core and calm_clear) or (prev == 'Likely Frozen' and not thawing) %}
+            Yes
+          {% elif dp > 1 or temp > 3 %}
+            No — Too warm ({{ temp }}°C / dew point {{ dp }}°C)
+          {% elif cloud >= 70 %}
+            No — Too cloudy ({{ cloud }}%)
+          {% elif wind >= 25 %}
+            No — Too windy ({{ wind }} km/h)
+          {% elif thawing %}
+            No — Thawing
+          {% else %}
+            No — Conditions borderline but not all criteria met
+          {% endif %}
 
     pc_status:
       friendly_name: "PC status"
