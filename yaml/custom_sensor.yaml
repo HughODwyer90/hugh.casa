@@ -483,6 +483,21 @@
         {% endif %}
       attribute_templates:
         Frozen?: >-
+          {% set temp = states('sensor.weather_temperature') | float(999) %}
+          {% set dp   = states('sensor.weather_dew_point')   | float(999) %}
+          {% set rh   = states('sensor.weather_humidity')    | float(0)   %}
+          {% set cloud= states('sensor.weather_cloud_coverage') | float(100) %}
+          {% set wind = states('sensor.weather_wind_speed')  | float(0)   %}
+          {% set cond = (states('sensor.weather_condition') | lower) or '' %}
+          {% set rain = states('sensor.weather_rain') | float(0) %}
+          {% set snow = states('sensor.weather_snow') | float(0) %}
+          {% set has_precip = (['rain','snow','sleet','mist','drizzle','shower'] | select('in', cond) | list | count > 0)
+                              or (rain > 0 or snow > 0) %}
+          {% set frost_core = (dp <= 1 and temp <= 3) or (temp <= 0 and has_precip) %}
+          {% set calm_clear = (cloud < 70) and (wind < 25) %}
+          {% set thawing = (temp > 4) and (rh < 80) and is_state('sun.sun','above_horizon') %}
+          {% set prev = states('sensor.windscreen_freeze_risk') %}
+
           {% if (frost_core and calm_clear) or (prev == 'Likely Frozen' and not thawing) %}
             Yes
           {% elif dp > 1 or temp > 3 %}
