@@ -169,7 +169,6 @@
           Unknown
         {% endif %}
 
-
     tv_subscription:
       friendly_name: "TV Subscription"
       unique_id: "tv_subscription_sensor"
@@ -195,7 +194,7 @@
         {% else %}
           Unknown
         {% endif %}
-        
+
     car_data_expiration:
       friendly_name: "Car Data Expiration"
       unique_id: "car_data_expiration_sensor"
@@ -445,52 +444,44 @@
 
     windscreen_freeze_risk:
       friendly_name: "Windscreen Freeze Risk"
-      unique_id: "windscreen_freeze_risk_sensor"
-      value_template: >
-        {% set real_feel = states('sensor.weather_feels_like_temperature') | float(999) %}
-        {% set temperature = states('sensor.weather_temperature') | float(999) %}
-        {% set humidity = states('sensor.weather_humidity') | float(0) %}
-        {% set cloud_cover = states('sensor.weather_cloud_coverage') | float(0) %}
-        {% set wind_speed = states('sensor.weather_wind_speed') | float(0) %}
-        {% set condition = states('sensor.weather_condition') | lower %}
+      unique_id: windscreen_freeze_risk_sensor
+      value_template: >-
+        {% set temp = states('sensor.weather_temperature') | float(999) %}   {# °C #}
+        {% set dp   = states('sensor.weather_dew_point')   | float(999) %}   {# °C #}
+        {% set rh   = states('sensor.weather_humidity')    | float(0)   %}   {# %  #}
+        {% set cloud= states('sensor.weather_cloud_coverage') | float(100) %}
+        {% set wind = states('sensor.weather_wind_speed')  | float(0)   %}   {# km/h #}
+        {% set cond = (states('sensor.weather_condition') | lower) or '' %}
         {% set rain = states('sensor.weather_rain') | float(0) %}
         {% set snow = states('sensor.weather_snow') | float(0) %}
-    
-        {# Use real feel temperature if available, otherwise fallback to regular temperature #}
-        {% set temp_to_use = real_feel if real_feel != 999 else temperature %}
-    
-        {# Check precipitation: either from condition keywords OR actual rain/snow values #}
-        {% set keywords = ['rain', 'snow', 'sleet', 'mist', 'drizzle', 'shower'] %}
-        {% set has_precipitation = (keywords | select('in', condition) | list | count > 0) or (rain > 0 or snow > 0) %}
-    
-        {# Base freeze logic #}
-        {% set frozen_now = (
-            (temp_to_use <= 0 and humidity > 80 and cloud_cover < 40 and wind_speed < 20)
-            or (temp_to_use <= 0 and has_precipitation)
-        ) %}
-    
-        {# Previous state (to hold frozen) #}
+
+        {# Precipitation check #}
+        {% set keywords = ['rain','snow','sleet','mist','drizzle','shower'] %}
+        {% set has_precip = (keywords | select('in', cond) | list | count > 0)
+                            or (rain > 0 or snow > 0) %}
+
+        {# Frost formation logic #}
+        {% set frost_core = (dp <= 1 and temp <= 3) or (temp <= 0 and has_precip) %}
+        {% set calm_clear = (cloud < 70) and (wind < 25) %}
+
+        {# Hold until thawing #}
         {% set prev = states('sensor.windscreen_freeze_risk') %}
-    
-        {# Thawing conditions (above 2°C, low humidity, sun up) #}
-        {% set thawing = temp_to_use > 2 and humidity < 70 and is_state('sun.sun','above_horizon') %}
-    
-        {# Final evaluation #}
-        {% if frozen_now %}
+        {% set thawing = (temp > 4) and (rh < 80) and is_state('sun.sun','above_horizon') %}
+
+        {% if frost_core and calm_clear %}
           Likely Frozen
         {% elif prev == 'Likely Frozen' and not thawing %}
           Likely Frozen
         {% else %}
           Not Frozen
         {% endif %}
-      icon_template: >
-        {% set state = states('sensor.windscreen_freeze_risk') %}
-        {% if state == 'Likely Frozen' %}
+      icon_template: >-
+        {% if is_state('sensor.windscreen_freeze_risk','Likely Frozen') %}
           mdi:snowflake
         {% else %}
           mdi:weather-sunny
         {% endif %}
-    
+
     pc_status:
       friendly_name: "PC status"
       unique_id: "pc_status_sensor"
