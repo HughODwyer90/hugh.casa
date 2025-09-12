@@ -3900,6 +3900,11 @@
           entity_id: input_select.hugh_room_blinds_mode
         data:
           option: Open
+      - action: light.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: light.hugh_room_lamp
     - conditions:
       - condition: trigger
         id: dusk
