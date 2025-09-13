@@ -941,18 +941,20 @@
     {% set entries = (children[0].standings.entries if children and children[0].get(&#x27;standings&#x27;) else []) %}
     {% set total_games = 38 %}
     {% set liverpool = entries | selectattr(&#x27;team.displayName&#x27;, &#x27;equalto&#x27;, &#x27;Liverpool&#x27;) | list | first %}
-
+    
     {% if liverpool %}
       {% set lfc_points = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
       {% set lfc_played = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;gamesPlayed&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+      {% set lfc_gd = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;pointDifferential&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
       {% set rank = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;rank&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+    
       {% set suffix =
         &#x27;th&#x27; if rank in [11, 12, 13] else
         &#x27;st&#x27; if rank % 10 == 1 else
         &#x27;nd&#x27; if rank % 10 == 2 else
         &#x27;rd&#x27; if rank % 10 == 3 else
         &#x27;th&#x27; %}
-
+    
       {% if rank == 1 %}
         {% set ns = namespace(uncatchable=true) %}
         {% for team in entries if team.team.displayName != &#x27;Liverpool&#x27; %}
@@ -963,7 +965,7 @@
             {% set ns.uncatchable = false %}
           {% endif %}
         {% endfor %}
-
+    
         {% if ns.uncatchable %}
           {{ rank }}{{ suffix }} (Champions)
         {% else %}
@@ -974,7 +976,13 @@
             | first
           ) %}
           {% set runner_points = runner_up[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
-          {{ rank }}{{ suffix }} (+{{ lfc_points - runner_points }} pts)
+          {% set runner_gd = runner_up[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;pointDifferential&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+    
+          {% if lfc_points == runner_points %}
+            {{ rank }}{{ suffix }} (+{{ lfc_gd - runner_gd }} GD)
+          {% else %}
+            {{ rank }}{{ suffix }} (+{{ lfc_points - runner_points }} pts)
+          {% endif %}
         {% endif %}
       {% else %}
         {% set leader = (
@@ -984,7 +992,13 @@
           | first
         ) %}
         {% set leader_points = leader[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
-        {{ rank }}{{ suffix }} (-{{ leader_points - lfc_points }} pts)
+        {% set leader_gd = leader[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;pointDifferential&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+    
+        {% if leader_points == lfc_points %}
+          {{ rank }}{{ suffix }} (-{{ leader_gd - lfc_gd }} GD)
+        {% else %}
+          {{ rank }}{{ suffix }} (-{{ leader_points - lfc_points }} pts)
+        {% endif %}
       {% endif %}
     {% else %}
       Liverpool not found
