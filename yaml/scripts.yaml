@@ -488,19 +488,16 @@ water_patrick_ai_2:
   alias: Water Patrick AI
   mode: single
   sequence:
-  - action: script.water_patrick_ai_call
-    data: {}
-  - action: input_boolean.turn_on
-    entity_id: input_boolean.patrick_needs_water
-    enabled: false
-water_patrick_ai_call:
-  use_blueprint:
-    path: plants/ai_plant_message.yaml
-    input:
-      plant_name: patrick
+  - action: script.ai_plant_message_direct
+    metadata: {}
+    data:
+      plant_name: Patrick
       notify_target: notify.notifications
-  alias: Water Patrick AI Call
-  description: ''
+  - action: input_boolean.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.patrick_needs_water
 ai_plant_message_direct:
   alias: AI Plant Message Direct
   mode: single
