@@ -178,24 +178,29 @@ find_car:
       my_lon: '{{ state_attr(''device_tracker.hugh_phone'', ''longitude'') | float(0)
         }}'
       dist: '{{ distance(my_lat, my_lon, car_lat, car_lon) | round(1) }}'
+      car_zone: '{{ states(''device_tracker.car_location'') }}'
   - action: conversation.process
     response_variable: ai_message
     data:
       agent_id: conversation.openai_conversation
-      text: 'Pretend you are Clio the Car, speaking in the voice of a scared, lost
-        child. Write a short, dramatic message begging your owner to come find you.  Keep
-        it under 25 words.
+      text: 'Pretend you are Clio the Car, speaking in the voice of a child. Write
+        a short, dramatic message begging your owner to come find you. Keep it under
+        25 words.
 
-        GPS data: latitude={{ car_lat }}, longitude={{ car_lon }}. Your owner is {{
-        dist }} km away.
+        {% if car_zone == ''home'' %} You are at the home zone — act sulky or whiny,
+        like you''re bored and want attention. {% elif car_zone == ''work'' %} You
+        are at the work zone — act impatient or tired of waiting. {% elif car_zone
+        not in [''not_home'', ''unknown'', ''unavailable'', ''None''] %} You are at
+        the "{{ car_zone }}" zone — act lonely or scared about being left there. {%
+        else %} GPS data: latitude={{ car_lat }}, longitude={{ car_lon }}. Act like
+        a lost, frightened child not knowing where you are. {% endif %}
+
+        Your owner is {{ dist }} km away.
 
         {% if dist < 0.5 %} Sound relieved but still anxious — they''re very close.
         {% elif dist < 5 %} Plead urgently — they''re nearby but not here yet. {%
         else %} Cry desperately — they''re far away, as if you''ve been abandoned.
-        {% endif %}
-
-        If GPS is missing, act frightened and confused about not knowing where you
-        are.'
+        {% endif %}'
   - action: input_text.set_value
     target:
       entity_id: input_text.car_gps_map_url
@@ -208,7 +213,9 @@ find_car:
   - action: notify.notifications
     data:
       message: '{{ ai_message.response.speech.plain.speech }}'
-      title: Clio the Car ({{ dist }} km away)
+      title: '{% if car_zone not in [''not_home'', ''unknown'', ''unavailable'', ''None'']
+        %} Clio the Car ({{ car_zone }} – {{ dist }} km away) {% else %} Clio the
+        Car ({{ dist }} km away) {% endif %}'
       data:
         notification_icon: mdi:car-search
         clickAction: '{{ states(''input_text.car_gps_map_url'') }}'
