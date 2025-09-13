@@ -1214,7 +1214,7 @@
         action: input_boolean.turn_off
   mode: restart
 - id: '1708005514284'
-  alias: Snake Plant – Needs Water
+  alias: Snake Plant – Needs Attention
   triggers:
   - trigger: numeric_state
     entity_id: sensor.snake_plant_moisture
@@ -1231,12 +1231,17 @@
         entity_id: sensor.snake_plant_growing_season
         state: 'on'
       sequence:
-      - action: script.feed_patrick
+      - data:
+          plant_name: Patrick
+          notify_target: notify.notifications
+          need_type: food
+        action: script.ai_plant_message_direct
     - conditions: []
       sequence:
       - data:
           plant_name: Patrick
           notify_target: notify.notifications
+          need_type: water
         action: script.ai_plant_message_direct
   - target:
       entity_id: input_boolean.patrick_needs_water
