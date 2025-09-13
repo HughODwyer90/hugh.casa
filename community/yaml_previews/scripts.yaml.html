@@ -203,8 +203,8 @@ find_car:
         25 words.
 
         {% if car_zone == &#x27;&#x27;home&#x27;&#x27; %} You are at the home zone — act sulky or whiny,
-        like you&#x27;&#x27;re bored and want attention. {% elif car_zone == &#x27;&#x27;work&#x27;&#x27; %} You
-        are at the work zone — act impatient or tired of waiting. {% elif car_zone
+        like you&#x27;&#x27;re bored. {% elif car_zone == &#x27;&#x27;work&#x27;&#x27; %} You are at the work zone
+        — act impatient or tired of waiting, like you want to go home. {% elif car_zone
         not in [&#x27;&#x27;not_home&#x27;&#x27;, &#x27;&#x27;unknown&#x27;&#x27;, &#x27;&#x27;unavailable&#x27;&#x27;, &#x27;&#x27;None&#x27;&#x27;] %} You are at
         the &quot;{{ car_zone }}&quot; zone — act lonely or scared about being left there. {%
         else %} GPS data: latitude={{ car_lat }}, longitude={{ car_lon }}. Act like
