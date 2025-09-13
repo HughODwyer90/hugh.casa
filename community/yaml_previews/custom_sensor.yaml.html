@@ -459,7 +459,7 @@
 
     windscreen_freeze_risk:
       friendly_name: &quot;Windscreen Freeze Risk&quot;
-      unique_id: windscreen_freeze_risk_sensor
+      unique_id: &quot;windscreen_freeze_risk_sensor&quot;
       value_template: &gt;-
         {% set temp = states(&#x27;sensor.weather_temperature&#x27;) | float(999) %}   {# °C #}
         {% set dp   = states(&#x27;sensor.weather_dew_point&#x27;)   | float(999) %}   {# °C #}
