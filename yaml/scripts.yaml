@@ -493,11 +493,3 @@ water_patrick_ai_2:
   - action: input_boolean.turn_on
     entity_id: input_boolean.patrick_needs_water
     enabled: false
-water_patrick_ai_call:
-  use_blueprint:
-    path: plants/ai_plant_message.yaml
-    input:
-      plant_name: Patrick
-      notify_target: notify.notifications
-  alias: Water Patrick AI Call
-  description: ''
