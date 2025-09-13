@@ -499,6 +499,27 @@ update_tv_subscription_date_2:
         %H:%M:%S&#x27;)\n}}&quot;
       data:
         notification_icon: mdi:television
+water_patrick_ai:
+  alias: Water Patrick AI
+  mode: single
+  sequence:
+  - action: conversation.process
+    response_variable: ai_message
+    data:
+      agent_id: conversation.openai_conversation
+      text: &#x27;Pretend you are Patrick the Plant. Write a short, playful reminder that
+        you need watering. Keep it fun and under 2 sentences.
+
+        &#x27;
+  - action: notify.notifications
+    data:
+      message: &#x27;{{ ai_message.response.speech.plain.speech }}&#x27;
+      title: Patrick the Plant
+      data:
+        notification_icon: mdi:water
+  - action: input_boolean.turn_on
+    entity_id: input_boolean.patrick_needs_water
+  description: &#x27;&#x27;
 </pre>
             </div>
             <script>
