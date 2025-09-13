@@ -494,12 +494,16 @@ ai_plant_message_direct:
     notify_target:
       description: The notify service to send the message
       example: notify.mobile_app_yourphone
+    need_type:
+      description: What the plant needs (e.g. water, food)
+      example: water
   sequence:
-  - response_variable: ai_message
+  - action: conversation.process
+    response_variable: ai_message
     data:
       agent_id: conversation.openai_conversation
       text: &#x27;Pretend you are {{ plant_name }} the Plant. Write a short, unique, melodramatic
-        reminder that you are dying of thirst and need water.
+        reminder that you are dying of {{ need_type }} and need it.
 
         Current conditions outside: {{ states(&#x27;&#x27;sensor.weather_condition&#x27;&#x27;) | replace(&#x27;&#x27;_&#x27;&#x27;,&#x27;&#x27;
         &#x27;&#x27;) }}, temperature {{ states(&#x27;&#x27;sensor.weather_temperature&#x27;&#x27;) }}°C (feels
@@ -509,11 +513,11 @@ ai_plant_message_direct:
         }} mm/h.
 
         {% set hour = now().hour %} {% if 6 &lt;= hour &lt; 12 %} It is morning, sound desperate
-        as if you will not survive the day without water. {% elif 12 &lt;= hour &lt; 18
-        %} It is afternoon, exaggerate your suffering under the weight of time. {%
-        elif 18 &lt;= hour &lt; 22 %} It is evening, make it sound like a dying plea before
-        night falls. {% else %} It is late night, whisper a haunting, sorrowful request
-        as if you may not see dawn. {% endif %}
+        as if you will not survive the day without {{ need_type }}. {% elif 12 &lt;=
+        hour &lt; 18 %} It is afternoon, exaggerate your suffering under the weight of
+        time. {% elif 18 &lt;= hour &lt; 22 %} It is evening, make it sound like a dying
+        plea before night falls. {% else %} It is late night, whisper a haunting,
+        sorrowful request as if you may not see dawn. {% endif %}
 
         {% if states(&#x27;&#x27;sensor.weather_temperature&#x27;&#x27;) | float &gt; 23 %} It is scorching
         hot, act like you are baking alive. {% elif states(&#x27;&#x27;sensor.weather_temperature&#x27;&#x27;)
@@ -521,37 +525,35 @@ ai_plant_message_direct:
         {% endif %}
 
         {% if states(&#x27;&#x27;sensor.weather_humidity&#x27;&#x27;) | float &lt; 40 %} The air is painfully
-        dry, exaggerate your thirst. {% elif states(&#x27;&#x27;sensor.weather_humidity&#x27;&#x27;) |
-        float &gt; 85 %} The air is heavy with humidity, but still you thirst — be extra
-        dramatic. {% endif %}
+        dry, exaggerate your suffering. {% elif states(&#x27;&#x27;sensor.weather_humidity&#x27;&#x27;)
+        | float &gt; 85 %} The air is heavy with humidity, but still you suffer — be
+        extra dramatic. {% endif %}
 
         {% if states(&#x27;&#x27;sensor.weather_rain&#x27;&#x27;) | float &gt; 0 %} Rain is falling, lament
-        how cruel it is that the sky drinks while you wither. {% endif %}
+        how cruel it is that the sky is satisfied while you wither. {% endif %}
 
         {% if states(&#x27;&#x27;sensor.weather_snow&#x27;&#x27;) | float &gt; 0 %} Snow is covering the
-        world, cry about the cold silence while you are parched. {% endif %}
+        world, cry about the cold silence while you are weak. {% endif %}
 
         {% if states(&#x27;&#x27;sensor.weather_wind_speed&#x27;&#x27;) | float &gt; 30 %} The wind howls
-        fiercely, beg for water before you are blown to dust. {% elif states(&#x27;&#x27;sensor.weather_wind_speed&#x27;&#x27;)
+        fiercely, beg for {{ need_type }} before you are blown to dust. {% elif states(&#x27;&#x27;sensor.weather_wind_speed&#x27;&#x27;)
         | float &lt; 5 %} The air is still, groan about the stagnant suffocation of your
-        thirst. {% endif %}
+        suffering. {% endif %}
 
         {% if is_state(&#x27;&#x27;input_boolean.hugh_room_occupied&#x27;&#x27;, &#x27;&#x27;on&#x27;&#x27;) %} Someone is
         in the room — cry out dramatically for immediate rescue, as if you know they
         can hear you. {% else %} The room is empty — sound abandoned and forgotten,
-        whispering about your thirst in solitude. {% endif %}
+        whispering about your {{ need_type }} in solitude. {% endif %}
 
         Keep it under 30 words and never repeat yourself the same way twice. Sign
         off the message with your name, without the &quot;the plant&quot; text and ensure a
         space is included after the em dash if you use one.&#x27;
-    action: conversation.process
-  - data:
+  - action: &#x27;{{ notify_target }}&#x27;
+    data:
       message: &#x27;{{ ai_message.response.speech.plain.speech }}&#x27;
       title: &#x27;{{ plant_name }} the Plant&#x27;
       data:
         notification_icon: mdi:water
-    action: &#x27;{{ notify_target }}&#x27;
-  description: &#x27;&#x27;
 </pre>
             </div>
             <script>
