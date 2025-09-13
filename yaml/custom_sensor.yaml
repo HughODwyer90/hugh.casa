@@ -444,7 +444,7 @@
 
     windscreen_freeze_risk:
       friendly_name: "Windscreen Freeze Risk"
-      unique_id: windscreen_freeze_risk_sensor
+      unique_id: "windscreen_freeze_risk_sensor"
       value_template: >-
         {% set temp = states('sensor.weather_temperature') | float(999) %}   {# °C #}
         {% set dp   = states('sensor.weather_dew_point')   | float(999) %}   {# °C #}
