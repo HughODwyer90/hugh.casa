@@ -1025,7 +1025,7 @@
         "modified_at": 1735990424.227219,
         "title": "Christmas HS100(UK)",
         "source": "user",
-        "state": "setup_in_progress",
+        "state": "setup_retry",
         "supports_options": false,
         "supports_remove_device": false,
         "supports_unload": true,
@@ -1034,9 +1034,12 @@
         "pref_disable_new_entities": false,
         "pref_disable_polling": false,
         "disabled_by": null,
-        "reason": null,
-        "error_reason_translation_key": null,
-        "error_reason_translation_placeholders": null,
+        "reason": "Unable to communicate with the device connect: Unable to connect to the device: 192.168.0.167:9999: [Errno 113] Connect call failed ('192.168.0.167', 9999)",
+        "error_reason_translation_key": "device_error",
+        "error_reason_translation_placeholders": {
+            "func": "connect",
+            "exc": "Unable to connect to the device: 192.168.0.167:9999: [Errno 113] Connect call failed ('192.168.0.167', 9999)"
+        },
         "num_subentries": 0
     },
     {
@@ -1295,7 +1298,7 @@
         "created_at": 1741096214.361231,
         "entry_id": "01JNGPQQTS47NSQ10S5V9EE8NV",
         "domain": "google_drive",
-        "modified_at": 1757730686.811861,
+        "modified_at": 1757749753.347233,
         "title": "Google Drive",
         "source": "user",
         "state": "loaded",
@@ -1337,7 +1340,7 @@
         "created_at": 1742152375.238811,
         "entry_id": "01JPG5Z6Y65VRTFPEP12EDS2RH",
         "domain": "google_assistant_sdk",
-        "modified_at": 1757588667.952402,
+        "modified_at": 1757749753.40275,
         "title": "Google Assistant SDK",
         "source": "user",
         "state": "loaded",
