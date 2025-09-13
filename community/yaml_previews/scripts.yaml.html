@@ -167,21 +167,6 @@ calculate_last_day_of_month:
         &#x27;
   mode: single
   icon: mdi:calendar
-water_patrick:
-  alias: Water Patrick
-  sequence:
-  - action: shell_command.water_patrick_message
-    data: {}
-    response_variable: message
-  - action: notify.notifications
-    data_template:
-      message: &#x27;{{ message[&#x27;&#x27;stdout&#x27;&#x27;] }}&#x27;
-      title: Patrick the Plant
-      data:
-        notification_icon: mdi:water
-  - action: input_boolean.turn_on
-    entity_id: input_boolean.patrick_needs_water
-  mode: single
 feed_patrick:
   alias: Feed Patrick
   sequence:
@@ -544,7 +529,7 @@ ai_plant_message_direct:
         night falls. {% else %} It is late night, whisper a haunting, sorrowful request
         as if you may not see dawn. {% endif %}
 
-        {% if states(&#x27;&#x27;sensor.weather_temperature&#x27;&#x27;) | float &gt; 25 %} It is scorching
+        {% if states(&#x27;&#x27;sensor.weather_temperature&#x27;&#x27;) | float &gt; 23 %} It is scorching
         hot, act like you are baking alive. {% elif states(&#x27;&#x27;sensor.weather_temperature&#x27;&#x27;)
         | float &lt; 5 %} It is freezing cold, act like you are shivering and desperate.
         {% endif %}
@@ -570,7 +555,9 @@ ai_plant_message_direct:
         can hear you. {% else %} The room is empty — sound abandoned and forgotten,
         whispering about your thirst in solitude. {% endif %}
 
-        Keep it under 2 sentences and never repeat yourself the same way twice.&#x27;
+        Keep it under 30 words and never repeat yourself the same way twice. Sign
+        off the message with your name, without the &quot;the plant&quot; text and ensure a
+        space is included after the em dash if you use one.&#x27;
     action: conversation.process
   - data:
       message: &#x27;{{ ai_message.response.speech.plain.speech }}&#x27;
