@@ -1234,10 +1234,13 @@
       - action: script.feed_patrick
     - conditions: []
       sequence:
-      - action: script.water_patrick
-  - action: input_boolean.turn_on
-    target:
+      - data:
+          plant_name: Patrick
+          notify_target: notify.notifications
+        action: script.ai_plant_message_direct
+  - target:
       entity_id: input_boolean.patrick_needs_water
+    action: input_boolean.turn_on
   mode: single
 - id: '1708033575791'
   alias: Hugh Phone Unplugged
