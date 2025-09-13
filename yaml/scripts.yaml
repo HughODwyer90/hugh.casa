@@ -490,5 +490,13 @@ water_patrick_ai:
     input:
       plant_name: Patrick
       notify_target: Notify.notifications
+  alias: Water Patrick AI Call
+  description: ''
+water_patrick_ai_2:
   alias: Water Patrick AI
+  mode: single
+  sequence:
+  - action: script.patrick_ai_message
+  - action: input_boolean.turn_on
+    entity_id: input_boolean.patrick_needs_water
   description: ''
