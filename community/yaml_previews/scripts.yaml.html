@@ -182,31 +182,51 @@ feed_patrick:
   mode: single
 find_car:
   alias: Find Car
+  mode: single
+  icon: mdi:car-search
   sequence:
-  - action: shell_command.find_car
-    data: {}
-    response_variable: message
+  - variables:
+      car_lat: &#x27;{{ states(&#x27;&#x27;sensor.car_gps_latitude&#x27;&#x27;) | float(0) }}&#x27;
+      car_lon: &#x27;{{ states(&#x27;&#x27;sensor.car_gps_longitude&#x27;&#x27;) | float(0) }}&#x27;
+      my_lat: &#x27;{{ state_attr(&#x27;&#x27;device_tracker.hugh_phone&#x27;&#x27;, &#x27;&#x27;latitude&#x27;&#x27;) | float(0)
+        }}&#x27;
+      my_lon: &#x27;{{ state_attr(&#x27;&#x27;device_tracker.hugh_phone&#x27;&#x27;, &#x27;&#x27;longitude&#x27;&#x27;) | float(0)
+        }}&#x27;
+      dist: &#x27;{{ distance(my_lat, my_lon, car_lat, car_lon) | round(1) }}&#x27;
+  - action: conversation.process
+    response_variable: ai_message
+    data:
+      agent_id: conversation.openai_conversation
+      text: &#x27;Pretend you are Clio the Car, speaking in the voice of a scared, lost
+        child. Write a short, dramatic message begging your owner to come find you.  Keep
+        it under 25 words.
+
+        GPS data: latitude={{ car_lat }}, longitude={{ car_lon }}. Your owner is {{
+        dist }} km away.
+
+        {% if dist &lt; 0.5 %} Sound relieved but still anxious — they&#x27;&#x27;re very close.
+        {% elif dist &lt; 5 %} Plead urgently — they&#x27;&#x27;re nearby but not here yet. {%
+        else %} Cry desperately — they&#x27;&#x27;re far away, as if you&#x27;&#x27;ve been abandoned.
+        {% endif %}
+
+        If GPS is missing, act frightened and confused about not knowing where you
+        are.&#x27;
   - action: input_text.set_value
     target:
       entity_id: input_text.car_gps_map_url
     data:
       value: &quot;{% set latitude = states(&#x27;sensor.car_gps_latitude&#x27;) %} {% set longitude
         = states(&#x27;sensor.car_gps_longitude&#x27;) %} {% if latitude not in [&#x27;unknown&#x27;,
-        &#x27;unavailable&#x27;, &#x27;None&#x27;] and longitude not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;, &#x27;None&#x27;]
-        %}\n  https://www.google.com/maps?q={{ latitude }},{{ longitude }}\n{% else
-        %}\n  https://www.google.com/maps\n{% endif %}\n&quot;
+        &#x27;unavailable&#x27;, &#x27;None&#x27;]\n      and longitude not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;,
+        &#x27;None&#x27;] %}\n  https://www.google.com/maps?q={{ latitude }},{{ longitude }}\n{%
+        else %}\n  https://www.google.com/maps\n{% endif %}&quot;
   - action: notify.notifications
-    data_template:
-      message: &#x27;{{ message[&#x27;&#x27;stdout&#x27;&#x27;] }}&#x27;
-      title: Clio the Car
+    data:
+      message: &#x27;{{ ai_message.response.speech.plain.speech }}&#x27;
+      title: Clio the Car ({{ dist }} km away)
       data:
         notification_icon: mdi:car-search
-        clickAction: &#x27;{{ states(&#x27;&#x27;input_text.car_gps_map_url&#x27;&#x27;) }}
-
-          &#x27;
-  mode: single
-  description: &#x27;&#x27;
-  icon: mdi:car-search
+        clickAction: &#x27;{{ states(&#x27;&#x27;input_text.car_gps_map_url&#x27;&#x27;) }}&#x27;
 update_umail_expiration:
   alias: Update Umail Expiration
   sequence:
