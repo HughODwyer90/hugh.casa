@@ -516,18 +516,22 @@
       friendly_name: "PC status"
       unique_id: "pc_status_sensor"
       value_template: >
-        {% if is_state('input_boolean.pc_on', 'on') %}
+        {% set pc_on = is_state('input_boolean.pc_on', 'on') %}
+        {% set active_window = states('sensor.activewindow_filtered') %}
+        {% if pc_on and active_window != 'Off' %}
           On
         {% else %}
           Off
         {% endif %}
       icon_template: >
-        {% if is_state('input_boolean.pc_on', 'on') %}
+        {% set pc_on = is_state('input_boolean.pc_on', 'on') %}
+        {% set active_window = states('sensor.activewindow_filtered') %}
+        {% if pc_on and active_window != 'Off' %}
           mdi:television-ambient-light
         {% else %}
           mdi:television
         {% endif %}
-
+        
     lucifer_activewindow_filtered:
       friendly_name: "Active Window"
       unique_id: "lucifer_activewindow_filtered_sensor"
