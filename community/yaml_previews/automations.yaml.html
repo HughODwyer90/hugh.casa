@@ -4008,6 +4008,32 @@
           title: Renewed
     action: notify.notifications
   mode: single
+- id: &#x27;1757850010708&#x27;
+  alias: PC on room adjustment
+  description: &#x27;&#x27;
+  triggers:
+  - trigger: state
+    entity_id:
+    - sensor.pc_status
+    to: &#x27;On&#x27;
+  conditions: []
+  actions:
+  - action: fan.set_percentage
+    metadata: {}
+    data:
+      percentage: 33
+    target:
+      entity_id: fan.air_purifier
+  - action: light.turn_on
+    metadata: {}
+    data:
+      rgb_color:
+      - 255
+      - 138
+      - 13
+    target:
+      entity_id: light.aroma_diffuser
+  mode: single
 </pre>
             </div>
             <script>
