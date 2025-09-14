@@ -3432,15 +3432,14 @@
   - entity_id: sensor.liverpool_score
     to: Scores unavailable
     trigger: state
-  conditions:
-  - condition: state
+  - trigger: state
     entity_id: sensor.liverpool_score
-    state: Scores unavailable
+    to: .*FT.*
+  conditions: []
   actions:
   - target:
       entity_id: script.update_liverpool_sensors
     action: script.turn_on
-    data: {}
   mode: single
 - id: '1733432457753'
   alias: Enable Sensors and Display Score
