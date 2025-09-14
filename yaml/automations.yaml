@@ -369,6 +369,23 @@
         data:
           percentage: 100
         action: fan.set_percentage
+  - if:
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: sensor.pc_status
+        state: 'On'
+      - condition: state
+        entity_id: media_player.monitor
+        state: 'on'
+    then: []
+    else:
+    - action: fan.set_percentage
+      metadata: {}
+      data:
+        percentage: 33
+      target:
+        entity_id: fan.air_purifier
   mode: single
 - id: '1702818164083'
   alias: Living Room Lights Occupied
