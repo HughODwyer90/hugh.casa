@@ -4019,7 +4019,7 @@
       entity_id: light.aroma_diffuser
   mode: single
 - id: &#x27;1758026590924&#x27;
-  alias: Enable Christmas Plug via NFC
+  alias: Toggle &amp; Manage Christmas Plug via NFC (Merged, Spook)
   description: Toggle the Christmas plug entities and UI visibility based on cloud
     connection state
   triggers:
@@ -4044,7 +4044,8 @@
           - binary_sensor.christmas_cloud_connection
         action: homeassistant.enable_entity
       - data:
-          entity_id: switch.christmas
+          entity_id:
+          - switch.christmas
         action: homeassistant.unhide_entity
     - conditions:
       - condition: state
@@ -4058,7 +4059,8 @@
           - binary_sensor.christmas_cloud_connection
         action: homeassistant.disable_entity
       - data:
-          entity_id: switch.christmas
+          entity_id:
+          - switch.christmas
         action: homeassistant.hide_entity
   mode: single
 </pre>
