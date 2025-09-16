@@ -3569,38 +3569,6 @@
   - action: shell_command.update_work_plug_state
     data: {}
   mode: single
-- id: '1735399717008'
-  alias: Manage Christmas Switch Visibility
-  description: Hide or unhide the Christmas switch based on its availability.
-  triggers:
-  - entity_id: switch.christmas
-    to: unavailable
-    trigger: state
-  - entity_id: switch.christmas
-    from: unavailable
-    trigger: state
-  conditions: []
-  actions:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: switch.christmas
-        state: unavailable
-      sequence:
-      - data:
-          entity_id: switch.christmas
-        action: homeassistant.hide_entity
-    - conditions:
-      - condition: template
-        value_template: '{{ states(''switch.christmas'') not in [''unavailable'',
-          ''unknown''] }}
-
-          '
-      sequence:
-      - data:
-          entity_id:
-          - switch.christmas
-        action: homeassistant.unhide_entity
 - id: '1736635713941'
   alias: Liverpool Manual Update
   description: Update liverpool info manually
