@@ -4035,3 +4035,39 @@
     target:
       entity_id: light.aroma_diffuser
   mode: single
+- id: '1758026590924'
+  alias: Toggle Christmas Plug via NFC
+  description: Toggle the Christmas plug entities based on cloud connection state
+  triggers:
+  - tag_id: 00_flour
+    trigger: tag
+  actions:
+  - choose:
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: binary_sensor.christmas_cloud_connection
+          state: unavailable
+        - condition: state
+          entity_id: binary_sensor.christmas_cloud_connection
+          state: 'off'
+      sequence:
+      - data:
+          entity_id:
+          - switch.christmas
+          - switch.christmas_led
+          - binary_sensor.christmas_cloud_connection
+        action: homeassistant.enable_entity
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.christmas_cloud_connection
+        state: 'on'
+      sequence:
+      - data:
+          entity_id:
+          - switch.christmas
+          - switch.christmas_led
+          - binary_sensor.christmas_cloud_connection
+        action: homeassistant.disable_entity
+  mode: single
