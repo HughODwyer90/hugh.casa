@@ -239,7 +239,7 @@ def fetch_ucl_leaderboard(stat_type: str, limit: int = 5, filter_goalkeepers=Fal
             stat_value = next((int(s["value"]) for s in stats if s["name"] == stat_type), 0)
             full_name = player.get("internationalName") or player.get("clubShirtName") or ""
             team_name = team.get("translations", {}).get("displayName", {}).get("EN") or ""
-            if filter_goalkeepers and player.get("position") != "Goalkeeper":
+            if filter_goalkeepers and player.get("fieldPosition") != "GOALKEEPER":
                 continue
             if not full_name:
                 continue
