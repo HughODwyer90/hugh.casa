@@ -740,7 +740,7 @@
       unique_id: "top_scorer_epl_sensor"
       icon_template: "mdi:trophy"
       value_template: >
-        {% set s = states('input_text.top_scorer_epl') %}
+        {% set s = states('input_text.input_text.epl_player_stats') %}
         {{ s if s and s not in ['unknown','unavailable','None'] else 'unavailable' }}
       attribute_templates:
         GOALS: "{{ state_attr('input_text.top_scorer_epl', 'GOALS') }}"
