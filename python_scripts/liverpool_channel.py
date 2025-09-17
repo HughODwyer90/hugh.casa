@@ -18,18 +18,15 @@ ACCESS_TOKEN = secrets["ha_access_token"]
 excluded_keywords = {"Viaplay", "Discovery", "Ziggo", "Caliente", "Diema"}
 base_url = "https://www.livescore.com/football/team/liverpool/3340/fixtures"
 
+# UEFA config
 UCL_BASE = "https://compstats.uefa.com/v1/player-ranking"
-UCL_HEADERS = {
-    "User-Agent": "Mozilla/5.0",
-    "Accept": "application/json"
-}
+UCL_HEADERS = {"User-Agent": "Mozilla/5.0", "Accept": "application/json"}
 
 LIVERPOOL_NAMES = {"Liverpool"}
 SURNAME_PARTICLES = {
     "da", "de", "del", "della", "di", "do", "dos", "du", "la", "le", "van", "von",
     "der", "den", "ter", "ten", "bin", "ibn", "al", "el", "st", "st."
 }
-
 
 
 def extract_surname(full_name: str) -> str:
@@ -240,7 +237,7 @@ def fetch_ucl_leaderboard(stat_type: str, limit: int = 5):
         return []
 
 
-def find_liverpool_top(players: list) -> dict | None:
+def find_liverpool_top(players: list) -> Optional[dict]:
     for p in players:
         if p.get("team") in LIVERPOOL_NAMES:
             return p
