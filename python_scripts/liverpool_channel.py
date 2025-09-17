@@ -18,11 +18,30 @@ excluded_keywords = {"Viaplay", "Discovery", "Ziggo", "Caliente", "Diema"}
 base_url = "https://www.livescore.com/football/team/liverpool/3340/fixtures"
 
 # UEFA config
-UCL_BASE_URL = "https://compstats.uefa.com/v1/player-ranking"
 UCL_HEADERS = {
     "User-Agent": "Mozilla/5.0",
-    "Accept": "application/json",
+    "Accept": "application/json"
 }
+
+UCL_ENDPOINTS = {
+    "goals": (
+        "https://compstats.uefa.com/v1/player-ranking?competitionId=1"
+        "&limit=15&offset=0&optionalFields=PLAYER%2CTEAM&order=DESC"
+        "&phase=TOURNAMENT&seasonYear={season}&stats=goals"
+    ),
+    "assists": (
+        "https://compstats.uefa.com/v1/player-ranking?competitionId=1"
+        "&limit=15&offset=0&optionalFields=PLAYER%2CTEAM&order=DESC"
+        "&phase=TOURNAMENT&seasonYear={season}&stats=assists"
+    ),
+    "clean_sheet": (
+        "https://compstats.uefa.com/v1/player-ranking?competitionId=1"
+        "&limit=15&offset=0&optionalFields=PLAYER%2CTEAM&order=DESC"
+        "&phase=TOURNAMENT&seasonYear={season}&stats=clean_sheet"
+    )
+}
+
+
 
 LIVERPOOL_NAMES = {"Liverpool"}
 SURNAME_PARTICLES = {
@@ -208,10 +227,9 @@ def update_pl_leaders_sensor():
 
 
 # --- UCL LOGIC ---
-def fetch_ucl_leaderboard(stat_type: str):
-    season = current_season_year()
-    url = f"{UCL_BASE_URL}?competitionId=1&limit=15&offset=0&optionalFields=PLAYER%2CTEAM&order=DESC&phase=TOURNAMENT&seasonYear={season}&stats={stat_type}"
-
+def fetch_ucl_leaderboard(stat_type: str, attribute_name: str):
+    season = current_season_year() + 1  # UEFA uses next calendar year
+    url = UCL_ENDPOINTS[stat_type].format(season=season)
     try:
         r = requests.get(url, headers=UCL_HEADERS, timeout=10)
         r.raise_for_status()
@@ -221,8 +239,7 @@ def fetch_ucl_leaderboard(stat_type: str):
             player = entry.get("player", {})
             team = entry.get("team", {})
             stats = entry.get("statistics", [])
-            target_stat = "clean_sheet" if stat_type == "sheets" else stat_type
-            stat_value = next((int(s["value"]) for s in stats if s["name"] == target_stat), 0)
+            stat_value = next((int(s["value"]) for s in stats if s["name"] == attribute_name), 0)
             full_name = player.get("internationalName") or player.get("clubShirtName") or ""
             team_name = team.get("translations", {}).get("displayName", {}).get("EN") or ""
             if not full_name:
@@ -246,9 +263,9 @@ def find_liverpool_top(players: list) -> dict | None:
 
 
 def update_ucl_leaders_sensor():
-    goals = fetch_ucl_leaderboard("goals")
-    assists = fetch_ucl_leaderboard("assists")
-    sheets = fetch_ucl_leaderboard("clean_sheet")
+    goals = fetch_ucl_leaderboard("goals", "goals")
+    assists = fetch_ucl_leaderboard("assists", "assists")
+    sheets = fetch_ucl_leaderboard("clean_sheet", "clean_sheet")
 
     attrs = {
         "friendly_name": "Player Stats (UCL)",
