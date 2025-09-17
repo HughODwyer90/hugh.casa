@@ -19,7 +19,6 @@ base_url = "https://www.livescore.com/football/team/liverpool/3340/fixtures"
 
 # UEFA config
 UCL_BASE_URL = "https://compstats.uefa.com/v1/player-ranking"
-UCL_COMPETITION_ID = 1
 UCL_HEADERS = {
     "User-Agent": "Mozilla/5.0",
     "Accept": "application/json",
@@ -192,12 +191,17 @@ def update_pl_leaders_sensor():
         "friendly_name": "Player Stats (EPL)",
         "icon": "mdi:trophy",
         "GOALS": "",
-        "ASSISTS": "",
-        "CLEAN SHEETS": "",
     }
-    for i, p in enumerate(goals5, 1): attrs[f"g{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
-    for i, p in enumerate(assists5, 1): attrs[f"a{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
-    for i, p in enumerate(sheets5, 1): attrs[f"c{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
+    for i, p in enumerate(goals5, 1):
+        attrs[f"g{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
+
+    attrs["ASSISTS"] = ""
+    for i, p in enumerate(assists5, 1):
+        attrs[f"a{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
+
+    attrs["CLEAN SHEETS"] = ""
+    for i, p in enumerate(sheets5, 1):
+        attrs[f"c{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
 
     post_state(EPL_STATS_ENTITY, state, attrs)
     return state
@@ -206,18 +210,10 @@ def update_pl_leaders_sensor():
 # --- UCL LOGIC ---
 def fetch_ucl_leaderboard(stat_type: str):
     season = current_season_year()
-    ucl_urls = {
-        "goals": f"{UCL_BASE_URL}?competitionId=1&limit=15&offset=0&optionalFields=PLAYER%2CTEAM&order=DESC&phase=TOURNAMENT"
-                 f"&seasonYear={season}&stats=goals%2Cgoals_scored_with_right%2Cgoals_scored_with_left%2Cgoals_scored_head%2Cgoals_scored_other"
-                 f"%2Cgoals_scored_inside_penalty_area%2Cgoals_scored_outside_penalty_area%2Cpenalty_scored%2Cmatches_appearance",
-        "assists": f"{UCL_BASE_URL}?competitionId=1&limit=15&offset=0&optionalFields=PLAYER%2CTEAM&order=DESC&phase=TOURNAMENT"
-                   f"&seasonYear={season}&stats=assists%2Ccorners%2Coffsides%2Cdribbling%2Cmatches_appearance",
-        "sheets": f"{UCL_BASE_URL}?competitionId=1&limit=15&offset=0&optionalFields=PLAYER%2CTEAM&order=DESC&phase=TOURNAMENT"
-                  f"&seasonYear={season}&stats=saves%2Cgoals_conceded%2Csaves_on_penalty%2Cclean_sheet%2Cpunches%2Cmatches_appearance"
-    }
+    url = f"{UCL_BASE_URL}?competitionId=1&limit=15&offset=0&optionalFields=PLAYER%2CTEAM&order=DESC&phase=TOURNAMENT&seasonYear={season}&stats={stat_type}"
 
     try:
-        r = requests.get(ucl_urls[stat_type], headers=UCL_HEADERS, timeout=10)
+        r = requests.get(url, headers=UCL_HEADERS, timeout=10)
         r.raise_for_status()
         raw = r.json()
         out = []
@@ -252,20 +248,23 @@ def find_liverpool_top(players: list) -> dict | None:
 def update_ucl_leaders_sensor():
     goals = fetch_ucl_leaderboard("goals")
     assists = fetch_ucl_leaderboard("assists")
-    sheets = fetch_ucl_leaderboard("sheets")
-
-    def fmt(players): return [f"{p['name']} – {p['team']} – {p['value']}" for p in players]
+    sheets = fetch_ucl_leaderboard("clean_sheet")
 
     attrs = {
         "friendly_name": "Player Stats (UCL)",
         "icon": "mdi:soccer",
         "GOALS": "",
-        "ASSISTS": "",
-        "CLEAN SHEETS": "",
     }
-    for i, p in enumerate(fmt(goals), 1):   attrs[f"g{i}"] = p
-    for i, p in enumerate(fmt(assists), 1): attrs[f"a{i}"] = p
-    for i, p in enumerate(fmt(sheets), 1):  attrs[f"c{i}"] = p
+    for i, p in enumerate(goals, 1):
+        attrs[f"g{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
+
+    attrs["ASSISTS"] = ""
+    for i, p in enumerate(assists, 1):
+        attrs[f"a{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
+
+    attrs["CLEAN SHEETS"] = ""
+    for i, p in enumerate(sheets, 1):
+        attrs[f"c{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
 
     top = goals[0] if goals else None
     lfc_top = find_liverpool_top(goals)
