@@ -24,22 +24,22 @@ UCL_HEADERS = {
 }
 
 UCL_ENDPOINTS = {
-    "goals": (
+    "goals": 
         "https://compstats.uefa.com/v1/player-ranking?competitionId=1"
         "&limit=15&offset=0&optionalFields=PLAYER%2CTEAM&order=DESC"
-        "&phase=TOURNAMENT&seasonYear={season}&stats=goals"
-    ),
-    "assists": (
+        "&phase=TOURNAMENT&seasonYear={season}&stats=goals",
+        
+    "assists":
         "https://compstats.uefa.com/v1/player-ranking?competitionId=1"
         "&limit=15&offset=0&optionalFields=PLAYER%2CTEAM&order=DESC"
-        "&phase=TOURNAMENT&seasonYear={season}&stats=assists"
-    ),
-    "clean_sheet": (
+        "&phase=TOURNAMENT&seasonYear={season}&stats=assists",
+        
+    "clean_sheet":
         "https://compstats.uefa.com/v1/player-ranking?competitionId=1"
         "&limit=15&offset=0&optionalFields=PLAYER%2CTEAM&order=DESC"
         "&phase=TOURNAMENT&seasonYear={season}&stats=clean_sheet"
-    )
 }
+
 
 
 
