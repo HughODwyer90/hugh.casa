@@ -3999,24 +3999,50 @@
   - trigger: state
     entity_id:
     - sensor.pc_status
-    to: &#x27;On&#x27;
+    to:
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
   conditions: []
   actions:
-  - action: fan.set_percentage
-    metadata: {}
-    data:
-      percentage: 33
-    target:
-      entity_id: fan.air_purifier
-  - action: light.turn_on
-    metadata: {}
-    data:
-      rgb_color:
-      - 255
-      - 138
-      - 13
-    target:
-      entity_id: light.aroma_diffuser
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: sensor.pc_status
+        state: &#x27;On&#x27;
+      sequence:
+      - action: light.turn_on
+        metadata: {}
+        data:
+          rgb_color:
+          - 255
+          - 138
+          - 13
+        target:
+          entity_id: light.aroma_diffuser
+      - action: fan.set_percentage
+        metadata: {}
+        data:
+          percentage: 33
+        target:
+          entity_id: fan.air_purifier
+    - conditions:
+      - condition: state
+        entity_id: sensor.pc_status
+        state: &#x27;Off&#x27;
+      sequence:
+      - action: fan.set_percentage
+        metadata: {}
+        data:
+          percentage: 66
+        target:
+          entity_id: fan.air_purifier
+      - action: light.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: light.aroma_diffuser
   mode: single
 - id: &#x27;1758026590924&#x27;
   alias: Toggle &amp; Manage Christmas Plug via NFC (Merged, Spook)
