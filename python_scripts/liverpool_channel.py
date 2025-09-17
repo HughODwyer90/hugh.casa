@@ -171,7 +171,7 @@ def update_pl_leaders_sensor():
             if filter_goalkeepers and md.get("position") != "Goalkeeper":
                 continue
             out.append({
-                "name": extract_surname(md.get("name", "")),
+                "name": normalize_name(md.get("name", "")),
                 "team": tm.get("shortName") or tm.get("name"),
                 "value": int((x.get("stats", {}) or {}).get(key, 0)),
             })
@@ -244,7 +244,7 @@ def fetch_ucl_leaderboard(stat_type: str, limit: int = 5, filter_goalkeepers=Fal
             if not full_name:
                 continue
             out.append({
-                "name": extract_surname(full_name),
+                "name": normalize_name(full_name),
                 "team": team_name,
                 "value": stat_value,
             })
