@@ -531,7 +531,7 @@
         {% else %}
           mdi:television
         {% endif %}
-        
+
     lucifer_activewindow_filtered:
       friendly_name: "Active Window"
       unique_id: "lucifer_activewindow_filtered_sensor"
@@ -735,34 +735,34 @@
           "No TV channel information"
         {% endif %}
 
-    liverpool_top_scorer_epl:
-      friendly_name: "Top Scorer (EPL)"
-      unique_id: "top_scorer_epl_sensor"
+    liverpool_epl_player_stats:
+      friendly_name: "Player Stats (EPL)"
+      unique_id: "epl_player_stats_sensor"
       icon_template: "mdi:trophy"
       value_template: >
-        {% set s = states('input_text.input_text.epl_player_stats') %}
+        {% set s = states('input_text.epl_player_stats') %}
         {{ s if s and s not in ['unknown','unavailable','None'] else 'unavailable' }}
       attribute_templates:
-        GOALS: "{{ state_attr('input_text.top_scorer_epl', 'GOALS') }}"
-        g1: "{{ state_attr('input_text.top_scorer_epl', 'g1') }}"
-        g2: "{{ state_attr('input_text.top_scorer_epl', 'g2') }}"
-        g3: "{{ state_attr('input_text.top_scorer_epl', 'g3') }}"
-        g4: "{{ state_attr('input_text.top_scorer_epl', 'g4') }}"
-        g5: "{{ state_attr('input_text.top_scorer_epl', 'g5') }}"
+        GOALS: "{{ state_attr('input_text.epl_player_stats', 'GOALS') }}"
+        g1: "{{ state_attr('input_text.epl_player_stats', 'g1') }}"
+        g2: "{{ state_attr('input_text.epl_player_stats', 'g2') }}"
+        g3: "{{ state_attr('input_text.epl_player_stats', 'g3') }}"
+        g4: "{{ state_attr('input_text.epl_player_stats', 'g4') }}"
+        g5: "{{ state_attr('input_text.epl_player_stats', 'g5') }}"
 
-        ASSISTS: "{{ state_attr('input_text.top_scorer_epl', 'ASSISTS') }}"
-        a1: "{{ state_attr('input_text.top_scorer_epl', 'a1') }}"
-        a2: "{{ state_attr('input_text.top_scorer_epl', 'a2') }}"
-        a3: "{{ state_attr('input_text.top_scorer_epl', 'a3') }}"
-        a4: "{{ state_attr('input_text.top_scorer_epl', 'a4') }}"
-        a5: "{{ state_attr('input_text.top_scorer_epl', 'a5') }}"
+        ASSISTS: "{{ state_attr('input_text.epl_player_stats', 'ASSISTS') }}"
+        a1: "{{ state_attr('input_text.epl_player_stats', 'a1') }}"
+        a2: "{{ state_attr('input_text.epl_player_stats', 'a2') }}"
+        a3: "{{ state_attr('input_text.epl_player_stats', 'a3') }}"
+        a4: "{{ state_attr('input_text.epl_player_stats', 'a4') }}"
+        a5: "{{ state_attr('input_text.epl_player_stats', 'a5') }}"
 
-        CLEAN SHEETS: "{{ state_attr('input_text.top_scorer_epl', 'CLEAN SHEETS') }}"
-        c1: "{{ state_attr('input_text.top_scorer_epl', 'c1') }}"
-        c2: "{{ state_attr('input_text.top_scorer_epl', 'c2') }}"
-        c3: "{{ state_attr('input_text.top_scorer_epl', 'c3') }}"
-        c4: "{{ state_attr('input_text.top_scorer_epl', 'c4') }}"
-        c5: "{{ state_attr('input_text.top_scorer_epl', 'c5') }}"
+        CLEAN SHEETS: "{{ state_attr('input_text.epl_player_stats', 'CLEAN SHEETS') }}"
+        c1: "{{ state_attr('input_text.epl_player_stats', 'c1') }}"
+        c2: "{{ state_attr('input_text.epl_player_stats', 'c2') }}"
+        c3: "{{ state_attr('input_text.epl_player_stats', 'c3') }}"
+        c4: "{{ state_attr('input_text.epl_player_stats', 'c4') }}"
+        c5: "{{ state_attr('input_text.epl_player_stats', 'c5') }}"
 
     liverpool_score:
       friendly_name: "Liverpool Score"
