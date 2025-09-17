@@ -2,7 +2,6 @@ import requests
 import re
 import time
 from datetime import datetime
-from typing import Optional
 from secret_manager import SecretsManager
 
 secrets = SecretsManager()
@@ -29,21 +28,39 @@ SURNAME_PARTICLES = {
 }
 
 
+def normalize_name(name: str) -> str:
+    replacements = {
+        "ı": "i", "İ": "I",
+        "ğ": "g", "Ğ": "G",
+        "ş": "s", "Ş": "S",
+        "ç": "c", "Ç": "C",
+        "ö": "o", "Ö": "O",
+        "ü": "u", "Ü": "U",
+        "á": "a", "Á": "A",
+        "é": "e", "É": "E",
+        "ñ": "n", "Ñ": "N",
+        "à": "a", "è": "e", "ù": "u",
+        "â": "a", "ê": "e", "î": "i", "ô": "o", "û": "u",
+        "ã": "a", "õ": "o"
+    }
+    return "".join(replacements.get(char, char) for char in name)
+
+
 def extract_surname(full_name: str) -> str:
     if not full_name:
         return ""
     parts = re.findall(r"[A-Za-zÀ-ÖØ-öø-ÿ'.-]+", full_name.strip())
     if not parts:
-        return full_name.strip()
+        return normalize_name(full_name.strip())
     surname_parts = [parts[-1]]
     i = len(parts) - 2
     while i >= 0 and parts[i].lower().strip(".") in SURNAME_PARTICLES:
         surname_parts.insert(0, parts[i])
         i -= 1
-    return " ".join(surname_parts)
+    return normalize_name(" ".join(surname_parts))
 
 
-def post_state(entity_id: str, state: str, attributes: Optional[dict] = None):
+def post_state(entity_id: str, state: str, attributes=None):
     url = f"{HOME_ASSISTANT_URL}/api/states/{entity_id}"
     headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}",
@@ -104,9 +121,8 @@ def fetch_tv_channel():
         post_state(ENTITY_ID, f"Error: {e}")
 
 
-# --- EPL LOGIC ---
+# Premier League
 PULSE_BASE = "https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v2"
-
 
 def pulselive_headers():
     return {
@@ -116,7 +132,6 @@ def pulselive_headers():
         "Accept": "application/json",
         "Accept-Encoding": "identity",
     }
-
 
 def fetch_pl_leaderboard_raw(metric: str, limit: int = 5):
     season = current_season_year()
@@ -131,7 +146,6 @@ def fetch_pl_leaderboard_raw(metric: str, limit: int = 5):
     except Exception:
         return []
 
-
 def find_team_top(data: list, team_names=LIVERPOOL_NAMES, metric_key="goals"):
     for x in data:
         md = x.get("playerMetadata", {}) or {}
@@ -144,27 +158,30 @@ def find_team_top(data: list, team_names=LIVERPOOL_NAMES, metric_key="goals"):
                 return {"name": extract_surname(full_name), "team": team_name, "value": value}
     return None
 
-
 def update_pl_leaders_sensor():
     goals5_raw = fetch_pl_leaderboard_raw("goals", 5)
     assists5_raw = fetch_pl_leaderboard_raw("goal_assists", 5)
-    sheets5_raw = fetch_pl_leaderboard_raw("clean_sheets", 5)
+    sheets5_raw = fetch_pl_leaderboard_raw("clean_sheets", 20)
 
-    def compact(arr, key):
+    def compact(arr, key, filter_goalkeepers=False):
         out = []
         for x in arr:
             md = x.get("playerMetadata", {}) or {}
             tm = md.get("currentTeam", {}) or {}
+            if filter_goalkeepers and md.get("position") != "Goalkeeper":
+                continue
             out.append({
                 "name": extract_surname(md.get("name", "")),
                 "team": tm.get("shortName") or tm.get("name"),
                 "value": int((x.get("stats", {}) or {}).get(key, 0)),
             })
+            if len(out) >= 5:
+                break
         return out
 
     goals5 = compact(goals5_raw, "goals")
     assists5 = compact(assists5_raw, "goalAssists")
-    sheets5 = compact(sheets5_raw, "cleanSheets")
+    sheets5 = compact(sheets5_raw, "cleanSheets", filter_goalkeepers=True)
 
     lfc_scan = fetch_pl_leaderboard_raw("goals", 120)
     lfc_top = find_team_top(lfc_scan, team_names=LIVERPOOL_NAMES, metric_key="goals")
@@ -191,11 +208,9 @@ def update_pl_leaders_sensor():
     }
     for i, p in enumerate(goals5, 1):
         attrs[f"g{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
-
     attrs["ASSISTS"] = ""
     for i, p in enumerate(assists5, 1):
         attrs[f"a{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
-
     attrs["CLEAN SHEETS"] = ""
     for i, p in enumerate(sheets5, 1):
         attrs[f"c{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
@@ -204,11 +219,11 @@ def update_pl_leaders_sensor():
     return state
 
 
-# --- UCL LOGIC ---
-def fetch_ucl_leaderboard(stat_type: str, limit: int = 5):
+# Champions League
+def fetch_ucl_leaderboard(stat_type: str, limit: int = 5, filter_goalkeepers=False):
     season = current_season_year() + 1
     url = (
-        f"{UCL_BASE}?competitionId=1&limit={limit}&offset=0"
+        f"{UCL_BASE}?competitionId=1&limit=50&offset=0"
         f"&optionalFields=PLAYER%2CTEAM&order=DESC"
         f"&phase=TOURNAMENT&seasonYear={season}&stats={stat_type}"
     )
@@ -217,13 +232,15 @@ def fetch_ucl_leaderboard(stat_type: str, limit: int = 5):
         r.raise_for_status()
         raw = r.json()
         out = []
-        for entry in raw[:limit]:
+        for entry in raw:
             player = entry.get("player", {})
             team = entry.get("team", {})
             stats = entry.get("statistics", [])
             stat_value = next((int(s["value"]) for s in stats if s["name"] == stat_type), 0)
             full_name = player.get("internationalName") or player.get("clubShirtName") or ""
             team_name = team.get("translations", {}).get("displayName", {}).get("EN") or ""
+            if filter_goalkeepers and player.get("position") != "Goalkeeper":
+                continue
             if not full_name:
                 continue
             out.append({
@@ -231,23 +248,23 @@ def fetch_ucl_leaderboard(stat_type: str, limit: int = 5):
                 "team": team_name,
                 "value": stat_value,
             })
+            if len(out) >= limit:
+                break
         return out
     except Exception as e:
         print(f"UCL {stat_type} fetch error: {e}")
         return []
 
-
-def find_liverpool_top(players: list) -> Optional[dict]:
+def find_liverpool_top(players: list):
     for p in players:
         if p.get("team") in LIVERPOOL_NAMES:
             return p
     return None
 
-
 def update_ucl_leaders_sensor():
     goals = fetch_ucl_leaderboard("goals")
     assists = fetch_ucl_leaderboard("assists")
-    sheets = fetch_ucl_leaderboard("clean_sheet")
+    sheets = fetch_ucl_leaderboard("clean_sheet", filter_goalkeepers=True)
 
     attrs = {
         "friendly_name": "Player Stats (UCL)",
@@ -256,11 +273,9 @@ def update_ucl_leaders_sensor():
     }
     for i, p in enumerate(goals, 1):
         attrs[f"g{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
-
     attrs["ASSISTS"] = ""
     for i, p in enumerate(assists, 1):
         attrs[f"a{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
-
     attrs["CLEAN SHEETS"] = ""
     for i, p in enumerate(sheets, 1):
         attrs[f"c{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
