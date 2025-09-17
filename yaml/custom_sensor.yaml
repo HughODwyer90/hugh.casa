@@ -763,6 +763,35 @@
         c3: "{{ state_attr('input_text.epl_player_stats', 'c3') }}"
         c4: "{{ state_attr('input_text.epl_player_stats', 'c4') }}"
         c5: "{{ state_attr('input_text.epl_player_stats', 'c5') }}"
+    
+    liverpool_ucl_player_stats:
+      friendly_name: "Player Stats (UCL)"
+      unique_id: "ucl_player_stats_sensor"
+      icon_template: "mdi:trophy"
+      value_template: >
+        {% set s = states('input_text.ucl_player_stats') %}
+        {{ s if s and s not in ['unknown','unavailable','None'] else 'unavailable' }}
+      attribute_templates:
+        GOALS: "{{ state_attr('input_text.ucl_player_stats', 'GOALS') }}"
+        g1: "{{ state_attr('input_text.ucl_player_stats', 'g1') }}"
+        g2: "{{ state_attr('input_text.ucl_player_stats', 'g2') }}"
+        g3: "{{ state_attr('input_text.ucl_player_stats', 'g3') }}"
+        g4: "{{ state_attr('input_text.ucl_player_stats', 'g4') }}"
+        g5: "{{ state_attr('input_text.ucl_player_stats', 'g5') }}"
+
+        ASSISTS: "{{ state_attr('input_text.ucl_player_stats', 'ASSISTS') }}"
+        a1: "{{ state_attr('input_text.ucl_player_stats', 'a1') }}"
+        a2: "{{ state_attr('input_text.ucl_player_stats', 'a2') }}"
+        a3: "{{ state_attr('input_text.ucl_player_stats', 'a3') }}"
+        a4: "{{ state_attr('input_text.ucl_player_stats', 'a4') }}"
+        a5: "{{ state_attr('input_text.ucl_player_stats', 'a5') }}"
+
+        CLEAN SHEETS: "{{ state_attr('input_text.ucl_player_stats', 'CLEAN SHEETS') }}"
+        c1: "{{ state_attr('input_text.ucl_player_stats', 'c1') }}"
+        c2: "{{ state_attr('input_text.ucl_player_stats', 'c2') }}"
+        c3: "{{ state_attr('input_text.ucl_player_stats', 'c3') }}"
+        c4: "{{ state_attr('input_text.ucl_player_stats', 'c4') }}"
+        c5: "{{ state_attr('input_text.ucl_player_stats', 'c5') }}"
 
     liverpool_score:
       friendly_name: "Liverpool Score"
