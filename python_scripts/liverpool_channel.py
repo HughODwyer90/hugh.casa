@@ -22,15 +22,23 @@ UCL_HEADERS = {
     "User-Agent": "Mozilla/5.0",
     "Accept": "application/json"
 }
+
 UCL_ENDPOINTS = {
-    "goals":
-        ("https://compstats.uefa.com/v1/player-ranking?competitionId=1&limit=15&offset=0&optionalFields=PLAYER%2CTEAM&order=DESC&phase=TOURNAMENT&seasonYear={season}&stats=goals"),
+    "goals": "https://compstats.uefa.com/v1/player-ranking"
+             "?competitionId=1&limit=15&offset=0"
+             "&optionalFields=PLAYER%2CTEAM&order=DESC"
+             "&phase=TOURNAMENT&seasonYear={season}&stats=goals",
 
-    "assists":
-        ("https://compstats.uefa.com/v1/player-ranking?competitionId=1&limit=15&offset=0&optionalFields=PLAYER%2CTEAM&order=DESC&phase=TOURNAMENT&seasonYear={season}&stats=assists"),
+    "assists": "https://compstats.uefa.com/v1/player-ranking"
+               "?competitionId=1&limit=15&offset=0"
+               "&optionalFields=PLAYER%2CTEAM&order=DESC"
+               "&phase=TOURNAMENT&seasonYear={season}&stats=assists",
 
-    "clean_sheet":
-        ("https://compstats.uefa.com/v1/player-ranking?competitionId=1&limit=15&offset=0&optionalFields=PLAYER%2CTEAM&order=DESC&phase=TOURNAMENT&seasonYear={season}&stats=clean_sheet")
+    "clean_sheet": "https://compstats.uefa.com/v1/player-ranking"
+                   "?competitionId=1&limit=15&offset=0"
+                   "&optionalFields=PLAYER%2CTEAM&order=DESC"
+                   "&phase=TOURNAMENT&seasonYear={season}"
+                   "&stats=saves%2Cgoals_conceded%2Csaves_on_penalty%2Cclean_sheet%2Cpunches%2Cmatches_appearance"
 }
 
 
