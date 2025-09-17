@@ -9,7 +9,7 @@ secrets = SecretsManager()
 # Home Assistant
 HOME_ASSISTANT_URL = "http://homeassistant.local:8123"
 ENTITY_ID = "input_text.liverpool_tv_channel"
-TOP_SCORER_ENTITY = "input_text.top_scorer_epl"
+EPL_STATS_ENTITY = "input_text.epl_player_stats"
 UCL_STATS_ENTITY = "input_text.ucl_player_stats"
 ACCESS_TOKEN = secrets["ha_access_token"]
 
@@ -30,9 +30,9 @@ LIVERPOOL_NAMES = {"Liverpool"}
 
 # Surname particles
 SURNAME_PARTICLES = {
-    "da","de","del","della","di","do","dos","du",
-    "la","le","van","von","der","den","ter","ten",
-    "bin","ibn","al","el","st","st."
+    "da", "de", "del", "della", "di", "do", "dos", "du",
+    "la", "le", "van", "von", "der", "den", "ter", "ten",
+    "bin", "ibn", "al", "el", "st", "st."
 }
 
 def extract_surname(full_name: str) -> str:
@@ -133,7 +133,6 @@ def fetch_tv_channel():
 
 # Premier League logic
 PULSE_BASE = "https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v2"
-VERBOSE = False
 
 def pulselive_headers():
     return {
@@ -220,7 +219,7 @@ def update_pl_leaders_sensor():
     for i, p in enumerate(assists5, 1):attrs[f"a{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
     for i, p in enumerate(sheets5, 1): attrs[f"c{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
 
-    post_state(TOP_SCORER_ENTITY, state, attrs)
+    post_state(EPL_STATS_ENTITY, state, attrs)
     print(f"Player Stats (EPL) [{season}]: {state}")
 
 # UEFA logic
@@ -241,7 +240,9 @@ def fetch_ucl_leaderboard(stat_type: str):
     try:
         r = requests.get(url, headers=UCL_HEADERS, timeout=10)
         r.raise_for_status()
-        raw = r.json().get("data", [])[:5]
+        resp = r.json()
+        raw = resp if isinstance(resp, list) else resp.get("data", [])
+        raw = raw[:5]
         return [
             {
                 "name": extract_surname(x.get("PLAYER", {}).get("fullName", "")),
@@ -296,7 +297,7 @@ def update_ucl_leaders_sensor():
     post_state(UCL_STATS_ENTITY, state, attrs)
     print(f"UCL Player Stats: {state}")
 
-# --- RUN ---
+# --- RUN ALL ---
 fetch_tv_channel()
 update_pl_leaders_sensor()
 update_ucl_leaders_sensor()
