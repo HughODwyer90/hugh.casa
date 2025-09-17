@@ -25,15 +25,12 @@ UCL_HEADERS = {
     "Accept": "application/json",
 }
 
-# Team name matching
 LIVERPOOL_NAMES = {"Liverpool"}
-
-# Surname particles
 SURNAME_PARTICLES = {
-    "da", "de", "del", "della", "di", "do", "dos", "du",
-    "la", "le", "van", "von", "der", "den", "ter", "ten",
-    "bin", "ibn", "al", "el", "st", "st."
+    "da", "de", "del", "della", "di", "do", "dos", "du", "la", "le", "van", "von",
+    "der", "den", "ter", "ten", "bin", "ibn", "al", "el", "st", "st."
 }
+
 
 def extract_surname(full_name: str) -> str:
     if not full_name:
@@ -48,6 +45,7 @@ def extract_surname(full_name: str) -> str:
         i -= 1
     return " ".join(surname_parts)
 
+
 def post_state(entity_id: str, state: str, attributes: dict | None = None):
     url = f"{HOME_ASSISTANT_URL}/api/states/{entity_id}"
     headers = {
@@ -61,18 +59,16 @@ def post_state(entity_id: str, state: str, attributes: dict | None = None):
     r.raise_for_status()
     return r.json()
 
+
 def current_season_year() -> int:
     now = datetime.now()
     return now.year if now.month >= 7 else now.year - 1
 
+
 def fetch_tv_channel():
     try:
         headers = {
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/91.0.4472.124 Safari/537.36"
-            )
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/91.0 Safari/537.36"
         }
         response = requests.get(base_url, headers=headers, timeout=10)
         response.raise_for_status()
@@ -87,43 +83,33 @@ def fetch_tv_channel():
             print("No build ID found, skipping.")
             return
         api_url = (
-            f"https://www.livescore.com/_next/data/{build_id}"
-            f"/en/football/team/liverpool/3340/fixtures.json"
-            f"?sport=football&teamName=liverpool&teamId=3340"
+            f"https://www.livescore.com/_next/data/{build_id}/en/football/team/liverpool/3340/fixtures.json"
+            "?sport=football&teamName=liverpool&teamId=3340"
         )
         response = requests.get(api_url, headers=headers, timeout=10)
         response.raise_for_status()
         data = response.json()
-        if (
-            data
-            and "pageProps" in data
-            and "initialData" in data["pageProps"]
-            and "eventsByMatchType" in data["pageProps"]["initialData"]
-        ):
-            events = data["pageProps"]["initialData"]["eventsByMatchType"][0]["Events"]
-            if events:
-                now_ms = time.time() * 1000
-                next_game = next((e for e in events if e.get("Esd") > now_ms), None)
-                if next_game and "Media" in next_game and "112" in next_game["Media"]:
-                    tv_channels = [
-                        m["eventId"]
-                        for m in next_game["Media"]["112"]
-                        if m.get("type") == "TV_CHANNEL"
-                    ]
-                    filtered = [ch for ch in tv_channels if not any(k in ch for k in excluded_keywords)]
-                    result = ", ".join(filtered[:3]) if filtered else "No TV channel listed"
-                    post_state(ENTITY_ID, result)
-                else:
-                    post_state(ENTITY_ID, "No TV channel information available")
-            else:
-                post_state(ENTITY_ID, "No upcoming games found")
+        events = data.get("pageProps", {}).get("initialData", {}).get("eventsByMatchType", [{}])[0].get("Events", [])
+        now_ms = time.time() * 1000
+        next_game = next((e for e in events if e.get("Esd") > now_ms), None)
+        if next_game and "Media" in next_game and "112" in next_game["Media"]:
+            tv_channels = [
+                m["eventId"]
+                for m in next_game["Media"]["112"]
+                if m.get("type") == "TV_CHANNEL"
+            ]
+            filtered = [ch for ch in tv_channels if not any(k in ch for k in excluded_keywords)]
+            result = ", ".join(filtered[:3]) if filtered else "No TV channel listed"
+            post_state(ENTITY_ID, result)
         else:
-            post_state(ENTITY_ID, "API data unavailable")
+            post_state(ENTITY_ID, "No TV channel information available")
     except Exception as e:
         post_state(ENTITY_ID, f"Error: {e}")
 
+
 # --- EPL LOGIC ---
 PULSE_BASE = "https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v2"
+
 
 def pulselive_headers():
     return {
@@ -133,6 +119,7 @@ def pulselive_headers():
         "Accept": "application/json",
         "Accept-Encoding": "identity",
     }
+
 
 def fetch_pl_leaderboard_raw(metric: str, limit: int = 5):
     season = current_season_year()
@@ -147,6 +134,7 @@ def fetch_pl_leaderboard_raw(metric: str, limit: int = 5):
     except Exception:
         return []
 
+
 def find_team_top(data: list, team_names=LIVERPOOL_NAMES, metric_key="goals"):
     for x in data:
         md = x.get("playerMetadata", {}) or {}
@@ -159,10 +147,11 @@ def find_team_top(data: list, team_names=LIVERPOOL_NAMES, metric_key="goals"):
                 return {"name": extract_surname(full_name), "team": team_name, "value": value}
     return None
 
+
 def update_pl_leaders_sensor():
-    goals5_raw   = fetch_pl_leaderboard_raw("goals", 5)
+    goals5_raw = fetch_pl_leaderboard_raw("goals", 5)
     assists5_raw = fetch_pl_leaderboard_raw("goal_assists", 5)
-    sheets5_raw  = fetch_pl_leaderboard_raw("clean_sheets", 5)
+    sheets5_raw = fetch_pl_leaderboard_raw("clean_sheets", 5)
 
     def compact(arr, key):
         out = []
@@ -176,12 +165,12 @@ def update_pl_leaders_sensor():
             })
         return out
 
-    goals5   = compact(goals5_raw,   "goals")
+    goals5 = compact(goals5_raw, "goals")
     assists5 = compact(assists5_raw, "goalAssists")
-    sheets5  = compact(sheets5_raw,  "cleanSheets")
+    sheets5 = compact(sheets5_raw, "cleanSheets")
 
     lfc_scan = fetch_pl_leaderboard_raw("goals", 120)
-    lfc_top  = find_team_top(lfc_scan, team_names=LIVERPOOL_NAMES, metric_key="goals")
+    lfc_top = find_team_top(lfc_scan, team_names=LIVERPOOL_NAMES, metric_key="goals")
     league_top = goals5[0] if goals5 else None
     season = current_season_year()
 
@@ -206,8 +195,8 @@ def update_pl_leaders_sensor():
         "ASSISTS": "",
         "CLEAN SHEETS": "",
     }
-    for i, p in enumerate(goals5, 1):  attrs[f"g{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
-    for i, p in enumerate(assists5, 1):attrs[f"a{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
+    for i, p in enumerate(goals5, 1): attrs[f"g{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
+    for i, p in enumerate(assists5, 1): attrs[f"a{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
     for i, p in enumerate(sheets5, 1): attrs[f"c{i}"] = f"{p['name']} – {p['team']} – {p['value']}"
 
     post_state(EPL_STATS_ENTITY, state, attrs)
@@ -217,15 +206,18 @@ def update_pl_leaders_sensor():
 # --- UCL LOGIC ---
 def fetch_ucl_leaderboard(stat_type: str):
     season = current_season_year()
-    key_map = {
-        "goals": "goals",
-        "assists": "assists",
-        "sheets": "clean_sheet"
+    ucl_urls = {
+        "goals": f"{UCL_BASE_URL}?competitionId=1&limit=15&offset=0&optionalFields=PLAYER%2CTEAM&order=DESC&phase=TOURNAMENT"
+                 f"&seasonYear={season}&stats=goals%2Cgoals_scored_with_right%2Cgoals_scored_with_left%2Cgoals_scored_head%2Cgoals_scored_other"
+                 f"%2Cgoals_scored_inside_penalty_area%2Cgoals_scored_outside_penalty_area%2Cpenalty_scored%2Cmatches_appearance",
+        "assists": f"{UCL_BASE_URL}?competitionId=1&limit=15&offset=0&optionalFields=PLAYER%2CTEAM&order=DESC&phase=TOURNAMENT"
+                   f"&seasonYear={season}&stats=assists%2Ccorners%2Coffsides%2Cdribbling%2Cmatches_appearance",
+        "sheets": f"{UCL_BASE_URL}?competitionId=1&limit=15&offset=0&optionalFields=PLAYER%2CTEAM&order=DESC&phase=TOURNAMENT"
+                  f"&seasonYear={season}&stats=saves%2Cgoals_conceded%2Csaves_on_penalty%2Cclean_sheet%2Cpunches%2Cmatches_appearance"
     }
-    target_stat = key_map[stat_type]
-    url = f"{UCL_BASE_URL}?competitionId=1&limit=15&offset=0&optionalFields=PLAYER%2CTEAM&order=DESC&phase=TOURNAMENT&seasonYear={season}&stats={target_stat}"
+
     try:
-        r = requests.get(url, headers=UCL_HEADERS, timeout=10)
+        r = requests.get(ucl_urls[stat_type], headers=UCL_HEADERS, timeout=10)
         r.raise_for_status()
         raw = r.json()
         out = []
@@ -233,6 +225,7 @@ def fetch_ucl_leaderboard(stat_type: str):
             player = entry.get("player", {})
             team = entry.get("team", {})
             stats = entry.get("statistics", [])
+            target_stat = "clean_sheet" if stat_type == "sheets" else stat_type
             stat_value = next((int(s["value"]) for s in stats if s["name"] == target_stat), 0)
             full_name = player.get("internationalName") or player.get("clubShirtName") or ""
             team_name = team.get("translations", {}).get("displayName", {}).get("EN") or ""
@@ -248,11 +241,13 @@ def fetch_ucl_leaderboard(stat_type: str):
         print(f"UCL {stat_type} fetch error: {e}")
         return []
 
+
 def find_liverpool_top(players: list) -> dict | None:
     for p in players:
         if p.get("team") in LIVERPOOL_NAMES:
             return p
     return None
+
 
 def update_ucl_leaders_sensor():
     goals = fetch_ucl_leaderboard("goals")
@@ -290,6 +285,7 @@ def update_ucl_leaders_sensor():
     post_state(UCL_STATS_ENTITY, state, attrs)
     return state
 
+
 # --- RUN ---
 print("🔎 Fetching TV channel info...")
 fetch_tv_channel()
@@ -303,4 +299,3 @@ ucl_state = update_ucl_leaders_sensor()
 print(f"✅ Champions League state: {ucl_state}")
 
 print("🎯 All updates completed.")
-
