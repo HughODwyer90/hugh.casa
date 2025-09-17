@@ -2,6 +2,7 @@ import requests
 import re
 import time
 from datetime import datetime
+from typing import Optional
 from secret_manager import SecretsManager
 
 secrets = SecretsManager()
@@ -17,40 +18,18 @@ ACCESS_TOKEN = secrets["ha_access_token"]
 excluded_keywords = {"Viaplay", "Discovery", "Ziggo", "Caliente", "Diema"}
 base_url = "https://www.livescore.com/football/team/liverpool/3340/fixtures"
 
-# UEFA config
+UCL_BASE = "https://compstats.uefa.com/v1/player-ranking"
 UCL_HEADERS = {
     "User-Agent": "Mozilla/5.0",
     "Accept": "application/json"
 }
-
-UCL_ENDPOINTS = {
-    "goals": "https://compstats.uefa.com/v1/player-ranking"
-             "?competitionId=1&limit=15&offset=0"
-             "&optionalFields=PLAYER%2CTEAM&order=DESC"
-             "&phase=TOURNAMENT&seasonYear={season}&stats=goals",
-
-    "assists": "https://compstats.uefa.com/v1/player-ranking"
-               "?competitionId=1&limit=15&offset=0"
-               "&optionalFields=PLAYER%2CTEAM&order=DESC"
-               "&phase=TOURNAMENT&seasonYear={season}&stats=assists",
-
-    "clean_sheet": "https://compstats.uefa.com/v1/player-ranking"
-                   "?competitionId=1&limit=15&offset=0"
-                   "&optionalFields=PLAYER%2CTEAM&order=DESC"
-                   "&phase=TOURNAMENT&seasonYear={season}"
-                   "&stats=saves%2Cgoals_conceded%2Csaves_on_penalty%2Cclean_sheet%2Cpunches%2Cmatches_appearance"
-}
-
-
-
-
-
 
 LIVERPOOL_NAMES = {"Liverpool"}
 SURNAME_PARTICLES = {
     "da", "de", "del", "della", "di", "do", "dos", "du", "la", "le", "van", "von",
     "der", "den", "ter", "ten", "bin", "ibn", "al", "el", "st", "st."
 }
+
 
 
 def extract_surname(full_name: str) -> str:
@@ -67,7 +46,7 @@ def extract_surname(full_name: str) -> str:
     return " ".join(surname_parts)
 
 
-def post_state(entity_id: str, state: str, attributes: dict | None = None):
+def post_state(entity_id: str, state: str, attributes: Optional[dict] = None):
     url = f"{HOME_ASSISTANT_URL}/api/states/{entity_id}"
     headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}",
@@ -193,7 +172,6 @@ def update_pl_leaders_sensor():
     lfc_scan = fetch_pl_leaderboard_raw("goals", 120)
     lfc_top = find_team_top(lfc_scan, team_names=LIVERPOOL_NAMES, metric_key="goals")
     league_top = goals5[0] if goals5 else None
-    season = current_season_year()
 
     def pretty(p): return f"{p['name']}: {p['value']}" if p else "unavailable"
 
@@ -230,19 +208,23 @@ def update_pl_leaders_sensor():
 
 
 # --- UCL LOGIC ---
-def fetch_ucl_leaderboard(stat_type: str, attribute_name: str):
-    season = current_season_year() + 1  # UEFA uses next calendar year
-    url = UCL_ENDPOINTS[stat_type].format(season=season)
+def fetch_ucl_leaderboard(stat_type: str, limit: int = 5):
+    season = current_season_year() + 1
+    url = (
+        f"{UCL_BASE}?competitionId=1&limit={limit}&offset=0"
+        f"&optionalFields=PLAYER%2CTEAM&order=DESC"
+        f"&phase=TOURNAMENT&seasonYear={season}&stats={stat_type}"
+    )
     try:
         r = requests.get(url, headers=UCL_HEADERS, timeout=10)
         r.raise_for_status()
         raw = r.json()
         out = []
-        for entry in raw[:15]:
+        for entry in raw[:limit]:
             player = entry.get("player", {})
             team = entry.get("team", {})
             stats = entry.get("statistics", [])
-            stat_value = next((int(s["value"]) for s in stats if s["name"] == attribute_name), 0)
+            stat_value = next((int(s["value"]) for s in stats if s["name"] == stat_type), 0)
             full_name = player.get("internationalName") or player.get("clubShirtName") or ""
             team_name = team.get("translations", {}).get("displayName", {}).get("EN") or ""
             if not full_name:
@@ -252,7 +234,7 @@ def fetch_ucl_leaderboard(stat_type: str, attribute_name: str):
                 "team": team_name,
                 "value": stat_value,
             })
-        return out[:5]
+        return out
     except Exception as e:
         print(f"UCL {stat_type} fetch error: {e}")
         return []
@@ -266,9 +248,9 @@ def find_liverpool_top(players: list) -> dict | None:
 
 
 def update_ucl_leaders_sensor():
-    goals = fetch_ucl_leaderboard("goals", "goals")
-    assists = fetch_ucl_leaderboard("assists", "assists")
-    sheets = fetch_ucl_leaderboard("clean_sheet", "clean_sheet")
+    goals = fetch_ucl_leaderboard("goals")
+    assists = fetch_ucl_leaderboard("assists")
+    sheets = fetch_ucl_leaderboard("clean_sheet")
 
     attrs = {
         "friendly_name": "Player Stats (UCL)",
