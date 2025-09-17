@@ -225,35 +225,50 @@ def update_pl_leaders_sensor():
 # UEFA logic
 def fetch_ucl_leaderboard(stat_type: str):
     season = current_season_year()
+
+    # Define stat keys for extraction
     if stat_type == "goals":
         url = f"{UCL_BASE_URL}?competitionId={UCL_COMPETITION_ID}&limit=15&offset=0&optionalFields=PLAYER%2CTEAM&order=DESC&phase=TOURNAMENT&seasonYear={season}&stats=goals"
-        key = "goals"
+        target_stat = "goals"
     elif stat_type == "assists":
-        url = f"{UCL_BASE_URL}?competitionId={UCL_COMPETITION_ID}&limit=15&offset=15&optionalFields=PLAYER%2CTEAM&order=DESC&phase=TOURNAMENT&seasonYear={season}&stats=passes_completed"
-        key = "passes_completed"
+        url = f"{UCL_BASE_URL}?competitionId={UCL_COMPETITION_ID}&limit=15&offset=15&optionalFields=PLAYER%2CTEAM&order=DESC&phase=TOURNAMENT&seasonYear={season}&stats=assists"
+        target_stat = "assists"
     elif stat_type == "sheets":
         url = f"{UCL_BASE_URL}?competitionId={UCL_COMPETITION_ID}&limit=15&offset=0&optionalFields=PLAYER%2CTEAM&order=DESC&phase=TOURNAMENT&seasonYear={season}&stats=clean_sheet"
-        key = "clean_sheet"
+        target_stat = "clean_sheet"
     else:
         return []
 
     try:
         r = requests.get(url, headers=UCL_HEADERS, timeout=10)
         r.raise_for_status()
-        resp = r.json()
-        raw = resp if isinstance(resp, list) else resp.get("data", [])
-        raw = raw[:5]
-        return [
-            {
-                "name": extract_surname(x.get("PLAYER", {}).get("fullName", "")),
-                "team": x.get("TEAM", {}).get("shortName", ""),
-                "value": int(x.get(key, 0)),
-            }
-            for x in raw
-        ]
+        raw = r.json()
+
+        out = []
+        for entry in raw[:15]:
+            player = entry.get("player", {})
+            team = entry.get("team", {})
+            stats = entry.get("statistics", [])
+
+            stat_value = next((int(s["value"]) for s in stats if s["name"] == target_stat), 0)
+            full_name = player.get("internationalName") or player.get("clubShirtName") or ""
+            team_name = team.get("translations", {}).get("displayName", {}).get("EN") or ""
+
+            if not full_name:
+                continue
+
+            out.append({
+                "name": extract_surname(full_name),
+                "team": team_name,
+                "value": stat_value,
+            })
+
+        return out[:5]
+
     except Exception as e:
         print(f"UCL {stat_type} fetch error: {e}")
         return []
+
 
 def find_liverpool_top(players: list) -> dict | None:
     for p in players:
