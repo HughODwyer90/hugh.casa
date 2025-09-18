@@ -23,16 +23,17 @@ UCL_HEADERS = {"User-Agent": "Mozilla/5.0", "Accept": "application/json"}
 
 LIVERPOOL_NAMES = {"Liverpool"}
 SURNAME_PARTICLES = {
-    "da", "de", "del", "della", "di", "do", "dos", "du", "la", "le", "van", "von",
-    "der", "den", "ter", "ten", "bin", "ibn", "al", "el", "st", "st."
+    "da", "de", "del", "della", "di", "do", "dos", "du",
+    "la", "le", "van", "von", "der", "den", "ter", "ten",
+    "bin", "ibn", "al", "el", "st", "st."
 }
 
 # --- Helpers ---
 def extract_surname(full_name: str) -> str:
-    """Extract surname (with particles) from a full name."""
+    """Extract surname (with particles) from a full name (Unicode-safe)."""
     if not full_name:
         return ""
-    parts = re.findall(r"[A-Za-zÀ-ÖØ-öø-ÿ'.-]+", full_name.strip())
+    parts = re.findall(r"\w+['.-]?", full_name.strip(), flags=re.UNICODE)
     if not parts:
         return full_name.strip()
     surname_parts = [parts[-1]]
@@ -140,9 +141,28 @@ def fetch_goalkeepers(metric: str, needed: int = 5, batch: int = 50):
     return collected
 
 
+def fetch_lfc_top(metric: str, batch: int = 50):
+    """Keep paging until a Liverpool player is found for the given metric."""
+    offset = 0
+    while True:
+        data = fetch_pl_leaderboard_raw(metric, limit=batch, offset=offset)
+        if not data:
+            return None
+        for x in data:
+            md = x.get("playerMetadata", {}) or {}
+            tm = md.get("currentTeam", {}) or {}
+            if (tm.get("shortName") or tm.get("name")) in LIVERPOOL_NAMES:
+                return {
+                    "name": extract_surname(md.get("name", "")),
+                    "team": tm.get("shortName") or tm.get("name"),
+                    "value": int((x.get("stats", {}) or {}).get(metric, 0)),
+                }
+        offset += batch
+
+
 def update_pl_leaders_sensor():
-    goals_raw = fetch_pl_leaderboard_raw("goals", 20)
-    assists_raw = fetch_pl_leaderboard_raw("goal_assists", 20)
+    goals_raw = fetch_pl_leaderboard_raw("goals", 50)
+    assists_raw = fetch_pl_leaderboard_raw("goal_assists", 50)
     sheets5 = fetch_goalkeepers("clean_sheets", needed=5)
 
     goals = [{
@@ -157,16 +177,17 @@ def update_pl_leaders_sensor():
         "value": int(x["stats"]["goalAssists"])
     } for x in assists_raw[:5]]
 
-    # Build state string
+    league_top = goals[0] if goals else None
+    lfc_top = fetch_lfc_top("goals")
+
     state = "unavailable"
-    if goals:
-        league_top = goals[0]
-        if len(goals) > 1:
-            second = goals[1]
-            diff = league_top["value"] - second["value"]
-            state = f"{league_top['name']}: {league_top['value']} (+{diff} {second['name']})"
-        else:
-            state = f"{league_top['name']}: {league_top['value']}"
+    if league_top and lfc_top:
+        diff = league_top["value"] - lfc_top["value"]
+        state = f"{league_top['name']}: {league_top['value']} (+{diff} {lfc_top['name']})"
+    elif league_top:
+        state = f"{league_top['name']}: {league_top['value']} (LFC top unknown)"
+    elif lfc_top:
+        state = f"{lfc_top['name']}: {lfc_top['value']} (2nd unknown)"
 
     attrs = {"friendly_name": "Player Stats (EPL)", "icon": "mdi:trophy", "GOALS": ""}
     for i in range(1, 6):
@@ -231,18 +252,23 @@ def fetch_ucl_goalkeepers(stat_type: str = "clean_sheet", needed: int = 5, batch
     return collected
 
 
-def fetch_ucl_leaderboard(stat_type: str, limit: int = 5):
+def fetch_ucl_leaderboard(stat_type: str, batch: int = 50, limit: int = 200):
     season = current_season_year() + 1
-    url = (
-        f"{UCL_BASE}?competitionId=1&limit={limit}&offset=0"
-        f"&optionalFields=PLAYER%2CTEAM&order=DESC"
-        f"&phase=TOURNAMENT&seasonYear={season}&stats={stat_type}"
-    )
-    try:
-        r = requests.get(url, headers=UCL_HEADERS, timeout=10)
-        r.raise_for_status()
-        raw = r.json()
-        out = []
+    out, offset = [], 0
+    while offset < limit:
+        url = (
+            f"{UCL_BASE}?competitionId=1&limit={batch}&offset={offset}"
+            f"&optionalFields=PLAYER%2CTEAM&order=DESC"
+            f"&phase=TOURNAMENT&seasonYear={season}&stats={stat_type}"
+        )
+        try:
+            r = requests.get(url, headers=UCL_HEADERS, timeout=10)
+            r.raise_for_status()
+            raw = r.json()
+        except Exception:
+            break
+        if not raw:
+            break
         for entry in raw:
             player, team = entry.get("player", {}), entry.get("team", {})
             stats = entry.get("statistics", [])
@@ -252,26 +278,57 @@ def fetch_ucl_leaderboard(stat_type: str, limit: int = 5):
             if not full_name:
                 continue
             out.append({"name": extract_surname(full_name), "team": team_name, "value": stat_value})
-        return out
-    except Exception:
-        return []
+        offset += batch
+    return out
+
+
+def fetch_ucl_lfc_top(stat_type: str = "goals", batch: int = 50):
+    """Keep paging until Liverpool player is found."""
+    season = current_season_year() + 1
+    offset = 0
+    while True:
+        url = (
+            f"{UCL_BASE}?competitionId=1&limit={batch}&offset={offset}"
+            f"&optionalFields=PLAYER%2CTEAM&order=DESC"
+            f"&phase=TOURNAMENT&seasonYear={season}&stats={stat_type}"
+        )
+        try:
+            r = requests.get(url, headers=UCL_HEADERS, timeout=10)
+            r.raise_for_status()
+            data = r.json()
+        except Exception:
+            return None
+        if not data:
+            return None
+        for entry in data:
+            player, team = entry.get("player", {}), entry.get("team", {})
+            if not team.get("translations"):
+                continue
+            team_name = team["translations"].get("displayName", {}).get("EN")
+            if team_name in LIVERPOOL_NAMES:
+                stats = entry.get("statistics", [])
+                stat_value = next((int(s["value"]) for s in stats if s["name"] == stat_type), 0)
+                full_name = player.get("internationalName") or player.get("clubShirtName") or ""
+                return {"name": extract_surname(full_name), "team": team_name, "value": stat_value}
+        offset += batch
 
 
 def update_ucl_leaders_sensor():
-    goals = fetch_ucl_leaderboard("goals", 10)
-    assists = fetch_ucl_leaderboard("assists", 10)
+    goals = fetch_ucl_leaderboard("goals", 50)
+    assists = fetch_ucl_leaderboard("assists", 50)
     sheets = fetch_ucl_goalkeepers(needed=5)
 
-    # Build state string
+    top = goals[0] if goals else None
+    lfc_top = fetch_ucl_lfc_top("goals")
+
     state = "unavailable"
-    if goals:
-        top = goals[0]
-        if len(goals) > 1:
-            second = goals[1]
-            diff = top["value"] - second["value"]
-            state = f"{top['name']}: {top['value']} (+{diff} {second['name']})"
-        else:
-            state = f"{top['name']}: {top['value']}"
+    if top and lfc_top:
+        diff = top["value"] - lfc_top["value"]
+        state = f"{top['name']}: {top['value']} (+{diff} {lfc_top['name']})"
+    elif top:
+        state = f"{top['name']}: {top['value']} (LFC top unknown)"
+    elif lfc_top:
+        state = f"{lfc_top['name']}: {lfc_top['value']} (2nd unknown)"
 
     attrs = {"friendly_name": "Player Stats (UCL)", "icon": "mdi:soccer", "GOALS": ""}
     for i in range(1, 6):
