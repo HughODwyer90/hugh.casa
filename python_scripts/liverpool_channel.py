@@ -182,8 +182,16 @@ def update_pl_leaders_sensor():
 
     state = "unavailable"
     if league_top and lfc_top:
-        diff = league_top["value"] - lfc_top["value"]
-        state = f"{league_top['name']}: {league_top['value']} (+{diff} {lfc_top['name']})"
+        if league_top["team"] in LIVERPOOL_NAMES:
+            second = goals[1] if len(goals) > 1 else None
+            if second:
+                diff = league_top["value"] - second["value"]
+                state = f"{league_top['name']}: {league_top['value']} (+{diff} {second['name']})"
+            else:
+                state = f"{league_top['name']}: {league_top['value']} (no 2nd)"
+        else:
+            diff = league_top["value"] - lfc_top["value"]
+            state = f"{league_top['name']}: {league_top['value']} (-{diff} {lfc_top['name']})"
     elif league_top:
         state = f"{league_top['name']}: {league_top['value']} (LFC top unknown)"
     elif lfc_top:
@@ -323,8 +331,16 @@ def update_ucl_leaders_sensor():
 
     state = "unavailable"
     if top and lfc_top:
-        diff = top["value"] - lfc_top["value"]
-        state = f"{top['name']}: {top['value']} (+{diff} {lfc_top['name']})"
+        if top["team"] in LIVERPOOL_NAMES:
+            second = goals[1] if len(goals) > 1 else None
+            if second:
+                diff = top["value"] - second["value"]
+                state = f"{top['name']}: {top['value']} (+{diff} {second['name']})"
+            else:
+                state = f"{top['name']}: {top['value']} (no 2nd)"
+        else:
+            diff = top["value"] - lfc_top["value"]
+            state = f"{top['name']}: {top['value']} (-{diff} {lfc_top['name']})"
     elif top:
         state = f"{top['name']}: {top['value']} (LFC top unknown)"
     elif lfc_top:
