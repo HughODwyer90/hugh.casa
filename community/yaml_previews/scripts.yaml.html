@@ -363,22 +363,22 @@ update_liverpool_sensors:
     - conditions:
       - condition: template
         value_template: &quot;{{ ( &#x27;Champions League&#x27; in states(&#x27;sensor.liverpool_comp&#x27;)
-          or\n     &#x27;Europa League&#x27; in states(&#x27;sensor.liverpool_comp&#x27;) )\n   and states(&#x27;sensor.liverpool_generic_stage&#x27;)
+          or\n     &#x27;Europa League&#x27; in states(&#x27;sensor.liverpool_comp&#x27;) or\n     &#x27;Conference
+          League&#x27; in states(&#x27;sensor.liverpool_comp&#x27;)  )\n   and states(&#x27;sensor.liverpool_generic_stage&#x27;)
           not in [&#x27;League Phase&#x27;, &#x27;&#x27;] }}\n&quot;
       sequence:
       - data:
           entity_id:
-          - sensor.liverpool_generic_stage
+          - sensor.liverpool_european_stage
           - sensor.liverpool_ucl_player_stats
         action: homeassistant.unhide_entity
       - data:
           entity_id:
-          - sensor.liverpool_premier_league_stage
           - sensor.liverpool_premier_league_position
           - sensor.liverpool_premier_league_record
           - sensor.liverpool_champions_league_position
           - sensor.liverpool_champions_league_record
-          - sensor.liverpool_european_stage
+          - sensor.liverpool_generic_stage
           - sensor.liverpool_epl_player_stats
         action: homeassistant.hide_entity
     - conditions: []
