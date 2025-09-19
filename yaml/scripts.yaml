@@ -313,6 +313,7 @@ update_liverpool_sensors:
           - sensor.liverpool_premier_league_stage
           - sensor.liverpool_premier_league_position
           - sensor.liverpool_premier_league_record
+          - sensor.liverpool_epl_player_stats
         action: homeassistant.unhide_entity
       - data:
           entity_id:
@@ -320,6 +321,7 @@ update_liverpool_sensors:
           - sensor.liverpool_champions_league_record
           - sensor.liverpool_generic_stage
           - sensor.liverpool_european_stage
+          - sensor.liverpool_ucl_player_stats
         action: homeassistant.hide_entity
     - conditions:
       - condition: template
@@ -333,6 +335,7 @@ update_liverpool_sensors:
           - sensor.liverpool_european_stage
           - sensor.liverpool_champions_league_position
           - sensor.liverpool_champions_league_record
+          - sensor.liverpool_ucl_player_stats
         action: homeassistant.unhide_entity
       - data:
           entity_id:
@@ -340,6 +343,28 @@ update_liverpool_sensors:
           - sensor.liverpool_premier_league_position
           - sensor.liverpool_premier_league_record
           - sensor.liverpool_generic_stage
+          - sensor.liverpool_epl_player_stats
+        action: homeassistant.hide_entity
+    - conditions:
+      - condition: template
+        value_template: "{{ ( 'Champions League' in states('sensor.liverpool_comp')
+          or\n     'Europa League' in states('sensor.liverpool_comp') )\n   and states('sensor.liverpool_generic_stage')
+          not in ['League Phase', ''] }}\n"
+      sequence:
+      - data:
+          entity_id:
+          - sensor.liverpool_generic_stage
+          - sensor.liverpool_ucl_player_stats
+        action: homeassistant.unhide_entity
+      - data:
+          entity_id:
+          - sensor.liverpool_premier_league_stage
+          - sensor.liverpool_premier_league_position
+          - sensor.liverpool_premier_league_record
+          - sensor.liverpool_champions_league_position
+          - sensor.liverpool_champions_league_record
+          - sensor.liverpool_european_stage
+          - sensor.liverpool_epl_player_stats
         action: homeassistant.hide_entity
     - conditions: []
       sequence:
@@ -355,6 +380,8 @@ update_liverpool_sensors:
           - sensor.liverpool_champions_league_position
           - sensor.liverpool_champions_league_record
           - sensor.liverpool_european_stage
+          - sensor.liverpool_ucl_player_stats
+          - sensor.liverpool_epl_player_stats
         action: homeassistant.hide_entity
   description: ''
 update_entities_html:
