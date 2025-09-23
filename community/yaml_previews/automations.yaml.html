@@ -2716,19 +2716,21 @@
   actions:
   - choose:
     - conditions:
-      - condition: template
-        value_template: &#x27;{{ states(&#x27;&#x27;input_number.hugh_room_blinds_position&#x27;&#x27;) | int
-          &lt; 20 }}&#x27;
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: input_select.hugh_room_blinds_mode
+          state: Half
+        - condition: state
+          entity_id: input_select.hugh_room_blinds_mode
+          state: Closed
       sequence:
       - action: input_select.select_option
         target:
           entity_id: input_select.hugh_room_blinds_mode
         data:
           option: Open
-    - conditions:
-      - condition: template
-        value_template: &#x27;{{ states(&#x27;&#x27;input_number.hugh_room_blinds_position&#x27;&#x27;) | int
-          &gt; 20 }}&#x27;
+    - conditions: []
       sequence:
       - action: input_select.select_option
         target:
