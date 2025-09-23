@@ -1121,24 +1121,26 @@
   alias: Living Room TV Lighting Control
   description: Activates the 'dimmers' scene based on the living room occupancy and
     the state of the TV.
-  trigger:
+  triggers:
   - trigger: state
-    entity_id: remote.living_room_tv
+    entity_id:
+    - sensor.living_room_tv_state_sensor
     from: 'on'
     to: 'off'
   - trigger: state
-    entity_id: remote.living_room_tv
+    entity_id:
+    - sensor.living_room_tv_state_sensor
     from: 'off'
     to: 'on'
-  condition:
+  conditions:
   - condition: state
     entity_id: binary_sensor.living_room_epone_occupancy
     state: 'on'
-  action:
+  actions:
   - choose:
     - conditions:
       - condition: state
-        entity_id: remote.living_room_tv
+        entity_id: sensor.living_room_tv_state_sensor
         state: 'off'
       sequence:
       - condition: or
@@ -1157,7 +1159,7 @@
           entity_id: scene.dimmers
     - conditions:
       - condition: state
-        entity_id: remote.living_room_tv
+        entity_id: sensor.living_room_tv_state_sensor
         state: 'on'
       sequence:
       - action: scene.turn_on
