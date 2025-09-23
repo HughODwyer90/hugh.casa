@@ -2701,19 +2701,21 @@
   actions:
   - choose:
     - conditions:
-      - condition: template
-        value_template: '{{ states(''input_number.hugh_room_blinds_position'') | int
-          < 20 }}'
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: input_select.hugh_room_blinds_mode
+          state: Half
+        - condition: state
+          entity_id: input_select.hugh_room_blinds_mode
+          state: Closed
       sequence:
       - action: input_select.select_option
         target:
           entity_id: input_select.hugh_room_blinds_mode
         data:
           option: Open
-    - conditions:
-      - condition: template
-        value_template: '{{ states(''input_number.hugh_room_blinds_position'') | int
-          > 20 }}'
+    - conditions: []
       sequence:
       - action: input_select.select_option
         target:
