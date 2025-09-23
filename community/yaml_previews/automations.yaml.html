@@ -416,18 +416,10 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: remote.living_room_tv
-      state: &#x27;off&#x27;
+      entity_id: sensor.living_room_tv_state_sensor
+      state: &#x27;Off&#x27;
     - condition: state
-      entity_id: remote.living_room_tv
-      state: unavailable
-  - condition: or
-    conditions:
-    - condition: state
-      entity_id: media_player.living_room_chromecast
-      state: &#x27;off&#x27;
-    - condition: state
-      entity_id: media_player.living_room_chromecast
+      entity_id: sensor.living_room_tv_state_sensor
       state: unavailable
   actions:
   - choose:
