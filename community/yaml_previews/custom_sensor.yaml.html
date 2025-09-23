@@ -185,6 +185,7 @@
         {% endif %}
     monitor_state_sensor:
       friendly_name: &quot;Monitor State&quot;
+      unique_id: monitor_state_sensor
       value_template: &gt;
         {% if is_state(&#x27;remote.monitor&#x27;, &#x27;on&#x27;)
               or is_state(&#x27;media_player.monitor&#x27;, &#x27;on&#x27;)
@@ -206,6 +207,7 @@
 
     living_room_tv_state_sensor:
       friendly_name: &quot;Living Room TV State&quot;
+      unique_id: living_room_tv_state_sensor
       value_template: &gt;
         {% if is_state(&#x27;remote.living_room_tv&#x27;, &#x27;on&#x27;)
               or is_state(&#x27;media_player.living_room_chromecast&#x27;, &#x27;on&#x27;)
