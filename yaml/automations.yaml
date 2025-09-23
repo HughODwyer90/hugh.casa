@@ -376,7 +376,7 @@
         entity_id: sensor.pc_status
         state: 'On'
       - condition: state
-        entity_id: remote.monitor
+        entity_id: sensor.monitor_state_sensor
         state: 'on'
     then: []
     else:
@@ -857,10 +857,10 @@
       - condition: or
         conditions:
         - condition: state
-          entity_id: remote.monitor
+          entity_id: sensor.monitor_state_sensor
           state: 'off'
         - condition: state
-          entity_id: remote.monitor
+          entity_id: sensor.monitor_state_sensor
           state: unavailable
       sequence:
       - target:
@@ -1405,10 +1405,10 @@
     conditions:
     - condition: state
       state: 'off'
-      entity_id: remote.monitor
+      entity_id: sensor.monitor_state_sensor
     - condition: state
       state: unavailable
-      entity_id: remote.monitor
+      entity_id: sensor.monitor_state_sensor
   actions:
   - choose:
     - conditions:
@@ -1438,16 +1438,16 @@
 - id: '1709505223121'
   alias: Hugh Room Air Purifier On
   description: ''
-  trigger:
+  triggers:
   - trigger: state
     entity_id:
     - fan.air_purifier
     to: 'on'
-  action:
+  actions:
   - choose:
     - conditions:
       - condition: state
-        entity_id: remote.monitor
+        entity_id: sensor.monitor_state_sensor
         state: 'off'
       sequence:
       - action: fan.set_percentage
@@ -1457,7 +1457,7 @@
           entity_id: fan.air_purifier
     - conditions:
       - condition: state
-        entity_id: remote.monitor
+        entity_id: sensor.monitor_state_sensor
         state: 'on'
       sequence:
       - action: fan.set_percentage
@@ -1470,17 +1470,17 @@
 - id: '1709505543648'
   alias: Hugh Room Monitor Turned On
   description: ''
-  trigger:
+  triggers:
   - trigger: state
-    entity_id: remote.monitor
+    entity_id: sensor.monitor_state_sensor
     to: 'on'
-  condition:
+  conditions:
   - condition: template
     value_template: '{{ state_attr(''fan.air_purifier'', ''percentage'') != 33 }}'
   - condition: state
     entity_id: fan.air_purifier
     state: 'on'
-  action:
+  actions:
   - action: fan.set_percentage
     data:
       percentage: 33
@@ -1490,11 +1490,11 @@
 - id: '1709505617365'
   alias: Hugh Room Monitor Turned Off
   description: ''
-  trigger:
+  triggers:
   - trigger: state
-    entity_id: remote.monitor
+    entity_id: sensor.monitor_state_sensor
     to: 'off'
-  action:
+  actions:
   - choose:
     - conditions:
       - condition: state
@@ -2166,7 +2166,7 @@
     entity_id: input_boolean.alarm_enabled
     state: 'on'
   - condition: state
-    entity_id: remote.monitor
+    entity_id: sensor.monitor_state_sensor
     state: 'off'
   actions:
   - choose:
@@ -3741,7 +3741,7 @@
   triggers:
   - trigger: state
     entity_id:
-    - remote.monitor
+    - sensor.monitor_state_sensor
     to: 'On'
   conditions:
   - condition: state
