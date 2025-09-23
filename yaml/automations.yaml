@@ -1125,13 +1125,13 @@
   - trigger: state
     entity_id:
     - sensor.living_room_tv_state_sensor
-    from: 'on'
-    to: 'off'
+    from: 'On'
+    to: 'Off'
   - trigger: state
     entity_id:
     - sensor.living_room_tv_state_sensor
-    from: 'off'
-    to: 'on'
+    from: 'Off'
+    to: 'On'
   conditions:
   - condition: state
     entity_id: binary_sensor.living_room_epone_occupancy
@@ -1141,7 +1141,7 @@
     - conditions:
       - condition: state
         entity_id: sensor.living_room_tv_state_sensor
-        state: 'off'
+        state: 'Off'
       sequence:
       - condition: or
         conditions:
@@ -1160,7 +1160,7 @@
     - conditions:
       - condition: state
         entity_id: sensor.living_room_tv_state_sensor
-        state: 'on'
+        state: 'On'
       sequence:
       - action: scene.turn_on
         target:
