@@ -376,7 +376,7 @@
         entity_id: sensor.pc_status
         state: 'On'
       - condition: state
-        entity_id: media_player.monitor
+        entity_id: remote.monitor
         state: 'on'
     then: []
     else:
@@ -2172,7 +2172,7 @@
     entity_id: input_boolean.alarm_enabled
     state: 'on'
   - condition: state
-    entity_id: media_player.monitor
+    entity_id: remote.monitor
     state: 'off'
   actions:
   - choose:
@@ -3747,7 +3747,7 @@
   triggers:
   - trigger: state
     entity_id:
-    - media_player.monitor
+    - remote.monitor
     to: 'On'
   conditions:
   - condition: state
