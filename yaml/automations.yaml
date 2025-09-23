@@ -374,10 +374,10 @@
       conditions:
       - condition: state
         entity_id: sensor.pc_status
-        state: 'On'
+        state: 'on'
       - condition: state
         entity_id: sensor.monitor_state_sensor
-        state: 'on'
+        state: 'On'
     then: []
     else:
     - action: fan.set_percentage
@@ -858,7 +858,7 @@
         conditions:
         - condition: state
           entity_id: sensor.monitor_state_sensor
-          state: 'off'
+          state: 'Off'
         - condition: state
           entity_id: sensor.monitor_state_sensor
           state: unavailable
@@ -1404,7 +1404,7 @@
   - condition: or
     conditions:
     - condition: state
-      state: 'off'
+      state: 'Off'
       entity_id: sensor.monitor_state_sensor
     - condition: state
       state: unavailable
@@ -1448,7 +1448,7 @@
     - conditions:
       - condition: state
         entity_id: sensor.monitor_state_sensor
-        state: 'off'
+        state: 'Off'
       sequence:
       - action: fan.set_percentage
         data:
@@ -1458,7 +1458,7 @@
     - conditions:
       - condition: state
         entity_id: sensor.monitor_state_sensor
-        state: 'on'
+        state: 'On'
       sequence:
       - action: fan.set_percentage
         data:
@@ -1473,7 +1473,7 @@
   triggers:
   - trigger: state
     entity_id: sensor.monitor_state_sensor
-    to: 'on'
+    to: 'On'
   conditions:
   - condition: template
     value_template: '{{ state_attr(''fan.air_purifier'', ''percentage'') != 33 }}'
@@ -1493,7 +1493,7 @@
   triggers:
   - trigger: state
     entity_id: sensor.monitor_state_sensor
-    to: 'off'
+    to: 'Off'
   actions:
   - choose:
     - conditions:
@@ -1715,11 +1715,6 @@
     to: 'on'
     trigger: state
   actions:
-  - target:
-      entity_id: automation.hugh_room_air_purifier_on
-    data:
-      skip_condition: true
-    action: automation.trigger
   - choose:
     - conditions:
       - condition: sun
@@ -1794,6 +1789,11 @@
           entity_id: input_select.hugh_room_blinds_mode
         data:
           option: Open
+  - target:
+      entity_id: automation.hugh_room_air_purifier_on
+    data:
+      skip_condition: true
+    action: automation.trigger
   mode: restart
 - id: '1711199503084'
   alias: Hugh Room Occupied Off
@@ -2167,7 +2167,7 @@
     state: 'on'
   - condition: state
     entity_id: sensor.monitor_state_sensor
-    state: 'off'
+    state: 'Off'
   actions:
   - choose:
     - conditions:
