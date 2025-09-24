@@ -4082,6 +4082,42 @@
           - switch.christmas
         action: homeassistant.hide_entity
   mode: single
+- id: &#x27;1758745396056&#x27;
+  alias: Blanket and Diffuser Sync
+  description: &#x27;&#x27;
+  triggers:
+  - entity_id: switch.hugh_room_plug_blanket
+    trigger: state
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: switch.hugh_room_plug_blanket
+        state: &#x27;on&#x27;
+      sequence:
+      - data:
+          scene_id: diffuser_previous
+          snapshot_entities:
+          - light.aroma_diffuser
+        action: scene.create
+      - target:
+          entity_id: light.aroma_diffuser
+        data:
+          rgb_color:
+          - 255
+          - 0
+          - 0
+        action: light.turn_on
+    - conditions:
+      - condition: state
+        entity_id: switch.hugh_room_plug_blanket
+        state: &#x27;off&#x27;
+      sequence:
+      - target:
+          entity_id: scene.diffuser_previous
+        action: scene.turn_on
+  mode: single
 </pre>
             </div>
             <script>
