@@ -1,0 +1,257 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>car_sensors.yaml</title>
+            <link rel="stylesheet" id="dynamic-styles">
+            <link rel="icon" id="dynamic-favicon">
+        </head>
+        <body>
+            <div class="fixed-header">
+                <h1>Viewing: car_sensors.yaml</h1>
+            </div>
+            <div class="scrollable-content">
+                <pre class="yaml-content">- platform: template
+  sensors:
+    car_gps_latitude:
+      friendly_name: &quot;Car GPS Latitude&quot;
+      unique_id: &quot;car_gps_latitude_sensor&quot;
+      value_template: &quot;{{ state_attr(&#x27;device_tracker.car_location&#x27;, &#x27;latitude&#x27;) | string }}&quot;
+      unit_of_measurement: &quot;degrees&quot;
+      icon_template: &quot;{{ &#x27;mdi:map-marker&#x27; }}&quot;
+
+    car_gps_longitude:
+      friendly_name: &quot;Car GPS Longitude&quot;
+      unique_id: &quot;car_gps_longitude_sensor&quot;
+      value_template: &quot;{{ state_attr(&#x27;device_tracker.car_location&#x27;, &#x27;longitude&#x27;) | string }}&quot;
+      unit_of_measurement: &quot;degrees&quot;
+      icon_template: &quot;{{ &#x27;mdi:map-marker&#x27; }}&quot;
+
+    car_gps_map_url:
+      friendly_name: &quot;Car GPS Map URL&quot;
+      unique_id: &quot;car_gps_map_url_sensor&quot;
+      value_template: &gt;
+        {% set latitude = states(&#x27;sensor.car_gps_latitude&#x27;) %}
+        {% set longitude = states(&#x27;sensor.car_gps_longitude&#x27;) %}
+        {% if latitude not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;, &#x27;None&#x27;] and longitude not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;, &#x27;None&#x27;] %}
+          &quot;https://www.google.com/maps?q={{ latitude }},{{ longitude }}&quot;
+        {% else %}
+          &quot;Coordinates not available&quot;
+        {% endif %}
+      icon_template: &quot;{{ &#x27;mdi:map&#x27; }}&quot;
+
+    daily_distance_traveled:
+      friendly_name: &quot;Car Today Distance&quot;
+      unit_of_measurement: &quot;km&quot;
+      icon_template: &quot;{{ &#x27;mdi:map-marker-distance&#x27; }}&quot;
+      unique_id: &quot;car_daily_distance_traveled_sensor&quot;
+      value_template: &gt;
+        {% set current = states(&#x27;sensor.car_mileage&#x27;) | float(default=none) %}
+        {% set previous = states(&#x27;input_number.previous_odometer_reading&#x27;) | float(default=none) %}
+
+        {% if current is not none and previous is not none and current &gt;= previous %}
+          {{ (current - previous) | round(2) }}
+        {% else %}
+          {{ none }}
+        {% endif %}
+
+    fuel_tank_remaining:
+      friendly_name: &quot;Car Fuel Remaining&quot;
+      value_template: &gt;
+        {% set current_fuel_quantity = states(&#x27;sensor.car_fuel_quantity&#x27;) %}
+        {% set max_fuel_capacity = 44 %}
+        {% if current_fuel_quantity not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
+          {% set current_fuel_quantity = current_fuel_quantity | float %}
+          {% set percent_remaining = (current_fuel_quantity / max_fuel_capacity) * 100 %}
+          
+          {% if current_fuel_quantity == current_fuel_quantity | round(0) %}
+            {% set fuel_display = current_fuel_quantity | round(0) | int %}
+          {% else %}
+            {% set fuel_display = current_fuel_quantity %}
+          {% endif %}
+          
+          {% if percent_remaining == percent_remaining | round(0) %}
+            {% set percent_display = percent_remaining | round(0) | int %}
+          {% else %}
+            {% set percent_display = percent_remaining | round(2) %}
+          {% endif %}
+          
+          {{ fuel_display }}L ({{ percent_display }}%)
+          
+        {% else %}
+          &quot;Unknown&quot;
+        {% endif %}
+      icon_template: &quot;{{ &#x27;mdi:fuel&#x27; }}&quot;
+      unique_id: &quot;car_fuel_tank_remaining_sensor&quot;
+
+    car_new_engine_distance:
+      friendly_name: &quot;Car Engine Distance&quot;
+      unique_id: &quot;car_engine_distance_sensor&quot;
+      unit_of_measurement: &quot;km&quot;
+      icon_template: &quot;{{ &#x27;mdi:engine&#x27; }}&quot;
+      value_template: &gt;
+        {% set engine_replacement_km = 68899 %}
+        {% set current_mileage = states(&#x27;sensor.car_mileage&#x27;) | float(default=none) %}
+
+        {% if current_mileage is not none and current_mileage &gt; engine_replacement_km %}
+          {{ (current_mileage - engine_replacement_km) | round(2) }}
+        {% else %}
+          {{ none }}
+        {% endif %}
+
+    yearly_distance_traveled:
+      friendly_name: &quot;Car YTD Distance&quot;
+      unit_of_measurement: &quot;km&quot;
+      unique_id: &quot;car_yearly_distance_traveled_sensor&quot;
+      icon_template: &quot;{{ &#x27;mdi:map-marker-distance&#x27; }}&quot;
+      value_template: &gt;
+        {% set previous_year = states(&#x27;input_number.previous_year_mileage&#x27;) | float(default=none) %}
+        {% set current = states(&#x27;sensor.car_mileage&#x27;) | float(default=none) %}
+
+        {% if previous_year is not none and current is not none %}
+          {% set distance = current - previous_year %}
+          {% if distance &gt; 0 %}
+            {{ distance | round(2) }}
+          {% else %}
+            {{ none }}
+          {% endif %}
+        {% else %}
+          {{ none }}
+        {% endif %}
+
+    car_daily_driving_time:
+      friendly_name: &quot;Today Driving Time&quot;
+      unique_id: &quot;car_daily_driving_time&quot;
+      icon_template: &quot;mdi:car-clock&quot;
+      unit_of_measurement: &quot;min&quot;
+      value_template: &gt;
+        {% set total_seconds = states(&#x27;input_number.daily_driving_seconds&#x27;) | int(default=0) %}
+        {% set minutes = total_seconds // 60 %}
+        {% set seconds = total_seconds % 60 %}
+        {{ &quot;%d.%02d&quot; | format(minutes, seconds) }}
+      attribute_templates:
+        readable_time: &gt;
+          {% set total_seconds = states(&#x27;input_number.daily_driving_seconds&#x27;) | int(default=0) %}
+          {% set hours = total_seconds // 3600 %}
+          {% set minutes = (total_seconds % 3600) // 60 %}
+          {% set seconds = total_seconds % 60 %}
+          {% if hours &gt; 0 %}
+            {{ hours }}h {{ minutes }}m {{ seconds }}s
+          {% else %}
+            {{ minutes }}m {{ seconds }}s
+          {% endif %}
+
+    car_yearly_driving_time:
+      friendly_name: &quot;YTD Driving Time&quot;
+      unique_id: &quot;car_yearly_driving_time&quot;
+      icon_template: &quot;mdi:car-clock&quot;
+      unit_of_measurement: &quot;h&quot;
+      value_template: &gt;
+        {% set total_seconds = states(&#x27;input_number.yearly_driving_seconds&#x27;) | int(default=0) %}
+        {% set hours = total_seconds // 3600 %}
+        {% set minutes = (total_seconds % 3600) // 60 %}
+        {{ &quot;%d.%02d&quot; | format(hours, minutes) }}
+      attribute_templates:
+        readable_time: &gt;
+          {% set total_seconds = states(&#x27;input_number.yearly_driving_seconds&#x27;) | int(default=0) %}
+          {% set days = total_seconds // 86400 %}
+          {% set hours = (total_seconds % 86400) // 3600 %}
+          {% set minutes = (total_seconds % 3600) // 60 %}
+          {% set seconds = total_seconds % 60 %}
+          {% if days &gt; 0 %}
+            {{ days }}d {{ hours }}h {{ minutes }}m {{ seconds }}s
+          {% elif hours &gt; 0 %}
+            {{ hours }}h {{ minutes }}m {{ seconds }}s
+          {% else %}
+            {{ minutes }}m {{ seconds }}s
+          {% endif %}
+    
+    windscreen_freeze_risk:
+      friendly_name: &quot;Windscreen Freeze Risk&quot;
+      unique_id: &quot;windscreen_freeze_risk_sensor&quot;
+      value_template: &gt;-
+        {% set temp = states(&#x27;sensor.weather_temperature&#x27;) | float(999) %}   {# °C #}
+        {% set dp   = states(&#x27;sensor.weather_dew_point&#x27;)   | float(999) %}   {# °C #}
+        {% set rh   = states(&#x27;sensor.weather_humidity&#x27;)    | float(0)   %}   {# %  #}
+        {% set cloud= states(&#x27;sensor.weather_cloud_coverage&#x27;) | float(100) %}
+        {% set wind = states(&#x27;sensor.weather_wind_speed&#x27;)  | float(0)   %}   {# km/h #}
+        {% set cond = (states(&#x27;sensor.weather_condition&#x27;) | lower) or &#x27;&#x27; %}
+        {% set rain = states(&#x27;sensor.weather_rain&#x27;) | float(0) %}
+        {% set snow = states(&#x27;sensor.weather_snow&#x27;) | float(0) %}
+
+        {# Precipitation check #}
+        {% set keywords = [&#x27;rain&#x27;,&#x27;snow&#x27;,&#x27;sleet&#x27;,&#x27;mist&#x27;,&#x27;drizzle&#x27;,&#x27;shower&#x27;] %}
+        {% set has_precip = (keywords | select(&#x27;in&#x27;, cond) | list | count &gt; 0)
+                            or (rain &gt; 0 or snow &gt; 0) %}
+
+        {# Frost formation logic #}
+        {% set frost_core = (dp &lt;= 1 and temp &lt;= 3) or (temp &lt;= 0 and has_precip) %}
+        {% set calm_clear = (cloud &lt; 70) and (wind &lt; 25) %}
+
+        {# Hold until thawing #}
+        {% set prev = states(&#x27;sensor.windscreen_freeze_risk&#x27;) %}
+        {% set thawing = (temp &gt; 4) and (rh &lt; 80) and is_state(&#x27;sun.sun&#x27;,&#x27;above_horizon&#x27;) %}
+
+        {% if frost_core and calm_clear %}
+          Likely Frozen
+        {% elif prev == &#x27;Likely Frozen&#x27; and not thawing %}
+          Likely Frozen
+        {% else %}
+          Not Frozen
+        {% endif %}
+      icon_template: &gt;-
+        {% if is_state(&#x27;sensor.windscreen_freeze_risk&#x27;,&#x27;Likely Frozen&#x27;) %}
+          mdi:snowflake
+        {% else %}
+          mdi:weather-sunny
+        {% endif %}
+      attribute_templates:
+        Frozen?: &gt;-
+          {% set temp = states(&#x27;sensor.weather_temperature&#x27;) | float(999) %}
+          {% set dp   = states(&#x27;sensor.weather_dew_point&#x27;)   | float(999) %}
+          {% set rh   = states(&#x27;sensor.weather_humidity&#x27;)    | float(0)   %}
+          {% set cloud= states(&#x27;sensor.weather_cloud_coverage&#x27;) | float(100) %}
+          {% set wind = states(&#x27;sensor.weather_wind_speed&#x27;)  | float(0)   %}
+          {% set cond = (states(&#x27;sensor.weather_condition&#x27;) | lower) or &#x27;&#x27; %}
+          {% set rain = states(&#x27;sensor.weather_rain&#x27;) | float(0) %}
+          {% set snow = states(&#x27;sensor.weather_snow&#x27;) | float(0) %}
+          {% set has_precip = ([&#x27;rain&#x27;,&#x27;snow&#x27;,&#x27;sleet&#x27;,&#x27;mist&#x27;,&#x27;drizzle&#x27;,&#x27;shower&#x27;] | select(&#x27;in&#x27;, cond) | list | count &gt; 0)
+                              or (rain &gt; 0 or snow &gt; 0) %}
+          {% set frost_core = (dp &lt;= 1 and temp &lt;= 3) or (temp &lt;= 0 and has_precip) %}
+          {% set calm_clear = (cloud &lt; 70) and (wind &lt; 25) %}
+          {% set thawing = (temp &gt; 4) and (rh &lt; 80) and is_state(&#x27;sun.sun&#x27;,&#x27;above_horizon&#x27;) %}
+          {% set prev = states(&#x27;sensor.windscreen_freeze_risk&#x27;) %}
+
+          {% if (frost_core and calm_clear) or (prev == &#x27;Likely Frozen&#x27; and not thawing) %}
+            Yes
+          {% elif dp &gt; 1 or temp &gt; 3 %}
+            No — Too warm ({{ temp }}°C / dew point {{ dp }}°C)
+          {% elif cloud &gt;= 70 %}
+            No — Too cloudy ({{ cloud }}%)
+          {% elif wind &gt;= 25 %}
+            No — Too windy ({{ wind }} km/h)
+          {% elif thawing %}
+            No — Thawing
+          {% else %}
+            No — Conditions borderline but not all criteria met
+          {% endif %}</pre>
+            </div>
+            <script>
+                (function fixPaths() {
+                    // ✅ If inside yaml_previews, use "../assets/", otherwise use "assets/"
+                    var basePath = window.location.pathname.includes("/yaml_previews/") ? "../assets/" : "assets/";
+
+                    // ✅ Apply correct asset paths
+                    document.getElementById("dynamic-styles").href = basePath + "table-styles.css";
+                    document.getElementById("dynamic-favicon").href = basePath + "favicon.ico";
+
+                    var script = document.createElement("script");
+                    script.src = basePath + "table-functions.js";
+                    document.body.appendChild(script);
+                })();
+            </script>
+        </body>
+        </html>
+        
