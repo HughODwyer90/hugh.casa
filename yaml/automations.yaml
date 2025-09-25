@@ -4069,11 +4069,9 @@
   mode: single
 - id: '1758745396056'
   alias: Blanket and Diffuser Sync
-  description: ''
   triggers:
   - entity_id: switch.hugh_room_plug_blanket
     trigger: state
-  conditions: []
   actions:
   - choose:
     - conditions:
@@ -4086,7 +4084,6 @@
           scene_id: diffuser_previous
           snapshot_entities:
           - light.aroma_diffuser
-      - delay: 00:00:01
       - action: light.turn_on
         target:
           entity_id: light.aroma_diffuser
@@ -4100,9 +4097,17 @@
         entity_id: switch.hugh_room_plug_blanket
         state: 'off'
       sequence:
-      - action: scene.apply
-        data:
-          entities:
-            light.aroma_diffuser: {}
-          scene_id: diffuser_previous
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: scene.diffuser_previous
+            state: scening
+          sequence:
+          - action: scene.apply
+            data:
+              scene_id: diffuser_previous
+        default:
+        - action: light.turn_off
+          target:
+            entity_id: light.aroma_diffuser
   mode: single
