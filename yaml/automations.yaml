@@ -1264,7 +1264,7 @@
   - entity_id: sensor.hugh_phone_battery_state
     to: discharging
     trigger: state
-  - entity_id: input_boolean.pc_on
+  - entity_id: binary_sensor.pc_status
     trigger: state
   conditions:
   - condition: state
@@ -1274,7 +1274,7 @@
   - choose:
     - conditions:
       - condition: state
-        entity_id: input_boolean.pc_on
+        entity_id: binary_sensor.pc_status
         state: 'off'
       sequence:
       - target:
@@ -1282,10 +1282,7 @@
         action: light.turn_off
     - conditions:
       - condition: state
-        entity_id: input_boolean.pc_on
-        state: 'on'
-      - condition: state
-        entity_id: fan.aroma_diffuser
+        entity_id: binary_sensor.pc_status
         state: 'on'
       sequence:
       - target:
@@ -1295,22 +1292,6 @@
           - 255
           - 138
           - 13
-        action: light.turn_on
-    - conditions:
-      - condition: state
-        entity_id: input_boolean.pc_on
-        state: 'on'
-      - condition: state
-        entity_id: fan.aroma_diffuser
-        state: 'off'
-      sequence:
-      - target:
-          entity_id: light.aroma_diffuser
-        data:
-          rgb_color:
-          - 255
-          - 0
-          - 0
         action: light.turn_on
     default:
     - target:
