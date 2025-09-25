@@ -1275,17 +1275,12 @@
   mode: single
 - id: &#x27;1708033575791&#x27;
   alias: Hugh Phone Unplugged
-  description: &#x27;Sets the diffuser light state
-
-    &#x27;
   triggers:
-  - trigger: state
-    entity_id:
-    - sensor.hugh_phone_battery_state
+  - entity_id: sensor.hugh_phone_battery_state
     to: discharging
-  - trigger: state
-    entity_id:
-    - input_boolean.pc_on
+    trigger: state
+  - entity_id: input_boolean.pc_on
+    trigger: state
   conditions:
   - condition: state
     entity_id: input_boolean.hugh_room_occupied
@@ -1294,48 +1289,48 @@
   - choose:
     - conditions:
       - condition: state
-        state: &#x27;off&#x27;
         entity_id: input_boolean.pc_on
+        state: &#x27;off&#x27;
       sequence:
-      - action: light.turn_off
-        target:
+      - target:
           entity_id: light.aroma_diffuser
-        data: {}
+        action: light.turn_off
     - conditions:
       - condition: state
         entity_id: input_boolean.pc_on
         state: &#x27;on&#x27;
+      - condition: state
+        entity_id: fan.aroma_diffuser
+        state: &#x27;on&#x27;
       sequence:
-      - action: light.turn_on
-        metadata: {}
+      - target:
+          entity_id: light.aroma_diffuser
         data:
           rgb_color:
           - 255
           - 138
           - 13
-        target:
-          entity_id: light.aroma_diffuser
+        action: light.turn_on
     - conditions:
-      - condition: not
-        conditions:
-        - condition: state
-          entity_id: fan.aroma_diffuser
-          state: &#x27;on&#x27;
+      - condition: state
+        entity_id: input_boolean.pc_on
+        state: &#x27;on&#x27;
+      - condition: state
+        entity_id: fan.aroma_diffuser
+        state: &#x27;off&#x27;
       sequence:
-      - action: light.turn_on
-        metadata: {}
+      - target:
+          entity_id: light.aroma_diffuser
         data:
           rgb_color:
           - 255
           - 0
           - 0
-        target:
-          entity_id: light.aroma_diffuser
+        action: light.turn_on
     default:
-    - action: light.turn_off
-      target:
+    - target:
         entity_id: light.aroma_diffuser
-      data: {}
+      action: light.turn_off
   mode: single
 - id: &#x27;1708037379935&#x27;
   alias: Diffuser Light Mode Check
