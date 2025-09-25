@@ -33,8 +33,6 @@ api:
   encryption:
     key: !secret pressure_api
 
-captive_portal:
-
 binary_sensor:
   - platform: gpio
     pin:
@@ -57,5 +55,3 @@ binary_sensor:
     filters:
       - delayed_on: 2s
       - delayed_off: 2s
-
-
