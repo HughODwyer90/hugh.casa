@@ -10,7 +10,7 @@ ble_client:
       then:
         - lambda: |-
             id(${brush_id}_connected) = true;
-            ESP_LOGD("ble_client_lambda", "Connected to ${name}");
+            ESP_LOGD("ble_client_lambda", "Connected to ${brush_name}");
             // require updates of battery state, because notifications don't always work for battery
             // https://community.home-assistant.io/t/dynamically-change-update-interval/108074/11
             id(${brush_id})->pair();
@@ -27,7 +27,7 @@ ble_client:
       then:
         - lambda: |-
             id(${brush_id}_connected) = false;
-            ESP_LOGD("ble_client_lambda", "Disconnected from ${name}");
+            ESP_LOGD("ble_client_lambda", "Disconnected from ${brush_name}");
             // https://community.home-assistant.io/t/dynamically-change-update-interval/108074/11
             id(${brush_id}_toothbrush_battery_value).set_update_interval(UINT32_MAX /* = never */);
             id(${brush_id}_toothbrush_battery_value).call_setup();
