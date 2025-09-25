@@ -376,8 +376,8 @@
         entity_id: binary_sensor.pc_status
         state: 'on'
       - condition: state
-        entity_id: sensor.monitor_state_sensor
-        state: 'On'
+        entity_id: binary_sensor.monitor_state
+        state: 'on'
     then: []
     else:
     - action: fan.set_percentage
@@ -857,10 +857,10 @@
       - condition: or
         conditions:
         - condition: state
-          entity_id: sensor.monitor_state_sensor
+          entity_id: binary_sensor.monitor_state
           state: 'Off'
         - condition: state
-          entity_id: sensor.monitor_state_sensor
+          entity_id: binary_sensor.monitor_state
           state: unavailable
       sequence:
       - target:
@@ -1405,10 +1405,10 @@
     conditions:
     - condition: state
       state: 'Off'
-      entity_id: sensor.monitor_state_sensor
+      entity_id: binary_sensor.monitor_state
     - condition: state
       state: unavailable
-      entity_id: sensor.monitor_state_sensor
+      entity_id: binary_sensor.monitor_state
   actions:
   - choose:
     - conditions:
@@ -1447,7 +1447,7 @@
   - choose:
     - conditions:
       - condition: state
-        entity_id: sensor.monitor_state_sensor
+        entity_id: binary_sensor.monitor_state
         state: 'Off'
       sequence:
       - action: fan.set_percentage
@@ -1457,7 +1457,7 @@
           entity_id: fan.air_purifier
     - conditions:
       - condition: state
-        entity_id: sensor.monitor_state_sensor
+        entity_id: binary_sensor.monitor_state
         state: 'On'
       sequence:
       - action: fan.set_percentage
@@ -1472,7 +1472,7 @@
   description: ''
   triggers:
   - trigger: state
-    entity_id: sensor.monitor_state_sensor
+    entity_id: binary_sensor.monitor_state
     to: 'On'
   conditions:
   - condition: template
@@ -1492,7 +1492,7 @@
   description: ''
   triggers:
   - trigger: state
-    entity_id: sensor.monitor_state_sensor
+    entity_id: binary_sensor.monitor_state
     to: 'Off'
   actions:
   - choose:
@@ -2166,7 +2166,7 @@
     entity_id: input_boolean.alarm_enabled
     state: 'on'
   - condition: state
-    entity_id: sensor.monitor_state_sensor
+    entity_id: binary_sensor.monitor_state
     state: 'Off'
   actions:
   - choose:
@@ -3741,7 +3741,7 @@
   triggers:
   - trigger: state
     entity_id:
-    - sensor.monitor_state_sensor
+    - binary_sensor.monitor_state
     to: 'On'
   conditions:
   - condition: state
