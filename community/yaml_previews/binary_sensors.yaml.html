@@ -17,21 +17,21 @@
   sensors:
     living_room_occupancy_scene:
       friendly_name: &quot;Living Room Occupancy Scene Saved&quot;
-      unique_id: &quot;living_room_occupancy_scene_saved_sensor&quot;
+      unique_id: living_room_occupancy_scene_saved_sensor
       device_class: occupancy
       value_template: &quot;{{ is_state(&#x27;input_boolean.living_room_occupancy_scene_saved&#x27;, &#x27;on&#x27;) }}&quot;
-      icon_template: &gt;
+      icon_template: &gt;-
         {% if is_state(&#x27;input_boolean.living_room_occupancy_scene_saved&#x27;, &#x27;on&#x27;) %}
           mdi:check-circle
         {% else %}
           mdi:close-circle
         {% endif %}
-  
+
     snake_plant_growing_season:
       friendly_name: &quot;Snake Plant Growing Season&quot;
-      unique_id: &quot;snake_plant_growing_season_sensor&quot;
+      unique_id: snake_plant_growing_season_sensor
       value_template: &quot;{{ now().month &gt;= 3 and now().month &lt;= 9 }}&quot;
-      icon_template: &gt;
+      icon_template: &gt;-
         {% if now().month &gt;= 3 and now().month &lt;= 9 %}
           mdi:leaf
         {% else %}
@@ -40,13 +40,13 @@
 
     pc_status:
       friendly_name: &quot;PC Status&quot;
-      unique_id: &quot;pc_status_sensor&quot;
+      unique_id: pc_status_sensor
       device_class: power
-      value_template: &gt;
+      value_template: &gt;-
         {% set pc_on = is_state(&#x27;input_boolean.pc_on&#x27;, &#x27;on&#x27;) %}
         {% set active_window = states(&#x27;sensor.activewindow_filtered&#x27;) %}
         {{ pc_on and active_window != &#x27;Off&#x27; }}
-      icon_template: &gt;
+      icon_template: &gt;-
         {% if is_state(&#x27;binary_sensor.pc_status&#x27;, &#x27;on&#x27;) %}
           mdi:television-ambient-light
         {% else %}
@@ -55,11 +55,10 @@
 
     philips_sonicare_toothbrush:
       friendly_name: &quot;Toothbrush&quot;
-      unique_id: &quot;philips_sonicare_toothbrush_sensor&quot;
+      unique_id: philips_sonicare_toothbrush_sensor
       device_class: presence
-      value_template: &gt;
-        {{ is_state(&#x27;device_tracker.ble_tracker_toothbrush&#x27;, &#x27;home&#x27;) }}
-      icon_template: &gt;
+      value_template: &quot;{{ is_state(&#x27;device_tracker.ble_tracker_toothbrush&#x27;, &#x27;home&#x27;) }}&quot;
+      icon_template: &gt;-
         {% if is_state(&#x27;binary_sensor.philips_sonicare_toothbrush&#x27;, &#x27;on&#x27;) %}
           mdi:tooth
         {% else %}
@@ -70,13 +69,13 @@
       friendly_name: &quot;Monitor State&quot;
       unique_id: monitor_state_sensor
       device_class: power
-      value_template: &gt;
+      value_template: &gt;-
         {{ is_state(&#x27;remote.monitor&#x27;, &#x27;on&#x27;)
             or is_state(&#x27;media_player.monitor&#x27;, &#x27;on&#x27;)
             or is_state(&#x27;media_player.monitor&#x27;, &#x27;playing&#x27;)
             or is_state(&#x27;media_player.monitor_google&#x27;, &#x27;on&#x27;)
             or is_state(&#x27;media_player.monitor_google&#x27;, &#x27;playing&#x27;) }}
-      icon_template: &gt;
+      icon_template: &gt;-
         {% if is_state(&#x27;binary_sensor.monitor_state&#x27;, &#x27;on&#x27;) %}
           mdi:monitor
         {% elif is_state(&#x27;binary_sensor.monitor_state&#x27;, &#x27;off&#x27;) %}
@@ -84,16 +83,16 @@
         {% else %}
           mdi:alert
         {% endif %}
-    
+
     living_room_tv_state:
       friendly_name: &quot;Living Room TV State&quot;
       unique_id: living_room_tv_state_sensor
       device_class: power
-      value_template: &gt;
+      value_template: &gt;-
         {{ is_state(&#x27;remote.living_room_tv&#x27;, &#x27;on&#x27;)
             or is_state(&#x27;media_player.living_room_chromecast&#x27;, &#x27;on&#x27;)
             or is_state(&#x27;media_player.living_room_chromecast&#x27;, &#x27;playing&#x27;) }}
-      icon_template: &gt;
+      icon_template: &gt;-
         {% if is_state(&#x27;binary_sensor.living_room_tv_state&#x27;, &#x27;on&#x27;) %}
           mdi:television
         {% elif is_state(&#x27;binary_sensor.living_room_tv_state&#x27;, &#x27;off&#x27;) %}
