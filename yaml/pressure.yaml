@@ -1,12 +1,7 @@
-packages: 
-  brush_1:
-    url: https://github.com/andrecall/esphome-sonicare
-    files:
-      - path: packages/sonicare.yaml
-        vars:
-          mac: "24:E5:AA:5C:A8:A0"
-          id: "hugh_toothbrush"
-          name: "Hugh Toothbrush"
+substitutions:
+  mac: "24:E5:AA:5C:A8:A0"
+  id: "hugh_toothbrush"
+  name: "Hugh Toothbrush"
 
 esphome:
   name: pressure
@@ -65,4 +60,6 @@ binary_sensor:
       - delayed_on: 2s
       - delayed_off: 2s
 
+packages:
+  brush_1: !include ../sonicare.yaml
 
