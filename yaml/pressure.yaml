@@ -1,3 +1,8 @@
+substitutions:
+  brush_mac: "24:E5:AA:5C:A8:A0"
+  brush_id: "hugh_toothbrush"
+  brush_name: "Hugh Toothbrush"
+
 esphome:
   name: pressure
   friendly_name: Pressure
@@ -57,9 +62,4 @@ binary_sensor:
 
 # Sonicare toothbrush BLE package
 packages:
-  brush_1:
-    <<: !include_with_vars ../sonicare.yaml
-    vars:
-      mac: "24:E5:AA:5C:A8:A0"
-      id: "hugh_toothbrush"
-      name: "Hugh Toothbrush"
+  brush_1: !include ../sonicare.yaml
