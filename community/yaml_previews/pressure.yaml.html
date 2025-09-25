@@ -13,15 +13,10 @@
                 <h1>Viewing: pressure.yaml</h1>
             </div>
             <div class="scrollable-content">
-                <pre class="yaml-content">packages: 
-  brush_1:
-    url: https://github.com/andrecall/esphome-sonicare
-    files:
-      - path: packages/sonicare.yaml
-        vars:
-          mac: &quot;24:E5:AA:5C:A8:A0&quot;
-          id: &quot;hugh_toothbrush&quot;
-          name: &quot;Hugh Toothbrush&quot;
+                <pre class="yaml-content">substitutions:
+  mac: &quot;24:E5:AA:5C:A8:A0&quot;
+  id: &quot;hugh_toothbrush&quot;
+  name: &quot;Hugh Toothbrush&quot;
 
 esphome:
   name: pressure
@@ -80,6 +75,8 @@ binary_sensor:
       - delayed_on: 2s
       - delayed_off: 2s
 
+packages:
+  brush_1: !include ../sonicare.yaml
 
 </pre>
             </div>
