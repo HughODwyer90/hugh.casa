@@ -350,6 +350,9 @@
   - action: shell_command.update_liverpool_channel
     metadata: {}
     data: {}
+  - action: shell_command.patch_tuya_diffuser
+    metadata: {}
+    data: {}
   - data:
       message: System has restarted and is now ready.
     action: notify.notifications
@@ -1448,8 +1451,9 @@
   description: ''
   triggers:
   - trigger: state
-    entity_id: binary_sensor.monitor_state
-    to: 'On'
+    entity_id:
+    - binary_sensor.monitor_state
+    to: 'on'
   conditions:
   - condition: template
     value_template: '{{ state_attr(''fan.air_purifier'', ''percentage'') != 33 }}'
@@ -4073,17 +4077,9 @@
         entity_id: switch.hugh_room_plug_blanket
         state: 'off'
       sequence:
-      - choose:
-        - conditions:
-          - condition: state
-            entity_id: scene.diffuser_previous
-            state: scening
-          sequence:
-          - action: scene.apply
-            data:
-              scene_id: diffuser_previous
-        default:
-        - action: light.turn_off
-          target:
-            entity_id: light.aroma_diffuser
+      - data:
+          entities:
+          - light.aroma_diffuser
+          scene_id: diffuser_previous
+        action: scene.apply
   mode: single
