@@ -14,18 +14,22 @@
             </div>
             <div class="scrollable-content">
                 <pre class="yaml-content">esphome:
-  name: esphome-web-16e904
+  name: pressure
   friendly_name: Pressure
   compile_process_limit: 1
-  
+
 esp32:
   board: esp32dev
   framework:
     type: arduino
 
+# Enable BLE support
+esp32_ble_tracker:
+
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
+  power_save_mode: none  # Recommended for stable BLE
   manual_ip:
     static_ip: 192.168.0.201
     gateway: 192.168.0.1
@@ -39,11 +43,10 @@ api:
     key: !secret pressure_api
 
 ota:
-  platform:
-    esphome
 
 captive_portal:
-    
+
+# GPIO-based pressure sensors
 binary_sensor:
   - platform: gpio
     pin:
@@ -66,7 +69,15 @@ binary_sensor:
     filters:
       - delayed_on: 2s
       - delayed_off: 2s
-</pre>
+
+# Sonicare toothbrush BLE package
+packages:
+  brush_1:
+    &lt;&lt;: !include_with_vars ../sonicare.yaml
+    vars:
+      mac: &quot;24:E5:AA:5C:A8:A0&quot;
+      id: &quot;hugh_toothbrush&quot;
+      name: &quot;Hugh Toothbrush&quot;</pre>
             </div>
             <script>
                 (function fixPaths() {
