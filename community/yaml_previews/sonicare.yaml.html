@@ -75,8 +75,6 @@ sensor:
     unit_of_measurement: &quot;%&quot;
     accuracy_decimals: 0
     device_class: battery
-    filters:
-      - filter_out: &quot;nan&quot;
 
   - platform: ble_client
     ble_client_id: hugh_toothbrush
@@ -90,9 +88,6 @@ sensor:
     device_class: duration
     accuracy_decimals: 0
     unit_of_measurement: s
-    filters:
-      - filter_out: &quot;nan&quot;
-      - filter_out: &quot;0&quot;
 
   - platform: ble_client
     ble_client_id: hugh_toothbrush
@@ -104,8 +99,6 @@ sensor:
     notify: True
     update_interval: never
     internal: true
-    filters:
-      - filter_out: &quot;nan&quot;
     on_value:
       then:
         - component.update: hugh_toothbrush_toothbrush_state
@@ -120,8 +113,6 @@ sensor:
     notify: True
     update_interval: never
     internal: true
-    filters:
-      - filter_out: &quot;nan&quot;
     on_value:
       then:
         - component.update: hugh_toothbrush_toothbrush_mode
@@ -136,8 +127,6 @@ sensor:
     notify: True
     update_interval: never
     internal: true
-    filters:
-      - filter_out: &quot;nan&quot;
     on_value:
       then:
         - component.update: hugh_toothbrush_toothbrush_head
@@ -152,8 +141,6 @@ sensor:
     notify: True
     update_interval: never
     internal: true
-    filters:
-      - filter_out: &quot;nan&quot;
     on_value:
       then:
         - component.update: hugh_toothbrush_toothbrush_head
@@ -170,8 +157,6 @@ sensor:
       return (float(x[0]) + 1);
     notify: True
     update_interval: never
-    filters:
-      - filter_out: &quot;nan&quot;
 
 text_sensor:
   - platform: template
