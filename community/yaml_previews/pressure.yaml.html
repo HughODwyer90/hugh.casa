@@ -13,10 +13,7 @@
                 <h1>Viewing: pressure.yaml</h1>
             </div>
             <div class="scrollable-content">
-                <pre class="yaml-content">packages:
-  brush_1: !include /config/sonicare.yaml
-
-esphome:
+                <pre class="yaml-content">esphome:
   name: pressure
   friendly_name: Pressure
   compile_process_limit: 1
@@ -26,13 +23,12 @@ esp32:
   framework:
     type: arduino
 
-# Enable BLE support
 esp32_ble_tracker:
 
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
-  power_save_mode: none  # Recommended for stable BLE
+  power_save_mode: none
   manual_ip:
     static_ip: 192.168.0.201
     gateway: 192.168.0.1
@@ -49,7 +45,25 @@ ota:
 
 captive_portal:
 
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: 13
+      inverted: true
+      mode: INPUT_PULLUP
+    name: Rug Sensor
+    device_class: occupancy
 
+  - platform: gpio
+    pin:
+      number: 15
+      inverted: true
+      mode: INPUT_PULLUP
+    name: Bed Sensor
+    device_class: occupancy
+
+packages:
+  brush_1: !include /config/sonicare.yaml
 </pre>
             </div>
             <script>
