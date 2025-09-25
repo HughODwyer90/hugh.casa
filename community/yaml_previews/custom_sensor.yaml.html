@@ -77,17 +77,6 @@
           mdi:fan
         {% endif %}
 
-    living_room_occupancy_scene:
-      friendly_name: &quot;Living Room Occupancy Scene Saved&quot;
-      unique_id: &quot;living_room_occupancy_scene_saved_sensor&quot;
-      value_template: &quot;{{ is_state(&#x27;input_boolean.living_room_occupancy_scene_saved&#x27;, &#x27;on&#x27;) }}&quot;
-      icon_template: &gt;
-        {% if is_state(&#x27;input_boolean.living_room_occupancy_scene_saved&#x27;, &#x27;on&#x27;) %}
-          mdi:check-circle
-        {% else %}
-          mdi:close-circle
-        {% endif %}
-
     previous_bathroom_humidity:
       friendly_name: &quot;Previous Bathroom Humidity&quot;
       unique_id: &quot;previous_bathroom_humidity_sensor&quot;
