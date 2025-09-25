@@ -852,8 +852,8 @@
         entity_id: binary_sensor.bed_sensor
         state: 'off'
       - condition: state
-        entity_id: input_boolean.pc_on
         state: 'off'
+        entity_id: binary_sensor.pc_status
       - condition: state
         entity_id: input_boolean.wake_up_alarm_running
         state: 'off'
@@ -1372,8 +1372,8 @@
     after: '22:00:00'
     before: 08:00:00
   - condition: state
-    entity_id: input_boolean.pc_on
     state: 'off'
+    entity_id: binary_sensor.pc_status
   - condition: state
     entity_id: input_boolean.wake_up_alarm_running
     state: 'off'
@@ -4033,4 +4033,62 @@
         - action: light.turn_off
           target:
             entity_id: light.aroma_diffuser
+  mode: single
+- id: '1758841212768'
+  alias: Hugh Room Monitor Sync
+  description: Handles purifier and lights when monitor turns on/off
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.monitor_state
+  actions:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.monitor_state
+        state: 'off'
+      sequence:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: binary_sensor.bed_sensor
+            state: 'on'
+          sequence:
+          - action: scene.turn_on
+            target:
+              entity_id: scene.hugh_room_all_lights_off
+            data:
+              transition: 1
+          - condition: template
+            value_template: '{{ state_attr(''fan.air_purifier'', ''percentage'') !=
+              66 }}'
+          - action: fan.set_percentage
+            data:
+              percentage: 66
+            target:
+              entity_id: fan.air_purifier
+        default:
+        - condition: template
+          value_template: '{{ state_attr(''fan.air_purifier'', ''percentage'') !=
+            66 }}'
+        - action: fan.set_percentage
+          data:
+            percentage: 66
+          target:
+            entity_id: fan.air_purifier
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.monitor_state
+        state: 'on'
+      sequence:
+      - condition: template
+        value_template: '{{ state_attr(''fan.air_purifier'', ''percentage'') != 33
+          }}'
+      - condition: state
+        entity_id: fan.air_purifier
+        state: 'on'
+      - action: fan.set_percentage
+        data:
+          percentage: 33
+        target:
+          entity_id: fan.air_purifier
   mode: single
