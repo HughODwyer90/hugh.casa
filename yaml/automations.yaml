@@ -1472,8 +1472,9 @@
   description: ''
   triggers:
   - trigger: state
-    entity_id: binary_sensor.monitor_state
-    to: 'Off'
+    entity_id:
+    - binary_sensor.monitor_state
+    to: 'off'
   actions:
   - choose:
     - conditions:
