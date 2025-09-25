@@ -858,7 +858,7 @@
         conditions:
         - condition: state
           entity_id: binary_sensor.monitor_state
-          state: 'Off'
+          state: 'off'
         - condition: state
           entity_id: binary_sensor.monitor_state
           state: unavailable
@@ -1205,7 +1205,7 @@
           conditions:
           - condition: state
             entity_id: sensor.activewindow_filtered
-            state: 'Off'
+            state: 'off'
       sequence:
       - target:
           entity_id: input_boolean.pc_on
@@ -1218,7 +1218,7 @@
           below: 50
         - condition: state
           entity_id: sensor.activewindow_filtered
-          state: 'Off'
+          state: 'off'
       sequence:
       - target:
           entity_id: input_boolean.pc_on
@@ -1404,7 +1404,7 @@
   - condition: or
     conditions:
     - condition: state
-      state: 'Off'
+      state: 'off'
       entity_id: binary_sensor.monitor_state
     - condition: state
       state: unavailable
@@ -1448,7 +1448,7 @@
     - conditions:
       - condition: state
         entity_id: binary_sensor.monitor_state
-        state: 'Off'
+        state: 'off'
       sequence:
       - action: fan.set_percentage
         data:
@@ -1458,7 +1458,7 @@
     - conditions:
       - condition: state
         entity_id: binary_sensor.monitor_state
-        state: 'On'
+        state: 'on'
       sequence:
       - action: fan.set_percentage
         data:
@@ -2167,7 +2167,7 @@
     state: 'on'
   - condition: state
     entity_id: binary_sensor.monitor_state
-    state: 'Off'
+    state: 'off'
   actions:
   - choose:
     - conditions:
@@ -3988,7 +3988,7 @@
     - conditions:
       - condition: state
         entity_id: binary_sensor.pc_status
-        state: 'On'
+        state: 'on'
       sequence:
       - action: light.turn_on
         metadata: {}
@@ -4008,7 +4008,7 @@
     - conditions:
       - condition: state
         entity_id: binary_sensor.pc_status
-        state: 'Off'
+        state: 'off'
       sequence:
       - action: fan.set_percentage
         metadata: {}
