@@ -1,0 +1,242 @@
+# Originates in https://github.com/iamjoshk/home-assistant-collection/blob/main/ESPHome/Sonicare/esphome_sonicare_ble.yaml
+# and https://github.com/v6ak/esphome-collection/blob/main/packages/sonicare.yaml
+
+ble_client:
+  - mac_address: ${mac}
+    id: ${id}
+    name: ${name}
+    auto_connect: true
+    on_connect:
+      then:
+        - lambda: |-
+            id(${id}_connected) = true;
+            ESP_LOGD("ble_client_lambda", "Connected to ${name}");
+            // require updates of battery state, because notifications don't always work for battery
+            // https://community.home-assistant.io/t/dynamically-change-update-interval/108074/11
+            id(${id})->pair();
+            id(${id}_toothbrush_battery_value).set_update_interval(15 * 1000 /* unit:ms */);
+            id(${id}_toothbrush_battery_value).call_setup();
+            id(${id}_toothbrush_head_nfc).set_update_interval(10 * 1000 /* unit:ms */);
+            id(${id}_toothbrush_head_nfc).call_setup();
+            id(${id}_toothbrush_head_id).set_update_interval(11 * 1000 /* unit:ms */);
+            id(${id}_toothbrush_head_id).call_setup();
+            id(${id}_toothbrush_strength).set_update_interval(10 * 1000 /* unit:ms */);
+            id(${id}_toothbrush_strength).call_setup();
+
+    on_disconnect:
+      then:
+        - lambda: |-
+            id(${id}_connected) = false;
+            ESP_LOGD("ble_client_lambda", "Disconnected from ${name}");
+            // https://community.home-assistant.io/t/dynamically-change-update-interval/108074/11
+            id(${id}_toothbrush_battery_value).set_update_interval(UINT32_MAX /* = never */);
+            id(${id}_toothbrush_battery_value).call_setup();
+            id(${id}_toothbrush_head_nfc).set_update_interval(UINT32_MAX /* = never */);
+            id(${id}_toothbrush_head_nfc).call_setup();
+            id(${id}_toothbrush_head_id).set_update_interval(UINT32_MAX /* = never */);
+            id(${id}_toothbrush_head_id).call_setup();
+            id(${id}_toothbrush_strength).set_update_interval(UINT32_MAX /* = never */);
+            id(${id}_toothbrush_strength).call_setup();
+
+globals:
+
+  - id: ${id}_connected
+    type: bool
+    restore_value: no
+    initial_value: 'false'
+
+binary_sensor:
+
+  - platform: template
+    name: ${name} Connection
+    id: ${id}_ble_connection
+    icon: "mdi:bluetooth-connect"
+    lambda: |-
+      return id(${id}_connected);
+    device_class: connectivity
+
+sensor:
+
+  - platform: ble_client
+    ble_client_id: ${id}
+    id: ${id}_toothbrush_battery_value
+    name: ${name} Battery
+    type: characteristic
+    service_uuid: 180F
+    characteristic_uuid: 2A19
+    notify: True  # event-driven
+    update_interval: never  # prevent polling, as the state is already updated by events
+    unit_of_measurement: '%'
+    accuracy_decimals: 0
+    device_class: battery
+    filters:
+      - filter_out:
+        - nan  # We get NaN when disconnected.
+
+  - platform: ble_client
+    ble_client_id: ${id}
+    id: ${id}_toothbrush_active_seconds
+    name: ${name} Active Time
+    type: characteristic
+    service_uuid: 477ea600-a260-11e4-ae37-0002a5d50002
+    characteristic_uuid: 477ea600-a260-11e4-ae37-0002a5d54090
+    notify: True  # event-driven
+    update_interval: never  # prevent polling, as the state is already updated by events
+    device_class: duration
+    accuracy_decimals: 0
+    unit_of_measurement: s
+    filters:
+      - filter_out:
+        - nan  # We get NaN when disconnected.
+        - "0" # or We can get 0 when disconnected too
+
+  - platform: ble_client
+    ble_client_id: ${id}
+    id: ${id}_toothbrush_state_id
+    name: ${name} status id
+    type: characteristic
+    service_uuid: 477ea600-a260-11e4-ae37-0002a5d50001
+    characteristic_uuid: 477ea600-a260-11e4-ae37-0002a5d54010
+    notify: True  # event-driven
+    update_interval: never  # prevent polling, as the state is already updated by events
+    internal: true
+    filters:
+      - filter_out:
+        - nan  # We get NaN when disconnected.
+    on_value:
+      then:
+         - component.update: ${id}_toothbrush_state
+
+  - platform: ble_client
+    ble_client_id: ${id}
+    id: ${id}_toothbrush_mode_id
+    name: ${name} mode id
+    type: characteristic
+    service_uuid: 477ea600-a260-11e4-ae37-0002a5d50002
+    characteristic_uuid: 477ea600-a260-11e4-ae37-0002a5d54080
+    notify: True  # event-driven
+    update_interval: never  # prevent polling, as the state is already updated by events
+    internal: true
+    filters:
+      - filter_out:
+        - nan  # We get NaN when disconnected.
+    on_value:
+      then:
+         - component.update: ${id}_toothbrush_mode
+
+  - platform: ble_client
+    ble_client_id: ${id}
+    id: ${id}_toothbrush_head_id
+    name: ${name} head id
+    type: characteristic
+    service_uuid: 477ea600-a260-11e4-ae37-0002a5d50006
+    characteristic_uuid: 477ea600-a260-11e4-ae37-0002a5d54220
+    notify: True  # event-driven
+    update_interval: never  # prevent polling, as the state is already updated by events
+    internal: true
+    filters:
+      - filter_out:
+        - nan  # We get NaN when disconnected.
+    on_value:
+      then:
+         - component.update: ${id}_toothbrush_head
+
+  - platform: ble_client
+    ble_client_id: ${id}
+    id: ${id}_toothbrush_head_nfc
+    name: ${name} head nfc
+    type: characteristic
+    service_uuid: 477ea600-a260-11e4-ae37-0002a5d50006
+    characteristic_uuid: 477ea600-a260-11e4-ae37-0002a5d542a0
+    notify: True  # event-driven
+    update_interval: never  # prevent polling, as the state is already updated by events
+    internal: true
+    filters:
+      - filter_out:
+        - nan  # We get NaN when disconnected.
+    on_value:
+      then:
+         - component.update: ${id}_toothbrush_head
+
+  - platform: ble_client
+    ble_client_id: ${id}
+    id: ${id}_toothbrush_strength
+    icon: "mdi:toothbrush-electric"
+    name: ${name} Strength
+    type: characteristic
+    service_uuid: 477ea600-a260-11e4-ae37-0002a5d50002
+    characteristic_uuid: 477ea600-a260-11e4-ae37-0002a5d540b0
+    lambda: |-
+      return (float(x[0])+1);
+    notify: True # event-driven 
+    update_interval: never # prevent polling, as the state is already updated by events 
+    filters:
+      - filter_out:
+        - nan  # We get NaN when disconnected.
+
+text_sensor:
+  - platform: template
+    name: ${name} State
+    id: ${id}_toothbrush_state
+    icon: "mdi:toothbrush-electric"
+    update_interval: never
+    lambda: |-
+      if (id(${id}_toothbrush_state_id).state == 0) {
+        return {"Off"};
+      } else if (id(${id}_toothbrush_state_id).state == 1) {
+        return {"Standby"};
+      } else if (id(${id}_toothbrush_state_id).state == 2) {
+        return {"Run"};
+      } else if (id(${id}_toothbrush_state_id).state == 3) {
+        return {"Charge"};
+      } else if (id(${id}_toothbrush_state_id).state == 5) {
+        return {"Shutdown"};
+      } else if (id(${id}_toothbrush_state_id).state == 6) {
+        return {"Validate"};
+      } else if (id(${id}_toothbrush_state_id).state == 7) {
+        return {"LightsOut"};
+      } else {
+        return {};
+      }
+
+  - platform: template
+    name: ${name} Mode
+    id: ${id}_toothbrush_mode
+    icon: "mdi:toothbrush-electric"
+    update_interval: never
+    lambda: |-
+      if (id(${id}_toothbrush_mode_id).state == 0) {
+        return {"Clean"};
+      } else if (id(${id}_toothbrush_mode_id).state == 1) {
+        return {"White+"};
+      } else if (id(${id}_toothbrush_mode_id).state == 2) {
+        return {"Gum Health"};
+      } else if (id(${id}_toothbrush_mode_id).state == 3) {
+        return {"Deep Clean+"};
+      } else {
+        return {};
+      }
+
+  - platform: template
+    name: ${name} Head
+    id: ${id}_toothbrush_head
+    icon: "mdi:toothbrush-electric"
+    update_interval: never
+    lambda: |-
+      if (id(${id}_toothbrush_head_nfc).state == 1) {
+        if (id(${id}_toothbrush_head_id).state == 0) {
+          return {"Adaptive Clean"};
+        } else if (id(${id}_toothbrush_head_id).state == 1) {
+          return {"Adaptive White"};
+        } else if (id(${id}_toothbrush_head_id).state == 2) {
+          return {"Tongue Care"};
+        } else if (id(${id}_toothbrush_head_id).state == 3) {
+          return {"Adaptive Gums"};
+        } else {
+          return {"Unknown"};
+        }
+      } else if (id(${id}_toothbrush_head_nfc).state == 0) {
+        return {"N/A"};
+      } else {
+        return {};
+      }
