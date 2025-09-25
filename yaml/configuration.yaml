@@ -12,12 +12,11 @@ automation: !include automations.yaml
 google_assistant: !include google.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
-sensor: !include custom_sensor_template.yaml
-binary_sensor: !include custom_sensor_binary.yaml
 notify: !include notifications.yaml
 python_script: !include_dir_merge_named python_scripts
 shell_command: !include shell_commands.yaml
 rest_command: !include custom_command.yaml
+template: !include_dir_merge_list custom_sensors/
 
 recorder:
   exclude:
