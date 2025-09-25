@@ -10,7 +10,13 @@ from html_generator import HTMLGenerator
 
 # File paths
 EXCLUDE_FILE_PATH = "/config/text_files/excluded_files.txt"
-YAML_DIRS = ["/config", "/config/custom_sensors", "/config/esphome"]
+YAML_DIRS = [
+    "/config",
+    "/config/custom_sensors_template",
+    "/config/custom_sensors_binary",
+    "/config/esphome"
+]
+
 PYTHON_SCRIPTS_DIR = "/config/python_scripts"
 ASSETS_DIR = "/config/www/community/assets"
 HA_BASE_URL = "http://homeassistant.local:8123"
