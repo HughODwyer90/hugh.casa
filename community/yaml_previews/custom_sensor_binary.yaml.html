@@ -13,20 +13,31 @@
                 <h1>Viewing: custom_sensor_binary.yaml</h1>
             </div>
             <div class="scrollable-content">
-                <pre class="yaml-content">binary_sensor:
-  - platform: template
-    sensors:
-      living_room_occupancy_scene:
-        friendly_name: &quot;Living Room Occupancy Scene Saved&quot;
-        unique_id: &quot;living_room_occupancy_scene_saved_sensor&quot;
-        device_class: occupancy
-        value_template: &quot;{{ is_state(&#x27;input_boolean.living_room_occupancy_scene_saved&#x27;, &#x27;on&#x27;) }}&quot;
-        icon_template: &gt;
-          {% if is_state(&#x27;input_boolean.living_room_occupancy_scene_saved&#x27;, &#x27;on&#x27;) %}
-            mdi:check-circle
-          {% else %}
-            mdi:close-circle
-          {% endif %}
+                <pre class="yaml-content">- platform: template
+  sensors:
+    living_room_occupancy_scene:
+      friendly_name: &quot;Living Room Occupancy Scene Saved&quot;
+      unique_id: &quot;living_room_occupancy_scene_saved_sensor&quot;
+      device_class: occupancy
+      value_template: &quot;{{ is_state(&#x27;input_boolean.living_room_occupancy_scene_saved&#x27;, &#x27;on&#x27;) }}&quot;
+      icon_template: &gt;
+        {% if is_state(&#x27;input_boolean.living_room_occupancy_scene_saved&#x27;, &#x27;on&#x27;) %}
+          mdi:check-circle
+        {% else %}
+          mdi:close-circle
+        {% endif %}
+  
+    snake_plant_growing_season:
+      friendly_name: &quot;Snake Plant Growing Season&quot;
+      unique_id: &quot;snake_plant_growing_season_sensor&quot;
+      device_class: season
+      value_template: &quot;{{ now().month &gt;= 3 and now().month &lt;= 9 }}&quot;
+      icon_template: &gt;
+        {% if now().month &gt;= 3 and now().month &lt;= 9 %}
+          mdi:leaf
+        {% else %}
+          mdi:snowflake
+        {% endif %}
 </pre>
             </div>
             <script>
