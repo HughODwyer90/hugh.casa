@@ -157,6 +157,7 @@
         {% else %}
           Unknown
         {% endif %}
+
     monitor_state_sensor:
       friendly_name: "Monitor State"
       unique_id: monitor_state_sensor
@@ -249,22 +250,6 @@
           {% endif %}
         {% else %}
           Unknown
-        {% endif %}
-
-    snake_plant_growing_season:
-      friendly_name: "Snake Plant Growing Season"
-      unique_id: "snake_plant_growing_season_sensor"
-      value_template: >
-        {% if now().month >= 3 and now().month <= 9 %}
-          Yes
-        {% else %}
-          No
-        {% endif %}
-      icon_template: >
-        {% if now().month >= 3 and now().month <= 9 %}
-          mdi:leaf
-        {% else %}
-          mdi:snowflake
         {% endif %}
 
     car_gps_latitude:
