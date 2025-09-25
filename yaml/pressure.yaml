@@ -34,26 +34,4 @@ ota:
 
 captive_portal:
 
-# GPIO-based pressure sensors
-binary_sensor:
-  - platform: gpio
-    pin:
-      number: 13
-      inverted: true
-      mode: INPUT_PULLUP
-    name: Rug Sensor
-    device_class: occupancy
-    filters:
-      - delayed_on: 0s
-      - delayed_off: 5s
 
-  - platform: gpio
-    pin:
-      number: 16   # swapped from GPIO15 (strapping pin) → safer choice
-      inverted: true
-      mode: INPUT_PULLUP
-    name: Bed Sensor
-    device_class: occupancy
-    filters:
-      - delayed_on: 2s
-      - delayed_off: 2s
