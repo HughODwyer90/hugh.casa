@@ -73,7 +73,11 @@ binary_sensor:
     device_class: occupancy
     filters:
       - delayed_on: 2s
-      - delayed_off: 2s</pre>
+      - delayed_off: 2s
+
+  - platform: ble_presence
+      mac_address: &quot;24:E5:AA:5C:A8:A0&quot;
+          name: &quot;Sonicare Present&quot;</pre>
             </div>
             <script>
                 (function fixPaths() {
