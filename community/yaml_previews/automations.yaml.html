@@ -4092,11 +4092,19 @@
         entity_id: switch.hugh_room_plug_blanket
         state: &#x27;off&#x27;
       sequence:
-      - data:
-          entities:
-          - light.aroma_diffuser
-          scene_id: diffuser_previous
-        action: scene.apply
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: scene.diffuser_previous
+            state: scening
+          sequence:
+          - action: scene.apply
+            data:
+              scene_id: diffuser_previous
+        default:
+        - action: light.turn_off
+          target:
+            entity_id: light.aroma_diffuser
   mode: single
 </pre>
             </div>
