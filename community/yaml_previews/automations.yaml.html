@@ -873,7 +873,7 @@
         conditions:
         - condition: state
           entity_id: binary_sensor.monitor_state
-          state: &#x27;Off&#x27;
+          state: &#x27;off&#x27;
         - condition: state
           entity_id: binary_sensor.monitor_state
           state: unavailable
@@ -1220,7 +1220,7 @@
           conditions:
           - condition: state
             entity_id: sensor.activewindow_filtered
-            state: &#x27;Off&#x27;
+            state: &#x27;off&#x27;
       sequence:
       - target:
           entity_id: input_boolean.pc_on
@@ -1233,7 +1233,7 @@
           below: 50
         - condition: state
           entity_id: sensor.activewindow_filtered
-          state: &#x27;Off&#x27;
+          state: &#x27;off&#x27;
       sequence:
       - target:
           entity_id: input_boolean.pc_on
@@ -1419,7 +1419,7 @@
   - condition: or
     conditions:
     - condition: state
-      state: &#x27;Off&#x27;
+      state: &#x27;off&#x27;
       entity_id: binary_sensor.monitor_state
     - condition: state
       state: unavailable
@@ -1463,7 +1463,7 @@
     - conditions:
       - condition: state
         entity_id: binary_sensor.monitor_state
-        state: &#x27;Off&#x27;
+        state: &#x27;off&#x27;
       sequence:
       - action: fan.set_percentage
         data:
@@ -1473,7 +1473,7 @@
     - conditions:
       - condition: state
         entity_id: binary_sensor.monitor_state
-        state: &#x27;On&#x27;
+        state: &#x27;on&#x27;
       sequence:
       - action: fan.set_percentage
         data:
@@ -2182,7 +2182,7 @@
     state: &#x27;on&#x27;
   - condition: state
     entity_id: binary_sensor.monitor_state
-    state: &#x27;Off&#x27;
+    state: &#x27;off&#x27;
   actions:
   - choose:
     - conditions:
@@ -4003,7 +4003,7 @@
     - conditions:
       - condition: state
         entity_id: binary_sensor.pc_status
-        state: &#x27;On&#x27;
+        state: &#x27;on&#x27;
       sequence:
       - action: light.turn_on
         metadata: {}
@@ -4023,7 +4023,7 @@
     - conditions:
       - condition: state
         entity_id: binary_sensor.pc_status
-        state: &#x27;Off&#x27;
+        state: &#x27;off&#x27;
       sequence:
       - action: fan.set_percentage
         metadata: {}
