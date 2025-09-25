@@ -1,11 +1,3 @@
-substitutions:
-  mac: "24:E5:AA:5C:A8:A0"
-  id: hugh_toothbrush
-  name: "Hugh Toothbrush"
-
-packages:
-  brush: !include ../sonicare.yaml
-
 esphome:
   name: pressure
   friendly_name: Pressure
@@ -62,4 +54,5 @@ binary_sensor:
 
   - platform: ble_presence
     mac_address: "24:E5:AA:5C:A8:A0"
-    name: "Sonicare Present"
+    name: "Toothbrush"
+    timeout: 120s   # ⬅️ Will turn off after 2 minutes without seeing the toothbrush
