@@ -14,9 +14,12 @@
             </div>
             <div class="scrollable-content">
                 <pre class="yaml-content">substitutions:
-  mac: &quot;24:E5:AA:5C:A8:A0&quot;
-  id: &quot;hugh_toothbrush&quot;
-  name: &quot;Hugh Toothbrush&quot;
+  brush_mac: &quot;24:E5:AA:5C:A8:A0&quot;
+  brush_id: &quot;hugh_toothbrush&quot;
+  brush_name: &quot;Hugh Toothbrush&quot;
+
+packages:
+  brush_1: !include /config/sonicare.yaml   # adjust path if needed
 
 esphome:
   name: pressure
@@ -66,7 +69,7 @@ binary_sensor:
 
   - platform: gpio
     pin:
-      number: 15
+      number: 16   # swapped from GPIO15 (strapping pin) → safer choice
       inverted: true
       mode: INPUT_PULLUP
     name: Bed Sensor
@@ -74,10 +77,6 @@ binary_sensor:
     filters:
       - delayed_on: 2s
       - delayed_off: 2s
-
-packages:
-  brush_1: !include ../sonicare.yaml
-
 </pre>
             </div>
             <script>
