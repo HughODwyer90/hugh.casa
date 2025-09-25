@@ -54,14 +54,12 @@ ble_client:
             id(${brush_id}_toothbrush_strength).call_setup();
 
 globals:
-
   - id: ${brush_id}_connected
     type: bool
     restore_value: no
-    initial_value: &#x27;false&#x27;
+    initial_value: &quot;false&quot;
 
 binary_sensor:
-
   - platform: template
     name: ${brush_name} Connection
     id: ${brush_id}_ble_connection
@@ -71,7 +69,6 @@ binary_sensor:
     device_class: connectivity
 
 sensor:
-
   - platform: ble_client
     ble_client_id: ${brush_id}
     id: ${brush_id}_toothbrush_battery_value
@@ -79,14 +76,14 @@ sensor:
     type: characteristic
     service_uuid: 180F
     characteristic_uuid: 2A19
-    notify: True  # event-driven
-    update_interval: never  # prevent polling, as the state is already updated by events
-    unit_of_measurement: &#x27;%&#x27;
+    notify: True # event-driven
+    update_interval: never # prevent polling, as the state is already updated by events
+    unit_of_measurement: &quot;%&quot;
     accuracy_decimals: 0
     device_class: battery
     filters:
       - filter_out:
-        - nan  # We get NaN when disconnected.
+          - nan # We get NaN when disconnected.
 
   - platform: ble_client
     ble_client_id: ${brush_id}
@@ -95,15 +92,15 @@ sensor:
     type: characteristic
     service_uuid: 477ea600-a260-11e4-ae37-0002a5d50002
     characteristic_uuid: 477ea600-a260-11e4-ae37-0002a5d54090
-    notify: True  # event-driven
-    update_interval: never  # prevent polling, as the state is already updated by events
+    notify: True # event-driven
+    update_interval: never # prevent polling, as the state is already updated by events
     device_class: duration
     accuracy_decimals: 0
     unit_of_measurement: s
     filters:
       - filter_out:
-        - nan  # We get NaN when disconnected.
-        - &quot;0&quot; # or We can get 0 when disconnected too
+          - nan # We get NaN when disconnected.
+          - &quot;0&quot; # or We can get 0 when disconnected too
 
   - platform: ble_client
     ble_client_id: ${brush_id}
@@ -112,15 +109,15 @@ sensor:
     type: characteristic
     service_uuid: 477ea600-a260-11e4-ae37-0002a5d50001
     characteristic_uuid: 477ea600-a260-11e4-ae37-0002a5d54010
-    notify: True  # event-driven
-    update_interval: never  # prevent polling, as the state is already updated by events
+    notify: True # event-driven
+    update_interval: never # prevent polling, as the state is already updated by events
     internal: true
     filters:
       - filter_out:
-        - nan  # We get NaN when disconnected.
+          - nan # We get NaN when disconnected.
     on_value:
       then:
-         - component.update: ${brush_id}_toothbrush_state
+        - component.update: ${brush_id}_toothbrush_state
 
   - platform: ble_client
     ble_client_id: ${brush_id}
@@ -129,15 +126,15 @@ sensor:
     type: characteristic
     service_uuid: 477ea600-a260-11e4-ae37-0002a5d50002
     characteristic_uuid: 477ea600-a260-11e4-ae37-0002a5d54080
-    notify: True  # event-driven
-    update_interval: never  # prevent polling, as the state is already updated by events
+    notify: True # event-driven
+    update_interval: never # prevent polling, as the state is already updated by events
     internal: true
     filters:
       - filter_out:
-        - nan  # We get NaN when disconnected.
+          - nan # We get NaN when disconnected.
     on_value:
       then:
-         - component.update: ${brush_id}_toothbrush_mode
+        - component.update: ${brush_id}_toothbrush_mode
 
   - platform: ble_client
     ble_client_id: ${brush_id}
@@ -146,15 +143,15 @@ sensor:
     type: characteristic
     service_uuid: 477ea600-a260-11e4-ae37-0002a5d50006
     characteristic_uuid: 477ea600-a260-11e4-ae37-0002a5d54220
-    notify: True  # event-driven
-    update_interval: never  # prevent polling, as the state is already updated by events
+    notify: True # event-driven
+    update_interval: never # prevent polling, as the state is already updated by events
     internal: true
     filters:
       - filter_out:
-        - nan  # We get NaN when disconnected.
+          - nan # We get NaN when disconnected.
     on_value:
       then:
-         - component.update: ${brush_id}_toothbrush_head
+        - component.update: ${brush_id}_toothbrush_head
 
   - platform: ble_client
     ble_client_id: ${brush_id}
@@ -163,15 +160,15 @@ sensor:
     type: characteristic
     service_uuid: 477ea600-a260-11e4-ae37-0002a5d50006
     characteristic_uuid: 477ea600-a260-11e4-ae37-0002a5d542a0
-    notify: True  # event-driven
-    update_interval: never  # prevent polling, as the state is already updated by events
+    notify: True # event-driven
+    update_interval: never # prevent polling, as the state is already updated by events
     internal: true
     filters:
       - filter_out:
-        - nan  # We get NaN when disconnected.
+          - nan # We get NaN when disconnected.
     on_value:
       then:
-         - component.update: ${brush_id}_toothbrush_head
+        - component.update: ${brush_id}_toothbrush_head
 
   - platform: ble_client
     ble_client_id: ${brush_id}
@@ -183,11 +180,11 @@ sensor:
     characteristic_uuid: 477ea600-a260-11e4-ae37-0002a5d540b0
     lambda: |-
       return (float(x[0])+1);
-    notify: True # event-driven 
-    update_interval: never # prevent polling, as the state is already updated by events 
+    notify: True # event-driven
+    update_interval: never # prevent polling, as the state is already updated by events
     filters:
       - filter_out:
-        - nan  # We get NaN when disconnected.
+          - nan # We get NaN when disconnected.
 
 text_sensor:
   - platform: template
@@ -238,19 +235,19 @@ text_sensor:
     icon: &quot;mdi:toothbrush-electric&quot;
     update_interval: never
     lambda: |-
-      if (id(${id}_toothbrush_head_nfc).state == 1) {
-        if (id(${id}_toothbrush_head_id).state == 0) {
+      if (id(${brush_id}_toothbrush_head_nfc).state == 1) {
+        if (id(${brush_id}_toothbrush_head_id).state == 0) {
           return {&quot;Adaptive Clean&quot;};
-        } else if (id(${id}_toothbrush_head_id).state == 1) {
+        } else if (id(${brush_id}_toothbrush_head_id).state == 1) {
           return {&quot;Adaptive White&quot;};
-        } else if (id(${id}_toothbrush_head_id).state == 2) {
+        } else if (id(${brush_id}_toothbrush_head_id).state == 2) {
           return {&quot;Tongue Care&quot;};
-        } else if (id(${id}_toothbrush_head_id).state == 3) {
+        } else if (id(${brush_id}_toothbrush_head_id).state == 3) {
           return {&quot;Adaptive Gums&quot;};
         } else {
           return {&quot;Unknown&quot;};
         }
-      } else if (id(${id}_toothbrush_head_nfc).state == 0) {
+      } else if (id(${brush_id}_toothbrush_head_nfc).state == 0) {
         return {&quot;N/A&quot;};
       } else {
         return {};
