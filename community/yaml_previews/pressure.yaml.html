@@ -13,9 +13,14 @@
                 <h1>Viewing: pressure.yaml</h1>
             </div>
             <div class="scrollable-content">
-                <pre class="yaml-content">packages:
-  brush_1: !include /config/sonicare.yaml
-  
+                <pre class="yaml-content">substitutions:
+  mac: &quot;24:E5:AA:5C:A8:A0&quot;
+  id: hugh_toothbrush
+  name: &quot;Hugh Toothbrush&quot;
+
+packages:
+  brush: !include ../sonicare.yaml
+
 esphome:
   name: pressure
   friendly_name: Pressure
@@ -31,7 +36,6 @@ esp32_ble_tracker:
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
-  power_save_mode: none
   manual_ip:
     static_ip: 192.168.0.201
     gateway: 192.168.0.1
@@ -44,8 +48,6 @@ api:
   encryption:
     key: !secret pressure_api
 
-ota:
-
 captive_portal:
 
 binary_sensor:
@@ -56,6 +58,9 @@ binary_sensor:
       mode: INPUT_PULLUP
     name: Rug Sensor
     device_class: occupancy
+    filters:
+      - delayed_on: 0s
+      - delayed_off: 5s
 
   - platform: gpio
     pin:
@@ -64,6 +69,10 @@ binary_sensor:
       mode: INPUT_PULLUP
     name: Bed Sensor
     device_class: occupancy
+    filters:
+      - delayed_on: 2s
+      - delayed_off: 2s
+
 
 </pre>
             </div>
