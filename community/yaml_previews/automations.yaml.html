@@ -388,7 +388,7 @@
     - condition: or
       conditions:
       - condition: state
-        entity_id: sensor.pc_status
+        entity_id: binary_sensor.pc_status
         state: &#x27;on&#x27;
       - condition: state
         entity_id: sensor.monitor_state_sensor
@@ -3683,7 +3683,7 @@
   triggers:
   - trigger: state
     entity_id:
-    - sensor.pc_status
+    - binary_sensor.pc_status
     to: &#x27;On&#x27;
   conditions:
   - condition: state
@@ -3991,7 +3991,7 @@
   triggers:
   - trigger: state
     entity_id:
-    - sensor.pc_status
+    - binary_sensor.pc_status
     to:
     for:
       hours: 0
@@ -4002,7 +4002,7 @@
   - choose:
     - conditions:
       - condition: state
-        entity_id: sensor.pc_status
+        entity_id: binary_sensor.pc_status
         state: &#x27;On&#x27;
       sequence:
       - action: light.turn_on
@@ -4022,7 +4022,7 @@
           entity_id: fan.air_purifier
     - conditions:
       - condition: state
-        entity_id: sensor.pc_status
+        entity_id: binary_sensor.pc_status
         state: &#x27;Off&#x27;
       sequence:
       - action: fan.set_percentage
