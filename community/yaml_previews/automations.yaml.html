@@ -4116,9 +4116,10 @@
         state: &#x27;off&#x27;
       sequence:
       - action: scene.apply
-        target:
-          entity_id: scene.diffuser_previous
-        continue_on_error: true
+        data:
+          entities:
+            light.aroma_diffuser: {}
+          scene_id: diffuser_previous
   mode: single
 </pre>
             </div>
