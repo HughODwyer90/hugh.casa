@@ -173,48 +173,6 @@
           Unknown
         {% endif %}
 
-    monitor_state_sensor:
-      friendly_name: &quot;Monitor State&quot;
-      unique_id: monitor_state_sensor
-      value_template: &gt;
-        {% if is_state(&#x27;remote.monitor&#x27;, &#x27;on&#x27;)
-              or is_state(&#x27;media_player.monitor&#x27;, &#x27;on&#x27;)
-              or is_state(&#x27;media_player.monitor&#x27;, &#x27;playing&#x27;)
-              or is_state(&#x27;media_player.monitor_google&#x27;, &#x27;on&#x27;)
-              or is_state(&#x27;media_player.monitor_google&#x27;, &#x27;playing&#x27;) %}
-          On
-        {% else %}
-          Off
-        {% endif %}
-      icon_template: &gt;
-        {% if states(&#x27;sensor.monitor_state_sensor&#x27;) == &quot;On&quot; %}
-          mdi:monitor
-        {% elif states(&#x27;sensor.monitor_state_sensor&#x27;) == &quot;Off&quot; %}
-          mdi:monitor-off
-        {% else %}
-          mdi:alert
-        {% endif %}
-
-    living_room_tv_state_sensor:
-      friendly_name: &quot;Living Room TV State&quot;
-      unique_id: living_room_tv_state_sensor
-      value_template: &gt;
-        {% if is_state(&#x27;remote.living_room_tv&#x27;, &#x27;on&#x27;)
-              or is_state(&#x27;media_player.living_room_chromecast&#x27;, &#x27;on&#x27;)
-              or is_state(&#x27;media_player.living_room_chromecast&#x27;, &#x27;playing&#x27;) %}
-          On
-        {% else %}
-          Off
-        {% endif %}
-      icon_template: &gt;
-        {% if states(&#x27;sensor.living_room_tv_state_sensor&#x27;) == &quot;On&quot; %}
-          mdi:television
-        {% elif states(&#x27;sensor.living_room_tv_state_sensor&#x27;) == &quot;Off&quot; %}
-          mdi:television-off
-        {% else %}
-          mdi:alert
-        {% endif %}
-
     tv_subscription:
       friendly_name: &quot;TV Subscription&quot;
       unique_id: &quot;tv_subscription_sensor&quot;
@@ -542,26 +500,6 @@
             No — Conditions borderline but not all criteria met
           {% endif %}
 
-    pc_status:
-      friendly_name: &quot;PC status&quot;
-      unique_id: &quot;pc_status_sensor&quot;
-      value_template: &gt;
-        {% set pc_on = is_state(&#x27;input_boolean.pc_on&#x27;, &#x27;on&#x27;) %}
-        {% set active_window = states(&#x27;sensor.activewindow_filtered&#x27;) %}
-        {% if pc_on and active_window != &#x27;Off&#x27; %}
-          On
-        {% else %}
-          Off
-        {% endif %}
-      icon_template: &gt;
-        {% set pc_on = is_state(&#x27;input_boolean.pc_on&#x27;, &#x27;on&#x27;) %}
-        {% set active_window = states(&#x27;sensor.activewindow_filtered&#x27;) %}
-        {% if pc_on and active_window != &#x27;Off&#x27; %}
-          mdi:television-ambient-light
-        {% else %}
-          mdi:television
-        {% endif %}
-
     lucifer_activewindow_filtered:
       friendly_name: &quot;Active Window&quot;
       unique_id: &quot;lucifer_activewindow_filtered_sensor&quot;
@@ -734,23 +672,6 @@
           {% endif %}
         {% else %}
           Off
-        {% endif %}
-
-    philips_sonicare_toothbrush:
-      friendly_name: &quot;Toothbrush&quot;
-      unique_id: &quot;philips_sonicare_toothbrush_sensor&quot;
-      value_template: &gt;
-        {% set state = states(&#x27;device_tracker.ble_tracker_toothbrush&#x27;) %}
-        {% if state == &#x27;home&#x27; %}
-          On
-        {% else %}
-          Off
-        {% endif %}
-      icon_template: &gt;
-        {% if states(&#x27;device_tracker.ble_tracker_toothbrush&#x27;) == &#x27;home&#x27; %}
-          mdi:tooth
-        {% else %}
-          mdi:tooth-outline
         {% endif %}
 
     liverpool_tv_channel:
