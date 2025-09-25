@@ -19,7 +19,6 @@ rest_command: !include custom_command.yaml
 sensor: !include_dir_merge_list custom_sensors_template/
 binary_sensor: !include_dir_merge_list custom_sensors_binary/
 
-
 recorder:
   exclude:
     entities:
@@ -63,11 +62,6 @@ http:
     - 192.168.0.0/16
   ip_ban_enabled: true
   login_attempts_threshold: 5
-
-spotcast:
-  sp_dc: !secret sp_dc
-  sp_key: !secret sp_key
-  country: IE
 
 media_player:
   - platform: universal
