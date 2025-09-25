@@ -1,0 +1,170 @@
+- platform: template
+  sensors:
+    network_scanner_devices_list:
+      friendly_name: "Network Scanner Devices List"
+      unique_id: "network_scanner_devices_list_sensor"
+      unit_of_measurement: "devices"
+      value_template: >
+        {% set devices = state_attr('sensor.network_scanner', 'devices') %}
+        {{ devices | count if devices else 0 }}
+      attribute_templates:
+        devices: >
+          {% set devices = state_attr('sensor.network_scanner', 'devices') %}
+          {% if devices %}
+          {% set sorted = devices | sort(attribute='vendor', case_sensitive=False) %}
+          {% for d in sorted %}
+          IP: {{ d.ip.ljust(13) }} | MAC: {{ d.mac.ljust(17) }}  Vendor: {{ d.vendor or 'Unknown' }}
+          .....................................................................
+          {%- endfor %}
+          {% else %}
+            No devices found
+          {% endif %}
+      icon_template: "mdi:lan-connect"
+
+    air_purifier_lifetime:
+      friendly_name: "Air Purifier Filter Life"
+      unique_id: "air_purifier_filter_life_sensor"
+      value_template: "{{ states('sensor.air_purifier_filter_lifetime') }}"
+      unit_of_measurement: "%"
+      icon_template: "{{ 'mdi:air-filter' }}"
+
+    air_purifier_speed:
+      friendly_name: "Air Purifier Fan Speed"
+      unique_id: "air_purifier_fan_speed_sensor"
+      unit_of_measurement: "%"
+      value_template: >
+        {% set state = states('fan.air_purifier') %}
+        {% set speed = state_attr('fan.air_purifier', 'percentage') %}
+        {% if speed in ['unknown', 'unavailable'] %}
+          Offline
+        {% elif state == 'off' %}
+          Off
+        {% else %}
+          {{ speed }}
+        {% endif %}
+      icon_template: >
+        {% set state = states('fan.air_purifier') %}
+        {% if state == 'off' or state_attr('fan.air_purifier', 'percentage') in ['unknown', 'unavailable'] %}
+          mdi:fan-off
+        {% else %}
+          mdi:fan
+        {% endif %}
+
+    previous_bathroom_humidity:
+      friendly_name: "Previous Bathroom Humidity"
+      unique_id: "previous_bathroom_humidity_sensor"
+      icon_template: "{{ 'mdi:water-percent' }}"
+      value_template: >
+        {% set previous_humidity = states('input_number.previous_bathroom_humidity') %}
+        {% if previous_humidity not in ['unknown', 'unavailable'] %}
+          {{ "{:.2f}".format(previous_humidity | float) }}%
+        {% else %}
+          Unknown
+        {% endif %}
+
+    next_bin_collection:
+      friendly_name: "Next Bin Collection"
+      unique_id: "next_bin_collection_sensor"
+      icon_template: "{{ 'mdi:trash-can' }}"
+      value_template: >
+        {% set bin = states('input_text.bin_collection_type') %}
+        {% if bin not in ['unknown', 'unavailable'] %}
+          {{ bin }}
+        {% else %}
+          Unknown
+        {% endif %}
+
+    lucifer_activewindow_filtered:
+      friendly_name: "Active Window"
+      unique_id: "lucifer_activewindow_filtered_sensor"
+      icon_template: "mdi:monitor-eye"
+      value_template: >
+        {% set value = states('sensor.lucifer_activewindow') %}
+        {% if 'Brave' in value %}
+          Brave
+        {% elif 'Chrome' in value %}
+          Chrome
+        {% elif 'Edge' in value %}
+          Edge
+        {% elif 'Firefox' in value %}
+          Firefox
+        {% elif value in ['unknown', 'unavailable'] %}
+          Off
+        {% else %}
+          {{ value }}
+        {% endif %}
+
+    datamars_activewindow_filtered:
+      friendly_name: "Datamars Active Window"
+      unique_id: "datamars_activewindow_filtered_sensor"
+      icon_template: "mdi:monitor-eye"
+      value_template: >
+        {% set value = states('sensor.datamars_activewindow') %}
+        {% if value in ['unknown', 'unavailable'] %}
+          Off
+        {% else %}
+          {{ value }}
+        {% endif %}
+
+    activewindow_filtered:
+      friendly_name: "Active Window"
+      unique_id: "activewindow_filtered_sensor"
+      icon_template: "mdi:monitor-eye"
+      value_template: >
+        {% set lucifer_value = states('sensor.lucifer_activewindow') %}
+        {% set datamars_value = states('sensor.datamars_activewindow') %}
+
+        {% if lucifer_value not in ['unknown', 'unavailable'] %}
+          {% if 'Brave' in lucifer_value %}
+            Brave (Lucifer)
+          {% elif 'Chrome' in lucifer_value %}
+            Chrome (Lucifer)
+          {% elif 'Edge' in lucifer_value %}
+            Edge (Lucifer)
+          {% elif 'Firefox' in lucifer_value %}
+            Firefox (Lucifer)
+          {% else %}
+            {{ lucifer_value }} (Lucifer)
+          {% endif %}
+        {% elif datamars_value not in ['unknown', 'unavailable'] %}
+          {% if 'Brave' in datamars_value %}
+            Brave (Datamars)
+          {% elif 'Chrome' in datamars_value %}
+            Chrome (Datamars)
+          {% elif 'Edge' in datamars_value %}
+            Edge (Datamars)
+          {% elif 'Firefox' in datamars_value %}
+            Firefox (Datamars)
+          {% elif 'Teams' in datamars_value %}
+            Teams (Datamars)
+          {% elif 'Outlook' in datamars_value %}
+            Outlook (Datamars)
+          {% else %}
+            {{ datamars_value }} (Datamars)
+          {% endif %}
+        {% else %}
+          Off
+        {% endif %}
+
+    total_sensors_count:
+      friendly_name: "Total Sensors"
+      unique_id: "total_sensors_count_sensor"
+      icon_template: "mdi:counter"
+      unit_of_measurement: "sensors"
+      value_template: >
+        {{ states | length }}
+
+    work_plug_state_sensor:
+      friendly_name: "Work Plug State"
+      value_template: >
+        {{ states('input_text.work_plug_state') }}
+      icon_template: >
+        {% if states('input_text.work_plug_state') == "On" %}
+          mdi:power-plug
+        {% elif states('input_text.work_plug_state') == "Off" %}
+          mdi:power-plug-off
+        {% else %}
+          mdi:alert
+        {% endif %}
+
+
