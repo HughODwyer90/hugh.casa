@@ -416,10 +416,10 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: sensor.living_room_tv_state_sensor
-      state: &#x27;Off&#x27;
+      entity_id: binary_sensor.living_room_tv_state
+      state: &#x27;off&#x27;
     - condition: state
-      entity_id: sensor.living_room_tv_state_sensor
+      entity_id: binary_sensor.living_room_tv_state
       state: unavailable
   actions:
   - choose:
@@ -1139,14 +1139,14 @@
   triggers:
   - trigger: state
     entity_id:
-    - sensor.living_room_tv_state_sensor
-    from: &#x27;On&#x27;
-    to: &#x27;Off&#x27;
+    - binary_sensor.living_room_tv_state
+    from: &#x27;on&#x27;
+    to: &#x27;off&#x27;
   - trigger: state
     entity_id:
-    - sensor.living_room_tv_state_sensor
-    from: &#x27;Off&#x27;
-    to: &#x27;On&#x27;
+    - binary_sensor.living_room_tv_state
+    from: &#x27;off&#x27;
+    to: &#x27;on&#x27;
   conditions:
   - condition: state
     entity_id: binary_sensor.living_room_epone_occupancy
@@ -1155,8 +1155,8 @@
   - choose:
     - conditions:
       - condition: state
-        entity_id: sensor.living_room_tv_state_sensor
-        state: &#x27;Off&#x27;
+        entity_id: binary_sensor.living_room_tv_state
+        state: &#x27;off&#x27;
       sequence:
       - condition: or
         conditions:
@@ -1174,8 +1174,8 @@
           entity_id: scene.dimmers
     - conditions:
       - condition: state
-        entity_id: sensor.living_room_tv_state_sensor
-        state: &#x27;On&#x27;
+        entity_id: binary_sensor.living_room_tv_state
+        state: &#x27;on&#x27;
       sequence:
       - action: scene.turn_on
         target:
