@@ -17,8 +17,8 @@
 default_config:
 
 #folder_watcher:
-  #- folder: /media/
-  
+#- folder: /media/
+
 # Load frontend themes from the themes folder
 frontend:
   themes: !include_dir_merge_named themes
@@ -27,13 +27,12 @@ automation: !include automations.yaml
 google_assistant: !include google.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
-sensor: !include custom_sensor.yaml
+sensor: !include custom_sensor_template.yaml
 binary_sensor: !include custom_sensor_binary.yaml
 notify: !include notifications.yaml
 python_script: !include_dir_merge_named python_scripts
 shell_command: !include shell_commands.yaml
 rest_command: !include custom_command.yaml
-
 
 recorder:
   exclude:
@@ -66,17 +65,16 @@ homeassistant:
     zone.home:
       radius: 15
   allowlist_external_dirs:
-    - &#x27;/config/messages&#x27;
-    - &#x27;/config/text_files&#x27;
-    - &#x27;/media/&#x27;
-  
+    - &quot;/config/messages&quot;
+    - &quot;/config/text_files&quot;
+    - &quot;/media/&quot;
 
 http:
   use_x_forwarded_for: true
   trusted_proxies:
-      - 172.30.33.0/24
-      - 127.0.0.1
-      - 192.168.0.0/16
+    - 172.30.33.0/24
+    - 127.0.0.1
+    - 192.168.0.0/16
   ip_ban_enabled: true
   login_attempts_threshold: 5
 
@@ -90,15 +88,13 @@ media_player:
     name: universal_player
     children:
       - media_player.hugh_room_stereo
-  
+
 bluetooth:
 
 browser_mod:
   devices:
     hugh-phone-browser:
       name: hugh_phone_browser
-
-
 </pre>
             </div>
             <script>
