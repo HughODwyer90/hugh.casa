@@ -13,7 +13,12 @@
                 <h1>Viewing: sonicare.yaml</h1>
             </div>
             <div class="scrollable-content">
-                <pre class="yaml-content">ble_client:
+                <pre class="yaml-content">substitutions:
+  brush_mac: &quot;24:E5:AA:5C:A8:A0&quot;
+  brush_id: &quot;hugh_toothbrush&quot;
+  brush_name: &quot;Hugh Toothbrush&quot;
+
+ble_client:
   - mac_address: ${brush_mac}
     id: ${brush_id}
     name: ${brush_name}
@@ -24,13 +29,13 @@
             id(${brush_id}_connected) = true;
             ESP_LOGD(&quot;ble_client_lambda&quot;, &quot;Connected to ${brush_name}&quot;);
             id(${brush_id})-&gt;pair();
-            id(${brush_id}_toothbrush_battery_value).set_update_interval(15 * 1000);
+            id(${brush_id}_toothbrush_battery_value).set_update_interval(15000);
             id(${brush_id}_toothbrush_battery_value).call_setup();
-            id(${brush_id}_toothbrush_head_nfc).set_update_interval(10 * 1000);
+            id(${brush_id}_toothbrush_head_nfc).set_update_interval(10000);
             id(${brush_id}_toothbrush_head_nfc).call_setup();
-            id(${brush_id}_toothbrush_head_id).set_update_interval(11 * 1000);
+            id(${brush_id}_toothbrush_head_id).set_update_interval(11000);
             id(${brush_id}_toothbrush_head_id).call_setup();
-            id(${brush_id}_toothbrush_strength).set_update_interval(10 * 1000);
+            id(${brush_id}_toothbrush_strength).set_update_interval(10000);
             id(${brush_id}_toothbrush_strength).call_setup();
 
     on_disconnect:
