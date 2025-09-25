@@ -55,8 +55,8 @@
 
     philips_sonicare_toothbrush:
       friendly_name: &quot;Toothbrush&quot;
+      device_class: power
       unique_id: philips_sonicare_toothbrush_sensor
-      device_class: presence
       value_template: &quot;{{ is_state(&#x27;device_tracker.ble_tracker_toothbrush&#x27;, &#x27;home&#x27;) }}&quot;
       icon_template: &gt;-
         {% if is_state(&#x27;binary_sensor.philips_sonicare_toothbrush&#x27;, &#x27;on&#x27;) %}
