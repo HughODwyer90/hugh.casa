@@ -1,0 +1,324 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>date_sensors.yaml</title>
+            <link rel="stylesheet" id="dynamic-styles">
+            <link rel="icon" id="dynamic-favicon">
+        </head>
+        <body>
+            <div class="fixed-header">
+                <h1>Viewing: date_sensors.yaml</h1>
+            </div>
+            <div class="scrollable-content">
+                <pre class="yaml-content">- platform: template
+  sensors:
+    car_data_expiration:
+      friendly_name: &quot;Car Data Expiration&quot;
+      unique_id: &quot;car_data_expiration_sensor&quot;
+      icon_template: &quot;{{ &#x27;mdi:calendar-clock&#x27; }}&quot;
+      value_template: &gt;
+        {% set expiration_date = states(&#x27;input_datetime.car_data_expiration&#x27;) %}
+        {% if expiration_date not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
+          {% set expiration_dt = as_datetime(expiration_date) %}
+          {% set expiration_day = expiration_dt.date() %}
+          {% set today = now().date() %}
+          {% set days = (expiration_day - today).days %}
+          {% if days &lt; 0 %}
+            Expired
+          {% elif days == 0 %}
+            Today
+          {% elif days == 1 %}
+            Tomorrow
+          {% elif days &lt;= 7 %}
+            {{ expiration_day.strftime(&#x27;%A&#x27;) }}
+          {% else %}
+            {{ expiration_day.strftime(&#x27;%d/%m/%Y&#x27;) }}
+          {% endif %}
+        {% else %}
+          Unknown
+        {% endif %}
+        
+    air_purifier_filter_changed:
+      friendly_name: &quot;Air Purifier Filter Changed&quot;
+      unique_id: &quot;air_purifier_filter_change_sensor&quot;
+      value_template: &gt;
+        {% set last_changed = states(&#x27;input_datetime.hugh_room_filter_changed&#x27;) %}
+        {% if last_changed not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;, &#x27;none&#x27;] %}
+          {{ as_datetime(last_changed).strftime(&#x27;%d/%m/%Y&#x27;) }}
+        {% else %}
+          No Data
+        {% endif %}
+      icon_template: &quot;mdi:calendar-clock&quot;
+
+    next_pay_day:
+      friendly_name: &quot;Next Pay Day&quot;
+      unique_id: &quot;next_pay_day_sensor&quot;
+      icon_template: &quot;{{ &#x27;mdi:currency-usd&#x27; }}&quot;
+      value_template: &gt;
+        {% set next_pay_day = states(&#x27;input_datetime.next_pay_day&#x27;) %}
+        {% if next_pay_day not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
+          {% set next_pay_date = as_timestamp(next_pay_day) %}
+          {% set current_date = as_timestamp(now().strftime(&#x27;%Y-%m-%d&#x27;)) %}
+          {% set days_until_pay = ((next_pay_date - current_date) / 86400) | float | round(0, &#x27;floor&#x27;) %}
+          {% if days_until_pay == 0 %}
+            Today
+          {% elif days_until_pay == 1 %}
+            Tomorrow
+          {% elif days_until_pay &lt;= 7 %}
+            {{ next_pay_date | timestamp_custom(&#x27;%A&#x27;) }}
+          {% else %}
+            {{ next_pay_date | timestamp_custom(&#x27;%d/%m/%Y&#x27;) }}
+          {% endif %}
+        {% else %}
+          Unknown
+        {% endif %}
+
+    next_public_holiday:
+      friendly_name: &quot;Next Public Holiday&quot;
+      unique_id: &quot;next_public_holiday_sensor&quot;
+      icon_template: &quot;{{ &#x27;mdi:beach&#x27; }}&quot;
+      value_template: &gt;
+        {% set next = state_attr(&#x27;calendar.ireland&#x27;, &#x27;start_time&#x27;) %}
+        {% if next not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;, None] %}
+          {% set next_holiday_date = as_datetime(next).date() %}
+          {% set current_date = now().date() %}
+          {% set days_until = (next_holiday_date - current_date).days %}
+          {% if days_until == 0 %}
+            Today
+          {% elif days_until == 1 %}
+            Tomorrow
+          {% elif days_until &lt;= 7 %}
+            {{ next_holiday_date.strftime(&#x27;%A&#x27;) }}
+          {% else %}
+            {{ next_holiday_date.strftime(&#x27;%d/%m/%Y&#x27;) }}
+          {% endif %}
+        {% else %}
+          Unknown
+        {% endif %}
+
+    umail_account_expiration:
+      friendly_name: &quot;Umail Account Expiration&quot;
+      unique_id: &quot;umail_account_expiration_sensor&quot;
+      icon_template: &quot;{{ &#x27;mdi:calendar-clock&#x27; }}&quot;
+      value_template: &gt;
+        {% set expiration_date = states(&#x27;input_datetime.umail_account_expiration&#x27;) %}
+        {% if expiration_date not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
+          {% set expiration_dt = as_datetime(expiration_date) %}
+          {% set expiration_day = expiration_dt.date() %}
+          {% set today = now().date() %}
+          {% set days = (expiration_day - today).days %}
+          {% if days &lt; 0 %}
+            Expired
+          {% elif days == 0 %}
+            Today
+          {% elif days == 1 %}
+            Tomorrow
+          {% elif days &lt;= 7 %}
+            {{ expiration_day.strftime(&#x27;%A&#x27;) }}
+          {% else %}
+            {{ expiration_day.strftime(&#x27;%d/%m/%Y&#x27;) }}
+          {% endif %}
+        {% else %}
+          Unknown
+        {% endif %}
+
+    tv_subscription:
+      friendly_name: &quot;TV Subscription&quot;
+      unique_id: &quot;tv_subscription_sensor&quot;
+      icon_template: &quot;{{ &#x27;mdi:calendar-clock&#x27; }}&quot;
+      value_template: &gt;
+        {% set expiration_date = states(&#x27;input_datetime.tv_subscription&#x27;) %}
+        {% if expiration_date not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
+          {% set expiration_dt = as_datetime(expiration_date) %}
+          {% set expiration_day = expiration_dt.date() %}
+          {% set today = now().date() %}
+          {% set days = (expiration_day - today).days %}
+          {% if days &lt; 0 %}
+            Expired
+          {% elif days == 0 %}
+            Today
+          {% elif days == 1 %}
+            Tomorrow
+          {% elif days &lt;= 7 %}
+            {{ expiration_day.strftime(&#x27;%A&#x27;) }}
+          {% else %}
+            {{ expiration_day.strftime(&#x27;%d/%m/%Y&#x27;) }}
+          {% endif %}
+        {% else %}
+          Unknown
+        {% endif %}
+
+    days_until_retirement:
+      friendly_name: &quot;Days Until Retirement&quot;
+      unique_id: &quot;days_until_retirement_sensor&quot;
+      icon_template: &quot;mdi:calendar-clock&quot;
+      unit_of_measurement: &quot;days&quot;
+      value_template: &gt;
+        {% set retirement_age = 66 %}
+        {% set birth_date = as_datetime(&#x27;1990-07-07&#x27;) %}
+        {% set retirement_date = birth_date.replace(year=birth_date.year + retirement_age) %}
+        {% set today = now().date() %}
+        {% if retirement_date.date() &gt;= today %}
+          {{ (retirement_date.date() - today).days }}
+        {% else %}
+          0
+        {% endif %}
+      attribute_templates:
+        retirement_date: &gt;
+          {% set retirement_age = 66 %}
+          {% set birth_date = as_datetime(&#x27;1990-07-07&#x27;) %}
+          {% set retirement_date = birth_date.replace(year=birth_date.year + retirement_age) %}
+          {{ retirement_date.strftime(&#x27;%A, %d %B %Y&#x27;) }}
+        time_remaining: &gt;
+          {% set retirement_date = as_datetime(&#x27;1990-07-07&#x27;).replace(year=as_datetime(&#x27;1990-07-07&#x27;).year + 66) %}
+          {% set now_date = now().replace(tzinfo=None) %}
+          {% set diff = retirement_date - now_date %}
+          {% if diff.total_seconds() &lt; 0 %}
+            Already Retired
+          {% else %}
+            {% set years = (diff.days // 365) %}
+            {% set months = ((diff.days % 365) // 30) %}
+            {% set days = ((diff.days % 365) % 30) %}
+            {{ &#x27;{} years, {} months, {} days&#x27;.format(years, months, days) }}
+          {% endif %}
+        working_days_remaining: &gt;
+          {% set total_days = states(&#x27;sensor.days_until_retirement&#x27;) | int(0) %}
+          {% set annual_leave = states(&#x27;input_number.annual_leave&#x27;) | int(22) %}
+          {% set today = now().date() %}
+          {% set ns = namespace(working_days=0) %}
+          {% set years_remaining = (total_days // 365) %}
+          {% set total_bank_holidays = 10 * years_remaining %}
+          {% set total_vacation_days = annual_leave * years_remaining %}
+
+          {% for day in range(0, total_days) %}
+            {% set current_date = (today + timedelta(days=day)) %}
+            {% if current_date.weekday() &lt; 5 %}
+              {% set ns.working_days = ns.working_days + 1 %}
+            {% endif %}
+          {% endfor %}
+
+          {% set adjusted = ns.working_days - total_bank_holidays - total_vacation_days %}
+          {{ adjusted if adjusted &gt; 0 else 0 }}
+
+    daylight_duration:
+      friendly_name: &quot;Daylight Duration&quot;
+      unique_id: &quot;daylight_duration_sensor&quot;
+      icon_template: &quot;mdi:weather-sunny&quot;
+      unit_of_measurement: &quot;h&quot;
+      value_template: &gt;
+        {% set sr = states(&#x27;input_datetime.today_sunrise&#x27;) %}
+        {% set ss = states(&#x27;input_datetime.today_sunset&#x27;) %}
+        {% if sr not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] and ss not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
+          {% set sr_ts = as_timestamp(sr) %}
+          {% set ss_ts = as_timestamp(ss) %}
+          {% if sr_ts &lt; ss_ts %}
+            {% set daylight = ss_ts - sr_ts %}
+            {% set hours = daylight // 3600 %}
+            {% set minutes = (daylight % 3600) // 60 %}
+            {{ &quot;%d.%02d&quot; | format(hours, minutes) }}
+          {% else %}
+            none
+          {% endif %}
+        {% else %}
+          none
+        {% endif %}
+      attribute_templates:
+        sunrise: &gt;
+          {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
+          Today at {{ sr | timestamp_custom(&#x27;%H:%M&#x27;) }}
+        sunset: &gt;
+          {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
+          Today at {{ ss | timestamp_custom(&#x27;%H:%M&#x27;) }}
+        daylight_minutes: &gt;
+          {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
+          {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
+          {{ ((ss - sr) // 60) | int }}
+        daylight_percent: &gt;
+          {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
+          {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
+          {% set daylight = ss - sr %}
+          {{ ((daylight / 86400) * 100) | round(1) }}%
+        is_daylight: &gt;
+          {% set now_ts = now().timestamp() %}
+          {% set sr = as_timestamp(states(&#x27;input_datetime.today_sunrise&#x27;)) %}
+          {% set ss = as_timestamp(states(&#x27;input_datetime.today_sunset&#x27;)) %}
+          {{ sr &lt;= now_ts &lt;= ss }}
+        previous_sunrise: &gt;
+          {% set pr = states(&#x27;input_datetime.previous_sunrise&#x27;) %}
+          {% if pr not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
+            {% set pr_ts = as_timestamp(pr) %}
+            {% if now().date() == as_datetime(pr).date() %}
+              Today at {{ pr_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% elif now().date() - as_datetime(pr).date() == timedelta(days=1) %}
+              Yesterday at {{ pr_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% else %}
+              {{ pr_ts | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
+            {% endif %}
+          {% else %}
+            —
+          {% endif %}
+        previous_sunset: &gt;
+          {% set ps = states(&#x27;input_datetime.previous_sunset&#x27;) %}
+          {% if ps not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
+            {% set ps_ts = as_timestamp(ps) %}
+            {% if now().date() == as_datetime(ps).date() %}
+              Today at {{ ps_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% elif now().date() - as_datetime(ps).date() == timedelta(days=1) %}
+              Yesterday at {{ ps_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% else %}
+              {{ ps_ts | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
+            {% endif %}
+          {% else %}
+            —
+          {% endif %}
+        next_sunrise: &gt;
+          {% set nr = state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;) %}
+          {% if nr is not none %}
+            {% set nr_ts = as_timestamp(nr) %}
+            {% set nr_date = as_datetime(nr).date() %}
+            {% if now().date() == nr_date %}
+              Today at {{ nr_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% elif now().date() + timedelta(days=1) == nr_date %}
+              Tomorrow at {{ nr_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% else %}
+              {{ nr_ts | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
+            {% endif %}
+          {% else %}
+            —
+          {% endif %}
+        next_sunset: &gt;
+          {% set ns = state_attr(&#x27;sun.sun&#x27;, &#x27;next_setting&#x27;) %}
+          {% if ns is not none %}
+            {% set ns_ts = as_timestamp(ns) %}
+            {% set ns_date = as_datetime(ns).date() %}
+            {% if now().date() == ns_date %}
+              Today at {{ ns_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% elif now().date() + timedelta(days=1) == ns_date %}
+              Tomorrow at {{ ns_ts | timestamp_custom(&#x27;%H:%M&#x27;) }}
+            {% else %}
+              {{ ns_ts | timestamp_custom(&#x27;%A at %H:%M&#x27;) }}
+            {% endif %}
+          {% else %}
+            —
+          {% endif %}</pre>
+            </div>
+            <script>
+                (function fixPaths() {
+                    // ✅ If inside yaml_previews, use "../assets/", otherwise use "assets/"
+                    var basePath = window.location.pathname.includes("/yaml_previews/") ? "../assets/" : "assets/";
+
+                    // ✅ Apply correct asset paths
+                    document.getElementById("dynamic-styles").href = basePath + "table-styles.css";
+                    document.getElementById("dynamic-favicon").href = basePath + "favicon.ico";
+
+                    var script = document.createElement("script");
+                    script.src = basePath + "table-functions.js";
+                    document.body.appendChild(script);
+                })();
+            </script>
+        </body>
+        </html>
+        
