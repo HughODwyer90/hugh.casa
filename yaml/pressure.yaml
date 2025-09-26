@@ -71,18 +71,10 @@ esp32_ble_tracker:
 
             ESP_LOGD("ble_toothbrush", "--------------------------");
 
-# ---- BLE Client for Toothbrush (active connection) ----
 ble_client:
   - id: toothbrush_client
     mac_address: 24:E5:AA:5C:A8:A0
-    on_connect:
-      then:
-        - lambda: 'ESP_LOGI("ble_toothbrush", "Connected to toothbrush!");'
-    on_disconnect:
-      then:
-        - lambda: 'ESP_LOGW("ble_toothbrush", "Disconnected from toothbrush!");'
 
-# ---- Sensors ----
 sensor:
   - platform: ble_rssi
     mac_address: "24:E5:AA:5C:A8:A0"
@@ -93,7 +85,6 @@ sensor:
     filters:
       - throttle: 5s
 
-  # Battery percentage (standard battery service)
   - platform: ble_client
     type: characteristic
     ble_client_id: toothbrush_client
@@ -105,25 +96,57 @@ sensor:
     state_class: measurement
     update_interval: 60s
 
-  # Sonicare-specific custom characteristic (READ)
+# Add custom read sensors for every discoverable READable characteristic
+text_sensor:
   - platform: ble_client
-    type: characteristic
+    ble_client_id: toothbrush_client
+    service_uuid: "477EA600-A260-11E4-AE37-0002A5D50001"
+    characteristic_uuid: "477EA600-A260-11E4-AE37-0002A5D54010"
+    name: "Char 54010"
+
+  - platform: ble_client
     ble_client_id: toothbrush_client
     service_uuid: "477EA600-A260-11E4-AE37-0002A5D50001"
     characteristic_uuid: "477EA600-A260-11E4-AE37-0002A5D54020"
-    name: "Sonicare Custom Value 1"
-    update_interval: 10s
+    name: "Char 54020"
 
-# ---- Text Sensors ----
-text_sensor:
-  # Raw hex read for debug or unknown string
+  - platform: ble_client
+    ble_client_id: toothbrush_client
+    service_uuid: "477EA600-A260-11E4-AE37-0002A5D50001"
+    characteristic_uuid: "477EA600-A260-11E4-AE37-0002A5D54022"
+    name: "Char 54022"
+
+  - platform: ble_client
+    ble_client_id: toothbrush_client
+    service_uuid: "477EA600-A260-11E4-AE37-0002A5D50001"
+    characteristic_uuid: "477EA600-A260-11E4-AE37-0002A5D54030"
+    name: "Char 54030"
+
+  - platform: ble_client
+    ble_client_id: toothbrush_client
+    service_uuid: "477EA600-A260-11E4-AE37-0002A5D50001"
+    characteristic_uuid: "477EA600-A260-11E4-AE37-0002A5D54040"
+    name: "Char 54040"
+
+  
+
   - platform: ble_client
     ble_client_id: toothbrush_client
     service_uuid: "477EA600-A260-11E4-AE37-0002A5D50001"
     characteristic_uuid: "477EA600-A260-11E4-AE37-0002A5D54050"
-    name: "Sonicare Custom Raw 2"
+    name: "Char 54050"
+    on_value:
+      then:
+        - lambda: |-
+            std::string hex_str = "HEX Char 54050:";
+            for (auto b : x) {
+              char buf[5];
+              snprintf(buf, sizeof(buf), " %02X", b);
+              hex_str += buf;
+            }
+            ESP_LOGI("ble_toothbrush", "%s", hex_str.c_str());
 
-# ---- Binary Sensors (BLE + GPIOs) ----
+
 binary_sensor:
   - platform: gpio
     pin:
@@ -154,4 +177,4 @@ binary_sensor:
 
   - platform: template
     name: "Sonicare Notify Flag"
-    lambda: 'return false;'  # placeholder for future notify-based automation
+    lambda: 'return false;'
