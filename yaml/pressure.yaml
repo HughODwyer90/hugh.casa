@@ -8,7 +8,65 @@ esp32:
   framework:
     type: arduino
 
+logger:
+  level: DEBUG
+  logs:
+    esp32_ble_tracker: DEBUG
+    ble_dump: DEBUG   # tag used by the lambda below
+
 esp32_ble_tracker:
+  on_ble_advertise:
+    then:
+      - lambda: |-
+          // x = BLEAdvertisedDeviceRef
+          std::string addr = x.address_str();
+          ESP_LOGD("ble_dump", "=== BLE ADV FROM %s  RSSI=%d", addr.c_str(), x.get_rssi());
+          ESP_LOGD("ble_dump", "  Name: %s", x.get_name().c_str());
+
+          // Raw payload
+          auto payload = x.get_payload();
+          if (!payload.empty()) {
+            std::string phex = "  Payload:";
+            for (auto b : payload) {
+              char buf[4];
+              snprintf(buf, sizeof(buf), " %02X", b);
+              phex += buf;
+            }
+            ESP_LOGD("ble_dump", "%s", phex.c_str());
+          }
+
+          // Manufacturer data (id -> bytes)
+          for (auto &m : x.get_manufacturer_data()) {
+            std::string mstr = "  Manufacturer 0x" + to_hex_string(m.first) + ":";
+            for (auto b : m.second) {
+              char buf[4];
+              snprintf(buf, sizeof(buf), " %02X", b);
+              mstr += buf;
+            }
+            ESP_LOGD("ble_dump", "%s", mstr.c_str());
+          }
+
+          // Service UUIDs (advertised)
+          for (auto &u : x.get_service_uuids()) {
+            ESP_LOGD("ble_dump", "  Service UUID: %s", u.c_str());
+          }
+
+          // Service data (uuid -> bytes)
+          for (auto &s : x.get_service_data()) {
+            std::string sstr = "  ServiceData " + s.first + ":";
+            for (auto b : s.second) {
+              char buf[4];
+              snprintf(buf, sizeof(buf), " %02X", b);
+              sstr += buf;
+            }
+            ESP_LOGD("ble_dump", "%s", sstr.c_str());
+          }
+
+          // Helper: print 6-byte MAC as hex (optional)
+          ESP_LOGD("ble_dump", "------------------------------");
+
+  # (keep other esp32_ble_tracker options you already have)
+
 
 wifi:
   ssid: !secret wifi_ssid
@@ -18,9 +76,6 @@ wifi:
     static_ip: 192.168.0.201
     gateway: 192.168.0.1
     subnet: 255.255.255.0
-
-logger:
-  level: WARN
 
 ota:
   platform: esphome
