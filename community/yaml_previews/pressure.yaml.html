@@ -27,60 +27,49 @@ logger:
   level: DEBUG
   logs:
     esp32_ble_tracker: DEBUG
-    ble_dump: DEBUG   # tag used by the lambda below
+    ble_dump: DEBUG
+
 
 esp32_ble_tracker:
   on_ble_advertise:
     then:
       - lambda: |-
-          // x = BLEAdvertisedDeviceRef
-          std::string addr = x.address_str();
-          ESP_LOGD(&quot;ble_dump&quot;, &quot;=== BLE ADV FROM %s  RSSI=%d&quot;, addr.c_str(), x.get_rssi());
-          ESP_LOGD(&quot;ble_dump&quot;, &quot;  Name: %s&quot;, x.get_name().c_str());
+          ESP_LOGD(&quot;ble_dump&quot;, &quot;==== BLE ADV ====&quot;);
+          ESP_LOGD(&quot;ble_dump&quot;, &quot;  Address: %s&quot;, x.address_str().c_str());
+          ESP_LOGD(&quot;ble_dump&quot;, &quot;  RSSI: %d&quot;, x.get_rssi());
 
-          // Raw payload
-          auto payload = x.get_payload();
-          if (!payload.empty()) {
-            std::string phex = &quot;  Payload:&quot;;
-            for (auto b : payload) {
-              char buf[4];
-              snprintf(buf, sizeof(buf), &quot; %02X&quot;, b);
-              phex += buf;
+          if (!x.get_name().empty()) {
+            ESP_LOGD(&quot;ble_dump&quot;, &quot;  Name: %s&quot;, x.get_name().c_str());
+          }
+
+          // Manufacturer data
+          for (const auto &amp;m : x.get_manufacturer_datas()) {
+            std::string md = &quot;  Manufacturer data:&quot;;
+            for (auto byte : m.data) {
+              char buf[5];
+              snprintf(buf, sizeof(buf), &quot; %02X&quot;, byte);
+              md += buf;
             }
-            ESP_LOGD(&quot;ble_dump&quot;, &quot;%s&quot;, phex.c_str());
+            ESP_LOGD(&quot;ble_dump&quot;, &quot;%s&quot;, md.c_str());
           }
 
-          // Manufacturer data (id -&gt; bytes)
-          for (auto &amp;m : x.get_manufacturer_data()) {
-            std::string mstr = &quot;  Manufacturer 0x&quot; + to_hex_string(m.first) + &quot;:&quot;;
-            for (auto b : m.second) {
-              char buf[4];
-              snprintf(buf, sizeof(buf), &quot; %02X&quot;, b);
-              mstr += buf;
+          // Service UUIDs
+          for (const auto &amp;uuid : x.get_service_uuids()) {
+            ESP_LOGD(&quot;ble_dump&quot;, &quot;  Service UUID: %s&quot;, uuid.to_string().c_str());
+          }
+
+          // Service data
+          for (const auto &amp;sd : x.get_service_datas()) {
+            std::string sd_str = &quot;  Service data (&quot; + sd.uuid.to_string() + &quot;):&quot;;
+            for (auto byte : sd.data) {
+              char buf[5];
+              snprintf(buf, sizeof(buf), &quot; %02X&quot;, byte);
+              sd_str += buf;
             }
-            ESP_LOGD(&quot;ble_dump&quot;, &quot;%s&quot;, mstr.c_str());
+            ESP_LOGD(&quot;ble_dump&quot;, &quot;%s&quot;, sd_str.c_str());
           }
 
-          // Service UUIDs (advertised)
-          for (auto &amp;u : x.get_service_uuids()) {
-            ESP_LOGD(&quot;ble_dump&quot;, &quot;  Service UUID: %s&quot;, u.c_str());
-          }
-
-          // Service data (uuid -&gt; bytes)
-          for (auto &amp;s : x.get_service_data()) {
-            std::string sstr = &quot;  ServiceData &quot; + s.first + &quot;:&quot;;
-            for (auto b : s.second) {
-              char buf[4];
-              snprintf(buf, sizeof(buf), &quot; %02X&quot;, b);
-              sstr += buf;
-            }
-            ESP_LOGD(&quot;ble_dump&quot;, &quot;%s&quot;, sstr.c_str());
-          }
-
-          // Helper: print 6-byte MAC as hex (optional)
-          ESP_LOGD(&quot;ble_dump&quot;, &quot;------------------------------&quot;);
-
-  # (keep other esp32_ble_tracker options you already have)
+          ESP_LOGD(&quot;ble_dump&quot;, &quot;------------------&quot;);
 
 
 wifi:
