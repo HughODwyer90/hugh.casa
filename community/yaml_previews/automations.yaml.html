@@ -4003,6 +4003,9 @@
       - condition: state
         entity_id: switch.hugh_room_plug_blanket
         state: &#x27;on&#x27;
+      - condition: time
+        after: 07:00:00
+        before: &#x27;23:00:00&#x27;
       sequence:
       - action: scene.create
         data:
@@ -4021,6 +4024,9 @@
       - condition: state
         entity_id: switch.hugh_room_plug_blanket
         state: &#x27;off&#x27;
+      - condition: time
+        after: 07:00:00
+        before: &#x27;23:00:00&#x27;
       sequence:
       - choose:
         - conditions:
@@ -4035,6 +4041,20 @@
         - action: light.turn_off
           target:
             entity_id: light.aroma_diffuser
+    - conditions:
+      - condition: time
+        before: 07:00:00
+      sequence:
+      - action: light.turn_off
+        target:
+          entity_id: light.aroma_diffuser
+    - conditions:
+      - condition: time
+        after: &#x27;23:00:00&#x27;
+      sequence:
+      - action: light.turn_off
+        target:
+          entity_id: light.aroma_diffuser
   mode: single
 - id: &#x27;1758841212768&#x27;
   alias: Hugh Room Monitor Sync
