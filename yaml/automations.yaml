@@ -605,9 +605,9 @@
   - at: '22:00:00'
     trigger: time
   - entity_id:
-    - device_tracker.ble_tracker_toothbrush
+    - binary_sensor.philips_sonicare_toothbrush
     trigger: state
-    to: home
+    to: 'on'
   conditions:
   - condition: or
     conditions:
@@ -3392,19 +3392,6 @@
     target:
       entity_id: automation.refresh_liverpool_sensors
   mode: single
-- id: '1733756303140'
-  alias: Refresh Toothbrush Tracker
-  description: ''
-  triggers:
-  - minutes: /5
-    trigger: time_pattern
-  actions:
-  - target:
-      entity_id: device_tracker.ble_tracker_toothbrush
-    action: homeassistant.update_entity
-    data:
-      entity_id:
-      - device_tracker.ble_tracker_toothbrush
 - id: '1734004817033'
   alias: Manage Windscreen Freeze Sensor Visibility Dynamically
   description: Dynamically show or hide the windscreen freeze sensor based on its
