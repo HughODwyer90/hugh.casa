@@ -11,13 +11,13 @@
         <body>
             <div class="fixed-header">
                 <h1>Home Assistant Entities</h1>
-                <p>Total Entities: 735 (Redacted: 17)</p>
-                <p>Version: 2025-09-26-200102</p>
+                <p>Total Entities: 742 (Redacted: 17)</p>
+                <p>Version: 2025-09-26-200351</p>
                 <div class="search-container">
                     <input type="text" id="entitySearch" class="search-box" placeholder="🔍 Search entities...">
                 </div>
                 <div>
-                    <p id="table-count">Search total: 735</p>
+                    <p id="table-count">Search total: 742</p>
                 </div>
                 <div class="filters">
                     <div id="filter-All" class="filter entity-filter active">All</div>
@@ -1200,7 +1200,7 @@
                 <td>binary_sensor.living_room_epone_occupancy</td>
                 <td>EPOne Occupancy</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -1399,6 +1399,14 @@
             <tr>
                 <td>binary_sensor.pressure_toothbrush</td>
                 <td>Pressure Toothbrush</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>binary_sensor.pressure_toothbrush_ble_connected</td>
+                <td>Pressure Toothbrush BLE Connected</td>
                 <td>N/A</td>
                 <td>off</td>
                 <td>Yes</td>
@@ -2432,7 +2440,7 @@
                 <td>light.living_room_floor_back</td>
                 <td>Light Floor Back</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -2440,7 +2448,7 @@
                 <td>light.living_room_floor_front</td>
                 <td>Light Floor Front</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -2856,7 +2864,7 @@
                 <td>scene.living_room_lights_last_state</td>
                 <td>living_room_lights_last_state</td>
                 <td>N/A</td>
-                <td>2025-09-26 20:00:13</td>
+                <td>2025-09-26 20:03:10</td>
                 <td>Yes</td>
             </tr>
         
@@ -2968,7 +2976,7 @@
                 <td>script.update_liverpool_sensors</td>
                 <td>Update Liverpool Sensors</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3720,7 +3728,7 @@
                 <td>sensor.date_time_iso</td>
                 <td>Date & Time (ISO)</td>
                 <td>N/A</td>
-                <td>2025-09-26 21:01:00</td>
+                <td>2025-09-26 21:03:00</td>
                 <td>Yes</td>
             </tr>
         
@@ -4152,7 +4160,7 @@
                 <td>sensor.hugh_room_plug_blanket_voltage</td>
                 <td>Hugh Room Plug Blanket Voltage</td>
                 <td>V</td>
-                <td>235</td>
+                <td>236</td>
                 <td>Yes</td>
             </tr>
         
@@ -4184,7 +4192,7 @@
                 <td>sensor.hugh_room_plug_fan_bed_voltage</td>
                 <td>Hugh Room Plug Fan Bed Voltage</td>
                 <td>V</td>
-                <td>235</td>
+                <td>236</td>
                 <td>Yes</td>
             </tr>
         
@@ -4488,7 +4496,7 @@
                 <td>sensor.living_room_epone_humidity</td>
                 <td>EPOne Humidity</td>
                 <td>%</td>
-                <td>40.82763671875</td>
+                <td>40.7879638671875</td>
                 <td>Yes</td>
             </tr>
         
@@ -4512,7 +4520,7 @@
                 <td>sensor.living_room_epone_temperature</td>
                 <td>EPOne Temperature</td>
                 <td>°C</td>
-                <td>24.8588104248047</td>
+                <td>24.8374481201172</td>
                 <td>Yes</td>
             </tr>
         
@@ -4664,7 +4672,7 @@
                 <td>sensor.pc_plug_energy</td>
                 <td>PC Plug Energy</td>
                 <td>kWh</td>
-                <td>101.7</td>
+                <td>101.71</td>
                 <td>Yes</td>
             </tr>
         
@@ -4672,7 +4680,7 @@
                 <td>sensor.pc_plug_power</td>
                 <td>PC Plug Power</td>
                 <td>W</td>
-                <td>120</td>
+                <td>121</td>
                 <td>Yes</td>
             </tr>
         
@@ -4693,9 +4701,57 @@
             </tr>
         
             <tr>
+                <td>sensor.pressure_toothbrush_active_seconds</td>
+                <td>Pressure Toothbrush Active Seconds</td>
+                <td>s</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.pressure_toothbrush_battery</td>
+                <td>Pressure Toothbrush Battery</td>
+                <td>%</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.pressure_toothbrush_head</td>
+                <td>Pressure Toothbrush Head</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.pressure_toothbrush_mode</td>
+                <td>Pressure Toothbrush Mode</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>sensor.pressure_toothbrush_rssi</td>
                 <td>Pressure Toothbrush RSSI</td>
                 <td>dBm</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.pressure_toothbrush_state</td>
+                <td>Pressure Toothbrush State</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.pressure_toothbrush_strength</td>
+                <td>Pressure Toothbrush Strength</td>
+                <td>N/A</td>
                 <td>unknown</td>
                 <td>Yes</td>
             </tr>
@@ -4816,7 +4872,7 @@
                 <td>sensor.snake_plant_signal_strength</td>
                 <td>Snake Plant Signal Strength</td>
                 <td>dBm</td>
-                <td>-69</td>
+                <td>-71</td>
                 <td>Yes</td>
             </tr>
         
@@ -4824,7 +4880,7 @@
                 <td>sensor.snake_plant_temperature</td>
                 <td>Snake Plant Temperature</td>
                 <td>°C</td>
-                <td>21.8</td>
+                <td>21.7</td>
                 <td>Yes</td>
             </tr>
         
@@ -4920,7 +4976,7 @@
                 <td>sensor.total_sensors_count</td>
                 <td>Total Entities</td>
                 <td>sensors</td>
-                <td>735</td>
+                <td>742</td>
                 <td>Yes</td>
             </tr>
         
@@ -4968,7 +5024,7 @@
                 <td>sensor.watchman_last_updated</td>
                 <td>Last Updated</td>
                 <td>N/A</td>
-                <td>2025-09-26 19:53:56</td>
+                <td>2025-09-26 20:03:49</td>
                 <td>Yes</td>
             </tr>
         
