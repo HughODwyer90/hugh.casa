@@ -90,6 +90,12 @@ esp32_ble_tracker:
 ble_client:
   - id: toothbrush_client
     mac_address: 24:E5:AA:5C:A8:A0
+    on_connect:
+      then:
+        - lambda: &#x27;ESP_LOGI(&quot;ble_toothbrush&quot;, &quot;Connected to toothbrush!&quot;);&#x27;
+    on_disconnect:
+      then:
+        - lambda: &#x27;ESP_LOGW(&quot;ble_toothbrush&quot;, &quot;Disconnected from toothbrush!&quot;);&#x27;
 
 # ---- Sensors ----
 sensor:
@@ -123,6 +129,7 @@ sensor:
     name: &quot;Sonicare Custom Value 1&quot;
     update_interval: 10s
 
+# ---- Text Sensors ----
 text_sensor:
   # Raw hex read for debug or unknown string
   - platform: ble_client
@@ -160,10 +167,9 @@ binary_sensor:
     name: &quot;Toothbrush&quot;
     timeout: 60s
 
-  # Optional: placeholder to toggle via automation on notify (not wired yet)
   - platform: template
     name: &quot;Sonicare Notify Flag&quot;
-    lambda: &#x27;return false;&#x27;
+    lambda: &#x27;return false;&#x27;  # placeholder for future notify-based automation
 </pre>
             </div>
             <script>
