@@ -17,45 +17,42 @@ logger:
 
 esp32_ble_tracker:
   on_ble_advertise:
-    then:
-      - lambda: |-
-          ESP_LOGD("ble_dump", "==== BLE ADV ====");
-          ESP_LOGD("ble_dump", "  Address: %s", x.address_str().c_str());
-          ESP_LOGD("ble_dump", "  RSSI: %d", x.get_rssi());
+    - mac_address: 24:E5:AA:5C:A8:A0
+      then:
+        - lambda: |-
+            ESP_LOGD("ble_toothbrush", "==== TOOTHBRUSH ADV ====");
+            ESP_LOGD("ble_toothbrush", "  Address: %s", x.address_str().c_str());
+            ESP_LOGD("ble_toothbrush", "  RSSI: %d", x.get_rssi());
 
-          if (!x.get_name().empty()) {
-            ESP_LOGD("ble_dump", "  Name: %s", x.get_name().c_str());
-          }
-
-          // Manufacturer data
-          for (const auto &m : x.get_manufacturer_datas()) {
-            std::string md = "  Manufacturer data:";
-            for (auto byte : m.data) {
-              char buf[5];
-              snprintf(buf, sizeof(buf), " %02X", byte);
-              md += buf;
+            if (!x.get_name().empty()) {
+              ESP_LOGD("ble_toothbrush", "  Name: %s", x.get_name().c_str());
             }
-            ESP_LOGD("ble_dump", "%s", md.c_str());
-          }
 
-          // Service UUIDs
-          for (const auto &uuid : x.get_service_uuids()) {
-            ESP_LOGD("ble_dump", "  Service UUID: %s", uuid.to_string().c_str());
-          }
-
-          // Service data
-          for (const auto &sd : x.get_service_datas()) {
-            std::string sd_str = "  Service data (" + sd.uuid.to_string() + "):";
-            for (auto byte : sd.data) {
-              char buf[5];
-              snprintf(buf, sizeof(buf), " %02X", byte);
-              sd_str += buf;
+            for (const auto &m : x.get_manufacturer_datas()) {
+              std::string md = "  Manufacturer data:";
+              for (auto byte : m.data) {
+                char buf[5];
+                snprintf(buf, sizeof(buf), " %02X", byte);
+                md += buf;
+              }
+              ESP_LOGD("ble_toothbrush", "%s", md.c_str());
             }
-            ESP_LOGD("ble_dump", "%s", sd_str.c_str());
-          }
 
-          ESP_LOGD("ble_dump", "------------------");
+            for (const auto &uuid : x.get_service_uuids()) {
+              ESP_LOGD("ble_toothbrush", "  Service UUID: %s", uuid.to_string().c_str());
+            }
 
+            for (const auto &sd : x.get_service_datas()) {
+              std::string sd_str = "  Service data (" + sd.uuid.to_string() + "):";
+              for (auto byte : sd.data) {
+                char buf[5];
+                snprintf(buf, sizeof(buf), " %02X", byte);
+                sd_str += buf;
+              }
+              ESP_LOGD("ble_toothbrush", "%s", sd_str.c_str());
+            }
+
+            ESP_LOGD("ble_toothbrush", "--------------------------");
 
 wifi:
   ssid: !secret wifi_ssid
