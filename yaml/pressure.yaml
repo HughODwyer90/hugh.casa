@@ -96,56 +96,13 @@ sensor:
     state_class: measurement
     update_interval: 60s
 
-# Add custom read sensors for every discoverable READable characteristic
-text_sensor:
   - platform: ble_client
-    ble_client_id: toothbrush_client
-    service_uuid: "477EA600-A260-11E4-AE37-0002A5D50001"
-    characteristic_uuid: "477EA600-A260-11E4-AE37-0002A5D54010"
-    name: "Char 54010"
-
-  - platform: ble_client
+    type: characteristic
     ble_client_id: toothbrush_client
     service_uuid: "477EA600-A260-11E4-AE37-0002A5D50001"
     characteristic_uuid: "477EA600-A260-11E4-AE37-0002A5D54020"
-    name: "Char 54020"
-
-  - platform: ble_client
-    ble_client_id: toothbrush_client
-    service_uuid: "477EA600-A260-11E4-AE37-0002A5D50001"
-    characteristic_uuid: "477EA600-A260-11E4-AE37-0002A5D54022"
-    name: "Char 54022"
-
-  - platform: ble_client
-    ble_client_id: toothbrush_client
-    service_uuid: "477EA600-A260-11E4-AE37-0002A5D50001"
-    characteristic_uuid: "477EA600-A260-11E4-AE37-0002A5D54030"
-    name: "Char 54030"
-
-  - platform: ble_client
-    ble_client_id: toothbrush_client
-    service_uuid: "477EA600-A260-11E4-AE37-0002A5D50001"
-    characteristic_uuid: "477EA600-A260-11E4-AE37-0002A5D54040"
-    name: "Char 54040"
-
-  
-
-  - platform: ble_client
-    ble_client_id: toothbrush_client
-    service_uuid: "477EA600-A260-11E4-AE37-0002A5D50001"
-    characteristic_uuid: "477EA600-A260-11E4-AE37-0002A5D54050"
-    name: "Char 54050"
-    on_value:
-      then:
-        - lambda: |-
-            std::string hex_str = "HEX Char 54050:";
-            for (auto b : x) {
-              char buf[5];
-              snprintf(buf, sizeof(buf), " %02X", b);
-              hex_str += buf;
-            }
-            ESP_LOGI("ble_toothbrush", "%s", hex_str.c_str());
-
+    name: "Sonicare Custom Value 1"
+    update_interval: 10s
 
 binary_sensor:
   - platform: gpio
@@ -178,3 +135,89 @@ binary_sensor:
   - platform: template
     name: "Sonicare Notify Flag"
     lambda: 'return false;'
+
+text_sensor:
+  - platform: ble_client
+    ble_client_id: toothbrush_client
+    service_uuid: "477EA600-A260-11E4-AE37-0002A5D50001"
+    characteristic_uuid: "477EA600-A260-11E4-AE37-0002A5D54010"
+    name: "Char 54010"
+    update_interval: 30s
+    on_value:
+      then:
+        - lambda: |-
+            std::string hex_str = "HEX Char 54010:";
+            for (auto b : x) {
+              char buf[5];
+              snprintf(buf, sizeof(buf), " %02X", b);
+              hex_str += buf;
+            }
+            ESP_LOGI("ble_toothbrush", "%s", hex_str.c_str());
+
+  - platform: ble_client
+    ble_client_id: toothbrush_client
+    service_uuid: "477EA600-A260-11E4-AE37-0002A5D50001"
+    characteristic_uuid: "477EA600-A260-11E4-AE37-0002A5D54020"
+    name: "Char 54020"
+    update_interval: 30s
+    on_value:
+      then:
+        - lambda: |-
+            std::string hex_str = "HEX Char 54020:";
+            for (auto b : x) {
+              char buf[5];
+              snprintf(buf, sizeof(buf), " %02X", b);
+              hex_str += buf;
+            }
+            ESP_LOGI("ble_toothbrush", "%s", hex_str.c_str());
+
+  - platform: ble_client
+    ble_client_id: toothbrush_client
+    service_uuid: "477EA600-A260-11E4-AE37-0002A5D50001"
+    characteristic_uuid: "477EA600-A260-11E4-AE37-0002A5D54022"
+    name: "Char 54022"
+    update_interval: 30s
+    on_value:
+      then:
+        - lambda: |-
+            std::string hex_str = "HEX Char 54022:";
+            for (auto b : x) {
+              char buf[5];
+              snprintf(buf, sizeof(buf), " %02X", b);
+              hex_str += buf;
+            }
+            ESP_LOGI("ble_toothbrush", "%s", hex_str.c_str());
+
+  - platform: ble_client
+    ble_client_id: toothbrush_client
+    service_uuid: "477EA600-A260-11E4-AE37-0002A5D50001"
+    characteristic_uuid: "477EA600-A260-11E4-AE37-0002A5D54040"
+    name: "Char 54040"
+    update_interval: 30s
+    on_value:
+      then:
+        - lambda: |-
+            std::string hex_str = "HEX Char 54040:";
+            for (auto b : x) {
+              char buf[5];
+              snprintf(buf, sizeof(buf), " %02X", b);
+              hex_str += buf;
+            }
+            ESP_LOGI("ble_toothbrush", "%s", hex_str.c_str());
+
+  - platform: ble_client
+    ble_client_id: toothbrush_client
+    service_uuid: "477EA600-A260-11E4-AE37-0002A5D50001"
+    characteristic_uuid: "477EA600-A260-11E4-AE37-0002A5D54050"
+    name: "Char 54050"
+    update_interval: 30s
+    on_value:
+      then:
+        - lambda: |-
+            std::string hex_str = "HEX Char 54050:";
+            for (auto b : x) {
+              char buf[5];
+              snprintf(buf, sizeof(buf), " %02X", b);
+              hex_str += buf;
+            }
+            ESP_LOGI("ble_toothbrush", "%s", hex_str.c_str());
