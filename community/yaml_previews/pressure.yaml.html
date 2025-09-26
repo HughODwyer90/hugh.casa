@@ -87,34 +87,6 @@ esp32_ble_tracker:
             }
             ESP_LOGD(&quot;ble_toothbrush&quot;, &quot;--------------------------&quot;);
 
-ble_client:
-  - id: toothbrush_client
-    mac_address: 24:E5:AA:5C:A8:A0
-    on_connect:
-      then:
-        - lambda: |-
-            id(toothbrush_connected) = true;
-            id(toothbrush_battery).set_update_interval(15000);
-            id(toothbrush_battery).call_setup();
-            id(toothbrush_strength).set_update_interval(10000);
-            id(toothbrush_strength).call_setup();
-            id(toothbrush_head_id).set_update_interval(11000);
-            id(toothbrush_head_id).call_setup();
-            id(toothbrush_head_nfc).set_update_interval(10000);
-            id(toothbrush_head_nfc).call_setup();
-    on_disconnect:
-      then:
-        - lambda: |-
-            id(toothbrush_connected) = false;
-            id(toothbrush_battery).set_update_interval(UINT32_MAX);
-            id(toothbrush_battery).call_setup();
-            id(toothbrush_strength).set_update_interval(UINT32_MAX);
-            id(toothbrush_strength).call_setup();
-            id(toothbrush_head_id).set_update_interval(UINT32_MAX);
-            id(toothbrush_head_id).call_setup();
-            id(toothbrush_head_nfc).set_update_interval(UINT32_MAX);
-            id(toothbrush_head_nfc).call_setup();
-
 binary_sensor:
   - platform: gpio
     pin:
@@ -143,13 +115,6 @@ binary_sensor:
     name: &quot;Toothbrush&quot;
     timeout: 120s
 
-  - platform: template
-    name: &quot;Toothbrush BLE Connected&quot;
-    lambda: |-
-      return id(toothbrush_connected);
-    device_class: connectivity
-    icon: &quot;mdi:bluetooth-connect&quot;
-
 sensor:
   - platform: ble_rssi
     mac_address: &quot;24:E5:AA:5C:A8:A0&quot;
@@ -158,140 +123,7 @@ sensor:
     unit_of_measurement: &quot;dBm&quot;
     state_class: measurement
     filters:
-      - throttle: 5s
-
-  - platform: ble_client
-    ble_client_id: toothbrush_client
-    type: characteristic
-    id: toothbrush_battery
-    name: &quot;Toothbrush Battery&quot;
-    service_uuid: 180F
-    characteristic_uuid: 2A19
-    unit_of_measurement: &quot;%&quot;
-    device_class: battery
-    state_class: measurement
-    notify: true
-    update_interval: never
-    filters:
-      - filter_out: [nan]
-
-  - platform: ble_client
-    ble_client_id: toothbrush_client
-    type: characteristic
-    name: &quot;Toothbrush Strength&quot;
-    id: toothbrush_strength
-    service_uuid: 477ea600-a260-11e4-ae37-0002a5d50002
-    characteristic_uuid: 477ea600-a260-11e4-ae37-0002a5d540b0
-    notify: true
-    update_interval: never
-    lambda: |-
-      return (float(x[0]) + 1);
-    unit_of_measurement: &quot;&quot;
-    filters:
-      - filter_out: [nan]
-
-  - platform: ble_client
-    ble_client_id: toothbrush_client
-    name: &quot;Toothbrush Active Seconds&quot;
-    service_uuid: 477ea600-a260-11e4-ae37-0002a5d50002
-    characteristic_uuid: 477ea600-a260-11e4-ae37-0002a5d54090
-    type: characteristic
-    notify: true
-    update_interval: never
-    unit_of_measurement: &quot;s&quot;
-    device_class: duration
-    filters:
-      - filter_out: [nan, &quot;0&quot;]
-
-  - platform: ble_client
-    ble_client_id: toothbrush_client
-    type: characteristic
-    id: toothbrush_state_id
-    name: &quot;Toothbrush State ID&quot;
-    service_uuid: 477ea600-a260-11e4-ae37-0002a5d50001
-    characteristic_uuid: 477ea600-a260-11e4-ae37-0002a5d54010
-    notify: true
-    update_interval: never
-    internal: true
-    filters:
-      - filter_out: [nan]
-
-  - platform: ble_client
-    ble_client_id: toothbrush_client
-    type: characteristic
-    id: toothbrush_mode_id
-    name: &quot;Toothbrush Mode ID&quot;
-    service_uuid: 477ea600-a260-11e4-ae37-0002a5d50002
-    characteristic_uuid: 477ea600-a260-11e4-ae37-0002a5d54080
-    notify: true
-    update_interval: never
-    internal: true
-    filters:
-      - filter_out: [nan]
-
-  - platform: ble_client
-    ble_client_id: toothbrush_client
-    type: characteristic
-    id: toothbrush_head_id
-    name: &quot;Toothbrush Head ID&quot;
-    service_uuid: 477ea600-a260-11e4-ae37-0002a5d50006
-    characteristic_uuid: 477ea600-a260-11e4-ae37-0002a5d54220
-    notify: true
-    update_interval: never
-    internal: true
-    filters:
-      - filter_out: [nan]
-
-  - platform: ble_client
-    ble_client_id: toothbrush_client
-    type: characteristic
-    id: toothbrush_head_nfc
-    name: &quot;Toothbrush Head NFC&quot;
-    service_uuid: 477ea600-a260-11e4-ae37-0002a5d50006
-    characteristic_uuid: 477ea600-a260-11e4-ae37-0002a5d542a0
-    notify: true
-    update_interval: never
-    internal: true
-    filters:
-      - filter_out: [nan]
-
-text_sensor:
-  - platform: template
-    name: &quot;Toothbrush State&quot;
-    lambda: |-
-      if (id(toothbrush_state_id).state == 0) return {&quot;Off&quot;};
-      else if (id(toothbrush_state_id).state == 1) return {&quot;Standby&quot;};
-      else if (id(toothbrush_state_id).state == 2) return {&quot;Run&quot;};
-      else if (id(toothbrush_state_id).state == 3) return {&quot;Charge&quot;};
-      else if (id(toothbrush_state_id).state == 5) return {&quot;Shutdown&quot;};
-      else if (id(toothbrush_state_id).state == 6) return {&quot;Validate&quot;};
-      else if (id(toothbrush_state_id).state == 7) return {&quot;LightsOut&quot;};
-      else return {};
-    icon: mdi:toothbrush-electric
-
-  - platform: template
-    name: &quot;Toothbrush Mode&quot;
-    lambda: |-
-      if (id(toothbrush_mode_id).state == 0) return {&quot;Clean&quot;};
-      else if (id(toothbrush_mode_id).state == 1) return {&quot;White+&quot;};
-      else if (id(toothbrush_mode_id).state == 2) return {&quot;Gum Health&quot;};
-      else if (id(toothbrush_mode_id).state == 3) return {&quot;Deep Clean+&quot;};
-      else return {};
-    icon: mdi:toothbrush-electric
-
-  - platform: template
-    name: &quot;Toothbrush Head&quot;
-    lambda: |-
-      if (id(toothbrush_head_nfc).state == 1) {
-        if (id(toothbrush_head_id).state == 0) return {&quot;Adaptive Clean&quot;};
-        else if (id(toothbrush_head_id).state == 1) return {&quot;Adaptive White&quot;};
-        else if (id(toothbrush_head_id).state == 2) return {&quot;Tongue Care&quot;};
-        else if (id(toothbrush_head_id).state == 3) return {&quot;Adaptive Gums&quot;};
-        else return {&quot;Unknown&quot;};
-      } else if (id(toothbrush_head_nfc).state == 0) return {&quot;N/A&quot;};
-      else return {};
-    icon: mdi:toothbrush-electric
-</pre>
+      - throttle: 5s</pre>
             </div>
             <script>
                 (function fixPaths() {
