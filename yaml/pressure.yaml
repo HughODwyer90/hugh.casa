@@ -96,4 +96,14 @@ binary_sensor:
   - platform: ble_presence
     mac_address: "24:E5:AA:5C:A8:A0"
     name: "Toothbrush"
-    timeout: 120s
+    timeout: 60s
+
+sensor:
+  - platform: ble_rssi
+    mac_address: "24:E5:AA:5C:A8:A0"
+    name: "Toothbrush RSSI"
+    device_class: signal_strength
+    unit_of_measurement: "dBm"
+    state_class: measurement
+    filters:
+      - throttle: 5s
