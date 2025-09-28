@@ -4124,6 +4124,34 @@
         target:
           entity_id: fan.air_purifier
   mode: single
+- id: &#x27;1759093314581&#x27;
+  alias: Toothbrush Head Replacement
+  description: Notify when toothbrush head usage reaches 200 and reset counter if
+    confirmed.
+  triggers:
+  - entity_id: counter.toothbrush_head
+    above: 199
+    trigger: numeric_state
+  actions:
+  - data:
+      title: Toothbrush Head
+      message: You’ve reached 200 uses. Time to swap the toothbrush head?
+      data:
+        actions:
+        - action: SWAP_HEAD
+          title: Swap Head
+    action: notify.notifications
+  - wait_for_trigger:
+    - event_type: mobile_app_notification_action
+      event_data:
+        action: SWAP_HEAD
+      trigger: event
+    timeout: &#x27;24:00:00&#x27;
+    continue_on_timeout: false
+  - target:
+      entity_id: counter.toothbrush_head
+    action: counter.reset
+  mode: single
 </pre>
             </div>
             <script>
