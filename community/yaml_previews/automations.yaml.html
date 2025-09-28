@@ -4129,13 +4129,14 @@
   description: Notify when toothbrush head usage reaches 200 and reset counter if
     confirmed.
   triggers:
-  - entity_id: counter.toothbrush_head
-    above: 199
+  - entity_id:
+    - counter.toothbrush_head
+    above: 224
     trigger: numeric_state
   actions:
   - data:
       title: Toothbrush Head
-      message: You’ve reached 200 uses. Time to swap the toothbrush head?
+      message: You’ve reached 225 uses. Time to swap the toothbrush head?
       data:
         actions:
         - action: SWAP_HEAD
@@ -4151,6 +4152,7 @@
   - target:
       entity_id: counter.toothbrush_head
     action: counter.reset
+    data: {}
   mode: single
 - id: &#x27;1759093626027&#x27;
   alias: Increment Toothbrush Head Counter
@@ -4163,9 +4165,9 @@
   conditions:
   - condition: template
     value_template: &quot;{% set last = states(&#x27;input_datetime.last_toothbrush_increment&#x27;)
-      %} {% if last in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}\n  true  # first time run\n{%
-      else %}\n  {% set last_dt = strptime(last, &#x27;%Y-%m-%d %H:%M:%S&#x27;) %}\n  {{ (now()
-      - last_dt).total_seconds() &gt; 3600 }}  # only once per hour\n{% endif %}\n&quot;
+      %} {% if last in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}\n  true\n{% else %}\n  {% set
+      last_ts = as_timestamp(last) %}\n  {{ (as_timestamp(now()) - last_ts) &gt; 3600
+      }}\n{% endif %}\n&quot;
   actions:
   - target:
       entity_id: counter.toothbrush_head
