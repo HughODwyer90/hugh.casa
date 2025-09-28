@@ -3906,7 +3906,7 @@
     for:
       hours: 0
       minutes: 0
-      seconds: 10
+      seconds: 2
   conditions: []
   actions:
   - choose:
@@ -3915,6 +3915,11 @@
         entity_id: binary_sensor.pc_status
         state: &#x27;on&#x27;
       sequence:
+      - action: input_boolean.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.hugh_room_occupied
       - action: light.turn_on
         metadata: {}
         data:
@@ -3924,17 +3929,17 @@
           - 13
         target:
           entity_id: light.aroma_diffuser
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 2
+          milliseconds: 0
       - action: fan.set_percentage
         metadata: {}
         data:
           percentage: 33
         target:
           entity_id: fan.air_purifier
-      - action: input_boolean.turn_on
-        metadata: {}
-        data: {}
-        target:
-          entity_id: input_boolean.hugh_room_occupied
     - conditions:
       - condition: state
         entity_id: binary_sensor.pc_status
