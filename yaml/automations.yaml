@@ -3915,6 +3915,11 @@
           percentage: 33
         target:
           entity_id: fan.air_purifier
+      - action: input_boolean.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.hugh_room_occupied
     - conditions:
       - condition: state
         entity_id: binary_sensor.pc_status
