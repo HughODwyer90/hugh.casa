@@ -4129,8 +4129,7 @@
   description: Notify when toothbrush head usage reaches 200 and reset counter if
     confirmed.
   triggers:
-  - entity_id:
-    - counter.toothbrush_head
+  - entity_id: counter.toothbrush_head
     above: 199
     trigger: numeric_state
   actions:
@@ -4138,6 +4137,7 @@
       title: Toothbrush Head
       message: You’ve reached 200 uses. Time to swap the toothbrush head?
       data:
+        notification_icon: mdi:toothbrush-electric
         actions:
         - action: SWAP_HEAD
           title: Swap Head
@@ -4152,7 +4152,6 @@
   - target:
       entity_id: counter.toothbrush_head
     action: counter.reset
-    data: {}
   mode: single
 - id: &#x27;1759093626027&#x27;
   alias: Increment Toothbrush Head Counter
