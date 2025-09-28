@@ -4152,6 +4152,30 @@
       entity_id: counter.toothbrush_head
     action: counter.reset
   mode: single
+- id: &#x27;1759093626027&#x27;
+  alias: Increment Toothbrush Head Counter
+  description: &#x27;&#x27;
+  triggers:
+  - entity_id: binary_sensor.philips_sonicare_toothbrush
+    to: &#x27;on&#x27;
+    for: 00:03:00
+    trigger: state
+  conditions:
+  - condition: template
+    value_template: &quot;{% set last = states(&#x27;input_datetime.last_toothbrush_increment&#x27;)
+      %} {% if last in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}\n  true  # first time run\n{%
+      else %}\n  {% set last_dt = strptime(last, &#x27;%Y-%m-%d %H:%M:%S&#x27;) %}\n  {{ (now()
+      - last_dt).total_seconds() &gt; 3600 }}  # only once per hour\n{% endif %}\n&quot;
+  actions:
+  - target:
+      entity_id: counter.toothbrush_head
+    action: counter.increment
+  - target:
+      entity_id: input_datetime.last_toothbrush_increment
+    data:
+      datetime: &#x27;{{ now().strftime(&#x27;&#x27;%Y-%m-%d %H:%M:%S&#x27;&#x27;) }}&#x27;
+    action: input_datetime.set_datetime
+  mode: single
 </pre>
             </div>
             <script>
