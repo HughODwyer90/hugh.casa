@@ -4063,6 +4063,9 @@
       - condition: state
         entity_id: binary_sensor.monitor_state
         state: 'off'
+      - condition: state
+        entity_id: binary_sensor.pc_status
+        state: 'off'
       sequence:
       - choose:
         - conditions:
