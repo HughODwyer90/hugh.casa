@@ -4186,6 +4186,34 @@
       datetime: &#x27;{{ now().strftime(&#x27;&#x27;%Y-%m-%d %H:%M:%S&#x27;&#x27;) }}&#x27;
     action: input_datetime.set_datetime
   mode: single
+- id: &#x27;1759252822326&#x27;
+  alias: Hugh Room Unoccupied Phone Away
+  description: &#x27;&#x27;
+  triggers:
+  - trigger: state
+    entity_id:
+    - device_tracker.hugh_phone
+    from: home
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  conditions:
+  - condition: state
+    entity_id: binary_sensor.bed_sensor
+    state: &#x27;off&#x27;
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: device_tracker.hugh_phone
+      state: unavailable
+  actions:
+  - action: input_boolean.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.hugh_room_occupied
+  mode: single
 </pre>
             </div>
             <script>
