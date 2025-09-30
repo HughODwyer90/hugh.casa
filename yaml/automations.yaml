@@ -347,10 +347,15 @@
       entity_id: input_boolean.shower_in_progress
     data: {}
     action: input_boolean.turn_off
-  - action: shell_command.update_liverpool_channel
+  - action: shell_command.patch_tuya_diffuser
     metadata: {}
     data: {}
-  - action: shell_command.patch_tuya_diffuser
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+  - action: shell_command.update_liverpool_channel
     metadata: {}
     data: {}
   - data:
