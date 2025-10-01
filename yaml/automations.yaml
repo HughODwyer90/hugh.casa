@@ -3186,6 +3186,7 @@
         state: 'on'
       - target:
           entity_id: update.living_room_epone_firmware
+        continue_on_error: true
         action: update.install
       - delay:
           minutes: 5
@@ -3194,6 +3195,7 @@
         state: 'on'
       - target:
           entity_id: update.pressure_firmware
+        continue_on_error: true
         action: update.install
       - delay:
           minutes: 5
@@ -3202,6 +3204,7 @@
         state: 'on'
       - target:
           entity_id: update.ir_receiver_firmware
+        continue_on_error: true
         action: update.install
       - delay:
           minutes: 5
@@ -3210,7 +3213,7 @@
         action: hassio.addon_start
       - data:
           title: ESPHome Updates
-          message: 'Manual trigger: ESPHome devices updated.'
+          message: 'Manual trigger: ESPHome devices updated (or skipped if up-to-date/failed).'
         action: notify.notifications
     - conditions:
       - condition: trigger
@@ -3224,6 +3227,7 @@
         state: 'on'
       - target:
           entity_id: update.living_room_epone_firmware
+        continue_on_error: true
         action: update.install
       - delay:
           minutes: 5
@@ -3232,6 +3236,7 @@
         state: 'on'
       - target:
           entity_id: update.pressure_firmware
+        continue_on_error: true
         action: update.install
       - delay:
           minutes: 5
@@ -3240,6 +3245,7 @@
         state: 'on'
       - target:
           entity_id: update.ir_receiver_firmware
+        continue_on_error: true
         action: update.install
       - delay:
           minutes: 5
@@ -3248,7 +3254,7 @@
         action: hassio.addon_start
       - data:
           title: ESPHome Updates
-          message: 'Scheduled run: ESPHome devices updated (Pressure had an update).'
+          message: 'Scheduled run: ESPHome devices updated (or skipped if up-to-date/failed).'
         action: notify.notifications
   - choose:
     - conditions:
