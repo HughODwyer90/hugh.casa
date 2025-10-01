@@ -378,7 +378,7 @@
       - target:
           entity_id: fan.air_purifier
         data:
-          percentage: 100
+          percentage: 50
         action: fan.set_percentage
   - if:
     - condition: or
@@ -394,7 +394,7 @@
     - action: fan.set_percentage
       metadata: {}
       data:
-        percentage: 33
+        percentage: 25
       target:
         entity_id: fan.air_purifier
   mode: single
@@ -3303,8 +3303,8 @@
           entity_id: fan.air_purifier
         data:
           percentage: "{% set current_speed = state_attr('fan.air_purifier', 'percentage')
-            %} {% if current_speed == 100 %}\n  66\n{% elif current_speed == 66 %}\n
-            \ 33\n{% elif current_speed == 33 %}\n  0\n{% else %}\n  0\n{% endif %}\n"
+            %} {% if current_speed == 75 %}\n  50\n{% elif current_speed == 50 %}\n
+            \ 25\n{% elif current_speed == 25 %}\n  0\n{% else %}\n  0\n{% endif %}\n"
         action: fan.set_percentage
     - conditions:
       - condition: state
@@ -3315,8 +3315,8 @@
           entity_id: fan.air_purifier
         data:
           percentage: "{% set current_speed = state_attr('fan.air_purifier', 'percentage')
-            %} {% if current_speed == 0 %}\n  33\n{% elif current_speed == 33 %}\n
-            \ 66\n{% elif current_speed == 66 %}\n  100\n{% else %}\n  100\n{% endif
+            %} {% if current_speed == 0 %}\n  25\n{% elif current_speed == 25 %}\n
+            \ 50\n{% elif current_speed == 50 %}\n  75\n{% else %}\n  75\n{% endif
             %}\n"
         action: fan.set_percentage
   mode: restart
@@ -3844,7 +3844,7 @@
       action: RENEWED_TV
   conditions: []
   actions:
-  - action: script.update_tv_subscription_date_2
+  - action: script.update_tv_subscription_date
     data: {}
   mode: single
 - id: '1757190365144'
