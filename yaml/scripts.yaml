@@ -593,3 +593,10 @@ ai_plant_message_direct:
       title: '{{ plant_name }} the Plant'
       data:
         notification_icon: mdi:water
+reload_tuya_local_integration:
+  alias: Reload Tuya Local Integration
+  sequence:
+  - action: homeassistant.reload_config_entry
+    data:
+      entry_id: 01JS426BFEYR9S9JGQ6W6P031S
+  description: ''
