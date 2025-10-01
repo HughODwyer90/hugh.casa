@@ -615,6 +615,51 @@ reload_tuya_local_integration:
     data:
       entry_id: 01JS426BFEYR9S9JGQ6W6P031S
   description: &#x27;&#x27;
+update_esphome_devices_2:
+  alias: Update ESPHome Devices
+  mode: single
+  sequence:
+  - action: hassio.addon_stop
+    data:
+      addon: a0d7b954_vscode
+  - delay: 00:00:30
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: update.living_room_epone_firmware
+        state: &#x27;on&#x27;
+      sequence:
+      - action: update.install
+        target:
+          entity_id: update.living_room_epone_firmware
+        continue_on_error: true
+  - delay: 00:05:00
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: update.pressure_firmware
+        state: &#x27;on&#x27;
+      sequence:
+      - action: update.install
+        target:
+          entity_id: update.pressure_firmware
+        continue_on_error: true
+  - delay: 00:05:00
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: update.ir_receiver_firmware
+        state: &#x27;on&#x27;
+      sequence:
+      - action: update.install
+        target:
+          entity_id: update.ir_receiver_firmware
+        continue_on_error: true
+  - delay: 00:05:00
+  - action: hassio.addon_start
+    data:
+      addon: a0d7b954_vscode
+  description: &#x27;&#x27;
 </pre>
             </div>
             <script>
