@@ -3169,8 +3169,10 @@
   mode: queued
 - id: &#x27;1727963833872&#x27;
   alias: Auto Update ESPHome Devices
-  description: Automatically check and update ESPHome devices if an update is available
-    at 7am.
+  description: &#x27;Automatically check and update ESPHome devices if an update is available
+    at 7 AM or when manually triggered, running one after the other.
+
+    &#x27;
   triggers:
   - at: 07:00:00
     trigger: time
@@ -3180,36 +3182,52 @@
   conditions: []
   actions:
   - action: hassio.addon_stop
-    metadata: {}
     data:
       addon: a0d7b954_vscode
-  - target:
+  - action: homeassistant.update_entity
+    target:
       entity_id:
+      - update.living_room_epone_firmware
       - update.pressure_firmware
       - update.ir_receiver_firmware
-      - update.living_room_epone_firmware
-    action: homeassistant.update_entity
-    data: {}
-  - target:
-      entity_id: update.living_room_epone_firmware
-    action: update.install
-    data: {}
-  - condition: state
-    entity_id: update.pressure_firmware
-    state: &#x27;on&#x27;
-  - target:
-      entity_id: update.pressure_firmware
-    action: update.install
-    data: {}
-  - condition: state
-    entity_id: update.ir_receiver_firmware
-    state: &#x27;on&#x27;
-  - target:
-      entity_id: update.ir_receiver_firmware
-    action: update.install
-    data: {}
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: update.living_room_epone_firmware
+        state: &#x27;on&#x27;
+      sequence:
+      - action: update.install
+        target:
+          entity_id: update.living_room_epone_firmware
+      - wait_template: &#x27;{{ is_state(&#x27;&#x27;update.living_room_epone_firmware&#x27;&#x27;, &#x27;&#x27;off&#x27;&#x27;)
+          }}&#x27;
+        timeout: 00:10:00
+        continue_on_timeout: false
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: update.pressure_firmware
+        state: &#x27;on&#x27;
+      sequence:
+      - action: update.install
+        target:
+          entity_id: update.pressure_firmware
+      - wait_template: &#x27;{{ is_state(&#x27;&#x27;update.pressure_firmware&#x27;&#x27;, &#x27;&#x27;off&#x27;&#x27;) }}&#x27;
+        timeout: 00:10:00
+        continue_on_timeout: false
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: update.ir_receiver_firmware
+        state: &#x27;on&#x27;
+      sequence:
+      - action: update.install
+        target:
+          entity_id: update.ir_receiver_firmware
+      - wait_template: &#x27;{{ is_state(&#x27;&#x27;update.ir_receiver_firmware&#x27;&#x27;, &#x27;&#x27;off&#x27;&#x27;) }}&#x27;
+        timeout: 00:10:00
+        continue_on_timeout: false
   - action: hassio.addon_start
-    metadata: {}
     data:
       addon: a0d7b954_vscode
   mode: single
