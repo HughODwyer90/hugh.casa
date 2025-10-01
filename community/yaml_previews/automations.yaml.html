@@ -3191,32 +3191,35 @@
   - target:
       entity_id: update.pressure_firmware
     action: homeassistant.update_entity
+    data: {}
   - choose:
     - conditions:
       - condition: trigger
         id: manual
       sequence:
-      - condition: state
-        entity_id: update.living_room_epone_firmware
-        state: &#x27;on&#x27;
+      - condition: template
+        value_template: &quot;{{ state_attr(&#x27;update.living_room_epone_firmware&#x27;,&#x27;installed_version&#x27;)
+          !=\n   state_attr(&#x27;update.living_room_epone_firmware&#x27;,&#x27;latest_version&#x27;)
+          }}\n&quot;
       - target:
           entity_id: update.living_room_epone_firmware
         continue_on_error: true
         action: update.install
+        data: {}
       - delay:
           minutes: 5
-      - condition: state
-        entity_id: update.pressure_firmware
-        state: &#x27;on&#x27;
+      - condition: template
+        value_template: &quot;{{ state_attr(&#x27;update.pressure_firmware&#x27;,&#x27;installed_version&#x27;)
+          !=\n   state_attr(&#x27;update.pressure_firmware&#x27;,&#x27;latest_version&#x27;) }}\n&quot;
       - target:
           entity_id: update.pressure_firmware
         continue_on_error: true
         action: update.install
       - delay:
           minutes: 5
-      - condition: state
-        entity_id: update.ir_receiver_firmware
-        state: &#x27;on&#x27;
+      - condition: template
+        value_template: &quot;{{ state_attr(&#x27;update.ir_receiver_firmware&#x27;,&#x27;installed_version&#x27;)
+          !=\n   state_attr(&#x27;update.ir_receiver_firmware&#x27;,&#x27;latest_version&#x27;) }}\n&quot;
       - target:
           entity_id: update.ir_receiver_firmware
         continue_on_error: true
@@ -3233,31 +3236,32 @@
     - conditions:
       - condition: trigger
         id: daily
-      - condition: state
-        entity_id: update.pressure_firmware
-        state: &#x27;on&#x27;
+      - condition: template
+        value_template: &quot;{{ state_attr(&#x27;update.pressure_firmware&#x27;,&#x27;installed_version&#x27;)
+          !=\n   state_attr(&#x27;update.pressure_firmware&#x27;,&#x27;latest_version&#x27;) }}\n&quot;
       sequence:
-      - condition: state
-        entity_id: update.living_room_epone_firmware
-        state: &#x27;on&#x27;
+      - condition: template
+        value_template: &quot;{{ state_attr(&#x27;update.living_room_epone_firmware&#x27;,&#x27;installed_version&#x27;)
+          !=\n   state_attr(&#x27;update.living_room_epone_firmware&#x27;,&#x27;latest_version&#x27;)
+          }}\n&quot;
       - target:
           entity_id: update.living_room_epone_firmware
         continue_on_error: true
         action: update.install
       - delay:
           minutes: 5
-      - condition: state
-        entity_id: update.pressure_firmware
-        state: &#x27;on&#x27;
+      - condition: template
+        value_template: &quot;{{ state_attr(&#x27;update.pressure_firmware&#x27;,&#x27;installed_version&#x27;)
+          !=\n   state_attr(&#x27;update.pressure_firmware&#x27;,&#x27;latest_version&#x27;) }}\n&quot;
       - target:
           entity_id: update.pressure_firmware
         continue_on_error: true
         action: update.install
       - delay:
           minutes: 5
-      - condition: state
-        entity_id: update.ir_receiver_firmware
-        state: &#x27;on&#x27;
+      - condition: template
+        value_template: &quot;{{ state_attr(&#x27;update.ir_receiver_firmware&#x27;,&#x27;installed_version&#x27;)
+          !=\n   state_attr(&#x27;update.ir_receiver_firmware&#x27;,&#x27;latest_version&#x27;) }}\n&quot;
       - target:
           entity_id: update.ir_receiver_firmware
         continue_on_error: true
@@ -3275,9 +3279,9 @@
     - conditions:
       - condition: trigger
         id: daily
-      - condition: state
-        entity_id: update.pressure_firmware
-        state: &#x27;off&#x27;
+      - condition: template
+        value_template: &quot;{{ state_attr(&#x27;update.pressure_firmware&#x27;,&#x27;installed_version&#x27;)
+          ==\n   state_attr(&#x27;update.pressure_firmware&#x27;,&#x27;latest_version&#x27;) }}\n&quot;
       sequence:
       - data:
           addon: a0d7b954_vscode
