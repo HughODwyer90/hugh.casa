@@ -66,6 +66,14 @@
         {% else %}
           {{ speed }}%
         {% endif %}
+      attribute_templates:
+        raw_percentage: &gt;
+          {% set speed = state_attr(&#x27;fan.air_purifier&#x27;, &#x27;percentage&#x27;) %}
+          {% if speed in [&#x27;unavailable&#x27;, &#x27;unknown&#x27;, None] %}
+            0
+          {% else %}
+            {{ speed | int }}
+          {% endif %}
       icon_template: &gt;
         {% set label = states(&#x27;sensor.air_purifier_fan_speed&#x27;) %}
         {% if label in [&#x27;Low&#x27;,&#x27;Medium&#x27;,&#x27;High&#x27;] %}
@@ -190,8 +198,6 @@
         {% else %}
           mdi:alert
         {% endif %}
-
-
 </pre>
             </div>
             <script>
