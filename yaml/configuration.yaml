@@ -16,7 +16,7 @@ notify: !include notifications.yaml
 python_script: !include_dir_merge_named python_scripts
 shell_command: !include shell_commands.yaml
 rest_command: !include custom_command.yaml
-sensor: !include_dir_merge_list custom_sensors_template/
+template: !include_dir_merge_list custom_sensors_template/
 binary_sensor: !include_dir_merge_list custom_sensors_binary/
 
 recorder:
