@@ -3178,19 +3178,6 @@
   - choose:
     - conditions:
       - condition: state
-        entity_id: update.living_room_epone_firmware
-        state: 'on'
-      sequence:
-      - action: update.install
-        target:
-          entity_id: update.living_room_epone_firmware
-      - wait_template: '{{ is_state(''update.living_room_epone_firmware'', ''off'')
-          }}'
-        timeout: 00:10:00
-        continue_on_timeout: false
-  - choose:
-    - conditions:
-      - condition: state
         entity_id: update.pressure_firmware
         state: 'on'
       sequence:
@@ -3210,6 +3197,28 @@
         target:
           entity_id: update.ir_receiver_firmware
       - wait_template: '{{ is_state(''update.ir_receiver_firmware'', ''off'') }}'
+        timeout: 00:10:00
+        continue_on_timeout: false
+  - choose:
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: update.pressure_firmware
+          state: 'on'
+        - condition: state
+          entity_id: update.ir_receiver_firmware
+          state: 'on'
+      sequence:
+      - action: update.install
+        target:
+          entity_id: update.living_room_epone_firmware
+      - wait_template: '{{ is_state(''update.living_room_epone_firmware'', ''unavailable'')
+          }}'
+        timeout: 00:02:00
+        continue_on_timeout: true
+      - wait_template: '{{ is_state(''update.living_room_epone_firmware'', ''off'')
+          }}'
         timeout: 00:10:00
         continue_on_timeout: false
   - action: hassio.addon_start
