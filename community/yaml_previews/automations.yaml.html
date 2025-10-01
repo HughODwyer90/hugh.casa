@@ -393,7 +393,7 @@
       - target:
           entity_id: fan.air_purifier
         data:
-          percentage: 50
+          percentage: &#x27;{{ states(&#x27;&#x27;input_number.fan_speed_medium&#x27;&#x27;) | int }}&#x27;
         action: fan.set_percentage
   - if:
     - condition: or
@@ -409,7 +409,7 @@
     - action: fan.set_percentage
       metadata: {}
       data:
-        percentage: 25
+        percentage: &#x27;{{ states(&#x27;&#x27;input_number.fan_speed_low&#x27;&#x27;) | int }}&#x27;
       target:
         entity_id: fan.air_purifier
   mode: single
@@ -714,7 +714,7 @@
     target:
       entity_id: fan.aroma_diffuser
     data:
-      percentage: 50
+      percentage: &#x27;{{ states(&#x27;&#x27;input_number.fan_speed_medium&#x27;&#x27;) | int }}&#x27;
   - action: light.turn_on
     target:
       entity_id: light.aroma_diffuser
@@ -1454,7 +1454,7 @@
       sequence:
       - action: fan.set_percentage
         data:
-          percentage: 66
+          percentage: &#x27;{{ states(&#x27;&#x27;input_number.fan_speed_medium&#x27;&#x27;) | int }}&#x27;
         target:
           entity_id: fan.air_purifier
     - conditions:
@@ -1464,7 +1464,7 @@
       sequence:
       - action: fan.set_percentage
         data:
-          percentage: 33
+          percentage: &#x27;{{ states(&#x27;&#x27;input_number.fan_speed_low&#x27;&#x27;) | int }}&#x27;
         target:
           entity_id: fan.air_purifier
     default: []
@@ -1744,7 +1744,7 @@
 - id: &#x27;1711199503084&#x27;
   alias: Hugh Room Occupied Off
   description: &#x27;Turns off all lights and sets the Hugh Room air purifier fan speed
-    to 100 when the room becomes unoccupied, but only if the diffuser is off.
+    to 100 when the room becomes unoccupied.
 
     &#x27;
   triggers:
@@ -1760,7 +1760,7 @@
   - target:
       entity_id: fan.air_purifier
     data:
-      percentage: 100
+      percentage: &#x27;{{ states(&#x27;&#x27;input_number.fan_speed_high&#x27;&#x27;) | int }}&#x27;
     action: fan.set_percentage
   - action: input_select.select_option
     target:
@@ -3269,7 +3269,7 @@
         state: playing
       sequence:
       - data:
-          percentage: 33
+          percentage: &#x27;{{ states(&#x27;&#x27;input_number.fan_speed_low&#x27;&#x27;) | int }}&#x27;
         target:
           entity_id: fan.air_purifier
         action: fan.set_percentage
@@ -3279,7 +3279,7 @@
         state: idle
       sequence:
       - data:
-          percentage: 66
+          percentage: &#x27;{{ states(&#x27;&#x27;input_number.fan_speed_medium&#x27;&#x27;) | int }}&#x27;
         target:
           entity_id: fan.air_purifier
         action: fan.set_percentage
@@ -3289,7 +3289,7 @@
         state: paused
       sequence:
       - data:
-          percentage: 66
+          percentage: &#x27;{{ states(&#x27;&#x27;input_number.fan_speed_medium&#x27;&#x27;) | int }}&#x27;
         target:
           entity_id: fan.air_purifier
         action: fan.set_percentage
@@ -3668,7 +3668,7 @@
   - trigger: state
     entity_id:
     - binary_sensor.monitor_state
-    to: &#x27;On&#x27;
+    to: &#x27;on&#x27;
   conditions:
   - condition: state
     entity_id: input_boolean.wake_up_alarm_running
@@ -3692,7 +3692,7 @@
   - action: fan.set_percentage
     metadata: {}
     data:
-      percentage: 33
+      percentage: &#x27;{{ states(&#x27;&#x27;input_number.fan_speed_low&#x27;&#x27;) | int }}&#x27;
     target:
       entity_id: fan.air_purifier
   mode: single
@@ -3938,7 +3938,7 @@
       - action: fan.set_percentage
         metadata: {}
         data:
-          percentage: 33
+          percentage: &#x27;{{ states(&#x27;&#x27;input_number.fan_speed_low&#x27;&#x27;) | int }}&#x27;
         target:
           entity_id: fan.air_purifier
     - conditions:
@@ -3949,7 +3949,7 @@
       - action: fan.set_percentage
         metadata: {}
         data:
-          percentage: 66
+          percentage: &#x27;{{ states(&#x27;&#x27;input_number.fan_speed_medium&#x27;&#x27;) | int }}&#x27;
         target:
           entity_id: fan.air_purifier
       - action: light.turn_off
@@ -4096,19 +4096,19 @@
               transition: 1
           - condition: template
             value_template: &#x27;{{ state_attr(&#x27;&#x27;fan.air_purifier&#x27;&#x27;, &#x27;&#x27;percentage&#x27;&#x27;) !=
-              66 }}&#x27;
+              (states(&#x27;&#x27;input_number.fan_speed_medium&#x27;&#x27;) | int) }}&#x27;
           - action: fan.set_percentage
             data:
-              percentage: 66
+              percentage: &#x27;{{ states(&#x27;&#x27;input_number.fan_speed_medium&#x27;&#x27;) | int }}&#x27;
             target:
               entity_id: fan.air_purifier
         default:
         - condition: template
           value_template: &#x27;{{ state_attr(&#x27;&#x27;fan.air_purifier&#x27;&#x27;, &#x27;&#x27;percentage&#x27;&#x27;) !=
-            66 }}&#x27;
+            (states(&#x27;&#x27;input_number.fan_speed_medium&#x27;&#x27;) | int) }}&#x27;
         - action: fan.set_percentage
           data:
-            percentage: 66
+            percentage: &#x27;{{ states(&#x27;&#x27;input_number.fan_speed_medium&#x27;&#x27;) | int }}&#x27;
           target:
             entity_id: fan.air_purifier
     - conditions:
@@ -4117,14 +4117,14 @@
         state: &#x27;on&#x27;
       sequence:
       - condition: template
-        value_template: &#x27;{{ state_attr(&#x27;&#x27;fan.air_purifier&#x27;&#x27;, &#x27;&#x27;percentage&#x27;&#x27;) != 33
-          }}&#x27;
+        value_template: &#x27;{{ state_attr(&#x27;&#x27;fan.air_purifier&#x27;&#x27;, &#x27;&#x27;percentage&#x27;&#x27;) != (states(&#x27;&#x27;input_number.fan_speed_low&#x27;&#x27;)
+          | int) }}&#x27;
       - condition: state
         entity_id: fan.air_purifier
         state: &#x27;on&#x27;
       - action: fan.set_percentage
         data:
-          percentage: 33
+          percentage: &#x27;{{ states(&#x27;&#x27;input_number.fan_speed_low&#x27;&#x27;) | int }}&#x27;
         target:
           entity_id: fan.air_purifier
   mode: single
