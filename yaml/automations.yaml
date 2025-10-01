@@ -3154,9 +3154,9 @@
   mode: queued
 - id: '1727963833872'
   alias: Auto Update ESPHome Devices
-  description: 'Run ESPHome "Update All" at 7 AM if Pressure has an update, or always
-    when manually triggered. Stops VSCode add-on during updates, waits a bit for memory
-    to clear, runs updates, waits fixed time, then restarts VSCode.
+  description: 'Sequentially update ESPHome devices at 7 AM if Pressure has an update,
+    or always when manually triggered. Stops VSCode add-on during updates, adds buffer
+    delays, then restarts VSCode.
 
     '
   triggers:
@@ -3171,7 +3171,8 @@
   - data:
       addon: a0d7b954_vscode
     action: hassio.addon_stop
-  - delay: 00:00:30
+  - delay:
+      seconds: 30
   - target:
       entity_id: update.pressure_firmware
     action: homeassistant.update_entity
@@ -3180,14 +3181,36 @@
       - condition: trigger
         id: manual
       sequence:
-      - action: shell_command.esphome_update_all
-      - delay: 00:15:00
+      - condition: state
+        entity_id: update.living_room_epone_firmware
+        state: 'on'
+      - target:
+          entity_id: update.living_room_epone_firmware
+        action: update.install
+      - delay:
+          minutes: 5
+      - condition: state
+        entity_id: update.pressure_firmware
+        state: 'on'
+      - target:
+          entity_id: update.pressure_firmware
+        action: update.install
+      - delay:
+          minutes: 5
+      - condition: state
+        entity_id: update.ir_receiver_firmware
+        state: 'on'
+      - target:
+          entity_id: update.ir_receiver_firmware
+        action: update.install
+      - delay:
+          minutes: 5
       - data:
           addon: a0d7b954_vscode
         action: hassio.addon_start
       - data:
           title: ESPHome Updates
-          message: 'Manual trigger: All ESPHome devices have been updated.'
+          message: 'Manual trigger: ESPHome devices updated.'
         action: notify.notifications
     - conditions:
       - condition: trigger
@@ -3196,8 +3219,30 @@
         entity_id: update.pressure_firmware
         state: 'on'
       sequence:
-      - action: shell_command.esphome_update_all
-      - delay: 00:15:00
+      - condition: state
+        entity_id: update.living_room_epone_firmware
+        state: 'on'
+      - target:
+          entity_id: update.living_room_epone_firmware
+        action: update.install
+      - delay:
+          minutes: 5
+      - condition: state
+        entity_id: update.pressure_firmware
+        state: 'on'
+      - target:
+          entity_id: update.pressure_firmware
+        action: update.install
+      - delay:
+          minutes: 5
+      - condition: state
+        entity_id: update.ir_receiver_firmware
+        state: 'on'
+      - target:
+          entity_id: update.ir_receiver_firmware
+        action: update.install
+      - delay:
+          minutes: 5
       - data:
           addon: a0d7b954_vscode
         action: hassio.addon_start
