@@ -3155,18 +3155,29 @@
 - id: '1727963833872'
   alias: Auto Update ESPHome Devices
   description: Automatically check and update ESPHome devices if an update is available
-    at 4 AM, excluding Everything Presence One.
+    at 7am.
   triggers:
   - at: 07:00:00
     trigger: time
+  - trigger: state
+    entity_id:
+    - input_button.update_esphome_devices
   conditions: []
   actions:
+  - action: hassio.addon_stop
+    metadata: {}
+    data:
+      addon: a0d7b954_vscode
   - target:
       entity_id:
       - update.pressure_firmware
       - update.ir_receiver_firmware
       - update.living_room_epone_firmware
     action: homeassistant.update_entity
+    data: {}
+  - target:
+      entity_id: update.living_room_epone_firmware
+    action: update.install
     data: {}
   - condition: state
     entity_id: update.pressure_firmware
@@ -3182,10 +3193,10 @@
       entity_id: update.ir_receiver_firmware
     action: update.install
     data: {}
-  - target:
-      entity_id: update.living_room_epone_firmware
-    action: update.install
-    data: {}
+  - action: hassio.addon_start
+    metadata: {}
+    data:
+      addon: a0d7b954_vscode
   mode: single
 - id: '1728126796689'
   alias: IR Remote Button in Wave
