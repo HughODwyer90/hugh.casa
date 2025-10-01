@@ -33,21 +33,30 @@
       unique_id: "air_purifier_fan_speed_sensor"
       unit_of_measurement: "%"
       value_template: >
-        {% set state = states('fan.air_purifier') %}
-        {% set speed = state_attr('fan.air_purifier', 'percentage') %}
-        {% if speed in ['unknown', 'unavailable'] %}
+        {% set fan_state = states('fan.air_purifier') %}
+        {% set speed = state_attr('fan.air_purifier', 'percentage') | int(0) %}
+        {% set low = states('input_number.fan_speed_low') | int %}
+        {% set med = states('input_number.fan_speed_medium') | int %}
+        {% set high = states('input_number.fan_speed_high') | int %}
+
+        {% if fan_state in ['unavailable', 'unknown'] %}
           Offline
-        {% elif state == 'off' %}
+        {% elif fan_state == 'off' %}
           Off
+        {% elif speed == low %}
+          Low
+        {% elif speed == med %}
+          Medium
+        {% elif speed == high %}
+          High
         {% else %}
-          {{ speed }}
+          {{ speed }}%
         {% endif %}
       icon_template: >
-        {% set state = states('fan.air_purifier') %}
-        {% if state == 'off' or state_attr('fan.air_purifier', 'percentage') in ['unknown', 'unavailable'] %}
-          mdi:fan-off
-        {% else %}
+        {% if states('sensor.air_purifier_fan_speed') in ['Low','Medium','High'] %}
           mdi:fan
+        {% else %}
+          mdi:fan-off
         {% endif %}
 
     previous_bathroom_humidity:
