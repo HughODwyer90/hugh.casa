@@ -3296,8 +3296,8 @@
   mode: single
 - id: &#x27;1729417096269&#x27;
   alias: Adjust Air Purifier Speed Based on Ollny Sensors
-  description: &#x27;Adjusts air purifier fan speed based on Ollny Twinkle and Comb sensors.  Decreases
-    speed when Ollny Twinkle is on, increases when Ollny Comb is on.
+  description: &#x27;Adjusts air purifier fan speed based on Ollny Twinkle and Comb sensors.
+    Decreases speed when Ollny Twinkle is on, increases when Ollny Comb is on.
 
     &#x27;
   triggers:
@@ -3314,26 +3314,39 @@
         entity_id: binary_sensor.ollny_twinkle
         state: &#x27;on&#x27;
       sequence:
-      - target:
+      - action: fan.set_percentage
+        target:
           entity_id: fan.air_purifier
         data:
-          percentage: &quot;{% set current_speed = state_attr(&#x27;fan.air_purifier&#x27;, &#x27;percentage&#x27;)
-            %} {% if current_speed == 75 %}\n  50\n{% elif current_speed == 50 %}\n
-            \ 25\n{% elif current_speed == 25 %}\n  0\n{% else %}\n  0\n{% endif %}\n&quot;
-        action: fan.set_percentage
+          percentage: &#x27;{% set current = state_attr(&#x27;&#x27;fan.air_purifier&#x27;&#x27;,&#x27;&#x27;percentage&#x27;&#x27;)
+            | int %} {% set off = states(&#x27;&#x27;input_number.fan_speed_off&#x27;&#x27;) | int %}
+            {% set low = states(&#x27;&#x27;input_number.fan_speed_low&#x27;&#x27;) | int %} {% set med
+            = states(&#x27;&#x27;input_number.fan_speed_medium&#x27;&#x27;) | int %} {% set high = states(&#x27;&#x27;input_number.fan_speed_high&#x27;&#x27;)
+            | int %}
+
+            {% if current &gt;= high %} {{ med }} {% elif current &gt;= med %} {{ low }}
+            {% elif current &gt;= low %} {{ off }} {% else %} {{ off }} {% endif %}
+
+            &#x27;
     - conditions:
       - condition: state
         entity_id: binary_sensor.ollny_comb
         state: &#x27;on&#x27;
       sequence:
-      - target:
+      - action: fan.set_percentage
+        target:
           entity_id: fan.air_purifier
         data:
-          percentage: &quot;{% set current_speed = state_attr(&#x27;fan.air_purifier&#x27;, &#x27;percentage&#x27;)
-            %} {% if current_speed == 0 %}\n  25\n{% elif current_speed == 25 %}\n
-            \ 50\n{% elif current_speed == 50 %}\n  75\n{% else %}\n  75\n{% endif
-            %}\n&quot;
-        action: fan.set_percentage
+          percentage: &#x27;{% set current = state_attr(&#x27;&#x27;fan.air_purifier&#x27;&#x27;,&#x27;&#x27;percentage&#x27;&#x27;)
+            | int %} {% set off = states(&#x27;&#x27;input_number.fan_speed_off&#x27;&#x27;) | int %}
+            {% set low = states(&#x27;&#x27;input_number.fan_speed_low&#x27;&#x27;) | int %} {% set med
+            = states(&#x27;&#x27;input_number.fan_speed_medium&#x27;&#x27;) | int %} {% set high = states(&#x27;&#x27;input_number.fan_speed_high&#x27;&#x27;)
+            | int %}
+
+            {% if current &lt;= off %} {{ low }} {% elif current &lt;= low %} {{ med }}
+            {% elif current &lt;= med %} {{ high }} {% else %} {{ high }} {% endif %}
+
+            &#x27;
   mode: restart
 - id: &#x27;1732470007670&#x27;
   alias: Manage Liverpool Sensors
