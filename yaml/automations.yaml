@@ -353,8 +353,11 @@
   - delay:
       hours: 0
       minutes: 0
-      seconds: 10
+      seconds: 5
       milliseconds: 0
+  - action: script.reload_tuya_local_integration
+    metadata: {}
+    data: {}
   - action: shell_command.update_liverpool_channel
     metadata: {}
     data: {}
@@ -3154,7 +3157,7 @@
   description: Automatically check and update ESPHome devices if an update is available
     at 4 AM, excluding Everything Presence One.
   triggers:
-  - at: 09:00:00
+  - at: 07:00:00
     trigger: time
   conditions: []
   actions:
