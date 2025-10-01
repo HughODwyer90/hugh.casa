@@ -3169,76 +3169,72 @@
   mode: queued
 - id: &#x27;1727963833872&#x27;
   alias: Auto Update ESPHome Devices
-  description: &#x27;Automatically check and update ESPHome devices if an update is available
-    at 7 AM or when manually triggered, running one after the other.
+  description: &#x27;Run ESPHome &quot;Update All&quot; at 7 AM if Pressure has an update, or always
+    when manually triggered. Stops VSCode add-on during updates, waits a bit for memory
+    to clear, runs updates, waits fixed time, then restarts VSCode.
 
     &#x27;
   triggers:
-  - at: 07:00:00
+  - id: daily
+    at: 07:00:00
     trigger: time
-  - trigger: state
-    entity_id:
-    - input_button.update_esphome_devices
+  - id: manual
+    trigger: state
+    entity_id: input_button.update_esphome_devices
   conditions: []
   actions:
-  - action: hassio.addon_stop
-    data:
+  - data:
       addon: a0d7b954_vscode
-  - action: homeassistant.update_entity
-    target:
-      entity_id:
-      - update.living_room_epone_firmware
-      - update.pressure_firmware
-      - update.ir_receiver_firmware
+    action: hassio.addon_stop
+  - delay: 00:00:30
+  - target:
+      entity_id: update.pressure_firmware
+    action: homeassistant.update_entity
   - choose:
     - conditions:
+      - condition: trigger
+        id: manual
+      sequence:
+      - action: shell_command.esphome_update_all
+      - delay: 00:15:00
+      - data:
+          addon: a0d7b954_vscode
+        action: hassio.addon_start
+      - data:
+          title: ESPHome Updates
+          message: &#x27;Manual trigger: All ESPHome devices have been updated.&#x27;
+        action: notify.notifications
+    - conditions:
+      - condition: trigger
+        id: daily
       - condition: state
         entity_id: update.pressure_firmware
         state: &#x27;on&#x27;
       sequence:
-      - action: update.install
-        target:
-          entity_id: update.pressure_firmware
-      - wait_template: &#x27;{{ is_state(&#x27;&#x27;update.pressure_firmware&#x27;&#x27;, &#x27;&#x27;off&#x27;&#x27;) }}&#x27;
-        timeout: 00:10:00
-        continue_on_timeout: false
+      - action: shell_command.esphome_update_all
+      - delay: 00:15:00
+      - data:
+          addon: a0d7b954_vscode
+        action: hassio.addon_start
+      - data:
+          title: ESPHome Updates
+          message: &#x27;Scheduled run: ESPHome devices updated (Pressure had an update).&#x27;
+        action: notify.notifications
   - choose:
     - conditions:
+      - condition: trigger
+        id: daily
       - condition: state
-        entity_id: update.ir_receiver_firmware
-        state: &#x27;on&#x27;
+        entity_id: update.pressure_firmware
+        state: &#x27;off&#x27;
       sequence:
-      - action: update.install
-        target:
-          entity_id: update.ir_receiver_firmware
-      - wait_template: &#x27;{{ is_state(&#x27;&#x27;update.ir_receiver_firmware&#x27;&#x27;, &#x27;&#x27;off&#x27;&#x27;) }}&#x27;
-        timeout: 00:10:00
-        continue_on_timeout: false
-  - choose:
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: update.pressure_firmware
-          state: &#x27;on&#x27;
-        - condition: state
-          entity_id: update.ir_receiver_firmware
-          state: &#x27;on&#x27;
-      sequence:
-      - action: update.install
-        target:
-          entity_id: update.living_room_epone_firmware
-      - wait_template: &#x27;{{ is_state(&#x27;&#x27;update.living_room_epone_firmware&#x27;&#x27;, &#x27;&#x27;unavailable&#x27;&#x27;)
-          }}&#x27;
-        timeout: 00:02:00
-        continue_on_timeout: true
-      - wait_template: &#x27;{{ is_state(&#x27;&#x27;update.living_room_epone_firmware&#x27;&#x27;, &#x27;&#x27;off&#x27;&#x27;)
-          }}&#x27;
-        timeout: 00:10:00
-        continue_on_timeout: false
-  - action: hassio.addon_start
-    data:
-      addon: a0d7b954_vscode
+      - data:
+          addon: a0d7b954_vscode
+        action: hassio.addon_start
+      - data:
+          title: ESPHome Updates
+          message: No update detected at 7 AM. Nothing updated.
+        action: notify.notifications
   mode: single
 - id: &#x27;1728126796689&#x27;
   alias: IR Remote Button in Wave
