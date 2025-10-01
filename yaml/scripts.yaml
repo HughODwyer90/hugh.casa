@@ -618,7 +618,10 @@ update_esphome_devices_2:
         target:
           entity_id: update.living_room_epone_firmware
         continue_on_error: true
-  - delay: 00:05:00
+      - wait_template: '{{ is_state(''update.living_room_epone_firmware'', ''off'')
+          }}'
+        timeout: 00:05:00
+        continue_on_timeout: true
   - choose:
     - conditions:
       - condition: state
@@ -629,7 +632,9 @@ update_esphome_devices_2:
         target:
           entity_id: update.pressure_firmware
         continue_on_error: true
-  - delay: 00:05:00
+      - wait_template: '{{ is_state(''update.pressure_firmware'', ''off'') }}'
+        timeout: 00:05:00
+        continue_on_timeout: true
   - choose:
     - conditions:
       - condition: state
@@ -640,8 +645,9 @@ update_esphome_devices_2:
         target:
           entity_id: update.ir_receiver_firmware
         continue_on_error: true
-  - delay: 00:05:00
+      - wait_template: '{{ is_state(''update.ir_receiver_firmware'', ''off'') }}'
+        timeout: 00:05:00
+        continue_on_timeout: true
   - action: hassio.addon_start
     data:
       addon: a0d7b954_vscode
-  description: ''
