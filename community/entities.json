@@ -860,17 +860,17 @@
         "entity_id": "script.update_entities_html",
         "state": "on",
         "attributes": {
-            "last_triggered": "2025-10-07T21:47:49.836644+00:00",
+            "last_triggered": "2025-10-07T21:48:25.545756+00:00",
             "mode": "single",
             "current": 1,
             "friendly_name": "Github Backup"
         },
-        "last_changed": "2025-10-07T21:47:49.836737+00:00",
-        "last_reported": "2025-10-07T21:47:49.836737+00:00",
-        "last_updated": "2025-10-07T21:47:49.836737+00:00",
+        "last_changed": "2025-10-07T21:48:25.545843+00:00",
+        "last_reported": "2025-10-07T21:48:25.545843+00:00",
+        "last_updated": "2025-10-07T21:48:25.545843+00:00",
         "context": {
-            "id": "01K70AA6PAB8DAB5ZNYPNEYYN2",
-            "parent_id": "01K70A8QPNRXKZBGZTQRDDRTNR",
+            "id": "01K70AB9J72V5RQXCDNK0H0WE6",
+            "parent_id": "01K70AB9HX0W3CDTXS7Y943PSB",
             "user_id": null
         }
     },
@@ -2476,18 +2476,18 @@
     },
     {
         "entity_id": "sensor.total_sensors_count",
-        "state": "747",
+        "state": "748",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "sensors",
             "icon": "mdi:counter",
             "friendly_name": "Total Entities"
         },
-        "last_changed": "2025-10-07T21:47:49.825346+00:00",
-        "last_reported": "2025-10-07T21:47:49.825346+00:00",
-        "last_updated": "2025-10-07T21:47:49.825346+00:00",
+        "last_changed": "2025-10-07T21:48:25.536264+00:00",
+        "last_reported": "2025-10-07T21:48:25.536264+00:00",
+        "last_updated": "2025-10-07T21:48:25.536264+00:00",
         "context": {
-            "id": "01K70AA6P0B1YXM62RQMNS766Q",
+            "id": "01K70AB9HX0W3CDTXS7Y943PSB",
             "parent_id": null,
             "user_id": null
         }
@@ -3252,16 +3252,16 @@
     },
     {
         "entity_id": "sensor.date_time_iso",
-        "state": "2025-10-07T22:47:00",
+        "state": "2025-10-07T22:48:00",
         "attributes": {
             "icon": "mdi:calendar-clock",
             "friendly_name": "Date & Time (ISO)"
         },
-        "last_changed": "2025-10-07T21:47:00.001955+00:00",
-        "last_reported": "2025-10-07T21:47:00.003547+00:00",
-        "last_updated": "2025-10-07T21:47:00.001955+00:00",
+        "last_changed": "2025-10-07T21:48:00.001522+00:00",
+        "last_reported": "2025-10-07T21:48:00.002978+00:00",
+        "last_updated": "2025-10-07T21:48:00.001522+00:00",
         "context": {
-            "id": "01K70A8P116HT6EN0Q9CTYD8EB",
+            "id": "01K70AAGM1WF9J2R58N3YFQ8DR",
             "parent_id": null,
             "user_id": null
         }
@@ -4033,7 +4033,7 @@
     },
     {
         "entity_id": "light.aroma_diffuser",
-        "state": "off",
+        "state": "on",
         "attributes": {
             "effect_list": [
                 "Mood",
@@ -4043,21 +4043,31 @@
                 "hs",
                 "white"
             ],
-            "effect": null,
-            "color_mode": null,
-            "brightness": null,
-            "hs_color": null,
-            "rgb_color": null,
-            "xy_color": null,
+            "effect": "off",
+            "color_mode": "hs",
+            "brightness": 255,
+            "hs_color": [
+                0,
+                100
+            ],
+            "rgb_color": [
+                255,
+                0,
+                0
+            ],
+            "xy_color": [
+                0.701,
+                0.299
+            ],
             "friendly_name": "Aroma diffuser",
             "supported_features": 4
         },
-        "last_changed": "2025-10-07T21:16:17.717836+00:00",
-        "last_reported": "2025-10-07T21:16:17.717836+00:00",
-        "last_updated": "2025-10-07T21:16:17.717836+00:00",
+        "last_changed": "2025-10-07T21:48:25.715066+00:00",
+        "last_reported": "2025-10-07T21:48:26.129799+00:00",
+        "last_updated": "2025-10-07T21:48:25.715066+00:00",
         "context": {
-            "id": "01K708GEXNYK5Q5GKEXW54557K",
-            "parent_id": null,
+            "id": "01K70AB9HRWVCRVQJHQWSATB8F",
+            "parent_id": "01K70AB9E0BPQSABPZKY27QVEE",
             "user_id": null
         }
     },
@@ -4080,7 +4090,7 @@
     },
     {
         "entity_id": "select.aroma_diffuser_mood_lighting",
-        "state": "Fixed",
+        "state": "Cycle",
         "attributes": {
             "options": [
                 "Cycle",
@@ -4090,11 +4100,11 @@
             "icon": "mdi:candelabra-fire",
             "friendly_name": "Aroma diffuser Mood lighting"
         },
-        "last_changed": "2025-10-07T21:16:17.767407+00:00",
-        "last_reported": "2025-10-07T21:16:17.767407+00:00",
-        "last_updated": "2025-10-07T21:16:17.767407+00:00",
+        "last_changed": "2025-10-07T21:48:26.017817+00:00",
+        "last_reported": "2025-10-07T21:48:26.130933+00:00",
+        "last_updated": "2025-10-07T21:48:26.017817+00:00",
         "context": {
-            "id": "01K708GEZ774SJYNFBMK2JWCBD",
+            "id": "01K70ABA114XSQPB7JR73Q6ZZ1",
             "parent_id": null,
             "user_id": null
         }
@@ -6801,36 +6811,36 @@
     },
     {
         "entity_id": "sensor.living_room_epone_temperature",
-        "state": "25.5984802246094",
+        "state": "25.6331939697266",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
             "device_class": "temperature",
             "friendly_name": "EPOne Temperature"
         },
-        "last_changed": "2025-10-07T21:47:11.913867+00:00",
-        "last_reported": "2025-10-07T21:47:11.913867+00:00",
-        "last_updated": "2025-10-07T21:47:11.913867+00:00",
+        "last_changed": "2025-10-07T21:48:11.873934+00:00",
+        "last_reported": "2025-10-07T21:48:11.873934+00:00",
+        "last_updated": "2025-10-07T21:48:11.873934+00:00",
         "context": {
-            "id": "01K70A91N9ENXJ3B0ZR8ZN49DD",
+            "id": "01K70AAW712D02CB8VWZ0MQ6PS",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.living_room_epone_illuminance",
-        "state": "3.67437958717346",
+        "state": "0.0",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "lx",
             "device_class": "illuminance",
             "friendly_name": "EPOne Illuminance"
         },
-        "last_changed": "2025-10-07T21:47:50.452959+00:00",
-        "last_reported": "2025-10-07T21:47:50.452959+00:00",
-        "last_updated": "2025-10-07T21:47:50.452959+00:00",
+        "last_changed": "2025-10-07T21:47:52.387812+00:00",
+        "last_reported": "2025-10-07T21:47:52.387812+00:00",
+        "last_updated": "2025-10-07T21:47:52.387812+00:00",
         "context": {
-            "id": "01K70AA79M0VGK6F1SNQMS1HVX",
+            "id": "01K70AA963YWTEMGVQQNYPBJ6D",
             "parent_id": null,
             "user_id": null
         }
@@ -6854,18 +6864,18 @@
     },
     {
         "entity_id": "sensor.living_room_epone_humidity",
-        "state": "45.399169921875",
+        "state": "45.362548828125",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "%",
             "device_class": "humidity",
             "friendly_name": "EPOne Humidity"
         },
-        "last_changed": "2025-10-07T21:47:11.916003+00:00",
-        "last_reported": "2025-10-07T21:47:11.916003+00:00",
-        "last_updated": "2025-10-07T21:47:11.916003+00:00",
+        "last_changed": "2025-10-07T21:48:11.875317+00:00",
+        "last_reported": "2025-10-07T21:48:11.875317+00:00",
+        "last_updated": "2025-10-07T21:48:11.875317+00:00",
         "context": {
-            "id": "01K70A91NCY84GHYXYEAA7RNJ6",
+            "id": "01K70AAW73376YEMDFAR7B0YG0",
             "parent_id": null,
             "user_id": null
         }
@@ -7865,7 +7875,7 @@
     },
     {
         "entity_id": "event.hugh_room_aqara_bed_button_action",
-        "state": "unknown",
+        "state": "2025-10-07T21:48:25.403+00:00",
         "attributes": {
             "event_types": [
                 "single",
@@ -7875,15 +7885,15 @@
                 "hold",
                 "release"
             ],
-            "event_type": "single",
+            "event_type": "double",
             "icon": "mdi:gesture-double-tap",
             "friendly_name": "Hugh Room Aqara Bed Button Action"
         },
-        "last_changed": "2025-10-07T21:16:05.812041+00:00",
-        "last_reported": "2025-10-07T21:16:05.812041+00:00",
-        "last_updated": "2025-10-07T21:16:05.812041+00:00",
+        "last_changed": "2025-10-07T21:48:25.406751+00:00",
+        "last_reported": "2025-10-07T21:48:25.406751+00:00",
+        "last_updated": "2025-10-07T21:48:25.406751+00:00",
         "context": {
-            "id": "01K708G39M7WCNT71NEE45B0TG",
+            "id": "01K70AB9DYR073VX5YRV1G7T6S",
             "parent_id": null,
             "user_id": null
         }
@@ -8906,7 +8916,7 @@
     },
     {
         "entity_id": "select.hugh_room_plug_blanket_indicator_mode",
-        "state": "off",
+        "state": "on",
         "attributes": {
             "options": [
                 "off",
@@ -8916,12 +8926,12 @@
             ],
             "friendly_name": "Hugh Room Plug Blanket Indicator mode"
         },
-        "last_changed": "2025-10-07T21:16:06.901245+00:00",
-        "last_reported": "2025-10-07T21:16:06.901245+00:00",
-        "last_updated": "2025-10-07T21:16:06.901245+00:00",
+        "last_changed": "2025-10-07T21:48:25.657158+00:00",
+        "last_reported": "2025-10-07T21:48:25.657158+00:00",
+        "last_updated": "2025-10-07T21:48:25.657158+00:00",
         "context": {
-            "id": "01K708G4BN6MARPCF3W6HVK684",
-            "parent_id": null,
+            "id": "01K70AB9HKEMJ8451TR6DFXHVY",
+            "parent_id": "01K70AB9E0BPQSABPZKY27QVEE",
             "user_id": null
         }
     },
@@ -10188,16 +10198,16 @@
     },
     {
         "entity_id": "sensor.hugh_room_aqara_bed_button_action",
-        "state": "unknown",
+        "state": "",
         "attributes": {
             "icon": "mdi:gesture-double-tap",
             "friendly_name": "Hugh Room Aqara Bed Button Action"
         },
-        "last_changed": "2025-10-07T21:16:05.832835+00:00",
-        "last_reported": "2025-10-07T21:16:05.832835+00:00",
-        "last_updated": "2025-10-07T21:16:05.832835+00:00",
+        "last_changed": "2025-10-07T21:48:25.417302+00:00",
+        "last_reported": "2025-10-07T21:48:25.417302+00:00",
+        "last_updated": "2025-10-07T21:48:25.417302+00:00",
         "context": {
-            "id": "01K708G3A8P3GA4KH1VWQN3R99",
+            "id": "01K70AB9E9HWJRA3QF6RAXRVRV",
             "parent_id": null,
             "user_id": null
         }
@@ -10524,18 +10534,18 @@
     },
     {
         "entity_id": "sensor.hugh_room_plug_blanket_current",
-        "state": "0.01",
+        "state": "0",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "A",
             "device_class": "current",
             "friendly_name": "Hugh Room Plug Blanket Current"
         },
-        "last_changed": "2025-10-07T21:44:09.610648+00:00",
-        "last_reported": "2025-10-07T21:44:09.610648+00:00",
-        "last_updated": "2025-10-07T21:44:09.610648+00:00",
+        "last_changed": "2025-10-07T21:48:10.093248+00:00",
+        "last_reported": "2025-10-07T21:48:10.093248+00:00",
+        "last_updated": "2025-10-07T21:48:10.093248+00:00",
         "context": {
-            "id": "01K70A3FMABPXXBF0WP0M1T0ZX",
+            "id": "01K70AATFD1JP6B1CP8ED6E14R",
             "parent_id": null,
             "user_id": null
         }
@@ -10596,36 +10606,36 @@
     },
     {
         "entity_id": "sensor.hugh_room_plug_fan_bed_current",
-        "state": "0.02",
+        "state": "0",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "A",
             "device_class": "current",
             "friendly_name": "Hugh Room Plug Fan Bed Current"
         },
-        "last_changed": "2025-10-07T21:47:09.531293+00:00",
-        "last_reported": "2025-10-07T21:47:09.531293+00:00",
-        "last_updated": "2025-10-07T21:47:09.531293+00:00",
+        "last_changed": "2025-10-07T21:48:09.648725+00:00",
+        "last_reported": "2025-10-07T21:48:09.648725+00:00",
+        "last_updated": "2025-10-07T21:48:09.648725+00:00",
         "context": {
-            "id": "01K70A8ZAVERV27WHM6QEWPZ75",
+            "id": "01K70AAT1GWEXD3NRKN71SRG0C",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.hugh_room_plug_fan_bed_voltage",
-        "state": "233",
+        "state": "232",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "V",
             "device_class": "voltage",
             "friendly_name": "Hugh Room Plug Fan Bed Voltage"
         },
-        "last_changed": "2025-10-07T21:45:09.290001+00:00",
-        "last_reported": "2025-10-07T21:45:09.290001+00:00",
-        "last_updated": "2025-10-07T21:45:09.290001+00:00",
+        "last_changed": "2025-10-07T21:48:09.647895+00:00",
+        "last_reported": "2025-10-07T21:48:09.647895+00:00",
+        "last_updated": "2025-10-07T21:48:09.647895+00:00",
         "context": {
-            "id": "01K70A59XA7A9E1Y9H4NE3S25G",
+            "id": "01K70AAT1FRJ3METGGP53ZSMZS",
             "parent_id": null,
             "user_id": null
         }
@@ -11016,16 +11026,16 @@
     },
     {
         "entity_id": "switch.hugh_room_plug_blanket",
-        "state": "off",
+        "state": "on",
         "attributes": {
             "friendly_name": "Hugh Room Plug Blanket"
         },
-        "last_changed": "2025-10-07T21:16:06.902033+00:00",
-        "last_reported": "2025-10-07T21:16:06.902033+00:00",
-        "last_updated": "2025-10-07T21:16:06.902033+00:00",
+        "last_changed": "2025-10-07T21:48:25.518716+00:00",
+        "last_reported": "2025-10-07T21:48:25.518716+00:00",
+        "last_updated": "2025-10-07T21:48:25.518716+00:00",
         "context": {
-            "id": "01K708G4BP5P6EYWWQN93X3XBR",
-            "parent_id": null,
+            "id": "01K70AB9E0BPQSABPZKY27QVEE",
+            "parent_id": "01K70AB9DXAP9M9M9YPMYGWVCY",
             "user_id": null
         }
     },
@@ -11309,17 +11319,17 @@
         "state": "on",
         "attributes": {
             "id": "1703765268013",
-            "last_triggered": "2025-10-04T23:58:55.879695+00:00",
+            "last_triggered": "2025-10-07T21:48:25.408743+00:00",
             "mode": "single",
             "current": 0,
             "friendly_name": "Hugh Room Bed Button Double"
         },
         "last_changed": "2025-10-07T21:14:14.208572+00:00",
-        "last_reported": "2025-10-07T21:14:14.208572+00:00",
-        "last_updated": "2025-10-07T21:14:14.208572+00:00",
+        "last_reported": "2025-10-07T21:48:25.430467+00:00",
+        "last_updated": "2025-10-07T21:48:25.430467+00:00",
         "context": {
-            "id": "01K708CPA0BZ9A020CQCA2XWE3",
-            "parent_id": null,
+            "id": "01K70AB9E0BPQSABPZKY27QVEE",
+            "parent_id": "01K70AB9DXAP9M9M9YPMYGWVCY",
             "user_id": null
         }
     },
@@ -11461,17 +11471,17 @@
         "state": "on",
         "attributes": {
             "id": "1705446923942",
-            "last_triggered": "2025-10-05T00:28:56.176418+00:00",
+            "last_triggered": "2025-10-07T21:48:25.523816+00:00",
             "mode": "single",
             "current": 0,
             "friendly_name": "Hugh Room Blanket Indicator"
         },
         "last_changed": "2025-10-07T21:14:14.213958+00:00",
-        "last_reported": "2025-10-07T21:14:14.213958+00:00",
-        "last_updated": "2025-10-07T21:14:14.213958+00:00",
+        "last_reported": "2025-10-07T21:48:25.575108+00:00",
+        "last_updated": "2025-10-07T21:48:25.575108+00:00",
         "context": {
-            "id": "01K708CPA5X01SDTR1CN7A3ZX7",
-            "parent_id": null,
+            "id": "01K70AB9HKEMJ8451TR6DFXHVY",
+            "parent_id": "01K70AB9E0BPQSABPZKY27QVEE",
             "user_id": null
         }
     },
@@ -12963,17 +12973,17 @@
         "state": "on",
         "attributes": {
             "id": "1734951741728",
-            "last_triggered": "2025-10-07T21:47:49.834895+00:00",
+            "last_triggered": "2025-10-07T21:48:25.544160+00:00",
             "mode": "single",
             "current": 1,
             "friendly_name": "Update Entity List on Entity Count Change"
         },
         "last_changed": "2025-10-07T21:14:14.272074+00:00",
-        "last_reported": "2025-10-07T21:47:49.834978+00:00",
-        "last_updated": "2025-10-07T21:47:49.834978+00:00",
+        "last_reported": "2025-10-07T21:48:25.544240+00:00",
+        "last_updated": "2025-10-07T21:48:25.544240+00:00",
         "context": {
-            "id": "01K70AA6PAB8DAB5ZNYPNEYYN2",
-            "parent_id": "01K70A8QPNRXKZBGZTQRDDRTNR",
+            "id": "01K70AB9J72V5RQXCDNK0H0WE6",
+            "parent_id": "01K70AB9HX0W3CDTXS7Y943PSB",
             "user_id": null
         }
     },
@@ -13362,17 +13372,17 @@
         "state": "on",
         "attributes": {
             "id": "1758745396056",
-            "last_triggered": "2025-10-07T21:16:06.907042+00:00",
+            "last_triggered": "2025-10-07T21:48:25.529275+00:00",
             "mode": "single",
             "current": 0,
             "friendly_name": "Blanket and Diffuser Sync"
         },
         "last_changed": "2025-10-07T21:14:14.286456+00:00",
-        "last_reported": "2025-10-07T21:16:06.937122+00:00",
-        "last_updated": "2025-10-07T21:16:06.937122+00:00",
+        "last_reported": "2025-10-07T21:48:25.594009+00:00",
+        "last_updated": "2025-10-07T21:48:25.594009+00:00",
         "context": {
-            "id": "01K708G4BTFFP4KTPKG6JSVSDW",
-            "parent_id": "01K708G4BP5P6EYWWQN93X3XBR",
+            "id": "01K70AB9HRWVCRVQJHQWSATB8F",
+            "parent_id": "01K70AB9E0BPQSABPZKY27QVEE",
             "user_id": null
         }
     },
@@ -13510,18 +13520,18 @@
     },
     {
         "entity_id": "sensor.snake_plant_signal_strength",
-        "state": "-86",
+        "state": "-84",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "dBm",
             "device_class": "signal_strength",
             "friendly_name": "Snake Plant Signal Strength"
         },
-        "last_changed": "2025-10-07T21:47:49.157137+00:00",
-        "last_reported": "2025-10-07T21:47:49.157137+00:00",
-        "last_updated": "2025-10-07T21:47:49.157137+00:00",
+        "last_changed": "2025-10-07T21:48:19.157392+00:00",
+        "last_reported": "2025-10-07T21:48:19.157392+00:00",
+        "last_updated": "2025-10-07T21:48:19.157392+00:00",
         "context": {
-            "id": "01K70AA61540TBFFX6PT0XAHVG",
+            "id": "01K70AB3ANKFW7SXTFQAXTDXH7",
             "parent_id": null,
             "user_id": null
         }
@@ -13583,18 +13593,18 @@
     },
     {
         "entity_id": "sensor.snake_plant_temperature",
-        "state": "19.4",
+        "state": "19.3",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
             "device_class": "temperature",
             "friendly_name": "Snake Plant Temperature"
         },
-        "last_changed": "2025-10-07T21:47:21.197280+00:00",
-        "last_reported": "2025-10-07T21:47:21.197280+00:00",
-        "last_updated": "2025-10-07T21:47:21.197280+00:00",
+        "last_changed": "2025-10-07T21:48:01.226337+00:00",
+        "last_reported": "2025-10-07T21:48:01.226337+00:00",
+        "last_updated": "2025-10-07T21:48:01.226337+00:00",
         "context": {
-            "id": "01K70A9AQDMP2WNM7YJAHQXF3A",
+            "id": "01K70AAHTAHS8QBTHVAHJJD9PP",
             "parent_id": null,
             "user_id": null
         }
@@ -14586,6 +14596,24 @@
         "last_updated": "2025-10-07T21:47:49.824078+00:00",
         "context": {
             "id": "01K70AA6P0B1YXM62RQMNS766Q",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "scene.diffuser_previous",
+        "state": "2025-09-25T09:53:42.909423+00:00",
+        "attributes": {
+            "entity_id": [
+                "light.aroma_diffuser"
+            ],
+            "friendly_name": "diffuser_previous"
+        },
+        "last_changed": "2025-10-07T21:48:25.533232+00:00",
+        "last_reported": "2025-10-07T21:48:25.533232+00:00",
+        "last_updated": "2025-10-07T21:48:25.533232+00:00",
+        "context": {
+            "id": "01K70AB9HX0W3CDTXS7Y943PSB",
             "parent_id": null,
             "user_id": null
         }
