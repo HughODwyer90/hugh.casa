@@ -1,0 +1,144 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>livescore_stand.yaml</title>
+            <link rel="stylesheet" id="dynamic-styles">
+            <link rel="icon" id="dynamic-favicon">
+        </head>
+        <body>
+            <div class="fixed-header">
+                <h1>Viewing: livescore_stand.yaml</h1>
+            </div>
+            <div class="scrollable-content">
+                <pre class="yaml-content">- resource: &quot;https://site.web.api.espn.com/apis/v2/sports/soccer/uefa.champions/standings?region=uk&amp;lang=en&quot;
+  scan_interval: 9000
+  timeout: 5
+  sensor:
+    - name: &quot;Liverpool (Champions League Position)&quot;
+      unique_id: &quot;liverpool_champions_league_position_sensor&quot;
+      value_template: &gt;
+        {% if value_json is not none and &#x27;children&#x27; in value_json and value_json[&#x27;children&#x27;] %}
+          {% set entries = value_json[&#x27;children&#x27;] | map(attribute=&#x27;standings&#x27;) | map(attribute=&#x27;entries&#x27;) | sum(start=[]) %}
+          {% set total_games = 8 %}
+          {% set liverpool = entries | selectattr(&#x27;team.displayName&#x27;, &#x27;equalto&#x27;, &#x27;Liverpool&#x27;) | list | first %}
+
+          {% if liverpool and &#x27;stats&#x27; in liverpool %}
+            {% set rank = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;rank&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+            {% set lfc_points = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+            {% set lfc_played = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;gamesPlayed&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+            {% set lfc_gd = liverpool[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;pointDifferential&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+            {% set suffix =
+              &#x27;th&#x27; if rank in [11, 12, 13] else
+              &#x27;st&#x27; if rank % 10 == 1 else
+              &#x27;nd&#x27; if rank % 10 == 2 else
+              &#x27;rd&#x27; if rank % 10 == 3 else
+              &#x27;th&#x27; %}
+
+            {% set ns = namespace(
+              guaranteed_first = true,
+              guaranteed_top8 = true,
+              guaranteed_eliminated = true
+            ) %}
+
+            {# ----- RANK 1 LOGIC ----- #}
+            {% if rank == 1 %}
+              {% for team in entries if team.team.displayName != &#x27;Liverpool&#x27; %}
+                {% set pts = team[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+                {% set played = team[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;, &#x27;equalto&#x27;, &#x27;gamesPlayed&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+                {% set max_possible = pts + (total_games - played) * 3 %}
+                {% if max_possible &gt; lfc_points %}
+                  {% set ns.guaranteed_first = false %}
+                {% endif %}
+              {% endfor %}
+
+              {% if ns.guaranteed_first %}
+                {{ rank }}{{ suffix }} (Guaranteed 1st)
+              {% else %}
+                {% set runner_up = (
+                  entries
+                  | rejectattr(&#x27;team.displayName&#x27;,&#x27;equalto&#x27;,&#x27;Liverpool&#x27;)
+                  | sort(attribute=&#x27;stats&#x27; | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first, reverse=true)
+                  | first
+                ) %}
+                {% set runner_points = runner_up[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+                {% set runner_gd = runner_up[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;pointDifferential&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+
+                {% if lfc_points == runner_points %}
+                  {{ rank }}{{ suffix }} (+{{ lfc_gd - runner_gd }} GD)
+                {% else %}
+                  {{ rank }}{{ suffix }} (+{{ lfc_points - runner_points }} pts)
+                {% endif %}
+              {% endif %}
+
+            {% else %}
+              {# ----- BELOW 1ST PLACE ----- #}
+              {% set leader = (
+                entries
+                | rejectattr(&#x27;team.displayName&#x27;,&#x27;equalto&#x27;,&#x27;Liverpool&#x27;)
+                | sort(attribute=&#x27;stats&#x27; | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first, reverse=true)
+                | first
+              ) %}
+              {% set leader_points = leader[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+              {% set leader_gd = leader[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;pointDifferential&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+
+              {# Check guaranteed top 8 #}
+              {% for team in entries if team.team.displayName != &#x27;Liverpool&#x27;
+                and (team[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;rank&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int) &gt; 8 %}
+                {% set pts = team[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+                {% set played = team[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;gamesPlayed&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+                {% set max_possible = pts + (total_games - played) * 3 %}
+                {% if max_possible &gt;= lfc_points %}
+                  {% set ns.guaranteed_top8 = false %}
+                {% endif %}
+              {% endfor %}
+
+              {# Check guaranteed eliminated (cannot reach top 24) #}
+              {% for team in entries if (team[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;rank&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int) &lt;= 24 %}
+                {% set pts = team[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;points&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+                {% set played = team[&#x27;stats&#x27;] | selectattr(&#x27;name&#x27;,&#x27;equalto&#x27;,&#x27;gamesPlayed&#x27;) | map(attribute=&#x27;value&#x27;) | list | first | int %}
+                {% set max_possible_lfc = lfc_points + (total_games - lfc_played) * 3 %}
+                {% if max_possible_lfc &gt;= pts %}
+                  {% set ns.guaranteed_eliminated = false %}
+                {% endif %}
+              {% endfor %}
+
+              {% if ns.guaranteed_top8 %}
+                {{ rank }}{{ suffix }} (Qualified)
+              {% elif ns.guaranteed_eliminated %}
+                {{ rank }}{{ suffix }} (Eliminated)
+              {% else %}
+                {% if leader_points == lfc_points %}
+                  {{ rank }}{{ suffix }} (-{{ leader_gd - lfc_gd }} GD)
+                {% else %}
+                  {{ rank }}{{ suffix }} (-{{ leader_points - lfc_points }} pts)
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          {% else %}
+            Liverpool not found
+          {% endif %}
+        {% else %}
+          API unavailable or invalid response
+        {% endif %}
+</pre>
+            </div>
+            <script>
+                (function fixPaths() {
+                    // ✅ If inside yaml_previews, use "../assets/", otherwise use "assets/"
+                    var basePath = window.location.pathname.includes("/yaml_previews/") ? "../assets/" : "assets/";
+
+                    // ✅ Apply correct asset paths
+                    document.getElementById("dynamic-styles").href = basePath + "table-styles.css";
+                    document.getElementById("dynamic-favicon").href = basePath + "favicon.ico";
+
+                    var script = document.createElement("script");
+                    script.src = basePath + "table-functions.js";
+                    document.body.appendChild(script);
+                })();
+            </script>
+        </body>
+        </html>
+        
