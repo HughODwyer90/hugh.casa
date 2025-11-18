@@ -1,0 +1,86 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>score_update.yaml</title>
+            <link rel="stylesheet" id="dynamic-styles">
+            <link rel="icon" id="dynamic-favicon">
+        </head>
+        <body>
+            <div class="fixed-header">
+                <h1>Viewing: score_update.yaml</h1>
+            </div>
+            <div class="scrollable-content">
+                <pre class="yaml-content">- resource: &quot;https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&amp;lang=en&amp;fixture=true&quot;
+  scan_interval: 10
+  timeout: 5
+  sensor:
+    - name: &quot;Home Team Score&quot;
+      unique_id: &quot;home_team_score_sensor&quot;
+      value_template: &gt;
+        {% if value_json is not none and &#x27;events&#x27; in value_json %}
+          {% set events = value_json[&#x27;events&#x27;] %}
+          {% if events %}
+            {% set competitors = events[0][&#x27;competitions&#x27;][0][&#x27;competitors&#x27;] %}
+            {% for competitor in competitors %}
+              {% if competitor[&#x27;homeAway&#x27;] == &#x27;home&#x27; %}
+                {{ competitor[&#x27;score&#x27;][&#x27;value&#x27;] if &#x27;score&#x27; in competitor and &#x27;value&#x27; in competitor[&#x27;score&#x27;] else &#x27;N/A&#x27; }}
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            No home team score
+          {% endif %}
+        {% else %}
+          API unavailable
+        {% endif %}
+
+    - name: &quot;Away Team Score&quot;
+      unique_id: &quot;away_team_score_sensor&quot;
+      value_template: &gt;
+        {% if value_json is not none and &#x27;events&#x27; in value_json %}
+          {% set events = value_json[&#x27;events&#x27;] %}
+          {% if events %}
+            {% set competitors = events[0][&#x27;competitions&#x27;][0][&#x27;competitors&#x27;] %}
+            {% for competitor in competitors %}
+              {% if competitor[&#x27;homeAway&#x27;] == &#x27;away&#x27; %}
+                {{ competitor[&#x27;score&#x27;][&#x27;value&#x27;] if &#x27;score&#x27; in competitor and &#x27;value&#x27; in competitor[&#x27;score&#x27;] else &#x27;N/A&#x27; }}
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            No away team score
+          {% endif %}
+        {% else %}
+          API unavailable
+        {% endif %}
+
+    - name: &quot;Minutes Played&quot;
+      unique_id: &quot;minutes_played_sensor&quot;
+      value_template: &gt;
+        {% if value_json is not none and &#x27;events&#x27; in value_json %}
+          {% set event = value_json[&#x27;events&#x27;][0] %}
+          {% set status = event[&#x27;competitions&#x27;][0][&#x27;status&#x27;] %}
+          {{ status[&#x27;type&#x27;][&#x27;shortDetail&#x27;] if &#x27;type&#x27; in status and &#x27;shortDetail&#x27; in status[&#x27;type&#x27;] else &quot;No status available&quot; }}
+        {% else %}
+          API unavailable
+        {% endif %}
+</pre>
+            </div>
+            <script>
+                (function fixPaths() {
+                    // ✅ If inside yaml_previews, use "../assets/", otherwise use "assets/"
+                    var basePath = window.location.pathname.includes("/yaml_previews/") ? "../assets/" : "assets/";
+
+                    // ✅ Apply correct asset paths
+                    document.getElementById("dynamic-styles").href = basePath + "table-styles.css";
+                    document.getElementById("dynamic-favicon").href = basePath + "favicon.ico";
+
+                    var script = document.createElement("script");
+                    script.src = basePath + "table-functions.js";
+                    document.body.appendChild(script);
+                })();
+            </script>
+        </body>
+        </html>
+        
