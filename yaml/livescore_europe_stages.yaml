@@ -1,0 +1,50 @@
+- resource: "https://prod-cdn-public-api.livescore.com/v1/api/app/stage/soccer/champions-league/league-stage/0?countryCode=IE&locale=en&MD=1"
+  scan_interval: 9000
+  timeout: 5
+  sensor:
+    - name: "Liverpool (European Stage)"
+      unique_id: "liverpool_europe_stage_sensor"
+      value_template: >
+        {% if value_json is not none and 'Stages' in value_json %}
+          {% set stages = value_json['Stages'] %}
+          {% if stages and stages[0]['LeagueTable']['L'][0]['Tables'][0]['team'] %}
+            {% set teams = stages[0]['LeagueTable']['L'][0]['Tables'][0]['team'] %}
+            {% set liverpool = teams | selectattr('Tnm', 'equalto', 'Liverpool') | list | first %}
+            {% if liverpool %}
+              {% set wins = liverpool['win'] | int %}
+              {% set draws = liverpool['drw'] | int %}
+              {% set losses = liverpool['lst'] | int %}
+              {% set games_played = 1 + wins + draws + losses %}
+              {% if games_played > 8 %}
+                Game 1 of 8
+              {% else %}
+                Game {{ games_played }} of 8
+              {% endif %}
+            {% else %}
+              Liverpool not found in current standings
+            {% endif %}
+          {% else %}
+            No teams data available
+          {% endif %}
+        {% else %}
+          API unavailable
+        {% endif %}
+
+    - name: "Liverpool (Champions League Record)"
+      unique_id: "liverpool_champions_league_record_sensor"
+      value_template: >
+        {% if value_json is not none and 'Stages' in value_json %}
+          {% set teams = value_json['Stages'][0]['LeagueTable']['L'][0]['Tables'][0]['team'] %}
+          {% set liverpool = teams | selectattr('Tnm', 'equalto', 'Liverpool') | list | first %}
+          {% if liverpool %}
+            {% set wins = liverpool['win'] | int %}
+            {% set draws = liverpool['drw'] | int %}
+            {% set losses = liverpool['lst'] | int %}
+            {% set points = (wins * 3) + draws %}
+            {{ wins }}-{{ draws }}-{{ losses }} ({{ points }} pts)
+          {% else %}
+            No record available
+          {% endif %}
+        {% else %}
+          API unavailable
+        {% endif %}
