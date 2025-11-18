@@ -13,69 +13,63 @@
                 <h1>Viewing: binary_sensors.yaml</h1>
             </div>
             <div class="scrollable-content">
-                <pre class="yaml-content">- platform: template
-  sensors:
-    living_room_occupancy_scene:
-      friendly_name: &quot;Living Room Occupancy Scene Saved&quot;
+                <pre class="yaml-content">- binary_sensor:
+    - name: &quot;Living Room Occupancy Scene Saved&quot;
       unique_id: living_room_occupancy_scene_saved_sensor
       device_class: occupancy
-      value_template: &quot;{{ is_state(&#x27;input_boolean.living_room_occupancy_scene_saved&#x27;, &#x27;on&#x27;) }}&quot;
-      icon_template: &gt;-
+      state: &quot;{{ is_state(&#x27;input_boolean.living_room_occupancy_scene_saved&#x27;, &#x27;on&#x27;) }}&quot;
+      icon: &gt;
         {% if is_state(&#x27;input_boolean.living_room_occupancy_scene_saved&#x27;, &#x27;on&#x27;) %}
           mdi:check-circle
         {% else %}
           mdi:close-circle
         {% endif %}
 
-    snake_plant_growing_season:
-      friendly_name: &quot;Snake Plant Growing Season&quot;
+    - name: &quot;Snake Plant Growing Season&quot;
       unique_id: snake_plant_growing_season_sensor
-      value_template: &quot;{{ now().month &gt;= 3 and now().month &lt;= 9 }}&quot;
-      icon_template: &gt;-
+      state: &quot;{{ now().month &gt;= 3 and now().month &lt;= 9 }}&quot;
+      icon: &gt;
         {% if now().month &gt;= 3 and now().month &lt;= 9 %}
           mdi:leaf
         {% else %}
           mdi:snowflake
         {% endif %}
 
-    pc_status:
-      friendly_name: &quot;PC Status&quot;
+    - name: &quot;PC Status&quot;
       unique_id: pc_status_sensor
       device_class: power
-      value_template: &gt;-
+      state: &gt;
         {% set pc_on = is_state(&#x27;input_boolean.pc_on&#x27;, &#x27;on&#x27;) %}
         {% set active_window = states(&#x27;sensor.activewindow_filtered&#x27;) %}
         {{ pc_on and active_window != &#x27;Off&#x27; }}
-      icon_template: &gt;-
+      icon: &gt;
         {% if is_state(&#x27;binary_sensor.pc_status&#x27;, &#x27;on&#x27;) %}
           mdi:television-ambient-light
         {% else %}
           mdi:television
         {% endif %}
 
-    philips_sonicare_toothbrush:
-      friendly_name: &quot;Toothbrush&quot;
-      device_class: power
+    - name: &quot;Toothbrush&quot;
       unique_id: philips_sonicare_toothbrush_sensor
-      value_template: &quot;{{ is_state(&#x27;binary_sensor.pressure_toothbrush&#x27;, &#x27;on&#x27;) }}&quot;
-      icon_template: &gt;-
+      device_class: power
+      state: &quot;{{ is_state(&#x27;binary_sensor.pressure_toothbrush&#x27;, &#x27;on&#x27;) }}&quot;
+      icon: &gt;
         {% if is_state(&#x27;binary_sensor.pressure_toothbrush&#x27;, &#x27;on&#x27;) %}
           mdi:tooth
         {% else %}
           mdi:tooth-outline
         {% endif %}
 
-    monitor_state:
-      friendly_name: &quot;Monitor State&quot;
+    - name: &quot;Monitor State&quot;
       unique_id: monitor_state_sensor
       device_class: power
-      value_template: &gt;-
+      state: &gt;
         {{ is_state(&#x27;remote.monitor&#x27;, &#x27;on&#x27;)
             or is_state(&#x27;media_player.monitor&#x27;, &#x27;on&#x27;)
             or is_state(&#x27;media_player.monitor&#x27;, &#x27;playing&#x27;)
             or is_state(&#x27;media_player.monitor_google&#x27;, &#x27;on&#x27;)
             or is_state(&#x27;media_player.monitor_google&#x27;, &#x27;playing&#x27;) }}
-      icon_template: &gt;-
+      icon: &gt;
         {% if is_state(&#x27;binary_sensor.monitor_state&#x27;, &#x27;on&#x27;) %}
           mdi:monitor
         {% elif is_state(&#x27;binary_sensor.monitor_state&#x27;, &#x27;off&#x27;) %}
@@ -84,15 +78,14 @@
           mdi:alert
         {% endif %}
 
-    living_room_tv_state:
-      friendly_name: &quot;Living Room TV State&quot;
+    - name: &quot;Living Room TV State&quot;
       unique_id: living_room_tv_state_sensor
       device_class: power
-      value_template: &gt;-
+      state: &gt;
         {{ is_state(&#x27;remote.living_room_tv&#x27;, &#x27;on&#x27;)
             or is_state(&#x27;media_player.living_room_chromecast&#x27;, &#x27;on&#x27;)
             or is_state(&#x27;media_player.living_room_chromecast&#x27;, &#x27;playing&#x27;) }}
-      icon_template: &gt;-
+      icon: &gt;
         {% if is_state(&#x27;binary_sensor.living_room_tv_state&#x27;, &#x27;on&#x27;) %}
           mdi:television
         {% elif is_state(&#x27;binary_sensor.living_room_tv_state&#x27;, &#x27;off&#x27;) %}
