@@ -323,80 +323,75 @@
   - trigger: homeassistant
     event: start
   actions:
-  - target:
-      entity_id: button.zigbee2mqtt_bridge_restart
-    data: {}
-    action: button.press
   - delay:
       hours: 0
-      minutes: 0
-      seconds: 20
+      minutes: 1
+      seconds: 30
       milliseconds: 0
-  - target:
-      entity_id: input_boolean.living_room_occupancy_scene_saved
-    data: {}
-    action: input_boolean.turn_off
-  - metadata: {}
-    data:
-      value: '705'
+  - action: button.press
+    target:
+      entity_id: button.zigbee2mqtt_bridge_restart
+  - delay: 00:00:20
+  - action: input_boolean.turn_off
     target:
       entity_id:
-      - number.living_room_epone_mmwave_zone_1_end
-    action: number.set_value
-  - target:
-      entity_id: input_boolean.shower_in_progress
-    data: {}
-    action: input_boolean.turn_off
+      - input_boolean.living_room_occupancy_scene_saved
+      - input_boolean.shower_in_progress
+  - action: number.set_value
+    target:
+      entity_id: number.living_room_epone_mmwave_zone_1_end
+    data:
+      value: 705
   - action: shell_command.patch_tuya_diffuser
-    metadata: {}
-    data: {}
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 5
-      milliseconds: 0
+  - delay: 00:00:05
   - action: script.reload_tuya_local_integration
-    metadata: {}
-    data: {}
-  - action: shell_command.update_liverpool_channel
-    metadata: {}
-    data: {}
-  - data:
-      message: System has restarted and is now ready.
-    action: notify.notifications
   - action: input_boolean.turn_on
-    metadata: {}
-    data: {}
     target:
       entity_id: input_boolean.bed_automation_enabled
+  - delay: 00:00:10
+  - action: shell_command.update_liverpool_channel
   - choose:
     - conditions:
       - condition: state
         entity_id: input_boolean.hugh_room_occupied
         state: 'off'
       sequence:
-      - target:
-          entity_id: fan.air_purifier
+      - action: script.set_purifier_speed
         data:
-          percentage: '{{ states(''input_number.fan_speed_medium'') | int }}'
-        action: fan.set_percentage
+          level: high
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.hugh_room_occupied
+        state: 'on'
+      sequence:
+      - choose:
+        - conditions:
+          - condition: or
+            conditions:
+            - condition: state
+              entity_id: binary_sensor.pc_status
+              state: 'on'
+            - condition: state
+              entity_id: binary_sensor.monitor_state
+              state: 'on'
+          sequence:
+          - action: script.set_purifier_speed
+            data:
+              level: low
+        - conditions: []
+          sequence:
+          - action: script.set_purifier_speed
+            data:
+              level: medium
+  - action: script.update_entities_html
   - if:
-    - condition: or
-      conditions:
-      - condition: state
-        entity_id: binary_sensor.pc_status
-        state: 'on'
-      - condition: state
-        entity_id: binary_sensor.monitor_state
-        state: 'on'
-    then: []
-    else:
-    - action: fan.set_percentage
-      metadata: {}
+    - condition: time
+      after: 06:00:00
+      before: '23:59:59'
+    then:
+    - action: notify.notifications
       data:
-        percentage: '{{ states(''input_number.fan_speed_low'') | int }}'
-      target:
-        entity_id: fan.air_purifier
+        message: System has restarted and is now ready.
   mode: single
 - id: '1702818164083'
   alias: Living Room Lights Occupied
@@ -610,11 +605,12 @@
   alias: Hugh Room Blanket Timer On
   description: ''
   triggers:
-  - at: '22:00:00'
+  - id: time_trigger
     trigger: time
-  - entity_id:
-    - binary_sensor.philips_sonicare_toothbrush
+    at: '22:00:00'
+  - id: toothbrush_trigger
     trigger: state
+    entity_id: binary_sensor.philips_sonicare_toothbrush
     to: 'on'
   conditions:
   - condition: or
@@ -623,14 +619,21 @@
       entity_id: sensor.snake_plant_temperature
       below: 15
     - condition: template
-      value_template: '{{ now().month in [11, 12, 1, 2] }}'
+      value_template: '{{ now().month in [10, 11, 12, 1, 2] }}'
     - condition: numeric_state
-      entity_id: sensor.weather_temperature
-      attribute: temperature
-      below: 10
-  - condition: time
-    after: 08:30:00
-    before: 03:00:00
+      entity_id: sensor.weather_feels_like_temperature
+      below: 15
+  - condition: or
+    conditions:
+    - condition: trigger
+      id: time_trigger
+    - condition: and
+      conditions:
+      - condition: trigger
+        id: toothbrush_trigger
+      - condition: time
+        after: '19:30:00'
+        before: 03:00:00
   - condition: not
     conditions:
     - condition: state
@@ -640,15 +643,14 @@
       entity_id: binary_sensor.bed_sensor
       state: 'on'
   actions:
-  - target:
+  - action: switch.turn_on
+    target:
       entity_id: switch.hugh_room_plug_blanket
-    action: switch.turn_on
-    data: {}
   mode: single
 - id: '1703933541162'
   alias: Hugh Room Blanket Timer Off
   description: ''
-  trigger:
+  triggers:
   - trigger: state
     entity_id:
     - switch.hugh_room_plug_blanket
@@ -656,9 +658,9 @@
     to: 'on'
     for:
       hours: 0
-      minutes: 30
+      minutes: 15
       seconds: 0
-  action:
+  actions:
   - action: switch.turn_off
     target:
       entity_id: switch.hugh_room_plug_blanket
@@ -681,15 +683,17 @@
   mode: single
 - id: '1704470061031'
   alias: Hugh Room Diffuser On
-  description: ''
+  description: 'Ensures diffuser is set up correctly when turned on or at 21:00.  Turns
+    diffuser on, sets its light red, and disables purifier.
+
+    '
   triggers:
   - trigger: time
     at: '21:00:00'
   - trigger: state
-    entity_id:
-    - fan.aroma_diffuser
-    to: 'on'
+    entity_id: fan.aroma_diffuser
     from: 'off'
+    to: 'on'
   conditions:
   - condition: state
     entity_id: binary_sensor.aroma_diffuser_problem
@@ -698,8 +702,6 @@
   - action: fan.turn_on
     target:
       entity_id: fan.aroma_diffuser
-    data:
-      percentage: '{{ states(''input_number.fan_speed_medium'') | int }}'
   - action: light.turn_on
     target:
       entity_id: light.aroma_diffuser
@@ -708,10 +710,9 @@
       - 255
       - 0
       - 0
-  - action: fan.turn_off
-    target:
-      entity_id: fan.air_purifier
-    data: {}
+  - action: script.set_purifier_speed
+    data:
+      level: 'off'
   mode: single
 - id: '1704750146680'
   alias: Living Room Aqara Button Single
@@ -830,55 +831,6 @@
         target:
           entity_id: select.hugh_room_plug_blanket_indicator_mode
   mode: single
-- id: '1705683467344'
-  alias: Hugh Room Pressure Rug
-  description: 'Toggles the occupancy state based on rug interaction while checking
-    other conditions like bed sensor, PC status, monitor status, and alarm status.
-    If the room is unoccupied, it sets the room to occupied without checking conditions.
-
-    '
-  triggers:
-  - entity_id:
-    - binary_sensor.rug_sensor
-    to: 'on'
-    trigger: state
-  actions:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: input_boolean.hugh_room_occupied
-        state: 'off'
-      sequence:
-      - target:
-          entity_id: input_boolean.hugh_room_occupied
-        action: input_boolean.turn_on
-    - conditions:
-      - condition: state
-        entity_id: input_boolean.hugh_room_occupied
-        state: 'on'
-      - condition: state
-        entity_id: binary_sensor.bed_sensor
-        state: 'off'
-      - condition: state
-        state: 'off'
-        entity_id: binary_sensor.pc_status
-      - condition: state
-        entity_id: input_boolean.wake_up_alarm_running
-        state: 'off'
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: binary_sensor.monitor_state
-          state: 'off'
-        - condition: state
-          entity_id: binary_sensor.monitor_state
-          state: unavailable
-      sequence:
-      - target:
-          entity_id: input_boolean.hugh_room_occupied
-        action: input_boolean.toggle
-    default: []
-  mode: restart
 - id: '1705702948959'
   alias: Hugh Room Fan Desk Indicator
   description: Updates the indicator state based on the power state of the switch
@@ -934,116 +886,108 @@
     entity_id: a97b8336160219a85f69fb46116b1b0e
     domain: switch
   mode: single
-- id: '1705859376552'
-  alias: Hugh Phone Charging
-  description: ''
-  triggers:
-  - trigger: state
-    entity_id:
-    - sensor.hugh_phone_charger_type
-    to: ac
-  conditions:
-  - condition: state
-    entity_id: sensor.hugh_phone_battery_state
-    state: charging
-  - condition: time
-    after: 08:00:00
-    before: '22:00:00'
-  - condition: state
-    entity_id: input_boolean.hugh_room_occupied
-    state: 'on'
-  actions:
-  - action: light.turn_on
-    target:
-      entity_id: light.aroma_diffuser
-    data:
-      rgb_color:
-      - 0
-      - 17
-      - 255
-  mode: single
-- id: '1705859650174'
-  alias: Hugh Phone Charged
-  description: ''
-  triggers:
-  - trigger: state
-    entity_id:
-    - sensor.hugh_phone_battery_state
-    to: not_charging
-  - trigger: numeric_state
-    entity_id:
-    - sensor.hugh_phone_battery_level
-    above: 90
-  conditions:
-  - condition: time
-    after: 08:00:00
-    before: '23:00:00'
-  - condition: state
-    entity_id: sensor.hugh_phone_charger_type
-    state: ac
-  - condition: state
-    entity_id: input_boolean.hugh_room_occupied
-    state: 'on'
-  actions:
-  - action: light.turn_on
-    target:
-      entity_id: light.aroma_diffuser
-    data:
-      rgb_color:
-      - 0
-      - 255
-      - 0
-  mode: single
 - id: '1705861047328'
   alias: Hugh Room Diffuser Off
-  description: 'Performs actions when the Hugh Room Diffuser is turned off. Adjusts
-    light color based on charging status and battery level. Light is turned on between
-    8 AM and midnight for Green100 and Blue100 colors. For Red100, the light is turned
-    off regardless of time.
+  description: 'When diffuser turns off or has been on too long, ensure it powers
+    off fully and adjusts purifier speed. Re-applies correct diffuser color if phone
+    or blanket conditions still active.
 
     '
   triggers:
   - trigger: state
-    entity_id:
-    - fan.aroma_diffuser
-    to: 'off'
+    entity_id: fan.aroma_diffuser
     from: 'on'
+    to: 'off'
+    id: turned_off
   - trigger: state
-    entity_id:
-    - fan.aroma_diffuser
-    to: 'on'
-    for:
-      hours: 0
-      minutes: 30
-      seconds: 0
+    entity_id: fan.aroma_diffuser
     from: 'off'
+    to: 'on'
+    for: 00:30:00
+    id: timeout
   - trigger: state
-    entity_id:
-    - fan.aroma_diffuser
+    entity_id: fan.aroma_diffuser
     from: unavailable
+    id: recovered
   conditions: []
   actions:
   - action: fan.turn_off
     target:
       entity_id: fan.aroma_diffuser
-    data: {}
-  - action: automation.trigger
-    metadata: {}
-    data:
-      skip_condition: false
-    target:
-      entity_id: automation.hugh_room_air_purifier_on
-  - action: automation.trigger
-    metadata: {}
-    data:
-      skip_condition: false
-    target:
-      entity_id: automation.phone_unplugged
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.hugh_room_occupied
+        state: 'on'
+      sequence:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: binary_sensor.pc_status
+            state: 'on'
+          sequence:
+          - action: script.set_purifier_speed
+            data:
+              level: low
+        - conditions:
+          - condition: state
+            entity_id: binary_sensor.monitor_state
+            state: 'on'
+          sequence:
+          - action: script.set_purifier_speed
+            data:
+              level: low
+        - conditions: []
+          sequence:
+          - action: script.set_purifier_speed
+            data:
+              level: medium
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.hugh_room_occupied
+        state: 'off'
+      sequence:
+      - action: script.set_purifier_speed
+        data:
+          level: high
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: switch.hugh_room_plug_blanket
+        state: 'on'
+      sequence:
+      - action: light.turn_on
+        target:
+          entity_id: light.aroma_diffuser
+        data:
+          rgb_color:
+          - 255
+          - 0
+          - 0
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: sensor.hugh_phone_battery_state
+          state: charging
+        - condition: and
+          conditions:
+          - condition: state
+            entity_id: sensor.hugh_phone_battery_state
+            state: not_charging
+          - condition: state
+            entity_id: sensor.hugh_phone_charger_type
+            state: ac
+      sequence:
+      - action: automation.trigger
+        target:
+          entity_id: automation.hugh_phone_diffuser_control
+        data:
+          skip_condition: false
   mode: single
 - id: '1705864250061'
   alias: Hugh Room Diffuser Lights Off
-  description: Turns off the diffuser lights if they are on between midnight and 8
-    AM.
+  description: Turns off the diffuser light after 11pm
   triggers:
   - trigger: time
     at: '23:00:00'
@@ -1192,18 +1136,38 @@
   alias: PC boolean toggle
   description: Toggles 'PC On' based on power level and plug state.
   triggers:
-  - entity_id: sensor.pc_plug_power
+  - entity_id:
+    - sensor.pc_plug_power
     above: 75
     trigger: numeric_state
-  - entity_id: sensor.pc_plug_power
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+  - entity_id:
+    - sensor.pc_plug_power
     below: 50
     trigger: numeric_state
-  - entity_id: sensor.activewindow_filtered
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+  - entity_id:
+    - sensor.activewindow_filtered
     to: 'Off'
     trigger: state
-  - entity_id: sensor.activewindow_filtered
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+  - entity_id:
+    - sensor.activewindow_filtered
     from: 'Off'
     trigger: state
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
   actions:
   - choose:
     - conditions:
@@ -1239,9 +1203,14 @@
   alias: Snake Plant – Needs Attention
   triggers:
   - trigger: numeric_state
-    entity_id: sensor.snake_plant_moisture
-    below: 6
-    for: 00:30:00
+    entity_id:
+    - sensor.snake_plant_moisture
+    below: 5
+    for:
+      hours: 0
+      minutes: 30
+      seconds: 0
+      milliseconds: 0
   conditions:
   - condition: state
     entity_id: input_boolean.patrick_needs_water
@@ -1268,66 +1237,6 @@
   - target:
       entity_id: input_boolean.patrick_needs_water
     action: input_boolean.turn_on
-  mode: single
-- id: '1708033575791'
-  alias: Hugh Phone Unplugged
-  triggers:
-  - entity_id: sensor.hugh_phone_battery_state
-    to: discharging
-    trigger: state
-  - entity_id: binary_sensor.pc_status
-    trigger: state
-  conditions:
-  - condition: state
-    entity_id: input_boolean.hugh_room_occupied
-    state: 'on'
-  actions:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.pc_status
-        state: 'off'
-      sequence:
-      - target:
-          entity_id: light.aroma_diffuser
-        action: light.turn_off
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.pc_status
-        state: 'on'
-      sequence:
-      - target:
-          entity_id: light.aroma_diffuser
-        data:
-          rgb_color:
-          - 255
-          - 138
-          - 13
-        action: light.turn_on
-    default:
-    - target:
-        entity_id: light.aroma_diffuser
-      action: light.turn_off
-  mode: single
-- id: '1708037379935'
-  alias: Diffuser Light Mode Check
-  description: Triggered when diffuser light is manually turned on
-  triggers:
-  - trigger: state
-    entity_id:
-    - light.aroma_diffuser
-    to: 'on'
-  - trigger: state
-    entity_id:
-    - fan.aroma_diffuser
-    to: 'on'
-  actions:
-  - action: select.select_option
-    target:
-      entity_id:
-      - select.aroma_diffuser_mood_lighting
-    data:
-      option: Fixed
   mode: single
 - id: '1708774732316'
   alias: Hugh Room Door Button Double
@@ -1422,38 +1331,6 @@
           entity_id: scene.lamp
         action: scene.turn_on
   mode: single
-- id: '1709505223121'
-  alias: Hugh Room Air Purifier On
-  description: ''
-  triggers:
-  - trigger: state
-    entity_id:
-    - fan.air_purifier
-    to: 'on'
-  actions:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.monitor_state
-        state: 'off'
-      sequence:
-      - action: fan.set_percentage
-        data:
-          percentage: '{{ states(''input_number.fan_speed_medium'') | int }}'
-        target:
-          entity_id: fan.air_purifier
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.monitor_state
-        state: 'on'
-      sequence:
-      - action: fan.set_percentage
-        data:
-          percentage: '{{ states(''input_number.fan_speed_low'') | int }}'
-        target:
-          entity_id: fan.air_purifier
-    default: []
-  mode: single
 - id: '1710016461336'
   alias: Shopping List Add Flour
   description: Adds different types of flour to the shopping list based on scanned
@@ -1511,58 +1388,66 @@
   mode: single
 - id: '1710203141837'
   alias: Alarm Dismiss
-  description: Turns off the alarm when the "Turn Off Alarm" button is pressed or
-    when the rug sensor is activated, but only if the alarm is currently running.
+  description: 'Dismisses the wake-up alarm when triggered by phone action, rug press,
+    PC turning on, monitor turning on, or when the alarm toggle is manually turned
+    off. Stops media, clears the alarm flag, and adjusts lighting and purifier speed
+    as appropriate.
+
+    '
   triggers:
-  - event_type: mobile_app_notification_action
+  - trigger: event
+    event_type: mobile_app_notification_action
     event_data:
       action: TURN_OFF_ALARM
-    trigger: event
-  - entity_id: binary_sensor.rug_sensor
+  - trigger: state
+    entity_id: binary_sensor.rug_sensor
     to: 'on'
-    trigger: state
+  - trigger: state
+    entity_id: binary_sensor.pc_status
+    to: 'on'
+  - trigger: state
+    entity_id: binary_sensor.monitor_state
+    to: 'on'
+  - trigger: state
+    entity_id: input_boolean.wake_up_alarm_running
+    from: 'on'
+    to: 'off'
   conditions:
   - condition: state
     entity_id: input_boolean.wake_up_alarm_running
     state: 'on'
   actions:
-  - choose:
-    - conditions:
-      - condition: state
-        state: playing
+  - if:
+    - condition: state
+      entity_id: media_player.universal_player
+      state: playing
+    then:
+    - action: media_player.media_stop
+      target:
         entity_id: media_player.universal_player
-      sequence:
-      - data: {}
-        target:
-          entity_id: media_player.universal_player
-        action: media_player.media_stop
-    default: []
-  - target:
-      entity_id: light.hugh_room_lamp
-    data:
-      transition: 2
-    action: light.turn_off
-  - target:
-      entity_id:
-      - light.hugh_room_ceiling
-    data:
-      transition: 2
-    action: light.turn_off
-  - target:
+  - if:
+    - condition: state
       entity_id: input_boolean.wake_up_alarm_running
-    data: {}
-    action: input_boolean.turn_off
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.bed_sensor
-        state: 'off'
-      sequence:
-      - target:
-          entity_id:
-          - input_boolean.hugh_room_occupied
-        data: {}
-        action: input_boolean.turn_off
+      state: 'on'
+    then:
+    - action: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.wake_up_alarm_running
+  - if:
+    - condition: state
+      entity_id: binary_sensor.pc_status
+      state: 'off'
+    then:
+    - action: light.turn_off
+      target:
+        entity_id:
+        - light.hugh_room_lamp
+        - light.hugh_room_ceiling
+      data:
+        transition: 2
+  - action: script.set_purifier_speed
+    data:
+      level: low
   mode: single
 - id: '1710514549478'
   alias: Bathroom Light Control
@@ -1633,131 +1518,40 @@
           entity_id:
           - sensor.bathroom_aqara_temperature
   mode: single
-- id: '1711198817481'
-  alias: Hugh Room Occupied On
-  description: 'Triggers the Hugh Room air purifier on automation and adjusts lighting
-    based on whether it''s near sunset or sunrise when the room becomes occupied.
-    It also ensures the air purifier does not turn on if the Hugh Room diffuser is
-    on.
-
-    '
-  triggers:
-  - entity_id: input_boolean.hugh_room_occupied
-    to: 'on'
-    trigger: state
-  actions:
-  - choose:
-    - conditions:
-      - condition: sun
-        before: sunrise
-        before_offset: 01:00:00
-        after: sunset
-      sequence:
-      - choose:
-        - conditions:
-          - condition: time
-            before: '22:00:00'
-          - condition: state
-            entity_id: light.hugh_room_lamp
-            state: 'off'
-          sequence:
-          - target:
-              entity_id: scene.hugh_room_all_lights_on
-            data:
-              transition: 1
-            action: scene.turn_on
-        - conditions:
-          - condition: time
-            after: '22:00:00'
-          - condition: state
-            entity_id: light.hugh_room_lamp
-            state: 'off'
-          sequence:
-          - target:
-              entity_id: light.hugh_room_lamp
-            data:
-              transition: 1
-            action: light.turn_on
-        - conditions:
-          - condition: state
-            entity_id: light.hugh_room_lamp
-            state: 'on'
-          sequence:
-          - target:
-              entity_id: light.hugh_room_lamp
-            action: light.turn_off
-            data: {}
-      - condition: template
-        value_template: '{{ states(''input_number.hugh_room_blinds_position'') | int
-          > 20 }}'
-      - action: input_select.select_option
-        target:
-          entity_id: input_select.hugh_room_blinds_mode
-        data:
-          option: Closed
-    - conditions:
-      - condition: numeric_state
-        entity_id: sensor.snake_plant_illuminance
-        below: 325
-      sequence:
-      - target:
-          entity_id: scene.hugh_room_all_lights_on
-        data:
-          transition: 1
-        action: scene.turn_on
-      - condition: template
-        value_template: '{{ states(''input_number.hugh_room_blinds_position'') | int
-          < 20 }}'
-      - action: input_select.select_option
-        target:
-          entity_id: input_select.hugh_room_blinds_mode
-        data:
-          option: Open
-    - conditions: []
-      sequence:
-      - action: input_select.select_option
-        target:
-          entity_id: input_select.hugh_room_blinds_mode
-        data:
-          option: Open
-  - target:
-      entity_id: automation.hugh_room_air_purifier_on
-    data:
-      skip_condition: true
-    action: automation.trigger
-  mode: restart
 - id: '1711199503084'
   alias: Hugh Room Occupied Off
-  description: 'Turns off all lights and sets the Hugh Room air purifier fan speed
-    to 100 when the room becomes unoccupied.
+  description: 'Turns off all lights, sets purifier to High, opens blinds,  and powers
+    off fans when the room becomes unoccupied.
 
     '
   triggers:
-  - entity_id: input_boolean.hugh_room_occupied
+  - trigger: state
+    entity_id: input_boolean.hugh_room_occupied
     to: 'off'
-    trigger: state
   actions:
-  - target:
+  - action: scene.turn_on
+    target:
       entity_id: scene.hugh_room_all_lights_off
     data:
       transition: 1
-    action: scene.turn_on
-  - target:
-      entity_id: fan.air_purifier
+  - action: script.set_purifier_speed
     data:
-      percentage: '{{ states(''input_number.fan_speed_high'') | int }}'
-    action: fan.set_percentage
+      level: high
   - action: input_select.select_option
     target:
       entity_id: input_select.hugh_room_blinds_mode
     data:
       option: Open
-  - target:
+  - action: switch.turn_off
+    target:
       entity_id:
       - switch.hugh_room_plug_fan_bed
       - switch.hugh_room_plug_fan_desk
+  - action: media_player.media_stop
+    metadata: {}
     data: {}
-    action: switch.turn_off
+    target:
+      entity_id: media_player.hugh_room_stereo_2
   mode: restart
 - id: '1712869374188'
   alias: Bathroom Humidity, Temperature, and Vibration Monitoring
@@ -1903,34 +1697,83 @@
   mode: single
 - id: '1713004095933'
   alias: Admin Home Assistant Restart
-  description: 'Triggers the Home Assistant restart either on the 1st of every month
-    at 3:30 AM or via a mobile notification action.
+  description: 'Restarts HA every 2 weeks on Sunday at 03:30, via mobile action, or
+    automatically/notified based on purifier offline duration and time of day.
 
     '
   triggers:
-  - value_template: '{{ now().day == 1 and now().hour == 3 and now().minute == 30
-      }}
-
-      '
-    trigger: template
-    enabled: false
-  - event_type: mobile_app_notification_action
+  - trigger: event
+    id: mobile
+    event_type: mobile_app_notification_action
     event_data:
       action: RESTART_HA
-    trigger: event
   - trigger: time
+    id: time
     at: 03:30:00
-    enabled: false
-  conditions: []
+  - trigger: template
+    id: purifier
+    value_template: "{% set s = states('fan.air_purifier') %} {% set lc = states.fan.air_purifier.last_changed
+      if states.fan.air_purifier is defined else none %} {{ s == 'unavailable' and
+      lc is not none and\n   (as_timestamp(now()) - as_timestamp(lc)) > 600 }}\n"
   actions:
-  - action: script.update_entities_html
-    data: {}
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 30
-  - data: {}
-    action: homeassistant.restart
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: time
+      - condition: time
+        weekday:
+        - sun
+      - condition: template
+        value_template: '{{ now().isocalendar().week % 2 == 0 }}'
+      sequence:
+      - action: homeassistant.restart
+    - conditions:
+      - condition: trigger
+        id: purifier
+      sequence:
+      - condition: not
+        conditions:
+        - condition: and
+          conditions:
+          - condition: time
+            after: 03:00:00
+            before: 03:30:00
+          - condition: time
+            weekday:
+            - sun
+          - condition: template
+            value_template: '{{ now().isocalendar().week % 2 == 0 }}'
+      - condition: template
+        value_template: '{{ is_state(''fan.air_purifier'',''unavailable'') }}'
+      - choose:
+        - conditions:
+          - condition: time
+            after: 00:00:00
+            before: 07:00:00
+          sequence:
+          - action: homeassistant.restart
+        - conditions:
+          - condition: time
+            after: 07:00:00
+            before: '23:59:59'
+          sequence:
+          - action: notify.notifications
+            data:
+              title: Air Purifier Offline
+              message: 'The VeSync purifier has been unavailable for over 10 minutes.
+                Restart Home Assistant now?
+
+                '
+              data:
+                tag: purifier-offline
+                actions:
+                - action: RESTART_HA
+                  title: Restart Now
+    - conditions:
+      - condition: trigger
+        id: mobile
+      sequence:
+      - action: homeassistant.restart
   mode: single
 - id: '1713039340245'
   alias: Bathroom Previous Readings
@@ -2279,35 +2122,6 @@
       data:
         clickAction: https://a.aliexpress.com/_EHv2KJD
   mode: single
-- id: '1716645005044'
-  alias: Hugh Room Pressure Bed Room Occupancy
-  description: ''
-  trigger:
-  - trigger: state
-    entity_id:
-    - binary_sensor.bed_sensor
-    to: 'on'
-    from: 'off'
-  - trigger: state
-    entity_id:
-    - binary_sensor.bed_sensor
-    to: 'off'
-    from: 'on'
-  condition:
-  - condition: state
-    entity_id: input_boolean.hugh_room_occupied
-    state: 'off'
-  - condition: not
-    conditions:
-    - condition: time
-      after: 03:20:00
-      before: 03:40:00
-  action:
-  - action: input_boolean.turn_on
-    target:
-      entity_id: input_boolean.hugh_room_occupied
-    data: {}
-  mode: single
 - id: '1717191665013'
   alias: Update Next Bin Collection Sensor
   description: Updates the Next Bin Collection sensor at midday the day after the
@@ -2397,34 +2211,6 @@
   - data: {}
     action: script.find_car
   mode: single
-- id: '1717788510529'
-  alias: Universal Player Volume Up
-  description: ''
-  trigger:
-  - trigger: state
-    entity_id: input_button.universal_player_volume_up
-  action:
-  - action: input_number.set_value
-    data_template:
-      entity_id: input_number.universal_player_volume
-      value: '{{ [states(''input_number.universal_player_volume'') | float + 1.0,
-        10.0] | min }}
-
-        '
-- id: '1717788641815'
-  alias: Universal Player Volume Down
-  description: ''
-  trigger:
-  - trigger: state
-    entity_id: input_button.universal_player_volume_down
-  action:
-  - action: input_number.set_value
-    data_template:
-      entity_id: input_number.universal_player_volume
-      value: '{{ [states(''input_number.universal_player_volume'') | float - 1.0,
-        0.0] | max }}
-
-        '
 - id: '1717788981796'
   alias: Adjust Media Player Volume
   description: ''
@@ -2651,22 +2437,23 @@
 - id: '1722191781948'
   alias: PC Turn On
   description: ''
-  trigger:
+  triggers:
   - trigger: state
     entity_id:
     - sensor.hugh_room_desk_aqara_button_action
     to: single
   - trigger: state
     entity_id:
-    - binary_sensor.ollny_steady
-    to: 'on'
-  condition:
+    - binary_sensor.typhoon_power
+    to:
+    - 'on'
+  conditions:
   - condition: not
     conditions:
     - condition: state
-      entity_id: input_boolean.pc_on
+      entity_id: binary_sensor.pc_status
       state: 'on'
-  action:
+  actions:
   - target:
       entity_id: switch.pc_plug
     data: {}
@@ -2680,6 +2467,11 @@
       entity_id: switch.pc_plug
     data: {}
     action: switch.turn_on
+  - action: input_boolean.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.pc_on
   mode: single
 - id: '1722250261847'
   alias: Umail Account Renewal Notification
@@ -2876,8 +2668,10 @@
   alias: IR Remote Blinds Minus
   description: ''
   triggers:
-  - entity_id: binary_sensor.ollny_minus
-    to: 'on'
+  - entity_id:
+    - binary_sensor.typhoon_woofer_down
+    to:
+    - 'on'
     trigger: state
   actions:
   - action: input_select.select_option
@@ -2890,8 +2684,9 @@
   description: ''
   triggers:
   - entity_id:
-    - binary_sensor.ollny_plus
-    to: 'on'
+    - binary_sensor.typhoon_woofer_up
+    to:
+    - 'on'
     trigger: state
   conditions: []
   actions:
@@ -2902,129 +2697,40 @@
       option: Open
   mode: single
 - id: '1724800619943'
-  alias: IR Remote Button Off
+  alias: IR Remote Vol Up
   description: ''
-  trigger:
+  triggers:
   - trigger: state
     entity_id:
-    - binary_sensor.ollny_off
-    to: 'on'
-  condition: []
-  action:
+    - binary_sensor.typhoon_volume_up
+    to:
+    - 'on'
+  conditions: []
+  actions:
   - action: script.hugh_room_stereo_volume_up
     data: {}
   mode: single
 - id: '1724800666570'
-  alias: IR Remote Button On
+  alias: IR Remote Vol Down
   description: ''
-  trigger:
+  triggers:
   - trigger: state
     entity_id:
-    - binary_sensor.ollny_on
-    to: 'on'
-  condition: []
-  action:
+    - binary_sensor.typhoon_volume_down
+    to:
+    - 'on'
+  conditions: []
+  actions:
   - action: script.hugh_room_stereo_volume_down
     data: {}
   mode: single
-- id: '1724802786276'
-  alias: IR Remote Button Timer
-  description: ''
-  trigger:
-  - trigger: state
-    entity_id:
-    - binary_sensor.ollny_timer
-    to: 'on'
-  condition: []
-  action:
-  - data:
-      media_content_id: media-source://radio_browser/d0a1da9f-46b3-11e9-aa55-52543be04c81
-      media_content_type: audio/mpeg
-    target:
-      entity_id: media_player.hugh_room_stereo
-    action: media_player.play_media
-  mode: single
-- id: '1724802866046'
-  alias: IR Remote Button 6639H
-  description: ''
-  trigger:
-  - trigger: state
-    entity_id:
-    - binary_sensor.ollny_6639h
-    to: 'on'
-  condition: []
-  action:
-  - action: media_player.media_next_track
-    target:
-      entity_id:
-      - media_player.hugh_room_stereo
-    data: {}
-  mode: single
-- id: '1724802939961'
-  alias: IR Remote Button 6H
-  description: ''
-  trigger:
-  - trigger: state
-    entity_id:
-    - binary_sensor.ollny_6h
-    to: 'on'
-  condition: []
-  action:
-  - action: media_player.media_previous_track
-    target:
-      entity_id:
-      - media_player.hugh_room_stereo
-    data: {}
-  mode: single
-- id: '1724803091046'
-  alias: IR Remote Button 8H
-  description: ''
-  triggers:
-  - trigger: state
-    entity_id:
-    - binary_sensor.ollny_8h
-    to: 'on'
-  conditions: []
-  actions:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: media_player.universal_player
-        state: playing
-      sequence:
-      - target:
-          entity_id: media_player.universal_player
-        data: {}
-        action: media_player.media_pause
-    - conditions:
-      - condition: state
-        entity_id: media_player.universal_player
-        state: paused
-      sequence:
-      - target:
-          entity_id: media_player.universal_player
-        data: {}
-        action: media_player.media_play
-    default:
-    - action: script.play_spotify_playlist_2
-      metadata: {}
-      data: {}
-  mode: single
 - id: '1725046410793'
-  alias: IR Remote Button Ollny Sequential
-  description: ''
+  alias: IR Remote Disable Bed
   triggers:
-  - entity_id: binary_sensor.ollny_sequential
+  - trigger: state
+    entity_id: binary_sensor.typhoon_mute
     to: 'on'
-    trigger: state
-  conditions: []
   actions:
-  - variables:
-      previous_light_state: '{{ states(''light.aroma_diffuser'') }}'
-      previous_light_rgb: '{{ state_attr(''light.aroma_diffuser'', ''rgb_color'')
-        }}'
-      previous_brightness: '{{ state_attr(''light.aroma_diffuser'', ''brightness'')
-        }}'
   - action: input_boolean.toggle
     target:
       entity_id: input_boolean.bed_automation_enabled
@@ -3034,71 +2740,27 @@
         entity_id: input_boolean.bed_automation_enabled
         state: 'on'
       sequence:
-      - action: light.turn_on
-        target:
-          entity_id: light.aroma_diffuser
+      - action: script.set_diffuser_color_flash
         data:
-          rgb_color:
+          color:
           - 0
           - 255
           - 0
-          brightness: 255
-          effect: 'off'
-      - delay: 00:00:02
-      - choose:
-        - conditions:
-          - condition: template
-            value_template: '{{ previous_light_state == ''off'' }}'
-          sequence:
-          - action: light.turn_off
-            target:
-              entity_id: light.aroma_diffuser
-        - conditions:
-          - condition: template
-            value_template: '{{ previous_light_state == ''on'' }}'
-          sequence:
-          - action: light.turn_on
-            target:
-              entity_id: light.aroma_diffuser
-            data:
-              rgb_color: '{{ previous_light_rgb }}'
-              brightness: '{{ previous_brightness }}'
-              effect: 'off'
+          brightness: 100
+          duration: 2
     - conditions:
       - condition: state
         entity_id: input_boolean.bed_automation_enabled
         state: 'off'
       sequence:
-      - action: light.turn_on
-        target:
-          entity_id: light.aroma_diffuser
+      - action: script.set_diffuser_color_flash
         data:
-          rgb_color:
+          color:
           - 255
           - 0
           - 0
-          brightness: 255
-          effect: 'off'
-      - delay: 00:00:02
-      - choose:
-        - conditions:
-          - condition: template
-            value_template: '{{ previous_light_state == ''off'' }}'
-          sequence:
-          - action: light.turn_off
-            target:
-              entity_id: light.aroma_diffuser
-        - conditions:
-          - condition: template
-            value_template: '{{ previous_light_state == ''on'' }}'
-          sequence:
-          - action: light.turn_on
-            target:
-              entity_id: light.aroma_diffuser
-            data:
-              rgb_color: '{{ previous_light_rgb }}'
-              brightness: '{{ previous_brightness }}'
-              effect: 'off'
+          brightness: 100
+          duration: 2
   mode: single
 - id: '1726565274036'
   alias: Reset Car Stats Button
@@ -3157,7 +2819,7 @@
   description: Run the ESPHome update script daily at 7 AM or via button/manual run
   triggers:
   - id: daily
-    at: 07:00:00
+    at: 06:00:00
     trigger: time
   - id: manual
     entity_id: input_button.update_esphome_devices
@@ -3168,14 +2830,16 @@
     data: {}
   mode: single
 - id: '1728126796689'
-  alias: IR Remote Button in Wave
+  alias: IR Remote Restart HA
   description: 'This automation flashes the diffuser light red and reboots Home Assistant
     when the IR remote button is pressed in wave mode.
 
     '
   triggers:
-  - entity_id: binary_sensor.ollny_wave
-    to: 'on'
+  - entity_id:
+    - binary_sensor.typhoon_reset
+    to:
+    - 'on'
     trigger: state
   conditions: []
   actions:
@@ -3227,111 +2891,82 @@
   - action: homeassistant.restart
     enabled: true
   mode: single
-- id: '1728775622846'
-  alias: Music Playing/Stopped Purifier Control
-  description: ''
-  triggers:
-  - entity_id:
-    - media_player.universal_player
-    to: playing
-    trigger: state
-  - entity_id:
-    - media_player.universal_player
-    from: playing
-    to: idle
-    trigger: state
-  - entity_id:
-    - media_player.universal_player
-    from: playing
-    to: paused
-    trigger: state
-  conditions: []
-  actions:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: media_player.universal_player
-        state: playing
-      sequence:
-      - data:
-          percentage: '{{ states(''input_number.fan_speed_low'') | int }}'
-        target:
-          entity_id: fan.air_purifier
-        action: fan.set_percentage
-    - conditions:
-      - condition: state
-        entity_id: media_player.universal_player
-        state: idle
-      sequence:
-      - data:
-          percentage: '{{ states(''input_number.fan_speed_medium'') | int }}'
-        target:
-          entity_id: fan.air_purifier
-        action: fan.set_percentage
-    - conditions:
-      - condition: state
-        entity_id: media_player.universal_player
-        state: paused
-      sequence:
-      - data:
-          percentage: '{{ states(''input_number.fan_speed_medium'') | int }}'
-        target:
-          entity_id: fan.air_purifier
-        action: fan.set_percentage
-  mode: single
 - id: '1729417096269'
-  alias: Adjust Air Purifier Speed Based on Ollny Sensors
-  description: 'Adjusts air purifier fan speed based on Ollny Twinkle and Comb sensors.
-    Decreases speed when Ollny Twinkle is on, increases when Ollny Comb is on.
+  alias: IR Remote Air Purifier Speed
+  description: 'Adjusts air purifier fan speed based on IR sensors.
 
     '
   triggers:
-  - entity_id: binary_sensor.ollny_twinkle
-    to: 'on'
-    trigger: state
-  - entity_id: binary_sensor.ollny_comb
-    to: 'on'
-    trigger: state
+  - trigger: state
+    entity_id:
+    - binary_sensor.typhoon_rear_down
+    to:
+    - 'on'
+  - trigger: state
+    entity_id:
+    - binary_sensor.typhoon_front_down
+    to:
+    - 'on'
   actions:
+  - variables:
+      current_speed: '{{ states(''sensor.air_purifier_speed'') }}'
   - choose:
     - conditions:
       - condition: state
-        entity_id: binary_sensor.ollny_twinkle
-        state: 'on'
+        entity_id: binary_sensor.typhoon_rear_down
+        state:
+        - 'on'
       sequence:
-      - action: fan.set_percentage
-        target:
-          entity_id: fan.air_purifier
-        data:
-          percentage: '{% set current = state_attr(''fan.air_purifier'',''percentage'')
-            | int %} {% set off = states(''input_number.fan_speed_off'') | int %}
-            {% set low = states(''input_number.fan_speed_low'') | int %} {% set med
-            = states(''input_number.fan_speed_medium'') | int %} {% set high = states(''input_number.fan_speed_high'')
-            | int %}
-
-            {% if current >= high %} {{ med }} {% elif current >= med %} {{ low }}
-            {% elif current >= low %} {{ off }} {% else %} {{ off }} {% endif %}
-
-            '
+      - choose:
+        - conditions:
+          - condition: template
+            value_template: '{{ current_speed == ''High'' }}'
+          sequence:
+          - action: script.set_purifier_speed
+            data:
+              level: medium
+        - conditions:
+          - condition: template
+            value_template: '{{ current_speed == ''Medium'' }}'
+          sequence:
+          - action: script.set_purifier_speed
+            data:
+              level: low
+        - conditions:
+          - condition: template
+            value_template: '{{ current_speed == ''Low'' }}'
+          sequence:
+          - action: script.set_purifier_speed
+            data:
+              level: 'off'
     - conditions:
       - condition: state
-        entity_id: binary_sensor.ollny_comb
-        state: 'on'
+        entity_id: binary_sensor.typhoon_front_down
+        state:
+        - 'on'
       sequence:
-      - action: fan.set_percentage
-        target:
-          entity_id: fan.air_purifier
-        data:
-          percentage: '{% set current = state_attr(''fan.air_purifier'',''percentage'')
-            | int %} {% set off = states(''input_number.fan_speed_off'') | int %}
-            {% set low = states(''input_number.fan_speed_low'') | int %} {% set med
-            = states(''input_number.fan_speed_medium'') | int %} {% set high = states(''input_number.fan_speed_high'')
-            | int %}
-
-            {% if current <= off %} {{ low }} {% elif current <= low %} {{ med }}
-            {% elif current <= med %} {{ high }} {% else %} {{ high }} {% endif %}
-
-            '
+      - choose:
+        - conditions:
+          - condition: template
+            value_template: '{{ current_speed == ''Off'' }}'
+          sequence:
+          - action: script.set_purifier_speed
+            data:
+              level: low
+        - conditions:
+          - condition: template
+            value_template: '{{ current_speed == ''Low'' }}'
+          sequence:
+          - action: script.set_purifier_speed
+            data:
+              level: medium
+        - conditions:
+          - condition: template
+            value_template: '{{ current_speed == ''Medium'' }}'
+          sequence:
+          - action: script.set_purifier_speed
+            data:
+              level: high
   mode: restart
 - id: '1732470007670'
   alias: Manage Liverpool Sensors
@@ -3423,7 +3058,7 @@
         data: {}
   mode: single
 - id: '1734951741728'
-  alias: Update Entity List on Entity Count Change
+  alias: Git Backup
   description: Updates the file when the total entity count changes
   triggers:
   - entity_id:
@@ -3488,22 +3123,94 @@
       entity_id: script.update_liverpool_sensors
 - id: '1737725488693'
   alias: Notify Air Purifier Filter Half-Life
-  description: Notify when the air purifier filter reaches half its lifetime.
+  description: Notify when the air purifier filter reaches half its lifetime and auto-resets
+    after replacement.
   triggers:
-  - entity_id: sensor.air_purifier_filter_lifetime
-    below: 50
-    trigger: numeric_state
-  conditions:
-  - condition: template
-    value_template: '{{ trigger.from_state.state | float > 50 }}'
+  - id: below_half
+    value_template: '{% set val = states(''sensor.air_purifier_filter_lifetime'')
+      | float(100) %} {% set prev = trigger.from_state.state | float(100) if trigger.from_state
+      else 100 %} {{ prev > 50 and val <= 50 }}
+
+      '
+    trigger: template
+  - id: above_half
+    value_template: '{% set val = states(''sensor.air_purifier_filter_lifetime'')
+      | float(0) %} {% set prev = trigger.from_state.state | float(0) if trigger.from_state
+      else 0 %} {{ prev <= 50 and val > 50 }}
+
+      '
+    trigger: template
+  - id: startup_check
+    event: start
+    trigger: homeassistant
+  conditions: []
   actions:
-  - data:
-      title: Air Purifier Maintenance
-      message: The air purifier filter is at half its lifetime. Consider cleaning
-        it soon.
-      data:
-        notification_icon: mdi:air-filter
-    action: notify.notifications
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: below_half
+      - condition: state
+        entity_id: input_boolean.filter_half_notified
+        state: 'off'
+      sequence:
+      - data:
+          title: Air Purifier Maintenance
+          message: 'The air purifier filter is at half its lifetime. Consider cleaning
+            it soon.
+
+            '
+          data:
+            notification_icon: mdi:air-filter
+        action: notify.notifications
+      - target:
+          entity_id: input_boolean.filter_half_notified
+        action: input_boolean.turn_on
+    - conditions:
+      - condition: trigger
+        id: above_half
+      - condition: state
+        entity_id: input_boolean.filter_half_notified
+        state: 'on'
+      sequence:
+      - target:
+          entity_id: input_boolean.filter_half_notified
+        action: input_boolean.turn_off
+    - conditions:
+      - condition: trigger
+        id: startup_check
+      sequence:
+      - choose:
+        - conditions:
+          - condition: numeric_state
+            entity_id: sensor.air_purifier_filter_lifetime
+            below: 50
+          - condition: state
+            entity_id: input_boolean.filter_half_notified
+            state: 'off'
+          sequence:
+          - data:
+              title: Air Purifier Maintenance
+              message: 'The air purifier filter is at half its lifetime. Consider
+                cleaning it soon.
+
+                '
+              data:
+                notification_icon: mdi:air-filter
+            action: notify.notifications
+          - target:
+              entity_id: input_boolean.filter_half_notified
+            action: input_boolean.turn_on
+        - conditions:
+          - condition: numeric_state
+            entity_id: sensor.air_purifier_filter_lifetime
+            above: 50
+          - condition: state
+            entity_id: input_boolean.filter_half_notified
+            state: 'on'
+          sequence:
+          - target:
+              entity_id: input_boolean.filter_half_notified
+            action: input_boolean.turn_off
   mode: single
 - id: '1740992262706'
   alias: Update Hugh Room Filter Change Date
@@ -3572,36 +3279,6 @@
       timestamp: '{{ as_timestamp(now()) }}'
     action: input_datetime.set_datetime
   mode: single
-- id: '1745479112868'
-  alias: Alarm Dismiss (PC on)
-  description: Turns off the alarm when the "Turn Off Alarm" button is pressed or
-    when the rug sensor is activated, but only if the alarm is currently running.
-  triggers:
-  - trigger: state
-    entity_id:
-    - binary_sensor.pc_status
-    to: 'On'
-  conditions:
-  - condition: state
-    entity_id: input_boolean.wake_up_alarm_running
-    state: 'on'
-  actions:
-  - choose:
-    - conditions:
-      - condition: state
-        state: playing
-        entity_id: media_player.universal_player
-      sequence:
-      - data: {}
-        target:
-          entity_id: media_player.universal_player
-        action: media_player.media_stop
-    default: []
-  - target:
-      entity_id: input_boolean.wake_up_alarm_running
-    data: {}
-    action: input_boolean.turn_off
-  mode: single
 - id: '1748355187479'
   alias: Auto Calculate Last Day of Month
   description: ''
@@ -3644,42 +3321,6 @@
   - action: shell_command.run_z2m_update_sequence
     metadata: {}
     data: {}
-  mode: single
-- id: '1754209322914'
-  alias: Alarm Dismiss (TV on)
-  description: Turns off the alarm when the "Turn Off Alarm" button is pressed or
-    when the rug sensor is activated, but only if the alarm is currently running.
-  triggers:
-  - trigger: state
-    entity_id:
-    - binary_sensor.monitor_state
-    to: 'on'
-  conditions:
-  - condition: state
-    entity_id: input_boolean.wake_up_alarm_running
-    state: 'on'
-  actions:
-  - choose:
-    - conditions:
-      - condition: state
-        state: playing
-        entity_id: media_player.universal_player
-      sequence:
-      - data: {}
-        target:
-          entity_id: media_player.universal_player
-        action: media_player.media_stop
-    default: []
-  - target:
-      entity_id: input_boolean.wake_up_alarm_running
-    data: {}
-    action: input_boolean.turn_off
-  - action: fan.set_percentage
-    metadata: {}
-    data:
-      percentage: '{{ states(''input_number.fan_speed_low'') | int }}'
-    target:
-      entity_id: fan.air_purifier
   mode: single
 - id: '1754809462445'
   alias: Set Hugh Room Blinds from Mode
@@ -3754,57 +3395,226 @@
       value: '{{ pos }}'
   mode: restart
 - id: '1754898110296'
-  alias: Hugh Room Blinds (Day/Dusk/Night)
-  description: ''
+  alias: Hugh Room Blinds, Lights & PC Logic
+  description: 'Handles blinds, lighting, and purifier dynamically based on time,
+    brightness, and activity.
+
+    '
   triggers:
   - id: day
-    trigger: time
-    at: '10:00:00'
-  - id: dusk
+    trigger: numeric_state
+    entity_id: sensor.snake_plant_illuminance
+    above: 350
+    for: 00:05:00
+  - id: dusk_light
+    trigger: numeric_state
+    entity_id: sensor.snake_plant_illuminance
+    below: 300
+    for: 00:05:00
+  - id: brightness_check
+    trigger: template
+    value_template: '{% set lux = states(''sensor.snake_plant_illuminance'') | float(0)
+      %} {{ lux < 300 or lux > 350 }}
+
+      '
+  - id: dusk_time
     trigger: sun
     event: sunset
   - id: night
     trigger: time
     at: '23:00:00'
-  conditions: []
+  - id: occupied
+    trigger: state
+    entity_id: input_boolean.hugh_room_occupied
+    to: 'on'
+  - id: pc_on
+    trigger: state
+    entity_id: binary_sensor.pc_status
+    to: 'on'
+    for: 00:00:02
+  conditions:
+  - condition: state
+    entity_id: input_boolean.wake_up_alarm_running
+    state:
+    - 'off'
   actions:
   - choose:
     - conditions:
       - condition: trigger
-        id: day
+        id: occupied
+      sequence:
+      - choose:
+        - conditions:
+          - condition: sun
+            before: sunset
+          - condition: numeric_state
+            entity_id: sensor.snake_plant_illuminance
+            above: 350
+          sequence:
+          - action: input_select.select_option
+            target:
+              entity_id: input_select.hugh_room_blinds_mode
+            data:
+              option: Open
+          - action: scene.turn_on
+            target:
+              entity_id: scene.hugh_room_all_lights_off
+        - conditions:
+          - condition: sun
+            before: sunset
+          - condition: numeric_state
+            entity_id: sensor.snake_plant_illuminance
+            below: 300
+          - condition: time
+            after: '16:00:00'
+            before: '22:00:00'
+          sequence:
+          - action: input_select.select_option
+            target:
+              entity_id: input_select.hugh_room_blinds_mode
+            data:
+              option: Half
+          - action: scene.turn_on
+            target:
+              entity_id: scene.hugh_room_all_lights_on
+            data:
+              transition: 1.5
+        - conditions:
+          - condition: sun
+            after: sunset
+          - condition: time
+            before: '22:00:00'
+          sequence:
+          - action: scene.turn_on
+            target:
+              entity_id: scene.hugh_room_all_lights_on
+            data:
+              transition: 1.5
+        - conditions:
+          - condition: time
+            after: '22:00:00'
+          - condition: state
+            entity_id: light.hugh_room_lamp
+            state: 'off'
+          sequence:
+          - action: light.turn_on
+            target:
+              entity_id: light.hugh_room_lamp
+            data:
+              transition: 1.5
+    - conditions:
+      - condition: trigger
+        id: pc_on
+      - condition: state
+        entity_id: input_boolean.hugh_room_occupied
+        state: 'on'
+      - condition: numeric_state
+        entity_id: sensor.snake_plant_illuminance
+        below: 300
       - condition: state
         entity_id: binary_sensor.bed_sensor
         state: 'off'
       sequence:
-      - action: input_select.select_option
+      - choose:
+        - conditions:
+          - condition: sun
+            before: sunset
+          sequence:
+          - action: input_select.select_option
+            target:
+              entity_id: input_select.hugh_room_blinds_mode
+            data:
+              option: Half
+      - action: scene.turn_on
         target:
-          entity_id: input_select.hugh_room_blinds_mode
+          entity_id: scene.hugh_room_all_lights_on
         data:
-          option: Open
-      - action: light.turn_off
-        metadata: {}
-        data: {}
-        target:
-          entity_id: light.hugh_room_lamp
+          transition: 1.5
     - conditions:
-      - condition: trigger
-        id: dusk
+      - condition: state
+        entity_id: input_boolean.hugh_room_occupied
+        state: 'on'
+      - condition: or
+        conditions:
+        - condition: trigger
+          id: day
+        - condition: trigger
+          id: dusk_light
+        - condition: trigger
+          id: brightness_check
+        - condition: trigger
+          id: dusk_time
       sequence:
-      - action: input_select.select_option
-        target:
-          entity_id: input_select.hugh_room_blinds_mode
-        data:
-          option: Half
+      - choose:
+        - conditions:
+          - condition: sun
+            before: sunset
+          - condition: state
+            entity_id: binary_sensor.bed_sensor
+            state:
+            - 'off'
+          sequence:
+          - action: input_select.select_option
+            target:
+              entity_id: input_select.hugh_room_blinds_mode
+            data:
+              option: "{% set lux = states('sensor.snake_plant_illuminance') | float(0)
+                %} {% if lux > 350 %}\n  Open\n{% elif lux < 300 %}\n  Half\n{% else
+                %}\n  Closed\n{% endif %}\n"
+      - choose:
+        - conditions:
+          - condition: numeric_state
+            entity_id: sensor.snake_plant_illuminance
+            below: 300
+          - condition: state
+            entity_id: binary_sensor.bed_sensor
+            state: 'off'
+          - condition: time
+            before: '23:00:00'
+          sequence:
+          - action: scene.turn_on
+            target:
+              entity_id: scene.hugh_room_all_lights_on
+            data:
+              transition: 1.5
+        - conditions:
+          - condition: numeric_state
+            entity_id: sensor.snake_plant_illuminance
+            above: 350
+          sequence:
+          - action: scene.turn_on
+            target:
+              entity_id: scene.hugh_room_all_lights_off
     - conditions:
       - condition: trigger
         id: night
+      - condition: state
+        entity_id: input_boolean.hugh_room_occupied
+        state: 'on'
+      - condition: state
+        entity_id: binary_sensor.bed_sensor
+        state: 'off'
+      - condition: state
+        entity_id: light.hugh_room_lamp
+        state: 'off'
+      sequence:
+      - action: light.turn_on
+        target:
+          entity_id: light.hugh_room_lamp
+        data:
+          transition: 1.5
+  - choose:
+    - conditions:
+      - condition: sun
+        after: sunset
       sequence:
       - action: input_select.select_option
         target:
           entity_id: input_select.hugh_room_blinds_mode
         data:
           option: Closed
-  mode: single
+    default: []
+  mode: restart
 - id: '1755779238287'
   alias: Enable WFH
   description: ''
@@ -3881,68 +3691,6 @@
           title: Renewed
     action: notify.notifications
   mode: single
-- id: '1757850010708'
-  alias: PC on room adjustment
-  description: ''
-  triggers:
-  - trigger: state
-    entity_id:
-    - binary_sensor.pc_status
-    to:
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 2
-  conditions: []
-  actions:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.pc_status
-        state: 'on'
-      sequence:
-      - action: input_boolean.turn_on
-        metadata: {}
-        data: {}
-        target:
-          entity_id: input_boolean.hugh_room_occupied
-      - action: light.turn_on
-        metadata: {}
-        data:
-          rgb_color:
-          - 255
-          - 138
-          - 13
-        target:
-          entity_id: light.aroma_diffuser
-      - delay:
-          hours: 0
-          minutes: 0
-          seconds: 3
-          milliseconds: 0
-      - action: fan.set_percentage
-        metadata: {}
-        data:
-          percentage: '{{ states(''input_number.fan_speed_low'') | int }}'
-        target:
-          entity_id: fan.air_purifier
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.pc_status
-        state: 'off'
-      sequence:
-      - action: fan.set_percentage
-        metadata: {}
-        data:
-          percentage: '{{ states(''input_number.fan_speed_medium'') | int }}'
-        target:
-          entity_id: fan.air_purifier
-      - action: light.turn_off
-        metadata: {}
-        data: {}
-        target:
-          entity_id: light.aroma_diffuser
-  mode: single
 - id: '1758026590924'
   alias: Toggle & Manage Christmas Plug via NFC (Merged, Spook)
   description: Toggle the Christmas plug entities and UI visibility based on cloud
@@ -4008,14 +3756,13 @@
           scene_id: diffuser_previous
           snapshot_entities:
           - light.aroma_diffuser
-      - action: light.turn_on
-        target:
-          entity_id: light.aroma_diffuser
+      - action: script.set_diffuser_color
         data:
-          rgb_color:
+          color:
           - 255
           - 0
           - 0
+          brightness: 100
     - conditions:
       - condition: state
         entity_id: switch.hugh_room_plug_blanket
@@ -4025,6 +3772,33 @@
         before: '23:00:00'
       sequence:
       - choose:
+        - conditions:
+          - condition: state
+            entity_id: sensor.hugh_phone_battery_state
+            state: charging
+          sequence:
+          - action: script.set_diffuser_color
+            data:
+              color:
+              - 0
+              - 17
+              - 255
+              brightness: 100
+        - conditions:
+          - condition: state
+            entity_id: sensor.hugh_phone_battery_state
+            state: not_charging
+          - condition: state
+            entity_id: sensor.hugh_phone_charger_type
+            state: ac
+          sequence:
+          - action: script.set_diffuser_color
+            data:
+              color:
+              - 0
+              - 255
+              - 0
+              brightness: 100
         - conditions:
           - condition: state
             entity_id: scene.diffuser_previous
@@ -4038,80 +3812,16 @@
           target:
             entity_id: light.aroma_diffuser
     - conditions:
-      - condition: time
-        before: 07:00:00
+      - condition: or
+        conditions:
+        - condition: time
+          before: 07:00:00
+        - condition: time
+          after: '23:00:00'
       sequence:
       - action: light.turn_off
         target:
           entity_id: light.aroma_diffuser
-    - conditions:
-      - condition: time
-        after: '23:00:00'
-      sequence:
-      - action: light.turn_off
-        target:
-          entity_id: light.aroma_diffuser
-  mode: single
-- id: '1758841212768'
-  alias: Hugh Room Monitor Sync
-  description: Handles purifier and lights when monitor turns on/off
-  triggers:
-  - trigger: state
-    entity_id: binary_sensor.monitor_state
-  actions:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.monitor_state
-        state: 'off'
-      - condition: state
-        entity_id: binary_sensor.pc_status
-        state: 'off'
-      sequence:
-      - choose:
-        - conditions:
-          - condition: state
-            entity_id: binary_sensor.bed_sensor
-            state: 'on'
-          sequence:
-          - action: scene.turn_on
-            target:
-              entity_id: scene.hugh_room_all_lights_off
-            data:
-              transition: 1
-          - condition: template
-            value_template: '{{ state_attr(''fan.air_purifier'', ''percentage'') !=
-              (states(''input_number.fan_speed_medium'') | int) }}'
-          - action: fan.set_percentage
-            data:
-              percentage: '{{ states(''input_number.fan_speed_medium'') | int }}'
-            target:
-              entity_id: fan.air_purifier
-        default:
-        - condition: template
-          value_template: '{{ state_attr(''fan.air_purifier'', ''percentage'') !=
-            (states(''input_number.fan_speed_medium'') | int) }}'
-        - action: fan.set_percentage
-          data:
-            percentage: '{{ states(''input_number.fan_speed_medium'') | int }}'
-          target:
-            entity_id: fan.air_purifier
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.monitor_state
-        state: 'on'
-      sequence:
-      - condition: template
-        value_template: '{{ state_attr(''fan.air_purifier'', ''percentage'') != (states(''input_number.fan_speed_low'')
-          | int) }}'
-      - condition: state
-        entity_id: fan.air_purifier
-        state: 'on'
-      - action: fan.set_percentage
-        data:
-          percentage: '{{ states(''input_number.fan_speed_low'') | int }}'
-        target:
-          entity_id: fan.air_purifier
   mode: single
 - id: '1759093314581'
   alias: Toothbrush Head Replacement
@@ -4194,4 +3904,463 @@
     data: {}
     target:
       entity_id: input_boolean.hugh_room_occupied
+  mode: single
+- id: '1759692786195'
+  alias: Auto Unoccupy Room
+  description: Marks room unoccupied when all sensors are off and phone is gone for
+    5 min.
+  triggers:
+  - entity_id:
+    - binary_sensor.pc_status
+    - binary_sensor.monitor_state
+    - binary_sensor.bed_sensor
+    - sensor.phone_ble_rssi
+    trigger: state
+  - minutes: /1
+    trigger: time_pattern
+  conditions:
+  - condition: state
+    entity_id: input_boolean.hugh_room_occupied
+    state: 'on'
+  - condition: state
+    entity_id: input_boolean.wake_up_alarm_running
+    state: 'off'
+  - condition: template
+    value_template: "{% set ents = expand([\n  'binary_sensor.pc_status',\n  'binary_sensor.monitor_state',\n
+      \ 'binary_sensor.bed_sensor'\n]) | rejectattr('state','in',['unknown','unavailable','None'])
+      | list %}\n{% set have_any = ents | count > 0 %} {% set all_off = (ents | selectattr('state','eq','off')
+      | list | count) == (ents | count) %}\n{# phone gone logic #} {% set phone_state
+      = states('sensor.phone_ble_rssi') %} {% set phone_rssi  = phone_state | float(default=-200)
+      %} {% set phone_gone  = phone_state in ['unknown','unavailable'] or phone_rssi
+      < -105 %}\n{# 5-minute stability for all binaries and phone sensor #} {% set
+      five = 5 * 60 %} {% set bins_stable = ents | map(attribute='entity_id')\n   |
+      map('states') | select('string') | list %} {# no-op to force eval #}\n{% set
+      all_bins_5m = ents | selectattr('last_changed','<=', now() - timedelta(seconds=five))
+      | list | count == (ents | count) %} {% set phone_5m = (states.sensor.phone_ble_rssi.last_changed
+      is defined) and\n                  (states.sensor.phone_ble_rssi.last_changed
+      <= now() - timedelta(seconds=five)) %}\n\n{{ have_any and all_off and phone_gone
+      and all_bins_5m and phone_5m }}"
+  actions:
+  - target:
+      entity_id: input_boolean.hugh_room_occupied
+    action: input_boolean.turn_off
+  mode: single
+- id: '1760189837022'
+  alias: Hugh Room Occupancy Control
+  description: "Toggles room occupancy using rug, bed, PC, and phone presence. - If
+    unoccupied → occupied. - If occupied → unoccupied (and stops alarm if running),\n
+    \ but ignores rug or phone triggers while bed, PC, or monitor are on.\n- Skips
+    during 03:20–03:40 maintenance window.\n"
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.rug_sensor
+    to: 'on'
+    id: rug_press
+  - trigger: state
+    entity_id: binary_sensor.bed_sensor
+    to: 'on'
+    from: 'off'
+    id: bed_on
+  - trigger: state
+    entity_id: binary_sensor.pc_status
+    to: 'on'
+    for: 00:00:02
+    id: pc_on
+  - trigger: state
+    entity_id: device_tracker.hugh_phone
+    from: home
+    to: not_home
+    for: 00:02:00
+    id: phone_away
+  actions:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.hugh_room_occupied
+        state: 'off'
+      - condition: or
+        conditions:
+        - condition: trigger
+          id: rug_press
+        - condition: trigger
+          id: bed_on
+        - condition: trigger
+          id: pc_on
+      - condition: not
+        conditions:
+        - condition: time
+          after: 03:20:00
+          before: 03:40:00
+      sequence:
+      - action: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.hugh_room_occupied
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.hugh_room_occupied
+        state: 'on'
+      - condition: or
+        conditions:
+        - condition: and
+          conditions:
+          - condition: trigger
+            id: rug_press
+          - condition: state
+            entity_id: binary_sensor.bed_sensor
+            state: 'off'
+          - condition: state
+            entity_id: binary_sensor.pc_status
+            state: 'off'
+          - condition: or
+            conditions:
+            - condition: state
+              entity_id: binary_sensor.monitor_state
+              state: 'off'
+            - condition: state
+              entity_id: binary_sensor.monitor_state
+              state: unavailable
+        - condition: and
+          conditions:
+          - condition: trigger
+            id: phone_away
+          - condition: state
+            entity_id: binary_sensor.bed_sensor
+            state: 'off'
+          - condition: state
+            entity_id: binary_sensor.pc_status
+            state: 'off'
+          - condition: or
+            conditions:
+            - condition: state
+              entity_id: binary_sensor.monitor_state
+              state: 'off'
+            - condition: state
+              entity_id: binary_sensor.monitor_state
+              state: unavailable
+      sequence:
+      - action: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.hugh_room_occupied
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: input_boolean.wake_up_alarm_running
+            state: 'on'
+          sequence:
+          - action: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.wake_up_alarm_running
+  mode: restart
+- id: '1761214986151'
+  alias: Hugh Phone Diffuser Control
+  description: Controls diffuser light based on phone charging state.
+  triggers:
+  - trigger: state
+    entity_id: sensor.hugh_phone_battery_state
+    to: not_charging
+    id: not_charging
+  - trigger: numeric_state
+    entity_id: sensor.hugh_phone_battery_level
+    above: 90
+    id: charged
+  - trigger: state
+    entity_id: sensor.hugh_phone_charger_type
+    to: ac
+    id: charging
+  - trigger: state
+    entity_id: sensor.hugh_phone_battery_state
+    to: discharging
+    id: unplugged
+  - trigger: state
+    entity_id: binary_sensor.pc_status
+    id: pc_status
+  conditions:
+  - condition: state
+    entity_id: input_boolean.hugh_room_occupied
+    state: 'on'
+  - condition: template
+    value_template: '{{ not is_state(''sensor.hugh_phone_battery_state'', ''unknown'')
+      }}'
+  - condition: template
+    value_template: '{{ not is_state(''sensor.hugh_phone_battery_state'', ''unavailable'')
+      }}'
+  - condition: template
+    value_template: '{{ not is_state(''sensor.hugh_phone_charger_type'', ''unknown'')
+      }}'
+  - condition: template
+    value_template: '{{ not is_state(''sensor.hugh_phone_charger_type'', ''unavailable'')
+      }}'
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: charging
+      - condition: state
+        entity_id: sensor.hugh_phone_battery_state
+        state: charging
+      - condition: time
+        after: 08:00:00
+        before: '22:00:00'
+      sequence:
+      - action: script.set_diffuser_color
+        data:
+          color:
+          - 0
+          - 17
+          - 255
+          brightness: 100
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: trigger
+          id: charged
+        - condition: trigger
+          id: not_charging
+      - condition: state
+        entity_id: sensor.hugh_phone_charger_type
+        state: ac
+      - condition: time
+        after: 08:00:00
+        before: '23:00:00'
+      sequence:
+      - action: script.set_diffuser_color
+        data:
+          color:
+          - 0
+          - 255
+          - 0
+          brightness: 100
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: trigger
+          id: unplugged
+        - condition: trigger
+          id: pc_status
+      sequence:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: switch.hugh_room_plug_blanket
+            state: 'on'
+          sequence:
+          - action: script.set_diffuser_color
+            data:
+              color:
+              - 255
+              - 0
+              - 0
+              brightness: 100
+        - conditions:
+          - condition: state
+            entity_id: switch.hugh_room_plug_blanket
+            state: 'off'
+          - condition: state
+            entity_id: binary_sensor.pc_status
+            state: 'on'
+          sequence:
+          - action: script.set_diffuser_color
+            data:
+              color:
+              - 255
+              - 138
+              - 13
+              brightness: 100
+        - conditions:
+          - condition: and
+            conditions:
+            - condition: state
+              entity_id: switch.hugh_room_plug_blanket
+              state: 'off'
+            - condition: state
+              entity_id: binary_sensor.pc_status
+              state: 'off'
+          sequence:
+          - action: light.turn_off
+            target:
+              entity_id: light.aroma_diffuser
+    default:
+    - action: light.turn_off
+      target:
+        entity_id: light.aroma_diffuser
+  mode: single
+- id: '1762130255049'
+  alias: Hugh Room Purifier Unified Logic
+  description: Adjusts purifier speed based on occupancy, PC, monitor, and music activity.
+  triggers:
+  - trigger: state
+    entity_id: input_boolean.hugh_room_occupied
+    id: occupancy_change
+  - trigger: state
+    entity_id: binary_sensor.pc_status
+    id: pc_change
+    for:
+      seconds: 2
+  - trigger: state
+    entity_id: binary_sensor.monitor_state
+    id: monitor_change
+    for:
+      seconds: 2
+  - trigger: state
+    entity_id: media_player.universal_player
+    from: playing
+    id: music_stopped
+    for:
+      seconds: 5
+  - trigger: state
+    entity_id: media_player.universal_player
+    to: playing
+    id: music_started
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.hugh_room_occupied
+        state: 'off'
+      sequence:
+      - action: script.set_purifier_speed
+        data:
+          level: high
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.hugh_room_occupied
+        state: 'on'
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: media_player.universal_player
+          state: playing
+        - condition: state
+          entity_id: binary_sensor.pc_status
+          state: 'on'
+        - condition: state
+          entity_id: binary_sensor.monitor_state
+          state: 'on'
+      sequence:
+      - action: script.set_purifier_speed
+        data:
+          level: low
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.hugh_room_occupied
+        state: 'on'
+      sequence:
+      - action: script.set_purifier_speed
+        data:
+          level: medium
+  mode: restart
+- id: '1763117444440'
+  alias: IR Typhoon Rear Up → Previous Track
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.typhoon_rear_up
+    to:
+    - 'on'
+  actions:
+  - action: media_player.media_previous_track
+    target:
+      device_id: 61df364729816b14e75f325311b07257
+    data: {}
+  mode: single
+- id: '1763117470810'
+  alias: IR Typhoon Front Up → Next Track
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.typhoon_front_up
+    to:
+    - 'on'
+  actions:
+  - action: media_player.media_next_track
+    target:
+      device_id: 61df364729816b14e75f325311b07257
+    data: {}
+  mode: single
+- id: '1763117507620'
+  alias: IR Typhoon Center Up – Play/Pause/Stop Music
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.typhoon_center_up
+    to: 'on'
+  actions:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: "{{ (now() - this.attributes.last_triggered).total_seconds()
+          < 2\n   if this.attributes.last_triggered else false }}\n"
+      sequence:
+      - action: media_player.media_stop
+        data: {}
+        target:
+          entity_id: media_player.hugh_room_stereo_2
+      - stop: ''
+    - conditions:
+      - condition: template
+        value_template: "{{ (now() - this.attributes.last_triggered).total_seconds()
+          >= 0.35\n   if this.attributes.last_triggered else true }}\n"
+      sequence:
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: input_boolean.wake_up_alarm_running
+            state: 'on'
+          sequence:
+          - data:
+              skip_condition: true
+            target:
+              entity_id: automation.alarm_dismiss
+            action: automation.trigger
+          - stop: ''
+        - conditions:
+          - condition: state
+            entity_id: media_player.hugh_room_stereo
+            state: playing
+          sequence:
+          - action: media_player.media_pause
+            data: {}
+            target:
+              entity_id: media_player.hugh_room_stereo_2
+        - conditions:
+          - condition: state
+            entity_id: media_player.hugh_room_stereo
+            state: paused
+          sequence:
+          - action: media_player.media_play
+            data: {}
+            target:
+              entity_id: media_player.hugh_room_stereo_2
+        default:
+        - action: script.play_spotify_playlist_2
+  mode: restart
+- id: '1763119440312'
+  alias: IR Remote Center Down - Like Track (With Pink Flash)
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.typhoon_center_down
+    to: 'on'
+  actions:
+  - action: button.press
+    target:
+      entity_id: button.hugh_room_stereo_favorite_current_song
+  - choose:
+    - conditions: []
+      sequence:
+      - action: notify.notifications
+        data:
+          title: Liked Song
+          message: ❤️ {{ state_attr('media_player.hugh_room_stereo_2','media_title')
+            }} {% set a = state_attr('media_player.hugh_room_stereo_2','media_artist')
+            %} {% if a %} – {{ a }}{% endif %}
+  - action: script.set_diffuser_color_flash
+    data:
+      color:
+      - 255
+      - 105
+      - 180
+      brightness: 100
+      duration: 2
   mode: single
