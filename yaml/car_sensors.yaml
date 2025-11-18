@@ -2,13 +2,17 @@
     - name: "Car GPS Latitude"
       unique_id: "car_gps_latitude_sensor"
       state: "{{ state_attr('device_tracker.car_location', 'latitude') | string }}"
-      unit_of_measurement: "degrees"
+      unit_of_measurement: "°"
+      state_class: measurement
+      device_class: distance
       icon: "mdi:map-marker"
 
     - name: "Car GPS Longitude"
       unique_id: "car_gps_longitude_sensor"
       state: "{{ state_attr('device_tracker.car_location', 'longitude') | string }}"
-      unit_of_measurement: "degrees"
+      unit_of_measurement: "°"
+      state_class: measurement
+      device_class: distance
       icon: "mdi:map-marker"
 
     - name: "Car GPS Map URL"
@@ -26,6 +30,8 @@
     - name: "Car Today Distance"
       unique_id: "car_daily_distance_traveled_sensor"
       unit_of_measurement: "km"
+      state_class: measurement
+      device_class: distance
       state: >
         {% set current = states('sensor.car_mileage') | float(default=none) %}
         {% set previous = states('input_number.previous_odometer_reading') | float(default=none) %}
@@ -41,32 +47,41 @@
       unique_id: "car_fuel_tank_remaining_sensor"
       state: >
         {% set current_fuel_quantity = states('sensor.car_fuel_quantity') %}
-        {% set max_fuel_capacity = 44 %}
         {% if current_fuel_quantity not in ['unknown', 'unavailable'] %}
           {% set current_fuel_quantity = current_fuel_quantity | float %}
-          {% set percent_remaining = (current_fuel_quantity / max_fuel_capacity) * 100 %}
-
           {% if current_fuel_quantity == current_fuel_quantity | round(0) %}
-            {% set fuel_display = current_fuel_quantity | round(0) | int %}
+            {{ current_fuel_quantity | round(0) | int }}
           {% else %}
-            {% set fuel_display = current_fuel_quantity %}
+            {{ current_fuel_quantity }}
           {% endif %}
-
-          {% if percent_remaining == percent_remaining | round(0) %}
-            {% set percent_display = percent_remaining | round(0) | int %}
-          {% else %}
-            {% set percent_display = percent_remaining | round(2) %}
-          {% endif %}
-
-          {{ fuel_display }}L ({{ percent_display }}%)
         {% else %}
-          Unknown
+          unknown
         {% endif %}
+      unit_of_measurement: "L"
+      state_class: measurement
+      device_class: volume
       icon: "mdi:fuel"
+      attributes:
+        percent_remaining: >
+          {% set current_fuel_quantity = states('sensor.car_fuel_quantity') %}
+          {% set max_fuel_capacity = 44 %}
+          {% if current_fuel_quantity not in ['unknown', 'unavailable'] %}
+            {% set current_fuel_quantity = current_fuel_quantity | float %}
+            {% set percent_remaining = (current_fuel_quantity / max_fuel_capacity) * 100 %}
+            {% if percent_remaining == percent_remaining | round(0) %}
+              {{ percent_remaining | round(0) | int }}%
+            {% else %}
+              {{ percent_remaining | round(2) }}%
+            {% endif %}
+          {% else %}
+            unknown
+          {% endif %}
 
     - name: "Car Engine Distance"
       unique_id: "car_engine_distance_sensor"
       unit_of_measurement: "km"
+      state_class: measurement
+      device_class: distance
       state: >
         {% set engine_replacement_km = 68899 %}
         {% set current_mileage = states('sensor.car_mileage') | float(default=none) %}
@@ -80,6 +95,8 @@
     - name: "Car YTD Distance"
       unique_id: "car_yearly_distance_traveled_sensor"
       unit_of_measurement: "km"
+      state_class: measurement
+      device_class: distance
       state: >
         {% set previous_year = states('input_number.previous_year_mileage') | float(default=none) %}
         {% set current = states('sensor.car_mileage') | float(default=none) %}
@@ -96,49 +113,43 @@
       icon: "mdi:map-marker-distance"
 
     - name: "Today Driving Time"
-      unique_id: "car_daily_driving_time"
+      unique_id: car_daily_driving_time
       unit_of_measurement: "min"
+      state_class: measurement
       state: >
-        {% set total_seconds = states('input_number.daily_driving_seconds') | int(default=0) %}
-        {% set minutes = total_seconds // 60 %}
-        {% set seconds = total_seconds % 60 %}
-        {{ "%d.%02d" | format(minutes, seconds) }}
+        {% set s = states('input_number.daily_driving_seconds') | int(0) %}
+        {% set m = s // 60 %}
+        {% set sec = s % 60 %}
+        {{ '{}.{:02}'.format(m, (sec / 60 * 100) | int) }}
       attributes:
         readable_time: >
-          {% set total_seconds = states('input_number.daily_driving_seconds') | int(default=0) %}
-          {% set hours = total_seconds // 3600 %}
-          {% set minutes = (total_seconds % 3600) // 60 %}
-          {% set seconds = total_seconds % 60 %}
-          {% if hours > 0 %}
-            {{ hours }}h {{ minutes }}m {{ seconds }}s
-          {% else %}
-            {{ minutes }}m {{ seconds }}s
-          {% endif %}
-      icon: "mdi:car-clock"
+          {% set s = states('input_number.daily_driving_seconds') | int(0) %}
+          {% set h = s // 3600 %}
+          {% set m = (s % 3600) // 60 %}
+          {% set sec = s % 60 %}
+          {% if h > 0 %}{{ h }}h {{ m }}m {{ sec }}s{% else %}{{ m }}m {{ sec }}s{% endif %}
+      icon: mdi:car-clock
 
     - name: "YTD Driving Time"
-      unique_id: "car_yearly_driving_time"
+      unique_id: car_yearly_driving_time
       unit_of_measurement: "h"
+      state_class: measurement
       state: >
-        {% set total_seconds = states('input_number.yearly_driving_seconds') | int(default=0) %}
-        {% set hours = total_seconds // 3600 %}
-        {% set minutes = (total_seconds % 3600) // 60 %}
-        {{ "%d.%02d" | format(hours, minutes) }}
+        {% set s = states('input_number.yearly_driving_seconds') | int(0) %}
+        {% set h = s // 3600 %}
+        {% set m = (s % 3600) // 60 %}
+        {{ '{}.{:02}'.format(h, m | int) }}
       attributes:
         readable_time: >
-          {% set total_seconds = states('input_number.yearly_driving_seconds') | int(default=0) %}
-          {% set days = total_seconds // 86400 %}
-          {% set hours = (total_seconds % 86400) // 3600 %}
-          {% set minutes = (total_seconds % 3600) // 60 %}
-          {% set seconds = total_seconds % 60 %}
-          {% if days > 0 %}
-            {{ days }}d {{ hours }}h {{ minutes }}m {{ seconds }}s
-          {% elif hours > 0 %}
-            {{ hours }}h {{ minutes }}m {{ seconds }}s
-          {% else %}
-            {{ minutes }}m {{ seconds }}s
-          {% endif %}
-      icon: "mdi:car-clock"
+          {% set s = states('input_number.yearly_driving_seconds') | int(0) %}
+          {% set d = s // 86400 %}
+          {% set h = (s % 86400) // 3600 %}
+          {% set m = (s % 3600) // 60 %}
+          {% set sec = s % 60 %}
+          {% if d > 0 %}{{ d }}d {{ h }}h {{ m }}m {{ sec }}s
+          {% elif h > 0 %}{{ h }}h {{ m }}m {{ sec }}s
+          {% else %}{{ m }}m {{ sec }}s{% endif %}
+      icon: mdi:car-clock
 
     - name: "Windscreen Freeze Risk"
       unique_id: "windscreen_freeze_risk_sensor"
