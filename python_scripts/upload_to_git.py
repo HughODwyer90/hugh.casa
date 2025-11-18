@@ -13,7 +13,7 @@ EXCLUDE_FILE_PATH = "/config/text_files/excluded_files.txt"
 YAML_DIRS = [
     "/config",
     "/config/custom_sensors_template",
-    "/config/custom_sensors_binary",
+    "/config/custom_sensors_rest",
     "/config/esphome"
 ]
 
