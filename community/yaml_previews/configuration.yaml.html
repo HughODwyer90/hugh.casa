@@ -32,9 +32,10 @@ python_script: !include_dir_merge_named python_scripts
 shell_command: !include shell_commands.yaml
 rest_command: !include custom_command.yaml
 template: !include_dir_merge_list custom_sensors_template/
-binary_sensor: !include_dir_merge_list custom_sensors_binary/
+rest: !include_dir_merge_list custom_sensors_rest/
 
 recorder:
+  purge_keep_days: 366
   exclude:
     entities:
       - switch.zigbee2mqtt_bridge_permit_join
