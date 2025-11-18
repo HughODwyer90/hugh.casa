@@ -16,545 +16,508 @@
                 <pre class="yaml-content">hugh_room_stereo_volume_up:
   alias: Hugh Room Stereo Volume Up
   sequence:
-    - action: media_player.volume_up
-      target:
-        entity_id:
-          - media_player.hugh_room_display
-      data: {}
+  - action: media_player.volume_up
+    target:
+      entity_id:
+      - media_player.hugh_room_display
+    data: {}
   mode: single
   icon: mdi:volume-plus
 hugh_room_stereo_volume_down:
   alias: Hugh Room Stereo Volume Down
   sequence:
-    - action: media_player.volume_down
-      data: {}
-      target:
-        entity_id: media_player.hugh_room_display
+  - action: media_player.volume_down
+    data: {}
+    enabled: true
+    target:
+      entity_id: media_player.hugh_room_display
   mode: single
   icon: mdi:volume-minus
 execute_alarm_actions:
   alias: Execute Alarm Actions
   sequence:
-    - action: input_boolean.turn_on
-      target:
-        entity_id: input_boolean.wake_up_alarm_running
-      data: {}
-    - condition: template
-      value_template:
-        &quot;{{ now() &lt;= state_attr(&#x27;sun.sun&#x27;, &#x27;next_rising&#x27;) | as_datetime
-        }}&quot;
-    - action: light.turn_on
-      data:
-        transition: 300
-      target:
-        entity_id: light.hugh_room_lamp
-    - delay:
-        minutes: 5
-    - action: music_assistant.play_media
-      data:
-        media_type: radio
-        media_id: Today FM
-      target:
-        device_id: 61df364729816b14e75f325311b07257
-    - wait_template: &quot;{{ is_state(&#x27;media_player.hugh_room_speaker&#x27;, &#x27;playing&#x27;) }}&quot;
-      timeout: 00:00:08
-      continue_on_timeout: true
-    - choose:
+  - action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.wake_up_alarm_running
+    data: {}
+  - condition: template
+    value_template: &#x27;{{ now() &lt;= state_attr(&#x27;&#x27;sun.sun&#x27;&#x27;, &#x27;&#x27;next_rising&#x27;&#x27;) | as_datetime
+      }}&#x27;
+  - action: light.turn_on
+    data:
+      transition: 300
+    target:
+      entity_id: light.hugh_room_lamp
+  - delay:
+      minutes: 5
+  - action: music_assistant.play_media
+    data:
+      media_type: radio
+      media_id: Today FM
+    target:
+      device_id: 61df364729816b14e75f325311b07257
+  - wait_template: &#x27;{{ is_state(&#x27;&#x27;media_player.hugh_room_speaker&#x27;&#x27;, &#x27;&#x27;playing&#x27;&#x27;) }}&#x27;
+    timeout: 00:00:08
+    continue_on_timeout: true
+  - choose:
+    - conditions:
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: media_player.hugh_room_speaker
+          state: playing
+      sequence:
+      - action: music_assistant.play_media
+        data:
+          media_type: radio
+          media_id: Today FM
+        target:
+          device_id: 61df364729816b14e75f325311b07257
+      - wait_template: &#x27;{{ is_state(&#x27;&#x27;media_player.hugh_room_speaker&#x27;&#x27;, &#x27;&#x27;playing&#x27;&#x27;)
+          }}&#x27;
+        timeout: 00:00:05
+        continue_on_timeout: true
+      - choose:
         - conditions:
-            - condition: not
-              conditions:
-                - condition: state
-                  entity_id: media_player.hugh_room_speaker
-                  state: playing
-          sequence:
-            - action: music_assistant.play_media
-              data:
-                media_type: radio
-                media_id: Today FM
-              target:
-                device_id: 61df364729816b14e75f325311b07257
-            - wait_template:
-                &quot;{{ is_state(&#x27;media_player.hugh_room_speaker&#x27;, &#x27;playing&#x27;)
-                }}&quot;
-              timeout: 00:00:05
-              continue_on_timeout: true
-            - choose:
-                - conditions:
-                    - condition: not
-                      conditions:
-                        - condition: state
-                          entity_id: media_player.hugh_room_speaker
-                          state: playing
-                  sequence:
-                    - action: media_player.play_media
-                      data:
-                        media_content_id: media-source://radio_browser/d0a1da9f-46b3-11e9-aa55-52543be04c81
-                        media_content_type: audio/mpeg
-                      target:
-                        entity_id: media_player.hugh_room_speaker
-    - action: media_player.volume_set
-      data:
-        volume_level: 0.2
-      target:
-        entity_id:
-          - media_player.battery_speaker
-          - media_player.hugh_room_speaker
-          - media_player.hugh_room_speaker_2
-          - media_player.hugh_room_display
-    - choose:
-        - conditions:
+          - condition: not
+            conditions:
             - condition: state
-              entity_id: sensor.windscreen_freeze_risk
-              state: Likely Frozen
+              entity_id: media_player.hugh_room_speaker
+              state: playing
           sequence:
-            - action: notify.notifications
-              data:
-                title: Wake Up Alarm
-                message: &quot;Good morning! \U0001F976 Prepare to de-ice your car!&quot;
-                data:
-                  actions:
-                    - action: TURN_OFF_ALARM
-                      title: Turn Off Alarm
-                    - action: SNOOZE_ALARM
-                      title: Snooze Alarm
-                  notification_icon: mdi:snowflake
-        - conditions:
-            - condition: state
-              entity_id: sensor.windscreen_freeze_risk
-              state: Not Frozen
-          sequence:
-            - action: notify.notifications
-              data:
-                title: Wake Up Alarm
-                message: &quot;Good morning! \U0001F31E&quot;
-                data:
-                  actions:
-                    - action: TURN_OFF_ALARM
-                      title: Turn Off Alarm
-                    - action: SNOOZE_ALARM
-                      title: Snooze Alarm
-                  notification_icon: mdi:alarm
-    - action: input_select.select_option
-      target:
-        entity_id: input_select.hugh_room_blinds_mode
-      data:
-        option: Half
-    - choose:
-        - conditions:
-            - condition: state
-              entity_id: sensor.windscreen_freeze_risk
-              state: Likely Frozen
-          sequence:
-            - action: light.turn_on
-              data:
-                rgb_color:
-                  - 173
-                  - 216
-                  - 230
-                brightness_pct: 10
-              target:
-                entity_id: light.hugh_room_ceiling
+          - action: media_player.play_media
+            data:
+              media_content_id: media-source://radio_browser/d0a1da9f-46b3-11e9-aa55-52543be04c81
+              media_content_type: audio/mpeg
+            target:
+              entity_id: media_player.hugh_room_speaker
+  - action: media_player.volume_set
+    data:
+      volume_level: 0.2
+    target:
+      entity_id:
+      - media_player.battery_speaker
+      - media_player.hugh_room_speaker
+      - media_player.hugh_room_speaker_2
+      - media_player.hugh_room_display
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: sensor.windscreen_freeze_risk
+        state: Likely Frozen
+      sequence:
+      - action: notify.notifications
+        data:
+          title: Wake Up Alarm
+          message: &quot;Good morning! \U0001F976 Prepare to de-ice your car!&quot;
+          data:
+            actions:
+            - action: TURN_OFF_ALARM
+              title: Turn Off Alarm
+            - action: SNOOZE_ALARM
+              title: Snooze Alarm
+            notification_icon: mdi:snowflake
+    - conditions:
+      - condition: state
+        entity_id: sensor.windscreen_freeze_risk
+        state: Not Frozen
+      sequence:
+      - action: notify.notifications
+        data:
+          title: Wake Up Alarm
+          message: &quot;Good morning! \U0001F31E&quot;
+          data:
+            actions:
+            - action: TURN_OFF_ALARM
+              title: Turn Off Alarm
+            - action: SNOOZE_ALARM
+              title: Snooze Alarm
+            notification_icon: mdi:alarm
+  - action: input_select.select_option
+    target:
+      entity_id: input_select.hugh_room_blinds_mode
+    data:
+      option: Half
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: sensor.windscreen_freeze_risk
+        state: Likely Frozen
+      sequence:
+      - action: light.turn_on
+        data:
+          rgb_color:
+          - 173
+          - 216
+          - 230
+          brightness_pct: 10
+        target:
+          entity_id: light.hugh_room_ceiling
   mode: single
   icon: mdi:alarm-bell
 calculate_last_day_of_month:
   alias: Calculate Last Day of Month
   sequence:
-    - action: input_datetime.set_datetime
-      target:
-        entity_id: input_datetime.last_day_of_month
-      data:
-        date:
-          &quot;{{ ((now().replace(day=1) + timedelta(days=32)).replace(day=1) - timedelta(days=1)).strftime(&#x27;%Y-%m-%d&#x27;)
-          }}
+  - action: input_datetime.set_datetime
+    target:
+      entity_id: input_datetime.last_day_of_month
+    data:
+      date: &#x27;{{ ((now().replace(day=1) + timedelta(days=32)).replace(day=1) - timedelta(days=1)).strftime(&#x27;&#x27;%Y-%m-%d&#x27;&#x27;)
+        }}
 
-          &quot;
+        &#x27;
   mode: single
   icon: mdi:calendar
 feed_patrick:
   alias: Feed Patrick
   sequence:
-    - action: shell_command.feed_patrick_message
-      data: {}
-      response_variable: message
-    - action: notify.notifications
-      data_template:
-        message: &quot;{{ message[&#x27;stdout&#x27;] }}&quot;
-        title: Patrick the Plant
-        data:
-          notification_icon: mdi:food-apple
+  - action: shell_command.feed_patrick_message
+    data: {}
+    response_variable: message
+  - action: notify.notifications
+    data_template:
+      message: &#x27;{{ message[&#x27;&#x27;stdout&#x27;&#x27;] }}&#x27;
+      title: Patrick the Plant
+      data:
+        notification_icon: mdi:food-apple
   mode: single
 find_car:
   alias: Find Car
   mode: single
   icon: mdi:car-search
   sequence:
-    - variables:
-        car_lat: &quot;{{ states(&#x27;sensor.car_gps_latitude&#x27;) | float(0) }}&quot;
-        car_lon: &quot;{{ states(&#x27;sensor.car_gps_longitude&#x27;) | float(0) }}&quot;
-        my_lat:
-          &quot;{{ state_attr(&#x27;device_tracker.hugh_phone&#x27;, &#x27;latitude&#x27;) | float(0)
-          }}&quot;
-        my_lon:
-          &quot;{{ state_attr(&#x27;device_tracker.hugh_phone&#x27;, &#x27;longitude&#x27;) | float(0)
-          }}&quot;
-        dist: &quot;{{ distance(my_lat, my_lon, car_lat, car_lon) | round(1) }}&quot;
-        car_zone: &quot;{{ states(&#x27;device_tracker.car_location&#x27;) }}&quot;
-    - action: conversation.process
-      response_variable: ai_message
+  - variables:
+      car_lat: &#x27;{{ states(&#x27;&#x27;sensor.car_gps_latitude&#x27;&#x27;) | float(0) }}&#x27;
+      car_lon: &#x27;{{ states(&#x27;&#x27;sensor.car_gps_longitude&#x27;&#x27;) | float(0) }}&#x27;
+      my_lat: &#x27;{{ state_attr(&#x27;&#x27;device_tracker.hugh_phone&#x27;&#x27;, &#x27;&#x27;latitude&#x27;&#x27;) | float(0)
+        }}&#x27;
+      my_lon: &#x27;{{ state_attr(&#x27;&#x27;device_tracker.hugh_phone&#x27;&#x27;, &#x27;&#x27;longitude&#x27;&#x27;) | float(0)
+        }}&#x27;
+      dist: &#x27;{{ distance(my_lat, my_lon, car_lat, car_lon) | round(1) }}&#x27;
+      car_zone: &#x27;{{ states(&#x27;&#x27;device_tracker.car_location&#x27;&#x27;) }}&#x27;
+  - action: conversation.process
+    response_variable: ai_message
+    data:
+      agent_id: conversation.openai_conversation
+      text: &quot;Pretend you are Clio the Car — a sarcastic, slightly dramatic teenager
+        with attitude. Write a short, funny message (under 25 words) telling your
+        owner to come find you. Don&#x27;t refer to locations as \&quot;the [name of zone] zone\&quot;
+        - just refer to them as [name of zone]\n{% if car_zone == &#x27;home&#x27; %}\n  You’re
+        at home — sound bored or playful, like you’ve been stuck there\n  too long
+        and are ready for a spin.\n{% elif car_zone == &#x27;work&#x27; %}\n  You’re parked
+        at work — sound unimpressed or fed up, like you’re done\n  with the 9-to-5
+        life.\n{% elif car_zone not in [&#x27;not_home&#x27;, &#x27;unknown&#x27;, &#x27;unavailable&#x27;, &#x27;None&#x27;]
+        %}\n  You’re at \&quot;{{ car_zone }}\&quot; — act mildly annoyed or dramatic,\n  like
+        you can’t believe you’ve been abandoned there.\n{% else %}\n  GPS data: latitude={{
+        car_lat }}, longitude={{ car_lon }}. You’re\n  somewhere unknown — sound exasperated
+        but confident, like a teen\n  pretending not to care but really wanting attention.\n{%
+        endif %}\nYour owner is {{ dist }} km away.\n{% if car_zone in [&#x27;home&#x27;, &#x27;work&#x27;]
+        %}\n  {% if dist &lt; 0.2 %}\n    Sound teasing — “Come on, lets go!”\n  {% elif
+        dist &lt; 5 %}\n    Sound impatient — “You’re close enough to grab keys already.”\n
+        \ {% else %}\n    Sound dismissive — “Fine, I’ll just vibe here without you.”\n
+        \ {% endif %}\n{% else %}\n  {% if dist &lt; 0.5 %}\n    Sound relieved but snarky
+        — “Took you long enough.”\n  {% elif dist &lt; 5 %}\n    Sound eager but dramatic
+        — “I can *almost* see you, hurry up!”\n  {% else %}\n    Sound melodramatic
+        — “Guess I’ll just sit here and rust in peace.”\n  {% endif %}\n{% endif %}&quot;
+  - action: input_text.set_value
+    target:
+      entity_id: input_text.car_gps_map_url
+    data:
+      value: &quot;{% set latitude = states(&#x27;sensor.car_gps_latitude&#x27;) %} {% set longitude
+        = states(&#x27;sensor.car_gps_longitude&#x27;) %} {% if latitude not in [&#x27;unknown&#x27;,
+        &#x27;unavailable&#x27;, &#x27;None&#x27;]\n      and longitude not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;,
+        &#x27;None&#x27;] %}\n  https://www.google.com/maps?q={{ latitude }},{{ longitude }}\n{%
+        else %}\n  https://www.google.com/maps\n{% endif %}&quot;
+  - action: notify.notifications
+    data:
+      message: &#x27;{{ ai_message.response.speech.plain.speech }}&#x27;
+      title: &#x27;{% if car_zone not in [&#x27;&#x27;not_home&#x27;&#x27;, &#x27;&#x27;unknown&#x27;&#x27;, &#x27;&#x27;unavailable&#x27;&#x27;, &#x27;&#x27;None&#x27;&#x27;]
+        %} Clio the Car ({{ car_zone }} – {{ dist }} km away) {% else %} Clio the
+        Car ({{ dist }} km away) {% endif %}&#x27;
       data:
-        agent_id: conversation.openai_conversation
-        text:
-          &#x27;Pretend you are Clio the Car, speaking in the voice of a child. Write
-          a short, dramatic message begging your owner to come find you. Keep it under
-          25 words.
-
-          {% if car_zone == &#x27;&#x27;home&#x27;&#x27; %} You are at the home zone — act sulky or whiny,
-          like you&#x27;&#x27;re bored. {% elif car_zone == &#x27;&#x27;work&#x27;&#x27; %} You are at the work zone
-          — act impatient or tired of waiting, like you want to go home. {% elif car_zone
-          not in [&#x27;&#x27;not_home&#x27;&#x27;, &#x27;&#x27;unknown&#x27;&#x27;, &#x27;&#x27;unavailable&#x27;&#x27;, &#x27;&#x27;None&#x27;&#x27;] %} You are at
-          the &quot;{{ car_zone }}&quot; zone — act lonely or scared about being left there. {%
-          else %} GPS data: latitude={{ car_lat }}, longitude={{ car_lon }}. Act like
-          a lost, frightened child not knowing where you are. {% endif %}
-
-          Your owner is {{ dist }} km away.
-
-          {% if dist &lt; 0.5 %} Sound relieved but still anxious — they&#x27;&#x27;re very close.
-          {% elif dist &lt; 5 %} Plead urgently — they&#x27;&#x27;re nearby but not here yet. {%
-          else %} Cry desperately — they&#x27;&#x27;re far away, as if you&#x27;&#x27;ve been abandoned.
-          {% endif %}&#x27;
-    - action: input_text.set_value
-      target:
-        entity_id: input_text.car_gps_map_url
-      data:
-        value:
-          &quot;{% set latitude = states(&#x27;sensor.car_gps_latitude&#x27;) %} {% set longitude
-          = states(&#x27;sensor.car_gps_longitude&#x27;) %} {% if latitude not in [&#x27;unknown&#x27;,
-          &#x27;unavailable&#x27;, &#x27;None&#x27;]\n      and longitude not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;,
-          &#x27;None&#x27;] %}\n  https://www.google.com/maps?q={{ latitude }},{{ longitude }}\n{%
-          else %}\n  https://www.google.com/maps\n{% endif %}&quot;
-    - action: notify.notifications
-      data:
-        message: &quot;{{ ai_message.response.speech.plain.speech }}&quot;
-        title:
-          &quot;{% if car_zone not in [&#x27;not_home&#x27;, &#x27;unknown&#x27;, &#x27;unavailable&#x27;, &#x27;None&#x27;]
-          %} Clio the Car ({{ car_zone }} – {{ dist }} km away) {% else %} Clio the
-          Car ({{ dist }} km away) {% endif %}&quot;
-        data:
-          notification_icon: mdi:car-search
-          clickAction: &quot;{{ states(&#x27;input_text.car_gps_map_url&#x27;) }}&quot;
+        notification_icon: mdi:car-search
+        clickAction: &#x27;{{ states(&#x27;&#x27;input_text.car_gps_map_url&#x27;&#x27;) }}&#x27;
 update_umail_expiration:
   alias: Update Umail Expiration
   sequence:
-    - action: input_datetime.set_datetime
-      data_template:
-        entity_id: input_datetime.umail_account_expiration
-        date:
-          &quot;{% set current_date = as_datetime(now()) %}\n        {% set new_month
-          = (current_date.month + 11) %}\n        {% set new_year = current_date.year
-          + (1 if new_month &gt; 12 else 0) %}\n        {% set final_month = new_month
-          - 12 if new_month &gt; 12 else new_month %}\n        {{ current_date.replace(year=new_year,
-          month=final_month).strftime(&#x27;%Y-%m-%d&#x27;) }}&quot;
-        time: &quot;{{ now().strftime(&#x27;%H:%M:%S&#x27;) }}&quot;
-    - action: notify.notifications
+  - action: input_datetime.set_datetime
+    data_template:
+      entity_id: input_datetime.umail_account_expiration
+      date: &quot;{% set current_date = as_datetime(now()) %}\n        {% set new_month
+        = (current_date.month + 11) %}\n        {% set new_year = current_date.year
+        + (1 if new_month &gt; 12 else 0) %}\n        {% set final_month = new_month
+        - 12 if new_month &gt; 12 else new_month %}\n        {{ current_date.replace(year=new_year,
+        month=final_month).strftime(&#x27;%Y-%m-%d&#x27;) }}&quot;
+      time: &#x27;{{ now().strftime(&#x27;&#x27;%H:%M:%S&#x27;&#x27;) }}&#x27;
+  - action: notify.notifications
+    data:
+      message: Umail account expiration date updated.
       data:
-        message: Umail account expiration date updated.
-        data:
-          notification_icon: mdi:calendar-alert
+        notification_icon: mdi:calendar-alert
   icon: mdi:calendar-alert
   mode: single
-  description: &quot;&quot;
+  description: &#x27;&#x27;
 reload_vesync:
   alias: Reload VeSync Integration
   sequence:
-    - action: homeassistant.reload_config_entry
-      data:
-        entry_id: af0e7105f5eb1d6df46598f6d4a7adc6
+  - action: homeassistant.reload_config_entry
+    data:
+      entry_id: af0e7105f5eb1d6df46598f6d4a7adc6
 reload_spotify:
   alias: Reload Spotify Integration
   sequence:
-    - action: homeassistant.reload_config_entry
-      data:
-        entry_id: 51cc8b5d71654625b84481b41649a6b8
+  - action: homeassistant.reload_config_entry
+    data:
+      entry_id: 51cc8b5d71654625b84481b41649a6b8
 update_car_data_expiration:
   alias: Update Car Data Expiration
   sequence:
-    - data_template:
-        entity_id: input_datetime.car_data_expiration
-        date:
-          &quot;{% set current_date = as_datetime(now()) %}\n        {% set new_month
-          = (current_date.month + 12) %}\n        {% set new_year = current_date.year
-          + (1 if new_month &gt; 12 else 0) %}\n        {% set final_month = new_month
-          - 12 if new_month &gt; 12 else new_month %}\n        {{ current_date.replace(year=new_year,
-          month=final_month).strftime(&#x27;%Y-%m-%d&#x27;) }}&quot;
-        time: &quot;{{ now().strftime(&#x27;%H:%M:%S&#x27;) }}&quot;
-      action: input_datetime.set_datetime
-    - data:
-        message: Car data expiration date updated.
-        data:
-          notification_icon: mdi:calendar-alert
-      action: notify.notifications
+  - data_template:
+      entity_id: input_datetime.car_data_expiration
+      date: &quot;{% set current_date = as_datetime(now()) %}\n        {% set new_month
+        = (current_date.month + 12) %}\n        {% set new_year = current_date.year
+        + (1 if new_month &gt; 12 else 0) %}\n        {% set final_month = new_month
+        - 12 if new_month &gt; 12 else new_month %}\n        {{ current_date.replace(year=new_year,
+        month=final_month).strftime(&#x27;%Y-%m-%d&#x27;) }}&quot;
+      time: &#x27;{{ now().strftime(&#x27;&#x27;%H:%M:%S&#x27;&#x27;) }}&#x27;
+    action: input_datetime.set_datetime
+  - data:
+      message: Car data expiration date updated.
+      data:
+        notification_icon: mdi:calendar-alert
+    action: notify.notifications
   icon: mdi:calendar-alert
   mode: single
-  description: &quot;&quot;
+  description: &#x27;&#x27;
 update_liverpool_sensors:
   alias: Update Liverpool Sensors
   sequence:
-    - data:
-        entity_id:
-          - sensor.liverpool_comp
-          - sensor.liverpool_vs
-          - sensor.liverpool_venue
-          - sensor.liverpool_champions_league_position
+  - data:
+      entity_id:
+      - sensor.liverpool_comp
+      - sensor.liverpool_vs
+      - sensor.liverpool_venue
+      - sensor.liverpool_champions_league_position
+      - sensor.liverpool_premier_league_position
+      - sensor.liverpool_premier_league_record
+      - sensor.liverpool_champions_league_record
+      - sensor.liverpool_generic_stage
+      - sensor.liverpool_european_stage
+      - sensor.liverpool_premier_league_stage
+      - sensor.liverpool_utc
+    action: homeassistant.update_entity
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - action: shell_command.update_liverpool_channel
+    data: {}
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ &#x27;&#x27;Premier League&#x27;&#x27; in states(&#x27;&#x27;sensor.liverpool_comp&#x27;&#x27;)
+          }}
+
+          &#x27;
+      sequence:
+      - data:
+          entity_id:
+          - sensor.liverpool_premier_league_stage
           - sensor.liverpool_premier_league_position
           - sensor.liverpool_premier_league_record
+          - sensor.liverpool_epl_player_stats
+        action: homeassistant.unhide_entity
+      - data:
+          entity_id:
+          - sensor.liverpool_champions_league_position
           - sensor.liverpool_champions_league_record
           - sensor.liverpool_generic_stage
           - sensor.liverpool_european_stage
+          - sensor.liverpool_ucl_player_stats
+        action: homeassistant.hide_entity
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ &#x27;&#x27;League Phase&#x27;&#x27; in states(&#x27;&#x27;sensor.liverpool_generic_stage&#x27;&#x27;)
+          }}
+
+          &#x27;
+      sequence:
+      - data:
+          entity_id:
+          - sensor.liverpool_european_stage
+          - sensor.liverpool_champions_league_position
+          - sensor.liverpool_champions_league_record
+          - sensor.liverpool_ucl_player_stats
+        action: homeassistant.unhide_entity
+      - data:
+          entity_id:
           - sensor.liverpool_premier_league_stage
-          - sensor.liverpool_utc
-      action: homeassistant.update_entity
-    - delay:
-        hours: 0
-        minutes: 0
-        seconds: 30
-        milliseconds: 0
-    - action: shell_command.update_liverpool_channel
-      data: {}
-    - delay:
-        hours: 0
-        minutes: 0
-        seconds: 30
-        milliseconds: 0
-    - choose:
-        - conditions:
-            - condition: template
-              value_template:
-                &quot;{{ &#x27;Premier League&#x27; in states(&#x27;sensor.liverpool_comp&#x27;)
-                }}
-
-                &quot;
-          sequence:
-            - data:
-                entity_id:
-                  - sensor.liverpool_premier_league_stage
-                  - sensor.liverpool_premier_league_position
-                  - sensor.liverpool_premier_league_record
-                  - sensor.liverpool_epl_player_stats
-              action: homeassistant.unhide_entity
-            - data:
-                entity_id:
-                  - sensor.liverpool_champions_league_position
-                  - sensor.liverpool_champions_league_record
-                  - sensor.liverpool_generic_stage
-                  - sensor.liverpool_european_stage
-                  - sensor.liverpool_ucl_player_stats
-              action: homeassistant.hide_entity
-        - conditions:
-            - condition: template
-              value_template:
-                &quot;{{ &#x27;League Phase&#x27; in states(&#x27;sensor.liverpool_generic_stage&#x27;)
-                }}
-
-                &quot;
-          sequence:
-            - data:
-                entity_id:
-                  - sensor.liverpool_european_stage
-                  - sensor.liverpool_champions_league_position
-                  - sensor.liverpool_champions_league_record
-                  - sensor.liverpool_ucl_player_stats
-              action: homeassistant.unhide_entity
-            - data:
-                entity_id:
-                  - sensor.liverpool_premier_league_stage
-                  - sensor.liverpool_premier_league_position
-                  - sensor.liverpool_premier_league_record
-                  - sensor.liverpool_generic_stage
-                  - sensor.liverpool_epl_player_stats
-              action: homeassistant.hide_entity
-        - conditions:
-            - condition: template
-              value_template:
-                &quot;{{ ( &#x27;Champions League&#x27; in states(&#x27;sensor.liverpool_comp&#x27;)
-                or\n     &#x27;Europa League&#x27; in states(&#x27;sensor.liverpool_comp&#x27;) or\n     &#x27;Conference
-                League&#x27; in states(&#x27;sensor.liverpool_comp&#x27;)  )\n   and states(&#x27;sensor.liverpool_generic_stage&#x27;)
-                not in [&#x27;League Phase&#x27;, &#x27;&#x27;] }}\n&quot;
-          sequence:
-            - data:
-                entity_id:
-                  - sensor.liverpool_european_stage
-                  - sensor.liverpool_ucl_player_stats
-              action: homeassistant.unhide_entity
-            - data:
-                entity_id:
-                  - sensor.liverpool_premier_league_position
-                  - sensor.liverpool_premier_league_record
-                  - sensor.liverpool_champions_league_position
-                  - sensor.liverpool_champions_league_record
-                  - sensor.liverpool_generic_stage
-                  - sensor.liverpool_epl_player_stats
-              action: homeassistant.hide_entity
-        - conditions: []
-          sequence:
-            - data:
-                entity_id:
-                  - sensor.liverpool_generic_stage
-              action: homeassistant.unhide_entity
-            - data:
-                entity_id:
-                  - sensor.liverpool_premier_league_stage
-                  - sensor.liverpool_premier_league_position
-                  - sensor.liverpool_premier_league_record
-                  - sensor.liverpool_champions_league_position
-                  - sensor.liverpool_champions_league_record
-                  - sensor.liverpool_european_stage
-                  - sensor.liverpool_ucl_player_stats
-                  - sensor.liverpool_epl_player_stats
-              action: homeassistant.hide_entity
-  description: &quot;&quot;
+          - sensor.liverpool_premier_league_position
+          - sensor.liverpool_premier_league_record
+          - sensor.liverpool_generic_stage
+          - sensor.liverpool_epl_player_stats
+        action: homeassistant.hide_entity
+    - conditions:
+      - condition: template
+        value_template: &quot;{{ ( &#x27;Champions League&#x27; in states(&#x27;sensor.liverpool_comp&#x27;)
+          or\n     &#x27;Europa League&#x27; in states(&#x27;sensor.liverpool_comp&#x27;) or\n     &#x27;Conference
+          League&#x27; in states(&#x27;sensor.liverpool_comp&#x27;)  )\n   and states(&#x27;sensor.liverpool_generic_stage&#x27;)
+          not in [&#x27;League Phase&#x27;, &#x27;&#x27;] }}\n&quot;
+      sequence:
+      - data:
+          entity_id:
+          - sensor.liverpool_european_stage
+          - sensor.liverpool_ucl_player_stats
+        action: homeassistant.unhide_entity
+      - data:
+          entity_id:
+          - sensor.liverpool_premier_league_position
+          - sensor.liverpool_premier_league_record
+          - sensor.liverpool_champions_league_position
+          - sensor.liverpool_champions_league_record
+          - sensor.liverpool_generic_stage
+          - sensor.liverpool_epl_player_stats
+        action: homeassistant.hide_entity
+    - conditions: []
+      sequence:
+      - data:
+          entity_id:
+          - sensor.liverpool_generic_stage
+        action: homeassistant.unhide_entity
+      - data:
+          entity_id:
+          - sensor.liverpool_premier_league_stage
+          - sensor.liverpool_premier_league_position
+          - sensor.liverpool_premier_league_record
+          - sensor.liverpool_champions_league_position
+          - sensor.liverpool_champions_league_record
+          - sensor.liverpool_european_stage
+          - sensor.liverpool_ucl_player_stats
+          - sensor.liverpool_epl_player_stats
+        action: homeassistant.hide_entity
+  description: &#x27;&#x27;
 update_entities_html:
   sequence:
-    - action: shell_command.upload_to_git
-      data: {}
-    - action: shell_command.upload_entities_to_git
-      data: {}
-      enabled: false
-    - delay:
-        hours: 0
-        minutes: 0
-        seconds: 10
-      enabled: false
-    - action: shell_command.upload_integrations_to_git
-      data: {}
-      enabled: false
-    - delay:
-        hours: 0
-        minutes: 0
-        seconds: 10
-      enabled: false
-    - action: shell_command.upload_yaml_to_git
-      data: {}
-      enabled: false
-    - delay:
-        hours: 0
-        minutes: 1
-        seconds: 0
-      enabled: false
-    - action: shell_command.upload_py_to_git
-      data: {}
-      enabled: false
-    - delay:
-        hours: 0
-        minutes: 1
-        seconds: 0
-      enabled: false
-    - action: shell_command.upload_index_to_git
-      data: {}
-      enabled: false
+  - action: shell_command.upload_to_git
+    data: {}
   alias: Github Backup
-  description: &quot;&quot;
+  description: &#x27;&#x27;
 play_spotify_playlist:
   alias: Play Spotify Playlist
   sequence:
-    - data:
-        media_content_id: spotify:playlist:7Gtodbwg48bzliqflc1BE9
-        media_content_type: music
-        enqueue: play
-      action: media_player.play_media
-      target:
-        device_id: 61df364729816b14e75f325311b07257
-    - data:
-        volume_level: 0.1
-      action: media_player.volume_set
-      target:
-        device_id: 61df364729816b14e75f325311b07257
+  - data:
+      media_content_id: spotify:playlist:7Gtodbwg48bzliqflc1BE9
+      media_content_type: music
+      enqueue: play
+    action: media_player.play_media
+    target:
+      device_id: 61df364729816b14e75f325311b07257
+  - data:
+      volume_level: 0.1
+    action: media_player.volume_set
+    target:
+      device_id: 61df364729816b14e75f325311b07257
   icon: mdi:spotify
   mode: single
-  description: &quot;&quot;
+  description: &#x27;&#x27;
 play_spotify_playlist_2:
   sequence:
-    - action: media_player.play_media
-      metadata: {}
-      data:
-        media_content_id: spotify:playlist:7Gtodbwg48bzliqflc1BE9
-        media_content_type: music
-        enqueue: replace
-      target:
-        device_id: 61df364729816b14e75f325311b07257
-  alias: Play Spotify Playlist
-  description: &quot;&quot;
+  - action: music_assistant.play_media
+    metadata: {}
+    data:
+      media_type: playlist
+      enqueue: play
+      media_id: spotify:playlist:7Gtodbwg48bzliqflc1BE9
+    target:
+      entity_id: media_player.hugh_room_stereo_2
+  - delay: &#x27;00:00:00.4&#x27;
+  - action: media_player.shuffle_set
+    metadata: {}
+    data:
+      shuffle: true
+    target:
+      device_id: 61df364729816b14e75f325311b07257
+  - action: media_player.media_next_track
+    metadata: {}
+    data: {}
+    target:
+      device_id: 61df364729816b14e75f325311b07257
+  alias: Play Spotify Playlist (Shuffled)
+  mode: single
 calculate_last_day_of_next_month:
   alias: Calculate Last Day of Next Month
   sequence:
-    - action: input_datetime.set_datetime
-      target:
-        entity_id: input_datetime.last_day_of_month
-      data:
-        date:
-          &quot;{{ ((now().replace(day=1) + timedelta(days=63)).replace(day=1) - timedelta(days=1)).strftime(&#x27;%Y-%m-%d&#x27;)
-          }}
+  - action: input_datetime.set_datetime
+    target:
+      entity_id: input_datetime.last_day_of_month
+    data:
+      date: &#x27;{{ ((now().replace(day=1) + timedelta(days=63)).replace(day=1) - timedelta(days=1)).strftime(&#x27;&#x27;%Y-%m-%d&#x27;&#x27;)
+        }}
 
-          &quot;
+        &#x27;
   mode: single
   icon: mdi:calendar
-  description: &quot;&quot;
+  description: &#x27;&#x27;
 update_tv_subscription_date:
   alias: Update TV Subscription date
-  description: &quot;&quot;
+  description: &#x27;&#x27;
   icon: mdi:calendar-alert
   mode: single
   sequence:
-    - action: input_datetime.set_datetime
-      target:
-        entity_id: input_datetime.tv_subscription
+  - action: input_datetime.set_datetime
+    target:
+      entity_id: input_datetime.tv_subscription
+    data:
+      date: &#x27;{% set raw = states(&#x27;&#x27;input_datetime.tv_subscription&#x27;&#x27;) %} {% set dt
+        = raw | as_datetime | as_local if raw not in [&#x27;&#x27;unknown&#x27;&#x27;,&#x27;&#x27;unavailable&#x27;&#x27;,&#x27;&#x27;none&#x27;&#x27;,&#x27;&#x27;&#x27;&#x27;]
+        else now() %} {% set y = dt.year + 1 %} {% set m = dt.month %} {% set d =
+        dt.day %} {% set is_leap = (y % 4 == 0) and ((y % 100 != 0) or (y % 400 ==
+        0)) %} {% set new_day = 28 if (m == 2 and d == 29 and not is_leap) else d
+        %} {{ dt.replace(year=y, month=m, day=new_day).strftime(&#x27;&#x27;%Y-%m-%d&#x27;&#x27;) }}&#x27;
+      time: &#x27;{% set raw = states(&#x27;&#x27;input_datetime.tv_subscription&#x27;&#x27;) %} {% set dt
+        = raw | as_datetime | as_local if raw not in [&#x27;&#x27;unknown&#x27;&#x27;,&#x27;&#x27;unavailable&#x27;&#x27;,&#x27;&#x27;none&#x27;&#x27;,&#x27;&#x27;&#x27;&#x27;]
+        else now() %} {% set y = dt.year + 1 %} {% set m = dt.month %} {% set d =
+        dt.day %} {% set is_leap = (y % 4 == 0) and ((y % 100 != 0) or (y % 400 ==
+        0)) %} {% set new_day = 28 if (m == 2 and d == 29 and not is_leap) else d
+        %} {{ dt.replace(year=y, month=m, day=new_day).strftime(&#x27;&#x27;%H:%M:%S&#x27;&#x27;) }}&#x27;
+  - action: notify.notifications
+    data:
+      message: &quot;TV Subscription date updated to {{\n  (\n    (states(&#x27;input_datetime.tv_subscription&#x27;)
+        | as_datetime | as_local\n      if states(&#x27;input_datetime.tv_subscription&#x27;)
+        not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n      else now()\n    ).replace(\n
+        \     year=( (states(&#x27;input_datetime.tv_subscription&#x27;) | as_datetime | as_local).year\n
+        \            if states(&#x27;input_datetime.tv_subscription&#x27;) not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n
+        \            else now().year),\n      month=( (states(&#x27;input_datetime.tv_subscription&#x27;)
+        | as_datetime | as_local).month\n              if states(&#x27;input_datetime.tv_subscription&#x27;)
+        not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n              else now().month
+        ),\n      day=(28 if (\n              ( (states(&#x27;input_datetime.tv_subscription&#x27;)
+        | as_datetime | as_local).month\n                if states(&#x27;input_datetime.tv_subscription&#x27;)
+        not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n                else now().month
+        ) == 2\n              and\n              ( (states(&#x27;input_datetime.tv_subscription&#x27;)
+        | as_datetime | as_local).day\n                if states(&#x27;input_datetime.tv_subscription&#x27;)
+        not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n                else now().day
+        ) == 29\n              and not (\n                (( (states(&#x27;input_datetime.tv_subscription&#x27;)
+        | as_datetime | as_local).year\n                   if states(&#x27;input_datetime.tv_subscription&#x27;)
+        not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n                   else now().year)
+        % 4 == 0)\n                and (\n                  (( (states(&#x27;input_datetime.tv_subscription&#x27;)
+        | as_datetime | as_local).year\n                     if states(&#x27;input_datetime.tv_subscription&#x27;)
+        not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n                     else now().year
+        ) % 100 != 0)\n                  or\n                  (( (states(&#x27;input_datetime.tv_subscription&#x27;)
+        | as_datetime | as_local).year\n                     if states(&#x27;input_datetime.tv_subscription&#x27;)
+        not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n                     else now().year
+        ) % 400 == 0)\n                )\n              )\n            ) else (\n
+        \             (states(&#x27;input_datetime.tv_subscription&#x27;) | as_datetime | as_local).day\n
+        \             if states(&#x27;input_datetime.tv_subscription&#x27;) not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n
+        \             else now().day\n            )\n      )\n    )\n  ).strftime(&#x27;%Y-%m-%d
+        %H:%M:%S&#x27;)\n}}&quot;
       data:
-        date:
-          &quot;{% set raw = states(&#x27;input_datetime.tv_subscription&#x27;) %} {% set dt
-          = raw | as_datetime | as_local if raw not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]
-          else now() %} {% set y = dt.year + 1 %} {% set m = dt.month %} {% set d =
-          dt.day %} {% set is_leap = (y % 4 == 0) and ((y % 100 != 0) or (y % 400 ==
-          0)) %} {% set new_day = 28 if (m == 2 and d == 29 and not is_leap) else d
-          %} {{ dt.replace(year=y, month=m, day=new_day).strftime(&#x27;%Y-%m-%d&#x27;) }}&quot;
-        time:
-          &quot;{% set raw = states(&#x27;input_datetime.tv_subscription&#x27;) %} {% set dt
-          = raw | as_datetime | as_local if raw not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]
-          else now() %} {% set y = dt.year + 1 %} {% set m = dt.month %} {% set d =
-          dt.day %} {% set is_leap = (y % 4 == 0) and ((y % 100 != 0) or (y % 400 ==
-          0)) %} {% set new_day = 28 if (m == 2 and d == 29 and not is_leap) else d
-          %} {{ dt.replace(year=y, month=m, day=new_day).strftime(&#x27;%H:%M:%S&#x27;) }}&quot;
-    - action: notify.notifications
-      data:
-        message:
-          &quot;TV Subscription date updated to {{\n  (\n    (states(&#x27;input_datetime.tv_subscription&#x27;)
-          | as_datetime | as_local\n      if states(&#x27;input_datetime.tv_subscription&#x27;)
-          not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n      else now()\n    ).replace(\n
-          \     year=( (states(&#x27;input_datetime.tv_subscription&#x27;) | as_datetime | as_local).year\n
-          \            if states(&#x27;input_datetime.tv_subscription&#x27;) not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n
-          \            else now().year),\n      month=( (states(&#x27;input_datetime.tv_subscription&#x27;)
-          | as_datetime | as_local).month\n              if states(&#x27;input_datetime.tv_subscription&#x27;)
-          not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n              else now().month
-          ),\n      day=(28 if (\n              ( (states(&#x27;input_datetime.tv_subscription&#x27;)
-          | as_datetime | as_local).month\n                if states(&#x27;input_datetime.tv_subscription&#x27;)
-          not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n                else now().month
-          ) == 2\n              and\n              ( (states(&#x27;input_datetime.tv_subscription&#x27;)
-          | as_datetime | as_local).day\n                if states(&#x27;input_datetime.tv_subscription&#x27;)
-          not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n                else now().day
-          ) == 29\n              and not (\n                (( (states(&#x27;input_datetime.tv_subscription&#x27;)
-          | as_datetime | as_local).year\n                   if states(&#x27;input_datetime.tv_subscription&#x27;)
-          not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n                   else now().year)
-          % 4 == 0)\n                and (\n                  (( (states(&#x27;input_datetime.tv_subscription&#x27;)
-          | as_datetime | as_local).year\n                     if states(&#x27;input_datetime.tv_subscription&#x27;)
-          not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n                     else now().year
-          ) % 100 != 0)\n                  or\n                  (( (states(&#x27;input_datetime.tv_subscription&#x27;)
-          | as_datetime | as_local).year\n                     if states(&#x27;input_datetime.tv_subscription&#x27;)
-          not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n                     else now().year
-          ) % 400 == 0)\n                )\n              )\n            ) else (\n
-          \             (states(&#x27;input_datetime.tv_subscription&#x27;) | as_datetime | as_local).day\n
-          \             if states(&#x27;input_datetime.tv_subscription&#x27;) not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n
-          \             else now().day\n            )\n      )\n    )\n  ).strftime(&#x27;%Y-%m-%d
-          %H:%M:%S&#x27;)\n}}&quot;
-        data:
-          notification_icon: mdi:television
+        notification_icon: mdi:television
 ai_plant_message_direct:
   alias: AI Plant Message Direct
   mode: single
@@ -569,122 +532,287 @@ ai_plant_message_direct:
       description: What the plant needs (e.g. water, food)
       example: water
   sequence:
-    - action: conversation.process
-      response_variable: ai_message
+  - action: conversation.process
+    response_variable: ai_message
+    data:
+      agent_id: conversation.openai_conversation
+      text: &#x27;Pretend you are {{ plant_name }} the Plant. Write a short, unique, melodramatic
+        reminder that you are dying of {{ need_type }} and need it.
+
+        Current conditions outside: {{ states(&#x27;&#x27;sensor.weather_condition&#x27;&#x27;) | replace(&#x27;&#x27;_&#x27;&#x27;,&#x27;&#x27;
+        &#x27;&#x27;) }}, temperature {{ states(&#x27;&#x27;sensor.weather_temperature&#x27;&#x27;) }}°C (feels
+        like {{ states(&#x27;&#x27;sensor.weather_feels_like_temperature&#x27;&#x27;) }}°C), humidity
+        {{ states(&#x27;&#x27;sensor.weather_humidity&#x27;&#x27;) }}%, wind {{ states(&#x27;&#x27;sensor.weather_wind_speed&#x27;&#x27;)
+        }} km/h, rain {{ states(&#x27;&#x27;sensor.weather_rain&#x27;&#x27;) }} mm/h, snow {{ states(&#x27;&#x27;sensor.weather_snow&#x27;&#x27;)
+        }} mm/h.
+
+        {% set hour = now().hour %} {% if 6 &lt;= hour &lt; 12 %} It is morning, sound desperate
+        as if you will not survive the day without {{ need_type }}. {% elif 12 &lt;=
+        hour &lt; 18 %} It is afternoon, exaggerate your suffering under the weight of
+        time. {% elif 18 &lt;= hour &lt; 22 %} It is evening, make it sound like a dying
+        plea before night falls. {% else %} It is late night, whisper a haunting,
+        sorrowful request as if you may not see dawn. {% endif %}
+
+        {% if states(&#x27;&#x27;sensor.weather_temperature&#x27;&#x27;) | float &gt; 23 %} It is scorching
+        hot, act like you are baking alive. {% elif states(&#x27;&#x27;sensor.weather_temperature&#x27;&#x27;)
+        | float &lt; 5 %} It is freezing cold, act like you are shivering and desperate.
+        {% endif %}
+
+        {% if states(&#x27;&#x27;sensor.weather_humidity&#x27;&#x27;) | float &lt; 40 %} The air is painfully
+        dry, exaggerate your suffering. {% elif states(&#x27;&#x27;sensor.weather_humidity&#x27;&#x27;)
+        | float &gt; 85 %} The air is heavy with humidity, but still you suffer — be
+        extra dramatic. {% endif %}
+
+        {% if states(&#x27;&#x27;sensor.weather_rain&#x27;&#x27;) | float &gt; 0 %} Rain is falling, lament
+        how cruel it is that the sky is satisfied while you wither. {% endif %}
+
+        {% if states(&#x27;&#x27;sensor.weather_snow&#x27;&#x27;) | float &gt; 0 %} Snow is covering the
+        world, cry about the cold silence while you are weak. {% endif %}
+
+        {% if states(&#x27;&#x27;sensor.weather_wind_speed&#x27;&#x27;) | float &gt; 30 %} The wind howls
+        fiercely, beg for {{ need_type }} before you are blown to dust. {% elif states(&#x27;&#x27;sensor.weather_wind_speed&#x27;&#x27;)
+        | float &lt; 5 %} The air is still, groan about the stagnant suffocation of your
+        suffering. {% endif %}
+
+        {% if is_state(&#x27;&#x27;input_boolean.hugh_room_occupied&#x27;&#x27;, &#x27;&#x27;on&#x27;&#x27;) %} Someone is
+        in the room — cry out dramatically for immediate rescue, as if you know they
+        can hear you. {% else %} The room is empty — sound abandoned and forgotten,
+        whispering about your {{ need_type }} in solitude. {% endif %}
+
+        Keep it under 30 words and never repeat yourself the same way twice. Sign
+        off the message with your name, without the &quot;the plant&quot; text and ensure a
+        space is included after the em dash if you use one.&#x27;
+  - action: &#x27;{{ notify_target }}&#x27;
+    data:
+      message: &#x27;{{ ai_message.response.speech.plain.speech }}&#x27;
+      title: &#x27;{{ plant_name }} the Plant&#x27;
       data:
-        agent_id: conversation.openai_conversation
-        text:
-          &#x27;Pretend you are {{ plant_name }} the Plant. Write a short, unique, melodramatic
-          reminder that you are dying of {{ need_type }} and need it.
-
-          Current conditions outside: {{ states(&#x27;&#x27;sensor.weather_condition&#x27;&#x27;) | replace(&#x27;&#x27;_&#x27;&#x27;,&#x27;&#x27;
-          &#x27;&#x27;) }}, temperature {{ states(&#x27;&#x27;sensor.weather_temperature&#x27;&#x27;) }}°C (feels
-          like {{ states(&#x27;&#x27;sensor.weather_feels_like_temperature&#x27;&#x27;) }}°C), humidity
-          {{ states(&#x27;&#x27;sensor.weather_humidity&#x27;&#x27;) }}%, wind {{ states(&#x27;&#x27;sensor.weather_wind_speed&#x27;&#x27;)
-          }} km/h, rain {{ states(&#x27;&#x27;sensor.weather_rain&#x27;&#x27;) }} mm/h, snow {{ states(&#x27;&#x27;sensor.weather_snow&#x27;&#x27;)
-          }} mm/h.
-
-          {% set hour = now().hour %} {% if 6 &lt;= hour &lt; 12 %} It is morning, sound desperate
-          as if you will not survive the day without {{ need_type }}. {% elif 12 &lt;=
-          hour &lt; 18 %} It is afternoon, exaggerate your suffering under the weight of
-          time. {% elif 18 &lt;= hour &lt; 22 %} It is evening, make it sound like a dying
-          plea before night falls. {% else %} It is late night, whisper a haunting,
-          sorrowful request as if you may not see dawn. {% endif %}
-
-          {% if states(&#x27;&#x27;sensor.weather_temperature&#x27;&#x27;) | float &gt; 23 %} It is scorching
-          hot, act like you are baking alive. {% elif states(&#x27;&#x27;sensor.weather_temperature&#x27;&#x27;)
-          | float &lt; 5 %} It is freezing cold, act like you are shivering and desperate.
-          {% endif %}
-
-          {% if states(&#x27;&#x27;sensor.weather_humidity&#x27;&#x27;) | float &lt; 40 %} The air is painfully
-          dry, exaggerate your suffering. {% elif states(&#x27;&#x27;sensor.weather_humidity&#x27;&#x27;)
-          | float &gt; 85 %} The air is heavy with humidity, but still you suffer — be
-          extra dramatic. {% endif %}
-
-          {% if states(&#x27;&#x27;sensor.weather_rain&#x27;&#x27;) | float &gt; 0 %} Rain is falling, lament
-          how cruel it is that the sky is satisfied while you wither. {% endif %}
-
-          {% if states(&#x27;&#x27;sensor.weather_snow&#x27;&#x27;) | float &gt; 0 %} Snow is covering the
-          world, cry about the cold silence while you are weak. {% endif %}
-
-          {% if states(&#x27;&#x27;sensor.weather_wind_speed&#x27;&#x27;) | float &gt; 30 %} The wind howls
-          fiercely, beg for {{ need_type }} before you are blown to dust. {% elif states(&#x27;&#x27;sensor.weather_wind_speed&#x27;&#x27;)
-          | float &lt; 5 %} The air is still, groan about the stagnant suffocation of your
-          suffering. {% endif %}
-
-          {% if is_state(&#x27;&#x27;input_boolean.hugh_room_occupied&#x27;&#x27;, &#x27;&#x27;on&#x27;&#x27;) %} Someone is
-          in the room — cry out dramatically for immediate rescue, as if you know they
-          can hear you. {% else %} The room is empty — sound abandoned and forgotten,
-          whispering about your {{ need_type }} in solitude. {% endif %}
-
-          Keep it under 30 words and never repeat yourself the same way twice. Sign
-          off the message with your name, without the &quot;the plant&quot; text and ensure a
-          space is included after the em dash if you use one.&#x27;
-    - action: &quot;{{ notify_target }}&quot;
-      data:
-        message: &quot;{{ ai_message.response.speech.plain.speech }}&quot;
-        title: &quot;{{ plant_name }} the Plant&quot;
-        data:
-          notification_icon: mdi:water
+        notification_icon: mdi:water
 reload_tuya_local_integration:
   alias: Reload Tuya Local Integration
   sequence:
-    - action: homeassistant.reload_config_entry
-      data:
-        entry_id: 01JS426BFEYR9S9JGQ6W6P031S
-  description: &quot;&quot;
+  - action: homeassistant.reload_config_entry
+    data:
+      entry_id: 01JS426BFEYR9S9JGQ6W6P031S
+  description: &#x27;&#x27;
 update_esphome_devices:
   alias: Update ESPHome Devices
   mode: single
   sequence:
-    - action: hassio.addon_stop
-      data:
-        addon: a0d7b954_vscode
-    - delay: 00:00:30
-    - choose:
-        - conditions:
-            - condition: state
-              entity_id: update.living_room_epone_firmware
-              state: &quot;on&quot;
-          sequence:
-            - action: update.install
-              target:
-                entity_id: update.living_room_epone_firmware
-              continue_on_error: true
-            - wait_template:
-                &quot;{{ is_state(&#x27;update.living_room_epone_firmware&#x27;, &#x27;off&#x27;)
-                }}&quot;
-              timeout: 00:05:00
-              continue_on_timeout: true
-    - choose:
-        - conditions:
-            - condition: state
-              entity_id: update.pressure_firmware
-              state: &quot;on&quot;
-          sequence:
-            - action: update.install
-              target:
-                entity_id: update.pressure_firmware
-              continue_on_error: true
-            - wait_template: &quot;{{ is_state(&#x27;update.pressure_firmware&#x27;, &#x27;off&#x27;) }}&quot;
-              timeout: 00:05:00
-              continue_on_timeout: true
-    - choose:
-        - conditions:
-            - condition: state
-              entity_id: update.ir_receiver_firmware
-              state: &quot;on&quot;
-          sequence:
-            - action: update.install
-              target:
-                entity_id: update.ir_receiver_firmware
-              continue_on_error: true
-            - wait_template: &quot;{{ is_state(&#x27;update.ir_receiver_firmware&#x27;, &#x27;off&#x27;) }}&quot;
-              timeout: 00:05:00
-              continue_on_timeout: true
-    - action: hassio.addon_start
-      data:
-        addon: a0d7b954_vscode
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: update.epone_firmware
+      state: &#x27;on&#x27;
+    - condition: state
+      entity_id: update.pressure_firmware
+      state: &#x27;on&#x27;
+    - condition: state
+      entity_id: update.ir_receiver_firmware
+      state: &#x27;on&#x27;
+  - action: hassio.addon_stop
+    data:
+      addon: a0d7b954_vscode
+  - delay: 00:00:30
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: update.epone_firmware
+        state: &#x27;on&#x27;
+      sequence:
+      - action: update.install
+        target:
+          entity_id: update.epone_firmware
+        continue_on_error: true
+      - wait_template: &#x27;{{ is_state(&#x27;&#x27;update.epone_firmware&#x27;&#x27;, &#x27;&#x27;off&#x27;&#x27;) }}&#x27;
+        timeout: 00:15:00
+        continue_on_timeout: true
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: update.pressure_firmware
+        state: &#x27;on&#x27;
+      sequence:
+      - action: update.install
+        target:
+          entity_id: update.pressure_firmware
+        continue_on_error: true
+      - wait_template: &#x27;{{ is_state(&#x27;&#x27;update.pressure_firmware&#x27;&#x27;, &#x27;&#x27;off&#x27;&#x27;) }}&#x27;
+        timeout: 00:15:00
+        continue_on_timeout: true
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: update.ir_receiver_firmware
+        state: &#x27;on&#x27;
+      sequence:
+      - action: update.install
+        target:
+          entity_id: update.ir_receiver_firmware
+        continue_on_error: true
+      - wait_template: &#x27;{{ is_state(&#x27;&#x27;update.ir_receiver_firmware&#x27;&#x27;, &#x27;&#x27;off&#x27;&#x27;) }}&#x27;
+        timeout: 00:15:00
+        continue_on_timeout: true
+  - action: hassio.addon_start
+    data:
+      addon: a0d7b954_vscode
+set_purifier_speed:
+  alias: Set Purifier Speed
+  description: Safely sets the purifier speed using custom sensor
+  mode: single
+  fields:
+    level:
+      description: &#x27;Desired speed: off, low, medium, high&#x27;
+      example: low
+  sequence:
+  - condition: template
+    value_template: &#x27;{{ states(&#x27;&#x27;sensor.air_purifier_speed&#x27;&#x27;) not in [&#x27;&#x27;Offline&#x27;&#x27;,
+      &#x27;&#x27;unavailable&#x27;&#x27;, &#x27;&#x27;unknown&#x27;&#x27;] }}
+
+      &#x27;
+  - choose:
+    - conditions: &#x27;{{ level | lower == &#x27;&#x27;off&#x27;&#x27; }}&#x27;
+      sequence:
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: sensor.air_purifier_speed
+          state: &#x27;Off&#x27;
+      - action: fan.turn_off
+        target:
+          entity_id: fan.air_purifier
+    - conditions: &#x27;{{ level | lower == &#x27;&#x27;low&#x27;&#x27; }}&#x27;
+      sequence:
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: sensor.air_purifier_speed
+          state: Low
+      - action: fan.set_percentage
+        target:
+          entity_id: fan.air_purifier
+        data:
+          percentage: &#x27;{{ states(&#x27;&#x27;input_number.fan_speed_low&#x27;&#x27;) | int }}&#x27;
+    - conditions: &#x27;{{ level | lower == &#x27;&#x27;medium&#x27;&#x27; }}&#x27;
+      sequence:
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: sensor.air_purifier_speed
+          state: Medium
+      - action: fan.set_percentage
+        target:
+          entity_id: fan.air_purifier
+        data:
+          percentage: &#x27;{{ states(&#x27;&#x27;input_number.fan_speed_medium&#x27;&#x27;) | int }}&#x27;
+    - conditions: &#x27;{{ level | lower == &#x27;&#x27;high&#x27;&#x27; }}&#x27;
+      sequence:
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: sensor.air_purifier_speed
+          state: High
+      - action: fan.set_percentage
+        target:
+          entity_id: fan.air_purifier
+        data:
+          percentage: &#x27;{{ states(&#x27;&#x27;input_number.fan_speed_high&#x27;&#x27;) | int }}&#x27;
+set_diffuser_color:
+  alias: Set Diffuser Color
+  description: Controls diffuser color and ensures Fixed lighting mode.
+  fields:
+    color:
+      description: RGB color (list of 3 values)
+      example: &#x27;[255, 0, 0]&#x27;
+    brightness:
+      description: Brightness percentage
+      example: &#x27;100&#x27;
+  sequence:
+  - variables:
+      rgb: &#x27;{{ color | default([255, 200, 150]) }}&#x27;
+      bright: &#x27;{{ brightness | default(100) }}&#x27;
+  - action: light.turn_on
+    target:
+      entity_id: light.aroma_diffuser
+    data:
+      rgb_color: &#x27;{{ rgb }}&#x27;
+      brightness_pct: &#x27;{{ bright }}&#x27;
+  - delay:
+      seconds: 1
+  - condition: template
+    value_template: &#x27;{{ is_state(&#x27;&#x27;select.aroma_diffuser_mood_lighting&#x27;&#x27;, &#x27;&#x27;Cycle&#x27;&#x27;)
+      }}&#x27;
+  - action: select.select_option
+    target:
+      entity_id: select.aroma_diffuser_mood_lighting
+    data:
+      option: Fixed
+  - delay:
+      milliseconds: 500
+  - action: light.turn_on
+    target:
+      entity_id: light.aroma_diffuser
+    data:
+      rgb_color: &#x27;{{ rgb }}&#x27;
+      brightness_pct: &#x27;{{ bright }}&#x27;
+  mode: single
+set_diffuser_color_flash:
+  alias: Set Diffuser Color Flash
+  description: Flash diffuser a color for a duration, then restore previous state.
+  fields:
+    color:
+      description: RGB list
+    brightness:
+      description: Brightness percentage
+    duration:
+      description: Flash length in seconds
+      default: 1
+  sequence:
+  - variables:
+      was_off: &#x27;{{ is_state(&#x27;&#x27;light.aroma_diffuser&#x27;&#x27;, &#x27;&#x27;off&#x27;&#x27;) }}&#x27;
+      prev_rgb: &#x27;{{ state_attr(&#x27;&#x27;light.aroma_diffuser&#x27;&#x27;, &#x27;&#x27;rgb_color&#x27;&#x27;) or [255,255,255]
+        }}&#x27;
+      prev_bri: &#x27;{{ state_attr(&#x27;&#x27;light.aroma_diffuser&#x27;&#x27;, &#x27;&#x27;brightness&#x27;&#x27;) | int(0)
+        }}&#x27;
+      rgb: &#x27;{{ color }}&#x27;
+      bright: &#x27;{{ brightness }}&#x27;
+  - action: light.turn_on
+    target:
+      entity_id: light.aroma_diffuser
+    data:
+      rgb_color: &#x27;{{ rgb }}&#x27;
+      brightness_pct: &#x27;{{ bright }}&#x27;
+  - action: select.select_option
+    target:
+      entity_id: select.aroma_diffuser_mood_lighting
+    data:
+      option: Fixed
+  - delay: &#x27;{{ duration }}&#x27;
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ was_off }}&#x27;
+      sequence:
+      - action: light.turn_off
+        target:
+          entity_id: light.aroma_diffuser
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ not was_off }}&#x27;
+      sequence:
+      - action: select.select_option
+        target:
+          entity_id: select.aroma_diffuser_mood_lighting
+        data:
+          option: Fixed
+      - delay: 0.3
+      - action: light.turn_on
+        target:
+          entity_id: light.aroma_diffuser
+        data:
+          rgb_color: &#x27;{{ prev_rgb }}&#x27;
+          brightness: &#x27;{{ prev_bri }}&#x27;
+  mode: single
 </pre>
             </div>
             <script>
