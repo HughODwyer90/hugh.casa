@@ -13,40 +13,39 @@
                 <h1>Viewing: general_sensors.yaml</h1>
             </div>
             <div class="scrollable-content">
-                <pre class="yaml-content">- platform: template
-  sensors:
-    network_scanner_devices_list:
-      friendly_name: &quot;Network Scanner Devices List&quot;
+                <pre class="yaml-content">- sensor:
+    - name: &quot;Network Scanner Devices List&quot;
       unique_id: &quot;network_scanner_devices_list_sensor&quot;
       unit_of_measurement: &quot;devices&quot;
-      value_template: &gt;
+      state_class: measurement
+      state: &gt;
         {% set devices = state_attr(&#x27;sensor.network_scanner&#x27;, &#x27;devices&#x27;) %}
         {{ devices | count if devices else 0 }}
-      attribute_templates:
+      attributes:
         devices: &gt;
           {% set devices = state_attr(&#x27;sensor.network_scanner&#x27;, &#x27;devices&#x27;) %}
           {% if devices %}
-          {% set sorted = devices | sort(attribute=&#x27;vendor&#x27;, case_sensitive=False) %}
-          {% for d in sorted %}
-          IP: {{ d.ip.ljust(13) }} | MAC: {{ d.mac.ljust(17) }}  Vendor: {{ d.vendor or &#x27;Unknown&#x27; }}
-          .....................................................................
-          {%- endfor %}
+            {% set sorted = devices | sort(attribute=&#x27;vendor&#x27;, case_sensitive=False) %}
+            {% for d in sorted %}
+            IP: {{ d.ip.ljust(13) }} | MAC: {{ d.mac.ljust(17) }}  Vendor: {{ d.vendor or &#x27;Unknown&#x27; }}
+            .....................................................................
+            {%- endfor %}
           {% else %}
             No devices found
           {% endif %}
-      icon_template: &quot;mdi:lan-connect&quot;
+      icon: &quot;mdi:lan-connect&quot;
 
-    air_purifier_lifetime:
-      friendly_name: &quot;Air Purifier Filter Life&quot;
+    - name: &quot;Air Purifier Filter Life&quot;
       unique_id: &quot;air_purifier_filter_life_sensor&quot;
-      value_template: &quot;{{ states(&#x27;sensor.air_purifier_filter_lifetime&#x27;) }}&quot;
       unit_of_measurement: &quot;%&quot;
-      icon_template: &quot;{{ &#x27;mdi:air-filter&#x27; }}&quot;
+      state_class: measurement
+      device_class: battery
+      state: &quot;{{ states(&#x27;sensor.air_purifier_filter_lifetime&#x27;) }}&quot;
+      icon: &quot;mdi:air-filter&quot;
 
-    air_purifier_speed:
-      friendly_name: &quot;Air Purifier Fan Speed&quot;
+    - name: &quot;Air Purifier Fan Speed&quot;
       unique_id: &quot;air_purifier_fan_speed_sensor&quot;
-      value_template: &gt;
+      state: &gt;
         {% set fan_state = states(&#x27;fan.air_purifier&#x27;) %}
         {% set speed = state_attr(&#x27;fan.air_purifier&#x27;, &#x27;percentage&#x27;) | int(0) %}
         {% set low = states(&#x27;input_number.fan_speed_low&#x27;) | int %}
@@ -66,7 +65,7 @@
         {% else %}
           {{ speed }}%
         {% endif %}
-      attribute_templates:
+      attributes:
         raw_percentage: &gt;
           {% set speed = state_attr(&#x27;fan.air_purifier&#x27;, &#x27;percentage&#x27;) %}
           {% if speed in [&#x27;unavailable&#x27;, &#x27;unknown&#x27;, None] %}
@@ -74,43 +73,53 @@
           {% else %}
             {{ speed | int }}
           {% endif %}
-      icon_template: &gt;
-        {% set label = states(&#x27;sensor.air_purifier_fan_speed&#x27;) %}
-        {% if label in [&#x27;Low&#x27;,&#x27;Medium&#x27;,&#x27;High&#x27;] %}
-          mdi:fan
-        {% else %}
+      icon: &gt;
+        {% set fan_state = states(&#x27;fan.air_purifier&#x27;) %}
+        {% set speed = state_attr(&#x27;fan.air_purifier&#x27;, &#x27;percentage&#x27;) | int(0) %}
+        {% set low = states(&#x27;input_number.fan_speed_low&#x27;) | int %}
+        {% set med = states(&#x27;input_number.fan_speed_medium&#x27;) | int %}
+        {% set high = states(&#x27;input_number.fan_speed_high&#x27;) | int %}
+
+        {% if fan_state == &#x27;off&#x27; %}
           mdi:fan-off
+        {% elif speed == low %}
+          mdi:fan-speed-1
+        {% elif speed == med %}
+          mdi:fan-speed-2
+        {% elif speed == high %}
+          mdi:fan-speed-3
+        {% else %}
+          mdi:fan
         {% endif %}
 
-    previous_bathroom_humidity:
-      friendly_name: &quot;Previous Bathroom Humidity&quot;
+    - name: &quot;Previous Bathroom Humidity&quot;
       unique_id: &quot;previous_bathroom_humidity_sensor&quot;
-      icon_template: &quot;{{ &#x27;mdi:water-percent&#x27; }}&quot;
-      value_template: &gt;
+      unit_of_measurement: &quot;%&quot;
+      state_class: measurement
+      device_class: humidity
+      state: &gt;
         {% set previous_humidity = states(&#x27;input_number.previous_bathroom_humidity&#x27;) %}
         {% if previous_humidity not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
           {{ &quot;{:.2f}&quot;.format(previous_humidity | float) }}%
         {% else %}
           Unknown
         {% endif %}
+      icon: &quot;mdi:water-percent&quot;
 
-    next_bin_collection:
-      friendly_name: &quot;Next Bin Collection&quot;
+    - name: &quot;Next Bin Collection&quot;
       unique_id: &quot;next_bin_collection_sensor&quot;
-      icon_template: &quot;{{ &#x27;mdi:trash-can&#x27; }}&quot;
-      value_template: &gt;
+      state: &gt;
         {% set bin = states(&#x27;input_text.bin_collection_type&#x27;) %}
         {% if bin not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
           {{ bin }}
         {% else %}
           Unknown
         {% endif %}
+      icon: &quot;mdi:trash-can&quot;
 
-    lucifer_activewindow_filtered:
-      friendly_name: &quot;Active Window&quot;
+    - name: &quot;Active Window (Lucifer)&quot;
       unique_id: &quot;lucifer_activewindow_filtered_sensor&quot;
-      icon_template: &quot;mdi:monitor-eye&quot;
-      value_template: &gt;
+      state: &gt;
         {% set value = states(&#x27;sensor.lucifer_activewindow&#x27;) %}
         {% if &#x27;Brave&#x27; in value %}
           Brave
@@ -125,24 +134,22 @@
         {% else %}
           {{ value }}
         {% endif %}
+      icon: &quot;mdi:monitor-eye&quot;
 
-    datamars_activewindow_filtered:
-      friendly_name: &quot;Datamars Active Window&quot;
+    - name: &quot;Active Window (Datamars)&quot;
       unique_id: &quot;datamars_activewindow_filtered_sensor&quot;
-      icon_template: &quot;mdi:monitor-eye&quot;
-      value_template: &gt;
+      state: &gt;
         {% set value = states(&#x27;sensor.datamars_activewindow&#x27;) %}
         {% if value in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
           Off
         {% else %}
           {{ value }}
         {% endif %}
+      icon: &quot;mdi:monitor-eye&quot;
 
-    activewindow_filtered:
-      friendly_name: &quot;Active Window&quot;
+    - name: &quot;Active Window&quot;
       unique_id: &quot;activewindow_filtered_sensor&quot;
-      icon_template: &quot;mdi:monitor-eye&quot;
-      value_template: &gt;
+      state: &gt;
         {% set lucifer_value = states(&#x27;sensor.lucifer_activewindow&#x27;) %}
         {% set datamars_value = states(&#x27;sensor.datamars_activewindow&#x27;) %}
 
@@ -177,20 +184,19 @@
         {% else %}
           Off
         {% endif %}
+      icon: &quot;mdi:monitor-eye&quot;
 
-    total_sensors_count:
-      friendly_name: &quot;Total Sensors&quot;
+    - name: &quot;Total Sensors&quot;
       unique_id: &quot;total_sensors_count_sensor&quot;
-      icon_template: &quot;mdi:counter&quot;
       unit_of_measurement: &quot;sensors&quot;
-      value_template: &gt;
-        {{ states | length }}
+      state_class: measurement
+      state: &quot;{{ states | length }}&quot;
+      icon: &quot;mdi:counter&quot;
 
-    work_plug_state_sensor:
-      friendly_name: &quot;Work Plug State&quot;
-      value_template: &gt;
-        {{ states(&#x27;input_text.work_plug_state&#x27;) }}
-      icon_template: &gt;
+    - name: &quot;Work Plug State&quot;
+      unique_id: &quot;work_plug_state_sensor&quot;
+      state: &quot;{{ states(&#x27;input_text.work_plug_state&#x27;) }}&quot;
+      icon: &gt;
         {% if states(&#x27;input_text.work_plug_state&#x27;) == &quot;On&quot; %}
           mdi:power-plug
         {% elif states(&#x27;input_text.work_plug_state&#x27;) == &quot;Off&quot; %}
