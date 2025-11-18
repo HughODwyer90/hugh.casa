@@ -1,66 +1,60 @@
-- platform: template
-  sensors:
-    living_room_occupancy_scene:
-      friendly_name: "Living Room Occupancy Scene Saved"
+- binary_sensor:
+    - name: "Living Room Occupancy Scene Saved"
       unique_id: living_room_occupancy_scene_saved_sensor
       device_class: occupancy
-      value_template: "{{ is_state('input_boolean.living_room_occupancy_scene_saved', 'on') }}"
-      icon_template: >-
+      state: "{{ is_state('input_boolean.living_room_occupancy_scene_saved', 'on') }}"
+      icon: >
         {% if is_state('input_boolean.living_room_occupancy_scene_saved', 'on') %}
           mdi:check-circle
         {% else %}
           mdi:close-circle
         {% endif %}
 
-    snake_plant_growing_season:
-      friendly_name: "Snake Plant Growing Season"
+    - name: "Snake Plant Growing Season"
       unique_id: snake_plant_growing_season_sensor
-      value_template: "{{ now().month >= 3 and now().month <= 9 }}"
-      icon_template: >-
+      state: "{{ now().month >= 3 and now().month <= 9 }}"
+      icon: >
         {% if now().month >= 3 and now().month <= 9 %}
           mdi:leaf
         {% else %}
           mdi:snowflake
         {% endif %}
 
-    pc_status:
-      friendly_name: "PC Status"
+    - name: "PC Status"
       unique_id: pc_status_sensor
       device_class: power
-      value_template: >-
+      state: >
         {% set pc_on = is_state('input_boolean.pc_on', 'on') %}
         {% set active_window = states('sensor.activewindow_filtered') %}
         {{ pc_on and active_window != 'Off' }}
-      icon_template: >-
+      icon: >
         {% if is_state('binary_sensor.pc_status', 'on') %}
           mdi:television-ambient-light
         {% else %}
           mdi:television
         {% endif %}
 
-    philips_sonicare_toothbrush:
-      friendly_name: "Toothbrush"
-      device_class: power
+    - name: "Toothbrush"
       unique_id: philips_sonicare_toothbrush_sensor
-      value_template: "{{ is_state('binary_sensor.pressure_toothbrush', 'on') }}"
-      icon_template: >-
+      device_class: power
+      state: "{{ is_state('binary_sensor.pressure_toothbrush', 'on') }}"
+      icon: >
         {% if is_state('binary_sensor.pressure_toothbrush', 'on') %}
           mdi:tooth
         {% else %}
           mdi:tooth-outline
         {% endif %}
 
-    monitor_state:
-      friendly_name: "Monitor State"
+    - name: "Monitor State"
       unique_id: monitor_state_sensor
       device_class: power
-      value_template: >-
+      state: >
         {{ is_state('remote.monitor', 'on')
             or is_state('media_player.monitor', 'on')
             or is_state('media_player.monitor', 'playing')
             or is_state('media_player.monitor_google', 'on')
             or is_state('media_player.monitor_google', 'playing') }}
-      icon_template: >-
+      icon: >
         {% if is_state('binary_sensor.monitor_state', 'on') %}
           mdi:monitor
         {% elif is_state('binary_sensor.monitor_state', 'off') %}
@@ -69,15 +63,14 @@
           mdi:alert
         {% endif %}
 
-    living_room_tv_state:
-      friendly_name: "Living Room TV State"
+    - name: "Living Room TV State"
       unique_id: living_room_tv_state_sensor
       device_class: power
-      value_template: >-
+      state: >
         {{ is_state('remote.living_room_tv', 'on')
             or is_state('media_player.living_room_chromecast', 'on')
             or is_state('media_player.living_room_chromecast', 'playing') }}
-      icon_template: >-
+      icon: >
         {% if is_state('binary_sensor.living_room_tv_state', 'on') %}
           mdi:television
         {% elif is_state('binary_sensor.living_room_tv_state', 'off') %}
