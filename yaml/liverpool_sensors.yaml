@@ -1,25 +1,21 @@
-- platform: template
-  sensors:
-    liverpool_tv_channel:
-      friendly_name: "Liverpool (TV)"
+- sensor:
+    - name: "Liverpool (TV)"
       unique_id: "liverpool_tv_channel_sensor"
-      icon_template: "{{ 'mdi:television-classic' }}"
-      value_template: >
+      state: >
         {% set channel = states('input_text.liverpool_tv_channel') %}
         {% if channel %}
           {{ channel }}
         {% else %}
-          "No TV channel information"
+          No TV channel information
         {% endif %}
+      icon: mdi:television-classic
 
-    liverpool_epl_player_stats:
-      friendly_name: "Player Stats (EPL)"
+    - name: "Player Stats (EPL)"
       unique_id: "epl_player_stats_sensor"
-      icon_template: "mdi:trophy"
-      value_template: >
+      state: >
         {% set s = states('input_text.epl_player_stats') %}
         {{ s if s and s not in ['unknown','unavailable','None'] else 'unavailable' }}
-      attribute_templates:
+      attributes:
         GOALS: "{{ state_attr('input_text.epl_player_stats', 'GOALS') }}"
         g1: "{{ state_attr('input_text.epl_player_stats', 'g1') }}"
         g2: "{{ state_attr('input_text.epl_player_stats', 'g2') }}"
@@ -40,15 +36,14 @@
         c3: "{{ state_attr('input_text.epl_player_stats', 'c3') }}"
         c4: "{{ state_attr('input_text.epl_player_stats', 'c4') }}"
         c5: "{{ state_attr('input_text.epl_player_stats', 'c5') }}"
-    
-    liverpool_ucl_player_stats:
-      friendly_name: "Player Stats (UCL)"
+      icon: mdi:trophy
+
+    - name: "Player Stats (UCL)"
       unique_id: "ucl_player_stats_sensor"
-      icon_template: "mdi:trophy"
-      value_template: >
+      state: >
         {% set s = states('input_text.ucl_player_stats') %}
         {{ s if s and s not in ['unknown','unavailable','None'] else 'unavailable' }}
-      attribute_templates:
+      attributes:
         GOALS: "{{ state_attr('input_text.ucl_player_stats', 'GOALS') }}"
         g1: "{{ state_attr('input_text.ucl_player_stats', 'g1') }}"
         g2: "{{ state_attr('input_text.ucl_player_stats', 'g2') }}"
@@ -69,12 +64,11 @@
         c3: "{{ state_attr('input_text.ucl_player_stats', 'c3') }}"
         c4: "{{ state_attr('input_text.ucl_player_stats', 'c4') }}"
         c5: "{{ state_attr('input_text.ucl_player_stats', 'c5') }}"
+      icon: mdi:trophy
 
-    liverpool_score:
-      friendly_name: "Liverpool Score"
+    - name: "Liverpool Score"
       unique_id: "liverpool_score_sensor"
-      icon_template: "mdi:soccer"
-      value_template: >
+      state: >
         {% set home = states('sensor.home_team_score') | float | int if states('sensor.home_team_score') not in ['unknown', 'unavailable', 'N/A'] else 'N/A' %}
         {% set away = states('sensor.away_team_score') | float | int if states('sensor.away_team_score') not in ['unknown', 'unavailable', 'N/A'] else 'N/A' %}
         {% set minutes = states('sensor.minutes_played') if states('sensor.minutes_played') not in ['unknown', 'unavailable', 'N/A'] else 'N/A' %}
@@ -86,11 +80,11 @@
         {% else %}
           Scores unavailable
         {% endif %}
+      icon: mdi:soccer
 
-    liverpool_time:
-      friendly_name: "Liverpool (time)"
+    - name: "Liverpool (time)"
       unique_id: "liverpool_time_sensor"
-      value_template: >
+      state: >
         {% set game_time = states('sensor.liverpool_utc') %}
         {% if game_time not in ['API unavailable', 'No valid date for next game', 'No upcoming games found'] %}
           {% set game_timestamp = as_timestamp(game_time) %}
@@ -110,514 +104,3 @@
         {% else %}
           {{ game_time }}
         {% endif %}
-
-- platform: rest
-  name: "Liverpool (vs)"
-  unique_id: "liverpool_vs_sensor"
-  resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
-  value_template: >
-    {% if value_json is not none and 'events' in value_json %}
-      {% set events = value_json['events'] %}
-      {% if events %}
-        {% set game = events[0] %}
-        {% if 'competitions' in game and game['competitions'] and 'competitors' in game['competitions'][0] %}
-          {% set competitors = game['competitions'][0]['competitors'] %}
-          {% if competitors | length > 1 and
-                'team' in competitors[0] and 'displayName' in competitors[0]['team'] and
-                'team' in competitors[1] and 'displayName' in competitors[1]['team'] %}
-            {% set home_team = competitors[0]['team']['displayName'] %}
-            {% set away_team = competitors[1]['team']['displayName'] %}
-            {% if home_team == 'Liverpool' %}
-              {{ away_team }}
-            {% else %}
-              {{ home_team }}
-            {% endif %}
-          {% else %}
-            Invalid competitors data
-          {% endif %}
-        {% else %}
-          Invalid competition data
-        {% endif %}
-      {% else %}
-        No upcoming games found
-      {% endif %}
-    {% else %}
-      API unavailable
-    {% endif %}
-  scan_interval: 9000
-  timeout: 5
-
-- platform: rest
-  name: "Liverpool (venue)"
-  unique_id: "liverpool_venue_sensor"
-  resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
-  value_template: >
-    {% if value_json is not none and 'events' in value_json %}
-      {% set events = value_json['events'] %}
-      {% if events %}
-        {% set game = events[0] %}
-        {% if 'competitions' in game and game['competitions'] and 'venue' in game['competitions'][0] and 'fullName' in game['competitions'][0]['venue'] %}
-          {% set venue = game['competitions'][0]['venue']['fullName'] %}
-          {% if 'competitors' in game['competitions'][0] and 
-                game['competitions'][0]['competitors'] and 
-                'team' in game['competitions'][0]['competitors'][0] and 
-                'displayName' in game['competitions'][0]['competitors'][0]['team'] %}
-            {% if game['competitions'][0]['competitors'][0]['team']['displayName'] == 'Liverpool' %}
-              Home - {{ venue }}
-            {% else %}
-              Away - {{ venue }}
-            {% endif %}
-          {% else %}
-            Invalid competitors data
-          {% endif %}
-        {% else %}
-          Invalid venue data
-        {% endif %}
-      {% else %}
-        No upcoming games found
-      {% endif %}
-    {% else %}
-      API unavailable
-    {% endif %}
-  scan_interval: 9000
-  timeout: 5
-
-- platform: rest
-  name: "Liverpool (comp)"
-  unique_id: "liverpool_comp_sensor"
-  resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
-  value_template: >
-    {% if value_json is not none and 'events' in value_json %}
-      {% set events = value_json['events'] %}
-      {% if events %}
-        {% set game = events[0] %}
-        {% if 'league' in game and 'name' in game['league'] %}
-          {% set comp_name = game['league']['name'] %}
-          {{ comp_name.replace('English', '').replace('UEFA', '').strip() }}
-        {% else %}
-          Invalid competition data
-        {% endif %}
-      {% else %}
-        No upcoming games found
-      {% endif %}
-    {% else %}
-      API unavailable
-    {% endif %}
-  scan_interval: 9000
-  timeout: 5
-
-- platform: rest
-  name: "Liverpool (Premier League Position)"
-  unique_id: "liverpool_premier_league_position_sensor"
-  resource: "https://site.web.api.espn.com/apis/v2/sports/soccer/eng.1/standings?region=uk&lang=en"
-  value_template: >
-    {% set children = value_json.get('children', []) %}
-    {% set entries = (children[0].standings.entries if children and children[0].get('standings') else []) %}
-    {% set total_games = 38 %}
-    {% set liverpool = entries | selectattr('team.displayName', 'equalto', 'Liverpool') | list | first %}
-
-    {% if liverpool %}
-      {% set lfc_points = liverpool['stats'] | selectattr('name', 'equalto', 'points') | map(attribute='value') | list | first | int %}
-      {% set lfc_played = liverpool['stats'] | selectattr('name', 'equalto', 'gamesPlayed') | map(attribute='value') | list | first | int %}
-      {% set lfc_gd = liverpool['stats'] | selectattr('name','equalto','pointDifferential') | map(attribute='value') | list | first | int %}
-      {% set rank = liverpool['stats'] | selectattr('name', 'equalto', 'rank') | map(attribute='value') | list | first | int %}
-
-      {% set suffix =
-        'th' if rank in [11, 12, 13] else
-        'st' if rank % 10 == 1 else
-        'nd' if rank % 10 == 2 else
-        'rd' if rank % 10 == 3 else
-        'th' %}
-
-      {% if rank == 1 %}
-        {% set ns = namespace(uncatchable=true) %}
-        {% for team in entries if team.team.displayName != 'Liverpool' %}
-          {% set pts = team['stats'] | selectattr('name', 'equalto', 'points') | map(attribute='value') | list | first | int %}
-          {% set played = team['stats'] | selectattr('name', 'equalto', 'gamesPlayed') | map(attribute='value') | list | first | int %}
-          {% set max_possible = pts + (total_games - played) * 3 %}
-          {% if max_possible > lfc_points %}
-            {% set ns.uncatchable = false %}
-          {% endif %}
-        {% endfor %}
-
-        {% if ns.uncatchable %}
-          {{ rank }}{{ suffix }} (Champions)
-        {% else %}
-          {% set runner_up = (
-            entries
-            | rejectattr('team.displayName','equalto','Liverpool')
-            | sort(attribute='stats' | selectattr('name', 'equalto', 'points') | map(attribute='value') | list | first, reverse=true)
-            | first
-          ) %}
-          {% set runner_points = runner_up['stats'] | selectattr('name','equalto','points') | map(attribute='value') | list | first | int %}
-          {% set runner_gd = runner_up['stats'] | selectattr('name','equalto','pointDifferential') | map(attribute='value') | list | first | int %}
-
-          {% if lfc_points == runner_points %}
-            {{ rank }}{{ suffix }} (+{{ lfc_gd - runner_gd }} GD)
-          {% else %}
-            {{ rank }}{{ suffix }} (+{{ lfc_points - runner_points }} pts)
-          {% endif %}
-        {% endif %}
-      {% else %}
-        {% set leader = (
-          entries
-          | rejectattr('team.displayName','equalto','Liverpool')
-          | sort(attribute='stats' | selectattr('name', 'equalto', 'points') | map(attribute='value') | list | first, reverse=true)
-          | first
-        ) %}
-        {% set leader_points = leader['stats'] | selectattr('name','equalto','points') | map(attribute='value') | list | first | int %}
-        {% set leader_gd = leader['stats'] | selectattr('name','equalto','pointDifferential') | map(attribute='value') | list | first | int %}
-
-        {% if leader_points == lfc_points %}
-          {{ rank }}{{ suffix }} (-{{ leader_gd - lfc_gd }} GD)
-        {% else %}
-          {{ rank }}{{ suffix }} (-{{ leader_points - lfc_points }} pts)
-        {% endif %}
-      {% endif %}
-    {% else %}
-      Liverpool not found
-    {% endif %}
-  scan_interval: 9000
-  timeout: 5
-
-- platform: rest
-  name: "Liverpool (Champions League Position)"
-  unique_id: "liverpool_champions_league_position_sensor"
-  resource: "https://site.web.api.espn.com/apis/v2/sports/soccer/uefa.champions/standings?region=uk&lang=en"
-  # For Europa League:
-  # resource: "https://site.web.api.espn.com/apis/v2/sports/soccer/uefa.europa/standings?region=uk&lang=en"
-  # For Conference League:
-  # resource: "https://site.web.api.espn.com/apis/v2/sports/soccer/uefa.europa.conference/standings?region=uk&lang=en"
-  value_template: >
-    {% if value_json is not none and 'children' in value_json and value_json['children'] %}
-      {% set entries = value_json['children'] | map(attribute='standings') | map(attribute='entries') | sum(start=[]) %}
-      {% set total_games = 8 %}
-      {% set liverpool = entries | selectattr('team.displayName', 'equalto', 'Liverpool') | list | first %}
-
-      {% if liverpool and 'stats' in liverpool %}
-        {% set rank = liverpool['stats'] | selectattr('name', 'equalto', 'rank') | map(attribute='value') | list | first | int %}
-        {% set lfc_points = liverpool['stats'] | selectattr('name', 'equalto', 'points') | map(attribute='value') | list | first | int %}
-        {% set lfc_played = liverpool['stats'] | selectattr('name', 'equalto', 'gamesPlayed') | map(attribute='value') | list | first | int %}
-        {% set lfc_gd = liverpool['stats'] | selectattr('name','equalto','pointDifferential') | map(attribute='value') | list | first | int %}
-        {% set suffix =
-          'th' if rank in [11, 12, 13] else
-          'st' if rank % 10 == 1 else
-          'nd' if rank % 10 == 2 else
-          'rd' if rank % 10 == 3 else
-          'th' %}
-
-        {% set ns = namespace(
-          guaranteed_first = true,
-          guaranteed_top8 = true,
-          guaranteed_eliminated = true
-        ) %}
-
-        {# ----- RANK 1 LOGIC ----- #}
-        {% if rank == 1 %}
-          {% for team in entries if team.team.displayName != 'Liverpool' %}
-            {% set pts = team['stats'] | selectattr('name', 'equalto', 'points') | map(attribute='value') | list | first | int %}
-            {% set played = team['stats'] | selectattr('name', 'equalto', 'gamesPlayed') | map(attribute='value') | list | first | int %}
-            {% set max_possible = pts + (total_games - played) * 3 %}
-            {% if max_possible > lfc_points %}
-              {% set ns.guaranteed_first = false %}
-            {% endif %}
-          {% endfor %}
-
-          {% if ns.guaranteed_first %}
-            {{ rank }}{{ suffix }} (Guaranteed 1st)
-          {% else %}
-            {% set runner_up = (
-              entries
-              | rejectattr('team.displayName','equalto','Liverpool')
-              | sort(attribute='stats' | selectattr('name','equalto','points') | map(attribute='value') | list | first, reverse=true)
-              | first
-            ) %}
-            {% set runner_points = runner_up['stats'] | selectattr('name','equalto','points') | map(attribute='value') | list | first | int %}
-            {% set runner_gd = runner_up['stats'] | selectattr('name','equalto','pointDifferential') | map(attribute='value') | list | first | int %}
-
-            {% if lfc_points == runner_points %}
-              {{ rank }}{{ suffix }} (+{{ lfc_gd - runner_gd }} GD)
-            {% else %}
-              {{ rank }}{{ suffix }} (+{{ lfc_points - runner_points }} pts)
-            {% endif %}
-          {% endif %}
-
-        {% else %}
-          {# ----- BELOW 1ST PLACE ----- #}
-          {% set leader = (
-            entries
-            | rejectattr('team.displayName','equalto','Liverpool')
-            | sort(attribute='stats' | selectattr('name','equalto','points') | map(attribute='value') | list | first, reverse=true)
-            | first
-          ) %}
-          {% set leader_points = leader['stats'] | selectattr('name','equalto','points') | map(attribute='value') | list | first | int %}
-          {% set leader_gd = leader['stats'] | selectattr('name','equalto','pointDifferential') | map(attribute='value') | list | first | int %}
-
-          {# Check guaranteed top 8 #}
-          {% for team in entries if team.team.displayName != 'Liverpool'
-            and (team['stats'] | selectattr('name','equalto','rank') | map(attribute='value') | list | first | int) > 8 %}
-            {% set pts = team['stats'] | selectattr('name','equalto','points') | map(attribute='value') | list | first | int %}
-            {% set played = team['stats'] | selectattr('name','equalto','gamesPlayed') | map(attribute='value') | list | first | int %}
-            {% set max_possible = pts + (total_games - played) * 3 %}
-            {% if max_possible >= lfc_points %}
-              {% set ns.guaranteed_top8 = false %}
-            {% endif %}
-          {% endfor %}
-
-          {# Check guaranteed eliminated (cannot reach top 24) #}
-          {% for team in entries if (team['stats'] | selectattr('name','equalto','rank') | map(attribute='value') | list | first | int) <= 24 %}
-            {% set pts = team['stats'] | selectattr('name','equalto','points') | map(attribute='value') | list | first | int %}
-            {% set played = team['stats'] | selectattr('name','equalto','gamesPlayed') | map(attribute='value') | list | first | int %}
-            {% set max_possible_lfc = lfc_points + (total_games - lfc_played) * 3 %}
-            {% if max_possible_lfc >= pts %}
-              {% set ns.guaranteed_eliminated = false %}
-            {% endif %}
-          {% endfor %}
-
-          {% if ns.guaranteed_top8 %}
-            {{ rank }}{{ suffix }} (Qualified)
-          {% elif ns.guaranteed_eliminated %}
-            {{ rank }}{{ suffix }} (Eliminated)
-          {% else %}
-            {% if leader_points == lfc_points %}
-              {{ rank }}{{ suffix }} (-{{ leader_gd - lfc_gd }} GD)
-            {% else %}
-              {{ rank }}{{ suffix }} (-{{ leader_points - lfc_points }} pts)
-            {% endif %}
-          {% endif %}
-        {% endif %}
-      {% else %}
-        Liverpool not found
-      {% endif %}
-    {% else %}
-      API unavailable or invalid response
-    {% endif %}
-  scan_interval: 9000
-  timeout: 5
-
-- platform: rest
-  name: "Liverpool (Generic Stage)"
-  unique_id: "liverpool_stage_only_sensor"
-  resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
-  value_template: >
-    {% if value_json is not none and 'events' in value_json %}
-      {% set events = value_json['events'] %}
-      {% if events %}
-        {% set game = events[0] %}
-        {% if 'seasonType' in game and 'name' in game['seasonType'] %}
-          {% set stage_name = game['seasonType']['name'] %}
-          {% if 'Community Shield' in stage_name %}
-            FA Community Shield
-          {% else %}
-            {{ stage_name }}
-          {% endif %}
-        {% else %}
-          Invalid game data
-        {% endif %}
-      {% else %}
-        No upcoming games
-      {% endif %}
-    {% else %}
-      API unavailable
-    {% endif %}
-  scan_interval: 9000
-  timeout: 5
-
-- platform: rest
-  name: "Liverpool (Premier League Stage)"
-  unique_id: "liverpool_premier_league_stage_sensor"
-  resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
-  value_template: >
-    {% if value_json is not none and 'team' in value_json and 'recordSummary' in value_json['team'] %}
-      {% set record = value_json['team']['recordSummary'] %}
-      {% if record %}
-        {% set wins, draws, losses = record.split('-') | map('int') | list %}
-        {% set games_played = 1 + wins + draws + losses %}
-        {% if games_played > 38 %}
-          Game 1 of 38
-        {% else %}
-          Game {{ games_played }} of 38
-        {% endif %}
-      {% else %}
-        No record available
-      {% endif %}
-    {% else %}
-      API unavailable or invalid response
-    {% endif %}
-  scan_interval: 9000
-  timeout: 5
-
-- platform: rest
-  name: "Liverpool (European Stage)"
-  unique_id: "liverpool_europe_stage_sensor"
-  resource: "https://prod-cdn-public-api.livescore.com/v1/api/app/stage/soccer/champions-league/league-stage/0?countryCode=IE&locale=en&MD=1"
-  value_template: >
-    {% if value_json is not none and 'Stages' in value_json %}
-      {% set stages = value_json['Stages'] %}
-      {% if stages and stages[0]['LeagueTable']['L'][0]['Tables'][0]['team'] %}
-        {% set teams = stages[0]['LeagueTable']['L'][0]['Tables'][0]['team'] %}
-        {% set liverpool = teams | selectattr('Tnm', 'equalto', 'Liverpool') | list | first %}
-        {% if liverpool %}
-          {% set wins = liverpool['win'] | int %}
-          {% set draws = liverpool['drw'] | int %}
-          {% set losses = liverpool['lst'] | int %}
-          {% set games_played = 1 + wins + draws + losses %}
-          {% if games_played > 8 %}
-            Game 1 of 8
-          {% else %}
-            Game {{ games_played }} of 8
-          {% endif %}
-        {% else %}
-          Liverpool not found in current standings
-        {% endif %}
-      {% else %}
-        No teams data available
-      {% endif %}
-    {% else %}
-      API unavailable
-    {% endif %}
-  scan_interval: 9000
-  timeout: 5
-
-- platform: rest
-  name: "Liverpool (Premier League Record)"
-  unique_id: "liverpool_premier_league_record_sensor"
-  resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
-  value_template: >
-    {% if value_json is not none and 'events' in value_json %}
-      {% set response = value_json %}
-      {% if response['events'] %}
-        {% set game_index = 0 %}
-        {% set game = response['events'][game_index] %}
-        {% set competition = game['season']['displayName'] %}
-        
-        {% if 'Premier League' in competition and 'team' in response %}
-          {% set team = response['team'] %}
-          {% set record = team.get('recordSummary', '') %}
-          {% set record_parts = record.split('-') %}
-          {% if record_parts | length == 3 %}
-            {% set wins = record_parts[0] | int %}
-            {% set draws = record_parts[1] | int %}
-            {% set points = (wins * 3) + draws %}
-            {{ record ~ ' (' ~ points ~ ' pts)' }}
-          {% else %}
-            {{ record }}
-          {% endif %}
-        {% else %}
-          -
-        {% endif %}
-      {% else %}
-        No record available
-      {% endif %}
-    {% else %}
-      API unavailable
-    {% endif %}
-  scan_interval: 9000
-  timeout: 5
-
-- platform: rest
-  name: "Liverpool (Champions League Record)"
-  unique_id: "liverpool_champions_league_record_sensor"
-  resource: "https://prod-cdn-public-api.livescore.com/v1/api/app/stage/soccer/champions-league/league-stage/0?countryCode=IE&locale=en&MD=1"
-  value_template: >
-    {% if value_json is not none and 'Stages' in value_json %}
-      {% set teams = value_json['Stages'][0]['LeagueTable']['L'][0]['Tables'][0]['team'] %}
-      {% set liverpool = teams | selectattr('Tnm', 'equalto', 'Liverpool') | list | first %}
-      {% if liverpool %}
-        {% set wins = liverpool['win'] | int %}
-        {% set draws = liverpool['drw'] | int %}
-        {% set losses = liverpool['lst'] | int %}
-        {% set points = (wins * 3) + draws %}
-        {{ wins }}-{{ draws }}-{{ losses }} ({{ points }} pts)
-      {% else %}
-        No record available
-      {% endif %}
-    {% else %}
-      API unavailable
-    {% endif %}
-  scan_interval: 9000
-  timeout: 5
-
-- platform: rest
-  name: "Liverpool (UTC)"
-  unique_id: "liverpool_utc_sensor"
-  resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
-  value_template: >
-    {% if value_json is not none and 'events' in value_json %}
-      {% set events = value_json['events'] %}
-      {% if events %}
-        {% set game = events[0] %}
-        {% if 'date' in game %}
-          {{ game['date'] }}
-        {% else %}
-          No valid date for next game
-        {% endif %}
-      {% else %}
-        No upcoming games found
-      {% endif %}
-    {% else %}
-      API unavailable
-    {% endif %}
-  scan_interval: 9000
-  timeout: 5
-
-- platform: rest
-  name: "Home Team Score"
-  unique_id: "home_team_score_sensor"
-  resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
-  value_template: >
-    {% if value_json is not none and 'events' in value_json %}
-      {% set events = value_json['events'] %}
-      {% if events %}
-        {% set competitors = events[0]['competitions'][0]['competitors'] %}
-        {% for competitor in competitors %}
-          {% if competitor['homeAway'] == 'home' %}
-            {{ competitor['score']['value'] if 'score' in competitor and 'value' in competitor['score'] else 'N/A' }}
-          {% endif %}
-        {% endfor %}
-      {% else %}
-        No home team score
-      {% endif %}
-    {% else %}
-      API unavailable
-    {% endif %}
-  scan_interval: 10
-  timeout: 5
-
-- platform: rest
-  name: "Away Team Score"
-  unique_id: "away_team_score_sensor"
-  resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
-  value_template: >
-    {% if value_json is not none and 'events' in value_json %}
-      {% set events = value_json['events'] %}
-      {% if events %}
-        {% set competitors = events[0]['competitions'][0]['competitors'] %}
-        {% for competitor in competitors %}
-          {% if competitor['homeAway'] == 'away' %}
-            {{ competitor['score']['value'] if 'score' in competitor and 'value' in competitor['score'] else 'N/A' }}
-          {% endif %}
-        {% endfor %}
-      {% else %}
-        No away team score
-      {% endif %}
-    {% else %}
-      API unavailable
-    {% endif %}
-  scan_interval: 10
-  timeout: 5
-
-- platform: rest
-  name: "Minutes Played"
-  unique_id: "minutes_played_sensor"
-  resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
-  value_template: >
-    {% if value_json is not none and 'events' in value_json %}
-      {% set event = value_json['events'][0] %}
-      {% set status = event['competitions'][0]['status'] %}
-      {{ status['type']['shortDetail'] if 'type' in status and 'shortDetail' in status['type'] else "No status available" }}
-    {% else %}
-      API unavailable
-    {% endif %}
-  scan_interval: 10
-  timeout: 5
