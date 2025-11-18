@@ -1,0 +1,84 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>livescore_europe_stages.yaml</title>
+            <link rel="stylesheet" id="dynamic-styles">
+            <link rel="icon" id="dynamic-favicon">
+        </head>
+        <body>
+            <div class="fixed-header">
+                <h1>Viewing: livescore_europe_stages.yaml</h1>
+            </div>
+            <div class="scrollable-content">
+                <pre class="yaml-content">- resource: &quot;https://prod-cdn-public-api.livescore.com/v1/api/app/stage/soccer/champions-league/league-stage/0?countryCode=IE&amp;locale=en&amp;MD=1&quot;
+  scan_interval: 9000
+  timeout: 5
+  sensor:
+    - name: &quot;Liverpool (European Stage)&quot;
+      unique_id: &quot;liverpool_europe_stage_sensor&quot;
+      value_template: &gt;
+        {% if value_json is not none and &#x27;Stages&#x27; in value_json %}
+          {% set stages = value_json[&#x27;Stages&#x27;] %}
+          {% if stages and stages[0][&#x27;LeagueTable&#x27;][&#x27;L&#x27;][0][&#x27;Tables&#x27;][0][&#x27;team&#x27;] %}
+            {% set teams = stages[0][&#x27;LeagueTable&#x27;][&#x27;L&#x27;][0][&#x27;Tables&#x27;][0][&#x27;team&#x27;] %}
+            {% set liverpool = teams | selectattr(&#x27;Tnm&#x27;, &#x27;equalto&#x27;, &#x27;Liverpool&#x27;) | list | first %}
+            {% if liverpool %}
+              {% set wins = liverpool[&#x27;win&#x27;] | int %}
+              {% set draws = liverpool[&#x27;drw&#x27;] | int %}
+              {% set losses = liverpool[&#x27;lst&#x27;] | int %}
+              {% set games_played = 1 + wins + draws + losses %}
+              {% if games_played &gt; 8 %}
+                Game 1 of 8
+              {% else %}
+                Game {{ games_played }} of 8
+              {% endif %}
+            {% else %}
+              Liverpool not found in current standings
+            {% endif %}
+          {% else %}
+            No teams data available
+          {% endif %}
+        {% else %}
+          API unavailable
+        {% endif %}
+
+    - name: &quot;Liverpool (Champions League Record)&quot;
+      unique_id: &quot;liverpool_champions_league_record_sensor&quot;
+      value_template: &gt;
+        {% if value_json is not none and &#x27;Stages&#x27; in value_json %}
+          {% set teams = value_json[&#x27;Stages&#x27;][0][&#x27;LeagueTable&#x27;][&#x27;L&#x27;][0][&#x27;Tables&#x27;][0][&#x27;team&#x27;] %}
+          {% set liverpool = teams | selectattr(&#x27;Tnm&#x27;, &#x27;equalto&#x27;, &#x27;Liverpool&#x27;) | list | first %}
+          {% if liverpool %}
+            {% set wins = liverpool[&#x27;win&#x27;] | int %}
+            {% set draws = liverpool[&#x27;drw&#x27;] | int %}
+            {% set losses = liverpool[&#x27;lst&#x27;] | int %}
+            {% set points = (wins * 3) + draws %}
+            {{ wins }}-{{ draws }}-{{ losses }} ({{ points }} pts)
+          {% else %}
+            No record available
+          {% endif %}
+        {% else %}
+          API unavailable
+        {% endif %}
+</pre>
+            </div>
+            <script>
+                (function fixPaths() {
+                    // ✅ If inside yaml_previews, use "../assets/", otherwise use "assets/"
+                    var basePath = window.location.pathname.includes("/yaml_previews/") ? "../assets/" : "assets/";
+
+                    // ✅ Apply correct asset paths
+                    document.getElementById("dynamic-styles").href = basePath + "table-styles.css";
+                    document.getElementById("dynamic-favicon").href = basePath + "favicon.ico";
+
+                    var script = document.createElement("script");
+                    script.src = basePath + "table-functions.js";
+                    document.body.appendChild(script);
+                })();
+            </script>
+        </body>
+        </html>
+        
