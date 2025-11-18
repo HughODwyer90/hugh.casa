@@ -14,7 +14,7 @@ UCL_STATS_ENTITY = "input_text.ucl_player_stats"
 ACCESS_TOKEN = secrets["ha_access_token"]
 
 # Livescore config
-excluded_keywords = {"Viaplay", "Discovery", "Ziggo", "Caliente", "Diema"}
+excluded_keywords = {"Viaplay", "Discovery", "Ziggo", "Caliente", "Diema", "HBO", "Amazon"}
 base_url = "https://www.livescore.com/football/team/liverpool/3340/fixtures"
 
 # UEFA config
