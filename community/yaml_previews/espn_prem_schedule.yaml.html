@@ -1,0 +1,213 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>espn_prem_schedule.yaml</title>
+            <link rel="stylesheet" id="dynamic-styles">
+            <link rel="icon" id="dynamic-favicon">
+        </head>
+        <body>
+            <div class="fixed-header">
+                <h1>Viewing: espn_prem_schedule.yaml</h1>
+            </div>
+            <div class="scrollable-content">
+                <pre class="yaml-content">- resource: &quot;https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&amp;lang=en&amp;fixture=true&quot;
+  scan_interval: 9000
+  timeout: 5
+  sensor:
+    - name: &quot;Liverpool (vs)&quot;
+      unique_id: &quot;liverpool_vs_sensor&quot;
+      value_template: &gt;
+        {% if value_json is not none and &#x27;events&#x27; in value_json %}
+          {% set events = value_json[&#x27;events&#x27;] %}
+          {% if events %}
+            {% set game = events[0] %}
+            {% if &#x27;competitions&#x27; in game and game[&#x27;competitions&#x27;] and &#x27;competitors&#x27; in game[&#x27;competitions&#x27;][0] %}
+              {% set competitors = game[&#x27;competitions&#x27;][0][&#x27;competitors&#x27;] %}
+              {% if competitors | length &gt; 1 and
+                    &#x27;team&#x27; in competitors[0] and &#x27;displayName&#x27; in competitors[0][&#x27;team&#x27;] and
+                    &#x27;team&#x27; in competitors[1] and &#x27;displayName&#x27; in competitors[1][&#x27;team&#x27;] %}
+                {% set home_team = competitors[0][&#x27;team&#x27;][&#x27;displayName&#x27;] %}
+                {% set away_team = competitors[1][&#x27;team&#x27;][&#x27;displayName&#x27;] %}
+                {% if home_team == &#x27;Liverpool&#x27; %}
+                  {{ away_team }}
+                {% else %}
+                  {{ home_team }}
+                {% endif %}
+              {% else %}
+                Invalid competitors data
+              {% endif %}
+            {% else %}
+              Invalid competition data
+            {% endif %}
+          {% else %}
+            No upcoming games found
+          {% endif %}
+        {% else %}
+          API unavailable
+        {% endif %}
+
+    - name: &quot;Liverpool (venue)&quot;
+      unique_id: &quot;liverpool_venue_sensor&quot;
+      value_template: &gt;
+        {% if value_json is not none and &#x27;events&#x27; in value_json %}
+          {% set events = value_json[&#x27;events&#x27;] %}
+          {% if events %}
+            {% set game = events[0] %}
+            {% if &#x27;competitions&#x27; in game and game[&#x27;competitions&#x27;] and &#x27;venue&#x27; in game[&#x27;competitions&#x27;][0] and &#x27;fullName&#x27; in game[&#x27;competitions&#x27;][0][&#x27;venue&#x27;] %}
+              {% set venue = game[&#x27;competitions&#x27;][0][&#x27;venue&#x27;][&#x27;fullName&#x27;] %}
+              {% if &#x27;competitors&#x27; in game[&#x27;competitions&#x27;][0] and 
+                    game[&#x27;competitions&#x27;][0][&#x27;competitors&#x27;] and 
+                    &#x27;team&#x27; in game[&#x27;competitions&#x27;][0][&#x27;competitors&#x27;][0] and 
+                    &#x27;displayName&#x27; in game[&#x27;competitions&#x27;][0][&#x27;competitors&#x27;][0][&#x27;team&#x27;] %}
+                {% if game[&#x27;competitions&#x27;][0][&#x27;competitors&#x27;][0][&#x27;team&#x27;][&#x27;displayName&#x27;] == &#x27;Liverpool&#x27; %}
+                  Home - {{ venue }}
+                {% else %}
+                  Away - {{ venue }}
+                {% endif %}
+              {% else %}
+                Invalid competitors data
+              {% endif %}
+            {% else %}
+              Invalid venue data
+            {% endif %}
+          {% else %}
+            No upcoming games found
+          {% endif %}
+        {% else %}
+          API unavailable
+        {% endif %}
+
+    - name: &quot;Liverpool (comp)&quot;
+      unique_id: &quot;liverpool_comp_sensor&quot;
+      value_template: &gt;
+        {% if value_json is not none and &#x27;events&#x27; in value_json %}
+          {% set events = value_json[&#x27;events&#x27;] %}
+          {% if events %}
+            {% set game = events[0] %}
+            {% if &#x27;league&#x27; in game and &#x27;name&#x27; in game[&#x27;league&#x27;] %}
+              {% set comp_name = game[&#x27;league&#x27;][&#x27;name&#x27;] %}
+              {{ comp_name.replace(&#x27;English&#x27;, &#x27;&#x27;).replace(&#x27;UEFA&#x27;, &#x27;&#x27;).strip() }}
+            {% else %}
+              Invalid competition data
+            {% endif %}
+          {% else %}
+            No upcoming games found
+          {% endif %}
+        {% else %}
+          API unavailable
+        {% endif %}
+
+    - name: &quot;Liverpool (Generic Stage)&quot;
+      unique_id: &quot;liverpool_stage_only_sensor&quot;
+      value_template: &gt;
+        {% if value_json is not none and &#x27;events&#x27; in value_json %}
+          {% set events = value_json[&#x27;events&#x27;] %}
+          {% if events %}
+            {% set game = events[0] %}
+            {% if &#x27;seasonType&#x27; in game and &#x27;name&#x27; in game[&#x27;seasonType&#x27;] %}
+              {% set stage_name = game[&#x27;seasonType&#x27;][&#x27;name&#x27;] %}
+              {% if &#x27;Community Shield&#x27; in stage_name %}
+                FA Community Shield
+              {% else %}
+                {{ stage_name }}
+              {% endif %}
+            {% else %}
+              Invalid game data
+            {% endif %}
+          {% else %}
+            No upcoming games
+          {% endif %}
+        {% else %}
+          API unavailable
+        {% endif %}
+
+    - name: &quot;Liverpool (Premier League Stage)&quot;
+      unique_id: &quot;liverpool_premier_league_stage_sensor&quot;
+      value_template: &gt;
+        {% if value_json is not none and &#x27;team&#x27; in value_json and &#x27;recordSummary&#x27; in value_json[&#x27;team&#x27;] %}
+          {% set record = value_json[&#x27;team&#x27;][&#x27;recordSummary&#x27;] %}
+          {% if record %}
+            {% set wins, draws, losses = record.split(&#x27;-&#x27;) | map(&#x27;int&#x27;) | list %}
+            {% set games_played = 1 + wins + draws + losses %}
+            {% if games_played &gt; 38 %}
+              Game 1 of 38
+            {% else %}
+              Game {{ games_played }} of 38
+            {% endif %}
+          {% else %}
+            No record available
+          {% endif %}
+        {% else %}
+          API unavailable or invalid response
+        {% endif %}
+
+    - name: &quot;Liverpool (Premier League Record)&quot;
+      unique_id: &quot;liverpool_premier_league_record_sensor&quot;
+      value_template: &gt;
+        {% if value_json is not none and &#x27;events&#x27; in value_json %}
+          {% set response = value_json %}
+          {% if response[&#x27;events&#x27;] %}
+            {% set game = response[&#x27;events&#x27;][0] %}
+            {% set competition = game[&#x27;season&#x27;][&#x27;displayName&#x27;] %}
+            
+            {% if &#x27;Premier League&#x27; in competition and &#x27;team&#x27; in response %}
+              {% set team = response[&#x27;team&#x27;] %}
+              {% set record = team.get(&#x27;recordSummary&#x27;, &#x27;&#x27;) %}
+              {% set record_parts = record.split(&#x27;-&#x27;) %}
+              {% if record_parts | length == 3 %}
+                {% set wins = record_parts[0] | int %}
+                {% set draws = record_parts[1] | int %}
+                {% set points = (wins * 3) + draws %}
+                {{ record ~ &#x27; (&#x27; ~ points ~ &#x27; pts)&#x27; }}
+              {% else %}
+                {{ record }}
+              {% endif %}
+            {% else %}
+              -
+            {% endif %}
+          {% else %}
+            No record available
+          {% endif %}
+        {% else %}
+          API unavailable
+        {% endif %}
+
+    - name: &quot;Liverpool (UTC)&quot;
+      unique_id: &quot;liverpool_utc_sensor&quot;
+      value_template: &gt;
+        {% if value_json is not none and &#x27;events&#x27; in value_json %}
+          {% set events = value_json[&#x27;events&#x27;] %}
+          {% if events %}
+            {% set game = events[0] %}
+            {% if &#x27;date&#x27; in game %}
+              {{ game[&#x27;date&#x27;] }}
+            {% else %}
+              No valid date for next game
+            {% endif %}
+          {% else %}
+            No upcoming games found
+          {% endif %}
+        {% else %}
+          API unavailable
+        {% endif %}</pre>
+            </div>
+            <script>
+                (function fixPaths() {
+                    // ✅ If inside yaml_previews, use "../assets/", otherwise use "assets/"
+                    var basePath = window.location.pathname.includes("/yaml_previews/") ? "../assets/" : "assets/";
+
+                    // ✅ Apply correct asset paths
+                    document.getElementById("dynamic-styles").href = basePath + "table-styles.css";
+                    document.getElementById("dynamic-favicon").href = basePath + "favicon.ico";
+
+                    var script = document.createElement("script");
+                    script.src = basePath + "table-functions.js";
+                    document.body.appendChild(script);
+                })();
+            </script>
+        </body>
+        </html>
+        
