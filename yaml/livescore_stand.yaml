@@ -1,0 +1,110 @@
+- resource: "https://site.web.api.espn.com/apis/v2/sports/soccer/uefa.champions/standings?region=uk&lang=en"
+  scan_interval: 9000
+  timeout: 5
+  sensor:
+    - name: "Liverpool (Champions League Position)"
+      unique_id: "liverpool_champions_league_position_sensor"
+      value_template: >
+        {% if value_json is not none and 'children' in value_json and value_json['children'] %}
+          {% set entries = value_json['children'] | map(attribute='standings') | map(attribute='entries') | sum(start=[]) %}
+          {% set total_games = 8 %}
+          {% set liverpool = entries | selectattr('team.displayName', 'equalto', 'Liverpool') | list | first %}
+
+          {% if liverpool and 'stats' in liverpool %}
+            {% set rank = liverpool['stats'] | selectattr('name', 'equalto', 'rank') | map(attribute='value') | list | first | int %}
+            {% set lfc_points = liverpool['stats'] | selectattr('name', 'equalto', 'points') | map(attribute='value') | list | first | int %}
+            {% set lfc_played = liverpool['stats'] | selectattr('name', 'equalto', 'gamesPlayed') | map(attribute='value') | list | first | int %}
+            {% set lfc_gd = liverpool['stats'] | selectattr('name','equalto','pointDifferential') | map(attribute='value') | list | first | int %}
+            {% set suffix =
+              'th' if rank in [11, 12, 13] else
+              'st' if rank % 10 == 1 else
+              'nd' if rank % 10 == 2 else
+              'rd' if rank % 10 == 3 else
+              'th' %}
+
+            {% set ns = namespace(
+              guaranteed_first = true,
+              guaranteed_top8 = true,
+              guaranteed_eliminated = true
+            ) %}
+
+            {# ----- RANK 1 LOGIC ----- #}
+            {% if rank == 1 %}
+              {% for team in entries if team.team.displayName != 'Liverpool' %}
+                {% set pts = team['stats'] | selectattr('name', 'equalto', 'points') | map(attribute='value') | list | first | int %}
+                {% set played = team['stats'] | selectattr('name', 'equalto', 'gamesPlayed') | map(attribute='value') | list | first | int %}
+                {% set max_possible = pts + (total_games - played) * 3 %}
+                {% if max_possible > lfc_points %}
+                  {% set ns.guaranteed_first = false %}
+                {% endif %}
+              {% endfor %}
+
+              {% if ns.guaranteed_first %}
+                {{ rank }}{{ suffix }} (Guaranteed 1st)
+              {% else %}
+                {% set runner_up = (
+                  entries
+                  | rejectattr('team.displayName','equalto','Liverpool')
+                  | sort(attribute='stats' | selectattr('name','equalto','points') | map(attribute='value') | list | first, reverse=true)
+                  | first
+                ) %}
+                {% set runner_points = runner_up['stats'] | selectattr('name','equalto','points') | map(attribute='value') | list | first | int %}
+                {% set runner_gd = runner_up['stats'] | selectattr('name','equalto','pointDifferential') | map(attribute='value') | list | first | int %}
+
+                {% if lfc_points == runner_points %}
+                  {{ rank }}{{ suffix }} (+{{ lfc_gd - runner_gd }} GD)
+                {% else %}
+                  {{ rank }}{{ suffix }} (+{{ lfc_points - runner_points }} pts)
+                {% endif %}
+              {% endif %}
+
+            {% else %}
+              {# ----- BELOW 1ST PLACE ----- #}
+              {% set leader = (
+                entries
+                | rejectattr('team.displayName','equalto','Liverpool')
+                | sort(attribute='stats' | selectattr('name','equalto','points') | map(attribute='value') | list | first, reverse=true)
+                | first
+              ) %}
+              {% set leader_points = leader['stats'] | selectattr('name','equalto','points') | map(attribute='value') | list | first | int %}
+              {% set leader_gd = leader['stats'] | selectattr('name','equalto','pointDifferential') | map(attribute='value') | list | first | int %}
+
+              {# Check guaranteed top 8 #}
+              {% for team in entries if team.team.displayName != 'Liverpool'
+                and (team['stats'] | selectattr('name','equalto','rank') | map(attribute='value') | list | first | int) > 8 %}
+                {% set pts = team['stats'] | selectattr('name','equalto','points') | map(attribute='value') | list | first | int %}
+                {% set played = team['stats'] | selectattr('name','equalto','gamesPlayed') | map(attribute='value') | list | first | int %}
+                {% set max_possible = pts + (total_games - played) * 3 %}
+                {% if max_possible >= lfc_points %}
+                  {% set ns.guaranteed_top8 = false %}
+                {% endif %}
+              {% endfor %}
+
+              {# Check guaranteed eliminated (cannot reach top 24) #}
+              {% for team in entries if (team['stats'] | selectattr('name','equalto','rank') | map(attribute='value') | list | first | int) <= 24 %}
+                {% set pts = team['stats'] | selectattr('name','equalto','points') | map(attribute='value') | list | first | int %}
+                {% set played = team['stats'] | selectattr('name','equalto','gamesPlayed') | map(attribute='value') | list | first | int %}
+                {% set max_possible_lfc = lfc_points + (total_games - lfc_played) * 3 %}
+                {% if max_possible_lfc >= pts %}
+                  {% set ns.guaranteed_eliminated = false %}
+                {% endif %}
+              {% endfor %}
+
+              {% if ns.guaranteed_top8 %}
+                {{ rank }}{{ suffix }} (Qualified)
+              {% elif ns.guaranteed_eliminated %}
+                {{ rank }}{{ suffix }} (Eliminated)
+              {% else %}
+                {% if leader_points == lfc_points %}
+                  {{ rank }}{{ suffix }} (-{{ leader_gd - lfc_gd }} GD)
+                {% else %}
+                  {{ rank }}{{ suffix }} (-{{ leader_points - lfc_points }} pts)
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          {% else %}
+            Liverpool not found
+          {% endif %}
+        {% else %}
+          API unavailable or invalid response
+        {% endif %}
