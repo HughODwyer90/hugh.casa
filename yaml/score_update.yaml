@@ -1,0 +1,52 @@
+- resource: "https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/teams/364/schedule?region=uk&lang=en&fixture=true"
+  scan_interval: 10
+  timeout: 5
+  sensor:
+    - name: "Home Team Score"
+      unique_id: "home_team_score_sensor"
+      value_template: >
+        {% if value_json is not none and 'events' in value_json %}
+          {% set events = value_json['events'] %}
+          {% if events %}
+            {% set competitors = events[0]['competitions'][0]['competitors'] %}
+            {% for competitor in competitors %}
+              {% if competitor['homeAway'] == 'home' %}
+                {{ competitor['score']['value'] if 'score' in competitor and 'value' in competitor['score'] else 'N/A' }}
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            No home team score
+          {% endif %}
+        {% else %}
+          API unavailable
+        {% endif %}
+
+    - name: "Away Team Score"
+      unique_id: "away_team_score_sensor"
+      value_template: >
+        {% if value_json is not none and 'events' in value_json %}
+          {% set events = value_json['events'] %}
+          {% if events %}
+            {% set competitors = events[0]['competitions'][0]['competitors'] %}
+            {% for competitor in competitors %}
+              {% if competitor['homeAway'] == 'away' %}
+                {{ competitor['score']['value'] if 'score' in competitor and 'value' in competitor['score'] else 'N/A' }}
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            No away team score
+          {% endif %}
+        {% else %}
+          API unavailable
+        {% endif %}
+
+    - name: "Minutes Played"
+      unique_id: "minutes_played_sensor"
+      value_template: >
+        {% if value_json is not none and 'events' in value_json %}
+          {% set event = value_json['events'][0] %}
+          {% set status = event['competitions'][0]['status'] %}
+          {{ status['type']['shortDetail'] if 'type' in status and 'shortDetail' in status['type'] else "No status available" }}
+        {% else %}
+          API unavailable
+        {% endif %}
