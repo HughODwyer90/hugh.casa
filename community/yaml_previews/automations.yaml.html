@@ -669,11 +669,13 @@
   - trigger: state
     entity_id:
     - switch.hugh_room_plug_blanket
-    from: &#x27;off&#x27;
-    to: &#x27;on&#x27;
+    from:
+    - &#x27;off&#x27;
+    to:
+    - &#x27;on&#x27;
     for:
       hours: 0
-      minutes: 15
+      minutes: 20
       seconds: 0
   actions:
   - action: switch.turn_off
