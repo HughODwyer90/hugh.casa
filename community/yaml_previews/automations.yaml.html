@@ -3925,7 +3925,7 @@
 - id: &#x27;1759692786195&#x27;
   alias: Auto Unoccupy Room
   description: Marks room unoccupied when all sensors are off and phone is gone for
-    5 min.
+    5 min (RSSI ignored if battery ≤ 10%).
   triggers:
   - entity_id:
     - binary_sensor.pc_status
@@ -3946,17 +3946,19 @@
     value_template: &quot;{% set ents = expand([\n  &#x27;binary_sensor.pc_status&#x27;,\n  &#x27;binary_sensor.monitor_state&#x27;,\n
       \ &#x27;binary_sensor.bed_sensor&#x27;\n]) | rejectattr(&#x27;state&#x27;,&#x27;in&#x27;,[&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;None&#x27;])
       | list %}\n{% set have_any = ents | count &gt; 0 %} {% set all_off = (ents | selectattr(&#x27;state&#x27;,&#x27;eq&#x27;,&#x27;off&#x27;)
-      | list | count) == (ents | count) %}\n{# phone gone logic #} {% set phone_state
-      = states(&#x27;sensor.phone_ble_rssi&#x27;) %} {% set phone_rssi  = phone_state | float(default=-200)
-      %} {% set phone_gone  = phone_state in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;] or phone_rssi
-      &lt; -105 %}\n{# 5-minute stability for all binaries and phone sensor #} {% set
-      five = 5 * 60 %} {% set bins_stable = ents | map(attribute=&#x27;entity_id&#x27;)\n   |
-      map(&#x27;states&#x27;) | select(&#x27;string&#x27;) | list %} {# no-op to force eval #}\n{% set
-      all_bins_5m = ents | selectattr(&#x27;last_changed&#x27;,&#x27;&lt;=&#x27;, now() - timedelta(seconds=five))
-      | list | count == (ents | count) %} {% set phone_5m = (states.sensor.phone_ble_rssi.last_changed
-      is defined) and\n                  (states.sensor.phone_ble_rssi.last_changed
-      &lt;= now() - timedelta(seconds=five)) %}\n\n{{ have_any and all_off and phone_gone
-      and all_bins_5m and phone_5m }}&quot;
+      | list | count) == (ents | count) %}\n{# battery logic #} {% set batt = states(&#x27;sensor.hugh_phone_battery_level&#x27;)
+      | float(default=0) %} {% set batt_threshold = 1 %}\n{# phone gone logic (only
+      if battery &gt; 10%) #} {% if batt &gt; batt_threshold %}\n  {% set phone_state =
+      states(&#x27;sensor.phone_ble_rssi&#x27;) %}\n  {% set phone_rssi  = phone_state | float(default=-200)
+      %}\n  {% set phone_gone  = phone_state in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;] or phone_rssi
+      &lt; -105 %}\n{% else %}\n  {% set phone_gone = true %}\n{% endif %}\n{# 5-minute
+      stability check #} {% set five = 5 * 60 %}\n{% set all_bins_5m =\n   (ents |
+      selectattr(&#x27;last_changed&#x27;,&#x27;&lt;=&#x27;, now() - timedelta(seconds=five)) | list | count)\n
+      \  == (ents | count) %}\n\n{% if batt &gt; batt_threshold %}\n  {% set phone_5m
+      =\n     (states.sensor.phone_ble_rssi.last_changed is defined) and\n     (states.sensor.phone_ble_rssi.last_changed
+      &lt;= now() - timedelta(seconds=five)) %}\n{% else %}\n  {% set phone_5m = true
+      %}\n{% endif %}\n{{ have_any and all_off and phone_gone and all_bins_5m and
+      phone_5m }}&quot;
   actions:
   - target:
       entity_id: input_boolean.hugh_room_occupied
