@@ -1413,58 +1413,81 @@
     &#x27;
   triggers:
   - trigger: event
+    id: phone
     event_type: mobile_app_notification_action
     event_data:
       action: TURN_OFF_ALARM
   - trigger: state
+    id: rug
     entity_id: binary_sensor.rug_sensor
     to: &#x27;on&#x27;
   - trigger: state
+    id: pc
     entity_id: binary_sensor.pc_status
     to: &#x27;on&#x27;
   - trigger: state
+    id: monitor
     entity_id: binary_sensor.monitor_state
     to: &#x27;on&#x27;
   - trigger: state
+    id: manual_off
     entity_id: input_boolean.wake_up_alarm_running
     from: &#x27;on&#x27;
     to: &#x27;off&#x27;
-  conditions:
-  - condition: state
-    entity_id: input_boolean.wake_up_alarm_running
-    state: &#x27;on&#x27;
   actions:
-  - if:
-    - condition: state
-      entity_id: media_player.universal_player
-      state: playing
-    then:
-    - action: media_player.media_stop
-      target:
-        entity_id: media_player.universal_player
-  - if:
-    - condition: state
-      entity_id: input_boolean.wake_up_alarm_running
-      state: &#x27;on&#x27;
-    then:
-    - action: input_boolean.turn_off
-      target:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - phone
+        - rug
+        - pc
+        - monitor
+      - condition: state
         entity_id: input_boolean.wake_up_alarm_running
-  - if:
-    - condition: state
-      entity_id: binary_sensor.pc_status
-      state: &#x27;off&#x27;
-    then:
-    - action: light.turn_off
-      target:
-        entity_id:
-        - light.hugh_room_lamp
-        - light.hugh_room_ceiling
-      data:
-        transition: 2
-  - action: script.set_purifier_speed
-    data:
-      level: low
+        state: &#x27;on&#x27;
+      sequence:
+      - if:
+        - condition: state
+          entity_id: media_player.universal_player
+          state: playing
+        then:
+        - action: media_player.media_stop
+          target:
+            entity_id: media_player.universal_player
+      - action: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.wake_up_alarm_running
+      - if:
+        - condition: state
+          entity_id: binary_sensor.pc_status
+          state: &#x27;off&#x27;
+        then:
+        - action: light.turn_off
+          target:
+            entity_id:
+            - light.hugh_room_lamp
+            - light.hugh_room_ceiling
+          data:
+            transition: 2
+      - action: script.set_purifier_speed
+        data:
+          level: low
+    - conditions:
+      - condition: trigger
+        id: manual_off
+      sequence:
+      - if:
+        - condition: state
+          entity_id: media_player.universal_player
+          state: playing
+        then:
+        - action: media_player.media_stop
+          target:
+            entity_id: media_player.universal_player
+      - action: script.set_purifier_speed
+        data:
+          level: low
   mode: single
 - id: &#x27;1710514549478&#x27;
   alias: Bathroom Light Control
