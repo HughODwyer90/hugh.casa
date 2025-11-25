@@ -4391,3 +4391,21 @@
       brightness: 100
       duration: 2
   mode: single
+- id: '1764055498061'
+  alias: Enable Bed Pressure Toggle
+  description: ''
+  triggers:
+  - trigger: time
+    at: 03:00:00
+  conditions:
+  - condition: state
+    entity_id: input_boolean.bed_automation_enabled
+    state:
+    - 'off'
+  actions:
+  - action: input_boolean.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.bed_automation_enabled
+  mode: single
