@@ -4304,78 +4304,60 @@
     data: {}
   mode: single
 - id: '1763117507620'
-  alias: IR Typhoon Center Up – Play/Pause/Stop Music
+  alias: IR Typhoon Center Up – Play / Pause / Move to Stereo
   triggers:
-  - trigger: state
-    entity_id: binary_sensor.typhoon_center_up
+  - entity_id: binary_sensor.typhoon_center_up
     to: 'on'
+    trigger: state
   actions:
   - choose:
     - conditions:
       - condition: template
-        value_template: "{{ (now() - this.attributes.last_triggered).total_seconds()
-          < 2\n   if this.attributes.last_triggered else false }}\n"
+        value_template: "{% set singles = [\n  'media_player.hugh_room_display',\n
+          \ 'media_player.hugh_room_speaker',\n  'media_player.hugh_room_speaker_2',\n
+          \ 'media_player.battery_speaker'\n] %} {{ singles | select('is_state','playing')
+          | list | count > 0\n   and not is_state('media_player.hugh_room_stereo','playing')
+          }}\n"
       sequence:
-      - action: media_player.media_stop
-        target:
+      - variables:
+          source: "{% set singles = [\n  'media_player.hugh_room_display',\n  'media_player.hugh_room_speaker',\n
+            \ 'media_player.hugh_room_speaker_2',\n  'media_player.battery_speaker'\n]
+            %} {{ singles | select('is_state','playing') | list | first }}\n"
+      - target:
           entity_id: media_player.hugh_room_stereo_2
-      - stop: ''
+        data:
+          media:
+            media_content_id: '{{ state_attr(source, ''media_content_id'') }}'
+            media_content_type: '{{ state_attr(source, ''media_content_type'') }}'
+            metadata: {}
+        action: media_player.play_media
+      - stop: Re-cast active stream to stereo group
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: media_player.hugh_room_stereo
+        state: playing
+      sequence:
+      - target:
+          entity_id: media_player.hugh_room_stereo_2
+        action: media_player.media_pause
+      - stop: Paused stereo
+    - conditions:
+      - condition: state
+        entity_id: media_player.hugh_room_stereo
+        state: paused
+      sequence:
+      - target:
+          entity_id: media_player.hugh_room_stereo_2
+        action: media_player.media_play
+      - stop: Resumed stereo
     - conditions:
       - condition: template
-        value_template: "{{ (now() - this.attributes.last_triggered).total_seconds()
-          >= 0.35\n   if this.attributes.last_triggered else true }}\n"
+        value_template: "{{ not is_state('media_player.hugh_room_stereo','playing')\n
+          \  and not is_state('media_player.hugh_room_display','playing')\n   and
+          not is_state('media_player.hugh_room_speaker','playing')\n   and not is_state('media_player.hugh_room_speaker_2','playing')\n
+          \  and not is_state('media_player.battery_speaker','playing') }}\n"
       sequence:
-      - choose:
-        - conditions:
-          - condition: state
-            entity_id: input_boolean.wake_up_alarm_running
-            state: 'on'
-          sequence:
-          - action: automation.trigger
-            data:
-              skip_condition: true
-            target:
-              entity_id: automation.alarm_dismiss
-          - stop: ''
-      - choose:
-        - conditions:
-          - condition: state
-            entity_id: media_player.hugh_room_stereo
-            state: playing
-          sequence:
-          - action: media_player.media_pause
-            target:
-              entity_id: media_player.hugh_room_stereo_2
-        - conditions:
-          - condition: state
-            entity_id: media_player.hugh_room_stereo
-            state: paused
-          sequence:
-          - action: media_player.media_play
-            target:
-              entity_id: media_player.hugh_room_stereo_2
-      - choose:
-        - conditions:
-          - condition: template
-            value_template: "{% set singles = [\n  'media_player.hugh_room_display',\n
-              \ 'media_player.hugh_room_speaker',\n  'media_player.hugh_room_speaker_2',\n
-              \ 'media_player.battery_speaker'\n] %} {% set any_playing = singles
-              | select('is_state','playing') | list %} {{ any_playing | count > 0
-              and not is_state('media_player.hugh_room_stereo','playing') }}\n"
-          sequence:
-          - variables:
-              active_source: "{% set singles = [\n  'media_player.hugh_room_display',\n
-                \ 'media_player.hugh_room_speaker',\n  'media_player.hugh_room_speaker_2',\n
-                \ 'media_player.battery_speaker'\n] %} {{ (singles | select('is_state','playing')
-                | list)[0] }}\n"
-          - action: media_player.media_pause
-            target:
-              entity_id: '{{ active_source }}'
-          - action: media_player.join
-            data:
-              media_player: media_player.hugh_room_stereo_2
-            target:
-              entity_id: '{{ active_source }}'
       - action: script.play_spotify_playlist_2
   mode: restart
 - id: '1763119440312'
