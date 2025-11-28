@@ -4317,7 +4317,6 @@
           < 2\n   if this.attributes.last_triggered else false }}\n"
       sequence:
       - action: media_player.media_stop
-        data: {}
         target:
           entity_id: media_player.hugh_room_stereo_2
       - stop: ''
@@ -4332,19 +4331,19 @@
             entity_id: input_boolean.wake_up_alarm_running
             state: 'on'
           sequence:
-          - data:
+          - action: automation.trigger
+            data:
               skip_condition: true
             target:
               entity_id: automation.alarm_dismiss
-            action: automation.trigger
           - stop: ''
+      - choose:
         - conditions:
           - condition: state
             entity_id: media_player.hugh_room_stereo
             state: playing
           sequence:
           - action: media_player.media_pause
-            data: {}
             target:
               entity_id: media_player.hugh_room_stereo_2
         - conditions:
@@ -4353,11 +4352,31 @@
             state: paused
           sequence:
           - action: media_player.media_play
-            data: {}
             target:
               entity_id: media_player.hugh_room_stereo_2
-        default:
-        - action: script.play_spotify_playlist_2
+      - choose:
+        - conditions:
+          - condition: template
+            value_template: "{% set singles = [\n  'media_player.hugh_room_display',\n
+              \ 'media_player.hugh_room_speaker',\n  'media_player.hugh_room_speaker_2',\n
+              \ 'media_player.battery_speaker'\n] %} {% set any_playing = singles
+              | select('is_state','playing') | list %} {{ any_playing | count > 0
+              and not is_state('media_player.hugh_room_stereo','playing') }}\n"
+          sequence:
+          - variables:
+              active_source: "{% set singles = [\n  'media_player.hugh_room_display',\n
+                \ 'media_player.hugh_room_speaker',\n  'media_player.hugh_room_speaker_2',\n
+                \ 'media_player.battery_speaker'\n] %} {{ (singles | select('is_state','playing')
+                | list)[0] }}\n"
+          - action: media_player.media_pause
+            target:
+              entity_id: '{{ active_source }}'
+          - action: media_player.join
+            data:
+              media_player: media_player.hugh_room_stereo_2
+            target:
+              entity_id: '{{ active_source }}'
+      - action: script.play_spotify_playlist_2
   mode: restart
 - id: '1763119440312'
   alias: IR Remote Center Down - Like Track (With Pink Flash)
