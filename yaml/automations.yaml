@@ -3433,6 +3433,11 @@
       < low or lux > high }}
 
       '
+  - id: helper_change
+    trigger: state
+    entity_id:
+    - input_number.hugh_room_lux_lower
+    - input_number.hugh_room_lux_upper
   - id: dusk_time
     trigger: sun
     event: sunset
@@ -3553,6 +3558,8 @@
         conditions:
         - condition: trigger
           id: brightness_check
+        - condition: trigger
+          id: helper_change
         - condition: trigger
           id: dusk_time
       sequence:
