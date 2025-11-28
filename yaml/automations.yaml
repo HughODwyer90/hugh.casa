@@ -3421,25 +3421,16 @@
   mode: restart
 - id: '1754898110296'
   alias: Hugh Room Blinds, Lights & PC Logic
-  description: 'Handles blinds, lighting, and purifier dynamically based on time,
-    brightness, and activity.
+  description: 'Handles blinds, lighting, and lamp dynamically using lux helpers.
 
     '
   triggers:
-  - id: day
-    trigger: numeric_state
-    entity_id: sensor.snake_plant_illuminance
-    above: 350
-    for: 00:05:00
-  - id: dusk_light
-    trigger: numeric_state
-    entity_id: sensor.snake_plant_illuminance
-    below: 300
-    for: 00:05:00
   - id: brightness_check
     trigger: template
     value_template: '{% set lux = states(''sensor.snake_plant_illuminance'') | float(0)
-      %} {{ lux < 300 or lux > 350 }}
+      %} {% set low = states(''input_number.hugh_room_lux_lower'') | float(0) %} {%
+      set high = states(''input_number.hugh_room_lux_upper'') | float(0) %} {{ lux
+      < low or lux > high }}
 
       '
   - id: dusk_time
@@ -3460,8 +3451,7 @@
   conditions:
   - condition: state
     entity_id: input_boolean.wake_up_alarm_running
-    state:
-    - 'off'
+    state: 'off'
   actions:
   - choose:
     - conditions:
@@ -3472,9 +3462,9 @@
         - conditions:
           - condition: sun
             before: sunset
-          - condition: numeric_state
-            entity_id: sensor.snake_plant_illuminance
-            above: 350
+          - condition: template
+            value_template: "{{ states('sensor.snake_plant_illuminance') | float(0)\n
+              \  > states('input_number.hugh_room_lux_upper') | float(0) }}\n"
           sequence:
           - action: input_select.select_option
             target:
@@ -3487,9 +3477,9 @@
         - conditions:
           - condition: sun
             before: sunset
-          - condition: numeric_state
-            entity_id: sensor.snake_plant_illuminance
-            below: 300
+          - condition: template
+            value_template: "{{ states('sensor.snake_plant_illuminance') | float(0)\n
+              \  < states('input_number.hugh_room_lux_lower') | float(0) }}\n"
           - condition: time
             after: '16:00:00'
             before: '22:00:00'
@@ -3533,9 +3523,9 @@
       - condition: state
         entity_id: input_boolean.hugh_room_occupied
         state: 'on'
-      - condition: numeric_state
-        entity_id: sensor.snake_plant_illuminance
-        below: 300
+      - condition: template
+        value_template: "{{ states('sensor.snake_plant_illuminance') | float(0)\n
+          \  < states('input_number.hugh_room_lux_lower') | float(0) }}\n"
       - condition: state
         entity_id: binary_sensor.bed_sensor
         state: 'off'
@@ -3562,10 +3552,6 @@
       - condition: or
         conditions:
         - condition: trigger
-          id: day
-        - condition: trigger
-          id: dusk_light
-        - condition: trigger
           id: brightness_check
         - condition: trigger
           id: dusk_time
@@ -3576,21 +3562,22 @@
             before: sunset
           - condition: state
             entity_id: binary_sensor.bed_sensor
-            state:
-            - 'off'
+            state: 'off'
           sequence:
           - action: input_select.select_option
             target:
               entity_id: input_select.hugh_room_blinds_mode
             data:
               option: "{% set lux = states('sensor.snake_plant_illuminance') | float(0)
-                %} {% if lux > 350 %}\n  Open\n{% elif lux < 300 %}\n  Half\n{% else
+                %} {% set low = states('input_number.hugh_room_lux_lower') | float(0)
+                %} {% set high = states('input_number.hugh_room_lux_upper') | float(0)
+                %} {% if lux > high %}\n  Open\n{% elif lux < low %}\n  Half\n{% else
                 %}\n  Closed\n{% endif %}\n"
       - choose:
         - conditions:
-          - condition: numeric_state
-            entity_id: sensor.snake_plant_illuminance
-            below: 300
+          - condition: template
+            value_template: "{{ states('sensor.snake_plant_illuminance') | float(0)\n
+              \  < states('input_number.hugh_room_lux_lower') | float(0) }}\n"
           - condition: state
             entity_id: binary_sensor.bed_sensor
             state: 'off'
@@ -3603,9 +3590,9 @@
             data:
               transition: 1.5
         - conditions:
-          - condition: numeric_state
-            entity_id: sensor.snake_plant_illuminance
-            above: 350
+          - condition: template
+            value_template: "{{ states('sensor.snake_plant_illuminance') | float(0)\n
+              \  > states('input_number.hugh_room_lux_upper') | float(0) }}\n"
           sequence:
           - action: scene.turn_on
             target:
@@ -3638,7 +3625,6 @@
           entity_id: input_select.hugh_room_blinds_mode
         data:
           option: Closed
-    default: []
   mode: restart
 - id: '1755779238287'
   alias: Enable WFH
