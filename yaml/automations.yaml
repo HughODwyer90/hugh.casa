@@ -2711,35 +2711,32 @@
         action: input_select.select_option
   mode: single
 - id: '1724800619943'
-  alias: IR Remote Vol Up
+  alias: IR Typhoon Volume Control
   description: ''
   triggers:
   - trigger: state
-    entity_id:
-    - binary_sensor.typhoon_volume_up
-    to:
-    - 'on'
-  conditions: []
-  actions:
-  - action: script.hugh_room_stereo_volume_up
-    data: {}
-  mode: single
-- id: '1724800666570'
-  alias: IR Remote Vol Down
-  description: ''
-  triggers:
+    entity_id: binary_sensor.typhoon_volume_down
+    to: 'on'
+    id: vol_down
   - trigger: state
-    entity_id:
-    - binary_sensor.typhoon_volume_down
-    to:
-    - 'on'
-  conditions: []
+    entity_id: binary_sensor.typhoon_volume_up
+    to: 'on'
+    id: vol_up
   actions:
-  - action: script.hugh_room_stereo_volume_down
-    data: {}
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.id == ''vol_down'' }}'
+      sequence:
+      - action: script.hugh_room_stereo_volume_down
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.id == ''vol_up'' }}'
+      sequence:
+      - action: script.hugh_room_stereo_volume_up
   mode: single
 - id: '1725046410793'
-  alias: IR Remote Disable Bed
+  alias: IR Typhoon Disable Bed
   triggers:
   - trigger: state
     entity_id: binary_sensor.typhoon_mute
@@ -2844,7 +2841,7 @@
     data: {}
   mode: single
 - id: '1728126796689'
-  alias: IR Remote Restart HA
+  alias: IR Typhoon Restart HA
   description: 'This automation flashes the diffuser light red and reboots Home Assistant
     when the IR remote button is pressed in wave mode.
 
