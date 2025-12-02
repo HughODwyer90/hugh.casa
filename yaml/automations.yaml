@@ -3911,18 +3911,20 @@
   mode: single
 - id: '1759692786195'
   alias: Auto Unoccupy Room
-  description: Marks room unoccupied when all sensors are off and phone is gone for
+  description: 'Marks room unoccupied when all sensors are off and phone is gone for
     5 min (RSSI ignored if battery ≤ 10%).
+
+    '
   triggers:
-  - entity_id:
+  - trigger: state
+    entity_id:
     - binary_sensor.pc_status
     - binary_sensor.monitor_state
     - binary_sensor.bed_sensor
     - sensor.phone_ble_rssi
-    trigger: state
     enabled: false
-  - minutes: /1
-    trigger: time_pattern
+  - trigger: time_pattern
+    minutes: /1
   conditions:
   - condition: state
     entity_id: input_boolean.hugh_room_occupied
@@ -3932,27 +3934,33 @@
     state: 'off'
   - condition: template
     value_template: "{% set ents = expand([\n  'binary_sensor.pc_status',\n  'binary_sensor.monitor_state',\n
-      \ 'binary_sensor.bed_sensor'\n]) | rejectattr('state','in',['unknown','unavailable','None'])
-      | list %}\n\n{% set have_any = ents | count > 0 %}\n{% set all_off = (ents |
-      selectattr('state','eq','off') | list | count) == (ents | count) %}\n\n{# battery
-      + charging logic #}\n{% set batt = states('sensor.hugh_phone_battery_level')
-      | float(default=0) %}\n{% set batt_threshold = 2 %}\n{% set charger = states('sensor.hugh_phone_charger_type')
-      %}\n{% set is_charging = charger == 'ac' %}\n\n{# phone gone logic: battery
-      low OR charging OR RSSI-based #}\n{% if batt <= batt_threshold or is_charging
-      %}\n  {% set phone_gone = true %}\n{% else %}\n  {% set phone_state = states('sensor.phone_ble_rssi')
-      %}\n  {% set phone_rssi  = phone_state | float(default=-200) %}\n  {% set phone_gone
-      \ = phone_state in ['unknown','unavailable'] or phone_rssi < -105 %}\n{% endif
-      %}\n\n{# 5-minute stability check #}\n{% set five = 5 * 60 %}\n{% set all_bins_5m
-      =\n   (ents | selectattr('last_changed','<=', now() - timedelta(seconds=five))
-      | list | count)\n   == (ents | count) %}\n\n{% if batt <= batt_threshold or
-      is_charging %}\n  {% set phone_5m = true %}\n{% else %}\n  {% set phone_5m =\n
-      \    (states.sensor.phone_ble_rssi.last_changed is defined) and\n     (states.sensor.phone_ble_rssi.last_changed
-      <= now() - timedelta(seconds=five)) %}\n{% endif %}\n\n{{ have_any and all_off
-      and phone_gone and all_bins_5m and phone_5m }}"
+      \ 'binary_sensor.bed_sensor'\n])  | rejectattr('state','in',['unknown','unavailable','None'])
+      \ | list %}\n{% set all_off = (ents | selectattr('state','eq','off') | list
+      | count)\n                 == (ents | count) %}\n\n{# battery + charging #}
+      {% set batt = states('sensor.hugh_phone_battery_level') | float(default=0) %}
+      {% set batt_threshold = 2 %} {% set charger = states('sensor.hugh_phone_charger_type')
+      %} {% set is_charging = charger == 'ac' %}\n{# PHONE GONE LOGIC #} {% if is_charging
+      %}\n  {% set phone_gone = false %}\n{% else %}\n  {% if batt <= batt_threshold
+      %}\n    {% set phone_gone = true %}\n  {% else %}\n    {% set phone_state =
+      states('sensor.phone_ble_rssi') %}\n    {% set phone_rssi  = phone_state | float(default=-200)
+      %}\n    {% set phone_gone  = phone_state in ['unknown','unavailable'] or phone_rssi
+      < -105 %}\n  {% endif %}\n{% endif %}\n{# 5-MINUTE CHECKS #} {% set five = 5
+      * 60 %}\n{% set all_bins_5m =\n   (ents | selectattr('last_changed','<=', now()
+      - timedelta(seconds=five))\n         | list | count)\n   == (ents | count) %}\n\n{%
+      if is_charging %}\n  {% set phone_5m = false %}\n{% elif batt <= batt_threshold
+      %}\n  {% set phone_5m = true %}\n{% else %}\n  {% set phone_5m =\n     (states.sensor.phone_ble_rssi.last_changed
+      is defined)\n     and\n     (states.sensor.phone_ble_rssi.last_changed\n      <=
+      now() - timedelta(seconds=five)) %}\n{% endif %}\n{{ all_off and phone_gone
+      and all_bins_5m and phone_5m }}\n"
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: sensor.hugh_phone_charger_type
+      state: ac
   actions:
-  - target:
+  - action: input_boolean.turn_off
+    target:
       entity_id: input_boolean.hugh_room_occupied
-    action: input_boolean.turn_off
   mode: single
 - id: '1760189837022'
   alias: Hugh Room Occupancy Control
