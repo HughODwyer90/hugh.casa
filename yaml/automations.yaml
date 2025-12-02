@@ -2682,37 +2682,33 @@
   - data: {}
     action: script.update_car_data_expiration
   mode: single
-- id: '1724782694427'
-  alias: IR Remote Blinds Minus
-  description: ''
-  triggers:
-  - entity_id:
-    - binary_sensor.typhoon_woofer_down
-    to:
-    - 'on'
-    trigger: state
-  actions:
-  - action: input_select.select_option
-    target:
-      entity_id: input_select.hugh_room_blinds_mode
-    data:
-      option: Closed
 - id: '1724788680813'
-  alias: IR Remote Blinds Plus
-  description: ''
+  alias: IR Typhoon Blinds Control
   triggers:
-  - entity_id:
-    - binary_sensor.typhoon_woofer_up
-    to:
-    - 'on'
-    trigger: state
-  conditions: []
+  - trigger: state
+    entity_id: binary_sensor.typhoon_woofer_down
+    to: 'on'
+    id: close
+  - trigger: state
+    entity_id: binary_sensor.typhoon_woofer_up
+    to: 'on'
+    id: open
   actions:
-  - action: input_select.select_option
-    target:
-      entity_id: input_select.hugh_room_blinds_mode
-    data:
-      option: Open
+  - choose:
+    - conditions: '{{ trigger.id == ''close'' }}'
+      sequence:
+      - target:
+          entity_id: input_select.hugh_room_blinds_mode
+        data:
+          option: Closed
+        action: input_select.select_option
+    - conditions: '{{ trigger.id == ''open'' }}'
+      sequence:
+      - target:
+          entity_id: input_select.hugh_room_blinds_mode
+        data:
+          option: Open
+        action: input_select.select_option
   mode: single
 - id: '1724800619943'
   alias: IR Remote Vol Up
@@ -2910,7 +2906,7 @@
     enabled: true
   mode: single
 - id: '1729417096269'
-  alias: IR Remote Air Purifier Speed
+  alias: IR Typhoon Air Purifier Speed
   description: 'Adjusts air purifier fan speed based on IR sensors.
 
     '
@@ -4267,34 +4263,53 @@
           level: medium
   mode: restart
 - id: '1763117444440'
-  alias: IR Typhoon Rear Up → Previous Track
-  description: ''
+  alias: IR Typhoon Rear Up → Previous Track (Universal)
   triggers:
   - trigger: state
-    entity_id:
-    - binary_sensor.typhoon_rear_up
-    to:
-    - 'on'
+    entity_id: binary_sensor.typhoon_rear_up
+    to: 'on'
   actions:
-  - action: media_player.media_previous_track
-    target:
-      device_id: 61df364729816b14e75f325311b07257
-    data: {}
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: "{% set players = [\n  'media_player.hugh_room_stereo_2',\n
+          \ 'media_player.hugh_room_stereo',\n  'media_player.hugh_room_display',\n
+          \ 'media_player.hugh_room_speaker',\n  'media_player.hugh_room_speaker_2',\n
+          \ 'media_player.battery_speaker'\n] %} {{ players | select('is_state','playing')
+          | list | count > 0 }}\n"
+      sequence:
+      - data:
+          entity_id: "{% set players = [\n  'media_player.hugh_room_stereo_2',\n  'media_player.hugh_room_stereo',\n
+            \ 'media_player.hugh_room_display',\n  'media_player.hugh_room_speaker',\n
+            \ 'media_player.hugh_room_speaker_2',\n  'media_player.battery_speaker'\n]
+            %} {{ players | select('is_state','playing') | list | first }}\n"
+        action: media_player.media_previous_track
   mode: single
 - id: '1763117470810'
-  alias: IR Typhoon Front Up → Next Track
-  description: ''
+  alias: IR Typhoon Front Up → Next Track (Universal)
   triggers:
   - trigger: state
-    entity_id:
-    - binary_sensor.typhoon_front_up
-    to:
-    - 'on'
+    entity_id: binary_sensor.typhoon_front_up
+    to: 'on'
   actions:
-  - action: media_player.media_next_track
-    target:
-      device_id: 61df364729816b14e75f325311b07257
-    data: {}
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: "{% set players = [\n  'media_player.hugh_room_stereo_2',\n
+          \ 'media_player.hugh_room_stereo',\n  'media_player.hugh_room_display',\n
+          \ 'media_player.hugh_room_speaker',\n  'media_player.hugh_room_speaker_2',\n
+          \ 'media_player.battery_speaker'\n] %} {{ players | select('is_state','playing')
+          | list | count > 0 }}\n"
+      sequence:
+      - data:
+          entity_id: "{% set players = [\n  'media_player.hugh_room_stereo_2',\n  'media_player.hugh_room_stereo',\n
+            \ 'media_player.hugh_room_display',\n  'media_player.hugh_room_speaker',\n
+            \ 'media_player.hugh_room_speaker_2',\n  'media_player.battery_speaker'\n]
+            %} {{ players | select('is_state','playing') | list | first }}\n"
+        action: "{% set players = [\n  'media_player.hugh_room_stereo_2',\n  'media_player.hugh_room_stereo',\n
+          \ 'media_player.hugh_room_display',\n  'media_player.hugh_room_speaker',\n
+          \ 'media_player.hugh_room_speaker_2',\n  'media_player.battery_speaker'\n]
+          %} media_player.media_next_track\n"
   mode: single
 - id: '1763117507620'
   alias: IR Typhoon Center Up – Play / Pause / Move to Stereo
@@ -4354,7 +4369,8 @@
       - action: script.play_spotify_playlist_2
   mode: restart
 - id: '1763119440312'
-  alias: IR Remote Center Down - Like Track (With Pink Flash)
+  alias: IR Typhoon Center Down - Like Track (With Pink Flash)
+  description: ''
   triggers:
   - trigger: state
     entity_id: binary_sensor.typhoon_center_down
