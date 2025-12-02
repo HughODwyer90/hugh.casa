@@ -649,25 +649,18 @@
   mode: single
 - id: '1703933541162'
   alias: Hugh Room Blanket Timer Off
-  description: ''
   triggers:
   - trigger: state
-    entity_id:
-    - switch.hugh_room_plug_blanket
-    from:
-    - 'off'
-    to:
-    - 'on'
-    for:
-      hours: 0
-      minutes: 20
-      seconds: 0
+    entity_id: switch.hugh_room_plug_blanket
+    from: 'off'
+    to: 'on'
   actions:
-  - action: switch.turn_off
+  - action: number.set_value
     target:
-      entity_id: switch.hugh_room_plug_blanket
-    data: {}
-  mode: single
+      entity_id: number.hugh_room_plug_blanket_countdown
+    data:
+      value: 1200
+  mode: restart
 - id: '1704468879583'
   alias: Hugh Room Diffuser Empty Warning
   description: Sends a notification when the diffuser is empty.
