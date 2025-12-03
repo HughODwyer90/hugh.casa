@@ -656,6 +656,13 @@ update_esphome_devices:
   - action: hassio.addon_start
     data:
       addon: a0d7b954_vscode
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+  - action: script.ep1_key_update
+    data: {}
 set_purifier_speed:
   alias: Set Purifier Speed
   description: Safely sets the purifier speed using custom sensor
