@@ -2695,14 +2695,20 @@
     id: open
   actions:
   - choose:
-    - conditions: '{{ trigger.id == ''close'' }}'
+    - conditions:
+      - condition: trigger
+        id:
+        - close
       sequence:
       - target:
           entity_id: input_select.hugh_room_blinds_mode
         data:
           option: Closed
         action: input_select.select_option
-    - conditions: '{{ trigger.id == ''open'' }}'
+    - conditions:
+      - condition: trigger
+        id:
+        - open
       sequence:
       - target:
           entity_id: input_select.hugh_room_blinds_mode
@@ -2725,13 +2731,15 @@
   actions:
   - choose:
     - conditions:
-      - condition: template
-        value_template: '{{ trigger.id == ''vol_down'' }}'
+      - condition: trigger
+        id:
+        - vol_down
       sequence:
       - action: script.hugh_room_stereo_volume_down
     - conditions:
-      - condition: template
-        value_template: '{{ trigger.id == ''vol_up'' }}'
+      - condition: trigger
+        id:
+        - vol_up
       sequence:
       - action: script.hugh_room_stereo_volume_up
   mode: single
