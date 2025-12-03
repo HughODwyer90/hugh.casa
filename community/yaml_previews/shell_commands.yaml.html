@@ -28,7 +28,9 @@ upload_yaml_to_git: &quot;python3 /config/python_scripts/upload_yaml_to_git.py&q
 upload_to_git: &quot;python3 /config/python_scripts/upload_to_git.py&quot;
 update_work_plug_state: &quot;python3 /config/python_scripts/fetch_work_plug_state.py&quot;
 run_z2m_update_sequence: &quot;python3 /config/python_scripts/z2m_sequential_update.py&quot;
-patch_tuya_diffuser: &quot;grep -q &#x27;category: config&#x27; /config/custom_components/tuya_local/devices/ditua_dt1522yn_aromadiffuser.yaml &amp;&amp; sed -i &#x27;/^  - entity: light$/,/^  - entity:/ {/category: config/d}&#x27; /config/custom_components/tuya_local/devices/ditua_dt1522yn_aromadiffuser.yaml || true&quot;</pre>
+update_ep1_psk: &quot;python3 /config/python_scripts/update_ep1_psk.py&quot;
+patch_tuya_diffuser: &quot;grep -q &#x27;category: config&#x27; /config/custom_components/tuya_local/devices/ditua_dt1522yn_aromadiffuser.yaml &amp;&amp; sed -i &#x27;/^  - entity: light$/,/^  - entity:/ {/category: config/d}&#x27; /config/custom_components/tuya_local/devices/ditua_dt1522yn_aromadiffuser.yaml || true&quot;
+</pre>
             </div>
             <script>
                 (function fixPaths() {
