@@ -2710,14 +2710,20 @@
     id: open
   actions:
   - choose:
-    - conditions: &#x27;{{ trigger.id == &#x27;&#x27;close&#x27;&#x27; }}&#x27;
+    - conditions:
+      - condition: trigger
+        id:
+        - close
       sequence:
       - target:
           entity_id: input_select.hugh_room_blinds_mode
         data:
           option: Closed
         action: input_select.select_option
-    - conditions: &#x27;{{ trigger.id == &#x27;&#x27;open&#x27;&#x27; }}&#x27;
+    - conditions:
+      - condition: trigger
+        id:
+        - open
       sequence:
       - target:
           entity_id: input_select.hugh_room_blinds_mode
@@ -2740,13 +2746,15 @@
   actions:
   - choose:
     - conditions:
-      - condition: template
-        value_template: &#x27;{{ trigger.id == &#x27;&#x27;vol_down&#x27;&#x27; }}&#x27;
+      - condition: trigger
+        id:
+        - vol_down
       sequence:
       - action: script.hugh_room_stereo_volume_down
     - conditions:
-      - condition: template
-        value_template: &#x27;{{ trigger.id == &#x27;&#x27;vol_up&#x27;&#x27; }}&#x27;
+      - condition: trigger
+        id:
+        - vol_up
       sequence:
       - action: script.hugh_room_stereo_volume_up
   mode: single
