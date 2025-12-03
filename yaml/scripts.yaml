@@ -798,3 +798,9 @@ set_diffuser_color_flash:
           rgb_color: '{{ prev_rgb }}'
           brightness: '{{ prev_bri }}'
   mode: single
+ep1_key_update:
+  sequence:
+  - action: shell_command.update_ep1_psk
+    data: {}
+  alias: EP1 Key Update
+  description: ''
