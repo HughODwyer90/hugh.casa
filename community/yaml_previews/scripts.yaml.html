@@ -661,7 +661,7 @@ update_esphome_devices:
       minutes: 1
       seconds: 0
       milliseconds: 0
-  - action: script.ep1_key_update
+  - action: shell_command.update_ep1_psk
     data: {}
 set_purifier_speed:
   alias: Set Purifier Speed
@@ -820,12 +820,6 @@ set_diffuser_color_flash:
           rgb_color: &#x27;{{ prev_rgb }}&#x27;
           brightness: &#x27;{{ prev_bri }}&#x27;
   mode: single
-ep1_key_update:
-  sequence:
-  - action: shell_command.update_ep1_psk
-    data: {}
-  alias: EP1 Key Update
-  description: &#x27;&#x27;
 </pre>
             </div>
             <script>
