@@ -814,25 +814,37 @@ recast_to_stereo_with_media:
     media_type:
       description: Media content type
     single_player:
-      description: Player to stop first
+      description: The single device currently playing
   sequence:
-  - action: media_player.media_stop
-    target:
-      entity_id: '{{ single_player }}'
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ is_state(single_player, ''playing'') }}'
+      sequence:
+      - action: media_player.media_pause
+        target:
+          entity_id: '{{ single_player }}'
+    - conditions:
+      - condition: template
+        value_template: '{{ is_state(single_player, ''paused'') }}'
+      sequence:
+      - action: media_player.turn_off
+        target:
+          entity_id: '{{ single_player }}'
+    default: []
   - action: music_assistant.play_media
+    target:
+      entity_id: media_player.hugh_room_stereo_2
     data:
       media_type: '{{ media_type }}'
       media_id: '{{ media_id }}'
       enqueue: play
-    target:
-      entity_id: media_player.hugh_room_stereo_2
   - delay: '00:00:00.4'
   - action: media_player.shuffle_set
-    data:
-      shuffle: true
     target:
       device_id: 61df364729816b14e75f325311b07257
+    data:
+      shuffle: true
   - action: media_player.media_next_track
     target:
       device_id: 61df364729816b14e75f325311b07257
-  description: ''
