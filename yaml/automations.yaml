@@ -4336,42 +4336,44 @@
       - condition: template
         value_template: "{% set singles = [\n  'media_player.hugh_room_display',\n
           \ 'media_player.hugh_room_speaker',\n  'media_player.hugh_room_speaker_2',\n
-          \ 'media_player.battery_speaker'\n] %} {{ singles | select('is_state','playing')
-          | list | count > 0\n   and not is_state('media_player.hugh_room_stereo','playing')
-          }}\n"
+          \ 'media_player.battery_speaker'\n] %}\n{% set active = singles | select('is_state','playing')
+          | list %} {# nothing playing → FALSE #} {% if active | count == 0 %}\n  false\n{%
+          else %}\n  {% set p = active | first %}\n  {# require a real media item
+          #}\n  {{ state_attr(p, 'media_content_id') not in [none, '', 'unknown',
+          'unavailable']\n     and not is_state('media_player.hugh_room_stereo','playing')
+          }}\n{% endif %}\n"
       sequence:
       - variables:
-          source: "{% set singles = [\n  'media_player.hugh_room_display',\n  'media_player.hugh_room_speaker',\n
-            \ 'media_player.hugh_room_speaker_2',\n  'media_player.battery_speaker'\n]
-            %} {{ singles | select('is_state','playing') | list | first }}\n"
-      - target:
-          entity_id: media_player.hugh_room_stereo_2
+          single_player: "{% set singles = [\n  'media_player.hugh_room_display',\n
+            \ 'media_player.hugh_room_speaker',\n  'media_player.hugh_room_speaker_2',\n
+            \ 'media_player.battery_speaker'\n] %} {{ singles | select('is_state','playing')
+            | list | first }}\n"
+          media_id: '{{ state_attr(single_player, ''media_content_id'') }}'
+          media_type: '{{ state_attr(single_player, ''media_content_type'') }}'
+      - action: script.recast_to_stereo_with_media
         data:
-          media:
-            media_content_id: '{{ state_attr(source, ''media_content_id'') }}'
-            media_content_type: '{{ state_attr(source, ''media_content_type'') }}'
-            metadata: {}
-        action: media_player.play_media
-      - stop: Re-cast active stream to stereo group
-  - choose:
+          single_player: '{{ single_player }}'
+          media_id: '{{ media_id }}'
+          media_type: '{{ media_type }}'
+      - stop: Recast handled by script
     - conditions:
       - condition: state
         entity_id: media_player.hugh_room_stereo
         state: playing
       sequence:
-      - target:
+      - action: media_player.media_pause
+        target:
           entity_id: media_player.hugh_room_stereo_2
-        action: media_player.media_pause
-      - stop: Paused stereo
+      - stop: Paused
     - conditions:
       - condition: state
         entity_id: media_player.hugh_room_stereo
         state: paused
       sequence:
-      - target:
+      - action: media_player.media_play
+        target:
           entity_id: media_player.hugh_room_stereo_2
-        action: media_player.media_play
-      - stop: Resumed stereo
+      - stop: Resumed
     - conditions:
       - condition: template
         value_template: "{{ not is_state('media_player.hugh_room_stereo','playing')\n
