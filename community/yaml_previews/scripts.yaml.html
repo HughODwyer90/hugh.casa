@@ -436,6 +436,7 @@ play_spotify_playlist_2:
       media_id: spotify:playlist:7Gtodbwg48bzliqflc1BE9
     target:
       entity_id: media_player.hugh_room_stereo_2
+    enabled: true
   - delay: &#x27;00:00:00.4&#x27;
   - action: media_player.shuffle_set
     metadata: {}
@@ -825,44 +826,16 @@ recast_to_stereo_with_media:
   mode: single
   fields:
     media_id:
-      description: Media content ID to play
-    media_type:
-      description: Media content type
-    single_player:
-      description: The single device currently playing
+      description: Raw media ID from the single player
   sequence:
-  - choose:
-    - conditions:
-      - condition: template
-        value_template: &#x27;{{ is_state(single_player, &#x27;&#x27;playing&#x27;&#x27;) }}&#x27;
-      sequence:
-      - action: media_player.media_pause
-        target:
-          entity_id: &#x27;{{ single_player }}&#x27;
-    - conditions:
-      - condition: template
-        value_template: &#x27;{{ is_state(single_player, &#x27;&#x27;paused&#x27;&#x27;) }}&#x27;
-      sequence:
-      - action: media_player.turn_off
-        target:
-          entity_id: &#x27;{{ single_player }}&#x27;
-    default: []
   - action: music_assistant.play_media
     target:
       entity_id: media_player.hugh_room_stereo_2
     data:
-      media_type: &#x27;{{ media_type }}&#x27;
+      media_type: track
       media_id: &#x27;{{ media_id }}&#x27;
       enqueue: play
-  - delay: &#x27;00:00:00.4&#x27;
-  - action: media_player.shuffle_set
-    target:
-      device_id: 61df364729816b14e75f325311b07257
-    data:
-      shuffle: true
-  - action: media_player.media_next_track
-    target:
-      device_id: 61df364729816b14e75f325311b07257
+      radio_mode: true
 </pre>
             </div>
             <script>
