@@ -805,3 +805,34 @@ set_diffuser_color_flash:
           rgb_color: '{{ prev_rgb }}'
           brightness: '{{ prev_bri }}'
   mode: single
+recast_to_stereo_with_media:
+  alias: Recast to Stereo with Media
+  mode: single
+  fields:
+    media_id:
+      description: Media content ID to play
+    media_type:
+      description: Media content type
+    single_player:
+      description: Player to stop first
+  sequence:
+  - action: media_player.media_stop
+    target:
+      entity_id: '{{ single_player }}'
+  - action: music_assistant.play_media
+    data:
+      media_type: '{{ media_type }}'
+      media_id: '{{ media_id }}'
+      enqueue: play
+    target:
+      entity_id: media_player.hugh_room_stereo_2
+  - delay: '00:00:00.4'
+  - action: media_player.shuffle_set
+    data:
+      shuffle: true
+    target:
+      device_id: 61df364729816b14e75f325311b07257
+  - action: media_player.media_next_track
+    target:
+      device_id: 61df364729816b14e75f325311b07257
+  description: ''
