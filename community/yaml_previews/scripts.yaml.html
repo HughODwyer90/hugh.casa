@@ -563,7 +563,9 @@ set_purifier_speed:
 
       &#x27;
   - choose:
-    - conditions: &#x27;{{ level | lower == &#x27;&#x27;off&#x27;&#x27; }}&#x27;
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ level | lower == &#x27;&#x27;off&#x27;&#x27; }}&#x27;
       sequence:
       - condition: not
         conditions:
@@ -573,7 +575,9 @@ set_purifier_speed:
       - action: fan.turn_off
         target:
           entity_id: fan.air_purifier
-    - conditions: &#x27;{{ level | lower == &#x27;&#x27;low&#x27;&#x27; }}&#x27;
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ level | lower == &#x27;&#x27;low&#x27;&#x27; }}&#x27;
       sequence:
       - condition: not
         conditions:
@@ -585,7 +589,9 @@ set_purifier_speed:
           entity_id: fan.air_purifier
         data:
           percentage: &#x27;{{ states(&#x27;&#x27;input_number.fan_speed_low&#x27;&#x27;) | int }}&#x27;
-    - conditions: &#x27;{{ level | lower == &#x27;&#x27;medium&#x27;&#x27; }}&#x27;
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ level | lower == &#x27;&#x27;medium&#x27;&#x27; }}&#x27;
       sequence:
       - condition: not
         conditions:
@@ -597,7 +603,9 @@ set_purifier_speed:
           entity_id: fan.air_purifier
         data:
           percentage: &#x27;{{ states(&#x27;&#x27;input_number.fan_speed_medium&#x27;&#x27;) | int }}&#x27;
-    - conditions: &#x27;{{ level | lower == &#x27;&#x27;high&#x27;&#x27; }}&#x27;
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ level | lower == &#x27;&#x27;high&#x27;&#x27; }}&#x27;
       sequence:
       - condition: not
         conditions:
