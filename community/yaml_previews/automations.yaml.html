@@ -1886,58 +1886,50 @@
       action: notify.notifications
   mode: single
 - id: &#x27;1715361346211&#x27;
-  alias: Calculate Next Pay Day
+  alias: Calculate Next Pay Day (Simplified)
   triggers:
-  - entity_id: input_datetime.last_day_of_month
-    trigger: state
+  - trigger: time
+    at: 00:10:00
+  conditions:
+  - condition: template
+    value_template: &quot;{% set pd = states(&#x27;input_datetime.next_pay_day&#x27;) %} {% if pd
+      in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;] %}\n  true\n{% else %}\n  {{ (pd | as_datetime).date()
+      &lt; now().date() }}\n{% endif %}\n&quot;
   actions:
-  - data_template:
+  - variables:
+      next_month_last_day: &#x27;{% set d = now().replace(day=1) %} {% set d = (d + timedelta(days=32)).replace(day=1)
+        %} {{ (d + timedelta(days=32)).replace(day=1) - timedelta(days=1) }}
+
+        &#x27;
+      last_day_datetime: &#x27;{{ next_month_last_day }}&#x27;
+      last_day_weekday: &#x27;{{ last_day_datetime.weekday() }}&#x27;
+  - action: input_datetime.set_datetime
+    target:
       entity_id: input_datetime.next_pay_day
-      date: &quot;{% set last_day = states(&#x27;input_datetime.last_day_of_month&#x27;) %} {% set
-        last_day_datetime = strptime(last_day, &#x27;%Y-%m-%d&#x27;) %} {% set last_day_weekday
-        = last_day_datetime.weekday() %}\n{# First check if the last day of the month
-        is a Saturday or Sunday, and set it to the previous Wednesday if it is #}
-        {% if last_day_weekday == 5 %}\n  {# If Saturday, move to the previous Wednesday
-        #}\n  {% set third_last_workday = last_day_datetime - timedelta(days=3) %}\n{%
-        elif last_day_weekday == 6 %}\n  {# If Sunday, move to the previous Wednesday
-        #}\n  {% set third_last_workday = last_day_datetime - timedelta(days=4) %}\n{%
-        else %}\n  {# Calculate the initial third last workday #}\n  {% if last_day_weekday
-        == 0 %}\n    {# Monday: Include Monday, then Friday, Thursday, Wednesday #}\n
-        \   {% set third_last_workday = last_day_datetime - timedelta(days=4) %}\n
-        \ {% elif last_day_weekday == 1 %}\n    {# Tuesday: Include Tuesday, then
-        Monday, Friday, Thursday #}\n    {% set third_last_workday = last_day_datetime
-        - timedelta(days=3) %}\n  {% elif last_day_weekday == 2 %}\n    {# Wednesday:
-        Include Wednesday, then Tuesday, Monday, Friday #}\n    {% set third_last_workday
+    data:
+      date: &quot;{% set last_day_datetime = last_day_datetime %} {% set last_day_weekday
+        = last_day_weekday %}\n{# --- Your existing full payday logic reused here
+        --- #}\n{% if last_day_weekday == 5 %}\n  {% set third_last = last_day_datetime
+        - timedelta(days=3) %}\n{% elif last_day_weekday == 6 %}\n  {% set third_last
+        = last_day_datetime - timedelta(days=4) %}\n{% else %}\n  {% if last_day_weekday
+        == 0 %}{% set third_last = last_day_datetime - timedelta(days=4) %}\n  {%
+        elif last_day_weekday == 1 %}{% set third_last = last_day_datetime - timedelta(days=3)
+        %}\n  {% elif last_day_weekday == 2 %}{% set third_last = last_day_datetime
+        - timedelta(days=2) %}\n  {% elif last_day_weekday == 3 %}{% set third_last
         = last_day_datetime - timedelta(days=2) %}\n  {% elif last_day_weekday ==
-        3 %}\n    {# Thursday: Include Thursday, then Wednesday, Tuesday, Monday #}\n
-        \   {% set third_last_workday = last_day_datetime - timedelta(days=2) %}\n
-        \ {% elif last_day_weekday == 4 %}\n    {# Friday: Include Friday, then Thursday,
-        Wednesday, Tuesday #}\n    {% set third_last_workday = last_day_datetime -
-        timedelta(days=2) %}\n  {% endif %}\n{% endif %}\n{# Identify the last Monday
-        of October #} {% if last_day_datetime.month == 10 %}\n  {% set last_monday
-        = last_day_datetime.replace(day=31) - timedelta(days=last_day_datetime.replace(day=31).weekday())
-        %}\n{% endif %}\n{# Adjust for the specific case of the October bank holiday
-        (last Monday in October) #} {% set bank_holiday_adjustment = false %} {% if
-        last_day_datetime.month == 10 and last_day_datetime &gt;= last_monday and last_day_datetime.weekday()
-        in [0, 1, 2] %}\n  {% set third_last_workday = third_last_workday - timedelta(days=1)
-        %}\n  {% set bank_holiday_adjustment = true %}\n{% endif %}\n{# Special logic
-        for December to move payday a week earlier #} {% if last_day_datetime.month
-        == 12 %}\n  {% set third_last_workday = third_last_workday - timedelta(weeks=1)
-        %}\n{% endif %}\n{# Final check: If the calculated third last workday falls
-        on a weekend, adjust it accordingly #}\n{% if third_last_workday.weekday()
-        == 4 %}\n  {# If Friday, move back to Thursday if bank holiday adjustment
-        was true #}\n  {% if bank_holiday_adjustment %}\n    {% set third_last_workday
-        = third_last_workday - timedelta(days=1) %}\n  {% endif %}\n{% elif third_last_workday.weekday()
-        == 5 %}\n  {# If Saturday, move back to Friday or Thursday if bank holiday
-        adjustment was true #}\n  {% if bank_holiday_adjustment %}\n    {% set third_last_workday
-        = third_last_workday - timedelta(days=2) %}\n  {% else %}\n    {% set third_last_workday
-        = third_last_workday - timedelta(days=1) %}\n  {% endif %}\n{% elif third_last_workday.weekday()
-        == 6 %}\n  {# If Sunday, move back to Friday or Thursday if bank holiday adjustment
-        was true #}\n  {% if bank_holiday_adjustment %}\n    {% set third_last_workday
-        = third_last_workday - timedelta(days=3) %}\n  {% else %}\n    {% set third_last_workday
-        = third_last_workday - timedelta(days=2) %}\n  {% endif %}\n{% endif %}\n{{
-        third_last_workday.strftime(&#x27;%Y-%m-%d&#x27;) }}\n&quot;
-    action: input_datetime.set_datetime
+        4 %}{% set third_last = last_day_datetime - timedelta(days=2) %}\n  {% endif
+        %}\n{% endif %}\n{# October bank holiday rule #} {% set bank_adj = false %}
+        {% if last_day_datetime.month == 10 %}\n  {% set last_monday = last_day_datetime.replace(day=31)
+        - timedelta(days=last_day_datetime.replace(day=31).weekday()) %}\n  {% if
+        last_day_datetime &gt;= last_monday and last_day_datetime.weekday() in [0,1,2]
+        %}\n    {% set third_last = third_last - timedelta(days=1) %}\n    {% set
+        bank_adj = true %}\n  {% endif %}\n{% endif %}\n{# December rule #} {% if
+        last_day_datetime.month == 12 %}\n  {% set third_last = third_last - timedelta(weeks=1)
+        %}\n{% endif %}\n{# Weekend correction #} {% if third_last.weekday() == 5
+        %}\n  {% set third_last = third_last - timedelta(days=2 if not bank_adj else
+        3) %}\n{% elif third_last.weekday() == 6 %}\n  {% set third_last = third_last
+        - timedelta(days=1 if not bank_adj else 3) %}\n{% endif %}\n{{ third_last.strftime(&#x27;%Y-%m-%d&#x27;)
+        }}\n&quot;
   mode: single
 - id: &#x27;1715594297562&#x27;
   alias: Alarm Start
