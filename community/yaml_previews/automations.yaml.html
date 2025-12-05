@@ -3315,18 +3315,6 @@
       timestamp: &#x27;{{ as_timestamp(now()) }}&#x27;
     action: input_datetime.set_datetime
   mode: single
-- id: &#x27;1748355187479&#x27;
-  alias: Auto Calculate Last Day of Month
-  description: &#x27;&#x27;
-  triggers:
-  - at: 00:05:00
-    trigger: time
-  conditions:
-  - condition: template
-    value_template: &#x27;{{ now().day == 1 }}&#x27;
-  actions:
-  - action: script.calculate_last_day_of_month
-  mode: single
 - id: &#x27;1749450015672&#x27;
   alias: Disable WFH
   description: &#x27;&#x27;
