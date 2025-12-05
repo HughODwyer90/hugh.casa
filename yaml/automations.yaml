@@ -2493,35 +2493,43 @@
   mode: single
 - id: '1722250261847'
   alias: Umail Account Renewal Notification
-  description: Sends a notification to renew umail account every 11 months.
+  description: Sends a notification to renew umail account 1 day before it expires.
   triggers:
-  - value_template: "{% set exp = states('input_datetime.umail_account_expiration')
-      %} {% if exp not in ['unknown', 'unavailable'] %}\n  {{ (exp | as_datetime -
-      timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S') ==\n     now().strftime('%Y-%m-%d
-      %H:%M:%S') }}\n{% else %}\n  false\n{% endif %}"
-    trigger: template
-  conditions: []
+  - trigger: time
+    at: 00:10:00
+  conditions:
+  - condition: template
+    value_template: "{% set exp = states('input_datetime.umail_account_expiration')
+      %} {% if exp not in ['unknown', 'unavailable', 'none'] %}\n  {{ (exp | as_datetime).date()
+      - timedelta(days=1) == now().date() }}\n{% else %}\n  false\n{% endif %}\n"
   actions:
-  - data:
+  - action: notify.notifications
+    data:
       message: It's time to renew your umail account.
       data:
         actions:
         - action: RENEWED_UMAIL
           title: Renewed
-    action: notify.notifications
   mode: single
 - id: '1722250405426'
   alias: Handle Umail renew
   description: ''
-  trigger:
+  triggers:
   - trigger: event
     event_type: mobile_app_notification_action
     event_data:
       action: RENEWED_UMAIL
-  condition: []
-  action:
-  - action: script.update_umail_expiration
-    data: {}
+  actions:
+  - action: shell_command.update_dates
+    data:
+      target: input_datetime.umail_account_expiration
+      years: 0
+      months: 11
+  - action: notify.notifications
+    data:
+      message: Umail account expiration updated
+      data:
+        notification_icon: mdi:calendar-alert
   mode: single
 - id: '1722258094912'
   alias: Reload VeSync Integration on State Change
@@ -2672,15 +2680,17 @@
 - id: '1723126142278'
   alias: Handle Car Data renew
   description: ''
-  trigger:
+  triggers:
   - trigger: event
     event_type: mobile_app_notification_action
     event_data:
       action: RENEWED_CAR
-  condition: []
-  action:
-  - data: {}
-    action: script.update_car_data_expiration
+  actions:
+  - action: shell_command.update_dates
+    data:
+      target: input_datetime.car_data_expiration
+      years: 1
+      months: 0
   mode: single
 - id: '1724788680813'
   alias: IR Typhoon Blinds Control
@@ -3671,6 +3681,7 @@
   mode: single
 - id: '1757190236828'
   alias: Handle TV Subscription update
+  description: ''
   triggers:
   - trigger: event
     event_type: mobile_app_notification_action
