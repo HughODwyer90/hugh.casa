@@ -35,37 +35,7 @@
           No Data
         {% endif %}
 
-    - name: "Next Pay Day"
-      unique_id: "next_pay_day_sensor"
-      icon: "mdi:currency-usd"
-      state: >
-        {% set next_pay_day = states('input_datetime.next_pay_day') %}
-        {% if next_pay_day not in ['unknown', 'unavailable'] %}
-          {% set next_pay_date = as_timestamp(next_pay_day) %}
-          {% set current_date = as_timestamp(now().strftime('%Y-%m-%d')) %}
-          {% set days_until_pay = ((next_pay_date - current_date) / 86400) | float | round(0, 'floor') %}
-          {% if days_until_pay == 0 %}
-            Today
-          {% elif days_until_pay == 1 %}
-            Tomorrow
-          {% elif days_until_pay <= 7 %}
-            {{ next_pay_date | timestamp_custom('%A') }}
-          {% else %}
-            {{ next_pay_date | timestamp_custom('%d/%m/%Y') }}
-          {% endif %}
-        {% else %}
-          Unknown
-        {% endif %}
-      attributes:
-        Day: >
-          {% set next_pay_day = states('input_datetime.next_pay_day') %}
-          {% if next_pay_day not in ['unknown', 'unavailable'] %}
-            {% set next_pay_date = as_timestamp(next_pay_day) %}
-            {{ next_pay_date | timestamp_custom('%A') }}
-          {% else %}
-            Unknown
-          {% endif %}
-
+   
     - name: "Next Public Holiday"
       unique_id: "next_public_holiday_sensor"
       icon: "mdi:beach"
@@ -92,6 +62,79 @@
           {% set name = state_attr('calendar.ireland', 'message') %}
           {{ name if name not in ['unknown', 'unavailable', None] else 'Unknown' }}
 
+    - name: "Next Pay Day"
+      unique_id: "next_pay_day_sensor"
+      icon: "mdi:cash-clock"
+      state: >
+        {% set today = now().date() %}
+    
+        {# --- Determine first & last day of next month --- #}
+        {% set first_this_month = today.replace(day=1) %}
+        {% set first_next_month = (first_this_month + timedelta(days=32)).replace(day=1) %}
+        {% set last_next_month = (first_next_month + timedelta(days=32)).replace(day=1) - timedelta(days=1) %}
+    
+        {# --- Get Irish holidays from calendar.ireland --- #}
+        {% set holidays = [] %}
+        {% for ev in state_attr('calendar.ireland', 'events') or [] %}
+          {% if ev.start is defined %}
+            {% set holidays = holidays + [as_datetime(ev.start).date()] %}
+          {% endif %}
+        {% endfor %}
+    
+        {# --- Build working-day list (Mon–Fri excluding holidays) --- #}
+        {% set working = [] %}
+        {% for i in range((last_next_month - first_next_month).days + 1) %}
+          {% set d = first_next_month + timedelta(days=i) %}
+          {% if d.weekday() in [0,1,2,3,4] and d not in holidays %}
+            {% set working = working + [d] %}
+          {% endif %}
+        {% endfor %}
+    
+        {# --- 3rd last working day --- #}
+        {% set payday = working[-3] %}
+        {% set days = (payday - today).days %}
+    
+        {# --- Friendly UI output --- #}
+        {% if days < 0 %}
+          Passed
+        {% elif days == 0 %}
+          Today
+        {% elif days == 1 %}
+          Tomorrow
+        {% elif days <= 7 %}
+          {{ payday.strftime('%A') }}
+        {% else %}
+          {{ payday.strftime('%d/%m/%Y') }}
+        {% endif %}
+    
+      attributes:
+        iso_date: >
+          {% set today = now().date() %}
+          {% set first_this_month = today.replace(day=1) %}
+          {% set first_next_month = (first_this_month + timedelta(days=32)).replace(day=1) %}
+          {% set last_next_month = (first_next_month + timedelta(days=32)).replace(day=1) - timedelta(days=1) %}
+    
+          {% set holidays = [] %}
+          {% for ev in state_attr('calendar.ireland', 'events') or [] %}
+            {% if ev.start is defined %}
+              {% set holidays = holidays + [as_datetime(ev.start).date()] %}
+            {% endif %}
+          {% endfor %}
+    
+          {% set working = [] %}
+          {% for i in range((last_next_month - first_next_month).days + 1) %}
+            {% set d = first_next_month + timedelta(days=i) %}
+            {% if d.weekday() in [0,1,2,3,4] and d not in holidays %}
+              {% set working = working + [d] %}
+            {% endif %}
+          {% endfor %}
+          {{ working[-3] }}
+    
+        weekday: >
+          {{ as_datetime(state_attr('sensor.next_pay_day','iso_date')).strftime('%A') }}
+    
+        days_remaining: >
+          {{ (as_datetime(state_attr('sensor.next_pay_day','iso_date')).date() - now().date()).days }}
 
     - name: "Umail Account Expiration"
       unique_id: "umail_account_expiration_sensor"
