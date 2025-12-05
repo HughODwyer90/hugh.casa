@@ -1,4 +1,5 @@
 - sensor:
+
     - name: "Car Data Expiration"
       unique_id: "car_data_expiration_sensor"
       icon: "mdi:calendar-clock"
@@ -35,7 +36,6 @@
           No Data
         {% endif %}
 
-   
     - name: "Next Public Holiday"
       unique_id: "next_public_holiday_sensor"
       icon: "mdi:beach"
@@ -62,7 +62,6 @@
           {% set name = state_attr('calendar.ireland', 'message') %}
           {{ name if name not in ['unknown', 'unavailable', None] else 'Unknown' }}
 
-    
     - name: "Umail Account Expiration"
       unique_id: "umail_account_expiration_sensor"
       icon: "mdi:calendar-clock"
@@ -116,7 +115,7 @@
         Username: !secret tv_username
         Password: !secret tv_password
         URL: !secret tv_url
-      
+
     - name: "Days Until Retirement"
       unique_id: "days_until_retirement_sensor"
       icon: "mdi:calendar-clock"
@@ -156,163 +155,54 @@
           {% set annual_leave = states('input_number.annual_leave') | int(22) %}
           {% set today = now().date() %}
           {% set ns = namespace(working_days=0) %}
-          {% set years_remaining = (total_days // 365) %}
-          {% set total_bank_holidays = 10 * years_remaining %}
-          {% set total_vacation_days = annual_leave * years_remaining %}
           {% for day in range(0, total_days) %}
             {% set current_date = (today + timedelta(days=day)) %}
             {% if current_date.weekday() < 5 %}
               {% set ns.working_days = ns.working_days + 1 %}
             {% endif %}
           {% endfor %}
-          {% set adjusted = ns.working_days - total_bank_holidays - total_vacation_days %}
+          {% set years_remaining = (total_days // 365) %}
+          {% set adjusted = ns.working_days - (10 * years_remaining) - (annual_leave * years_remaining) %}
           {{ adjusted if adjusted > 0 else 0 }}
 
     - name: "Next Pay Day"
-      unique_id: "next_pay_day_sensor"
+      unique_id: next_pay_day_sensor
+      icon: mdi:cash
       state: >
-        {% set today = now().date() %}
-        {% set y = today.year %}
-        {% set m = today.month %}
-    
-        {# ===================================================== #}
-        {# FUNCTION BLOCK (inline, no macro):                    #}
-        {# Returns the 3rd last working day of (year, month)     #}
-        {# ===================================================== #}
-    
-        {% set first = as_datetime(y ~ "-" ~ "%02d"|format(m) ~ "-01").date() %}
-        {% set last  = (first + timedelta(days=32)).replace(day=1) - timedelta(days=1) %}
-    
-        {# ---- Determine holidays for THIS month ---- #}
-        {% set hols = [] %}
-    
-        {# OCTOBER: last Monday #}
-        {% if m == 10 %}
-          {% set last_mon = none %}
-          {% for i in range(7) %}
-            {% set cand = last - timedelta(days=i) %}
-            {% if cand.weekday() == 0 %}
-              {% set last_mon = cand %}
-            {% endif %}
-          {% endfor %}
-          {% if last_mon %}
-            {% set hols = hols + [last_mon] %}
-          {% endif %}
-        {% endif %}
-    
-        {# DECEMBER: 25th, 26th + observed #}
-        {% if m == 12 %}
-          {% set d25 = as_datetime(y ~ "-12-25").date() %}
-          {% set d26 = as_datetime(y ~ "-12-26").date() %}
-          {% set hols = hols + [d25, d26] %}
-    
-          {# Observed Christmas #}
-          {% if d25.weekday() == 5 %}
-            {% set hols = hols + [d25 + timedelta(days=2)] %}
-          {% elif d25.weekday() == 6 %}
-            {% set hols = hols + [d25 + timedelta(days=1)] %}
-          {% endif %}
-    
-          {# Observed Stephen's Day #}
-          {% if d26.weekday() == 5 %}
-            {% set hols = hols + [d26 + timedelta(days=2)] %}
-          {% elif d26.weekday() == 6 %}
-            {% set hols = hols + [d26 + timedelta(days=1)] %}
-          {% endif %}
-        {% endif %}
-    
-        {# ---- Build working days list ---- #}
-        {% set working = [] %}
-        {% for i in range((last - first).days + 1) %}
-          {% set d = first + timedelta(days=i) %}
-          {% if d.weekday() in [0,1,2,3,4] and d not in hols %}
-            {% set working = working + [d] %}
-          {% endif %}
-        {% endfor %}
-    
-        {# 3rd last working day of this month #}
-        {% set pay_this =
-          (working[-3] if working|count >= 3 else none)
-        %}
-    
-        {# ===================================================== #}
-        {# SWITCH TO NEXT MONTH IF THIS MONTH'S PAYDAY PASSED     #}
-        {# ===================================================== #}
-    
-        {% if pay_this and today > pay_this %}
-          {% set next_y = y + (1 if m == 12 else 0) %}
-          {% set next_m = 1 if m == 12 else m + 1 %}
-    
-          {# REPEAT WHOLE CALC FOR NEXT MONTH (inline again) #}
-    
-          {% set first2 = as_datetime(next_y ~ "-" ~ "%02d"|format(next_m) ~ "-01").date() %}
-          {% set last2  = (first2 + timedelta(days=32)).replace(day=1) - timedelta(days=1) %}
-          {% set hols2 = [] %}
-    
-          {% if next_m == 10 %}
-            {% set last_mon2 = none %}
-            {% for i in range(7) %}
-              {% set cand2 = last2 - timedelta(days=i) %}
-              {% if cand2.weekday() == 0 %}
-                {% set last_mon2 = cand2 %}
-              {% endif %}
-            {% endfor %}
-            {% if last_mon2 %}
-              {% set hols2 = hols2 + [last_mon2] %}
-            {% endif %}
-          {% endif %}
-    
-          {% if next_m == 12 %}
-            {% set d25b = as_datetime(next_y ~ "-12-25").date() %}
-            {% set d26b = as_datetime(next_y ~ "-12-26").date() %}
-            {% set hols2 = hols2 + [d25b, d26b] %}
-    
-            {% if d25b.weekday() == 5 %}
-              {% set hols2 = hols2 + [d25b + timedelta(days=2)] %}
-            {% elif d25b.weekday() == 6 %}
-              {% set hols2 = hols2 + [d25b + timedelta(days=1)] %}
-            {% endif %}
-    
-            {% if d26b.weekday() == 5 %}
-              {% set hols2 = hols2 + [d26b + timedelta(days=2)] %}
-            {% elif d26b.weekday() == 6 %}
-              {% set hols2 = hols2 + [d26b + timedelta(days=1)] %}
-            {% endif %}
-          {% endif %}
-    
-          {% set working2 = [] %}
-          {% for i in range((last2 - first2).days + 1) %}
-            {% set d2 = first2 + timedelta(days=i) %}
-            {% if d2.weekday() in [0,1,2,3,4] and d2 not in hols2 %}
-              {% set working2 = working2 + [d2] %}
-            {% endif %}
-          {% endfor %}
-    
-          {% set payday = working2[-3] if working2|count >= 3 else none %}
-    
-        {% else %}
-          {% set payday = pay_this %}
-        {% endif %}
-    
-        {# ===================================================== #}
-        {# FINAL OUTPUT FORMAT                                    #}
-        {# ===================================================== #}
-    
-        {% if payday == none %}
+        {% set raw = states('input_datetime.next_pay_day') %}
+        {% if raw in ['unknown', 'unavailable', None, ''] %}
           Unknown
         {% else %}
-          {% set days = (payday - today).days %}
-          {% if days == 0 %}
+          {% set d = as_datetime(raw).date() %}
+          {% set today = now().date() %}
+          {% set diff = (d - today).days %}
+          {% if diff == 0 %}
             Today
-          {% elif days == 1 %}
+          {% elif diff == 1 %}
             Tomorrow
-          {% elif 1 < days <= 7 %}
-            {{ payday.strftime("%A") }}
+          {% elif 1 < diff <= 7 %}
+            {{ d.strftime('%A') }}
           {% else %}
-            {{ payday.strftime("%d/%m/%Y") }}
+            {{ d.strftime('%d/%m/%Y') }}
           {% endif %}
         {% endif %}
-      
+      attributes:
+        iso_date: "{{ states('input_datetime.next_pay_day') }}"
+        weekday: >
+          {% set raw = states('input_datetime.next_pay_day') %}
+          {% if raw not in ['unknown','unavailable',None,''] %}
+            {{ as_datetime(raw).strftime('%A') }}
+          {% else %}
+            Unknown
+          {% endif %}
+        days_remaining: >
+          {% set raw = states('input_datetime.next_pay_day') %}
+          {% if raw not in ['unknown','unavailable',None,''] %}
+            {{ (as_datetime(raw).date() - now().date()).days }}
+          {% else %}
+            Unknown
+          {% endif %}
+
     - name: "Daylight Duration"
       unique_id: "daylight_duration_sensor"
       icon: "mdi:weather-sunny"
@@ -321,7 +211,7 @@
       state: >
         {% set sr = states('input_datetime.today_sunrise') %}
         {% set ss = states('input_datetime.today_sunset') %}
-        {% if sr not in ['unknown', 'unavailable'] and ss not in ['unknown', 'unavailable'] %}
+        {% if sr not in ['unknown','unavailable'] and ss not in ['unknown','unavailable'] %}
           {% set sr_ts = as_timestamp(sr) %}
           {% set ss_ts = as_timestamp(ss) %}
           {% if sr_ts < ss_ts %}
@@ -358,7 +248,7 @@
           {{ sr <= now_ts <= ss }}
         previous_sunrise: >
           {% set pr = states('input_datetime.previous_sunrise') %}
-          {% if pr not in ['unknown', 'unavailable'] %}
+          {% if pr not in ['unknown','unavailable'] %}
             {% set pr_ts = as_timestamp(pr) %}
             {% if now().date() == as_datetime(pr).date() %}
               Today at {{ pr_ts | timestamp_custom('%H:%M') }}
@@ -372,7 +262,7 @@
           {% endif %}
         previous_sunset: >
           {% set ps = states('input_datetime.previous_sunset') %}
-          {% if ps not in ['unknown', 'unavailable'] %}
+          {% if ps not in ['unknown','unavailable'] %}
             {% set ps_ts = as_timestamp(ps) %}
             {% if now().date() == as_datetime(ps).date() %}
               Today at {{ ps_ts | timestamp_custom('%H:%M') }}
