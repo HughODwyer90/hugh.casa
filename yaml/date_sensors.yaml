@@ -198,14 +198,12 @@
             {% set d26 = as_datetime(y ~ "-12-26").date() %}
             {% set hols = hols + [d25, d26] %}
     
-            {# Observed Christmas Day #}
             {% if d25.weekday() == 5 %}
               {% set hols = hols + [d25 + timedelta(days=2)] %}
             {% elif d25.weekday() == 6 %}
               {% set hols = hols + [d25 + timedelta(days=1)] %}
             {% endif %}
     
-            {# Observed Stephen’s Day #}
             {% if d26.weekday() == 5 %}
               {% set hols = hols + [d26 + timedelta(days=2)] %}
             {% elif d26.weekday() == 6 %}
@@ -213,7 +211,7 @@
             {% endif %}
           {% endif %}
     
-          {# ----------- Build working days list ----------- #}
+          {# ----------- Build working days ----------- #}
           {% set ns = namespace(days=[]) %}
           {% set total = (last - first).days + 1 %}
           {% for i in range(total) %}
@@ -223,11 +221,10 @@
             {% endif %}
           {% endfor %}
     
-          {% set paydate = ns.days[-3] %}
-          {{ paydate.isoformat() }}
+          {{ ns.days[-3].isoformat() }}
         {% endmacro %}
     
-        {# === Determine whether this month or next month applies === #}
+        {# === choose this-month or next-month payday === #}
         {% set today = now().date() %}
         {% set y = today.year %}
         {% set m = today.month %}
@@ -244,7 +241,6 @@
     
         {% set days = (pay_date - today).days %}
     
-        {# === Friendly display === #}
         {% if days == 0 %}
           Today
         {% elif days == 1 %}
@@ -260,53 +256,9 @@
           {% set today = now().date() %}
           {% set y = today.year %}
           {% set m = today.month %}
-          {% macro payday_for_month(y, m) %}
-            {% set first = as_datetime(y ~ "-" ~ "%02d"|format(m) ~ "-01").date() %}
-            {% set last = (first + timedelta(days=32)).replace(day=1) - timedelta(days=1) %}
-            {% set hols = [] %}
-    
-            {% if m == 10 %}
-              {% set nm = namespace(last_mon = none) %}
-              {% for i in range(7) %}
-                {% set cand = last - timedelta(days=i) %}
-                {% if cand.weekday() == 0 %}
-                  {% set nm.last_mon = cand %}
-                {% endif %}
-              {% endfor %}
-              {% if nm.last_mon %}
-                {% set hols = hols + [nm.last_mon] %}
-              {% endif %}
-            {% endif %}
-    
-            {% if m == 12 %}
-              {% set d25 = as_datetime(y ~ "-12-25").date() %}
-              {% set d26 = as_datetime(y ~ "-12-26").date() %}
-              {% set hols = hols + [d25, d26] %}
-              {% if d25.weekday() == 5 %}
-                {% set hols = hols + [d25 + timedelta(days=2)] %}
-              {% elif d25.weekday() == 6 %}
-                {% set hols = hols + [d25 + timedelta(days=1)] %}
-              {% endif %}
-              {% if d26.weekday() == 5 %}
-                {% set hols = hols + [d26 + timedelta(days=2)] %}
-              {% elif d26.weekday() == 6 %}
-                {% set hols = hols + [d26 + timedelta(days=1)] %}
-              {% endif %}
-            {% endif %}
-    
-            {% set ns = namespace(days=[]) %}
-            {% set total = (last - first).days + 1 %}
-            {% for i in range(total) %}
-              {% set d = first + timedelta(days=i) %}
-              {% if d.weekday() in [0,1,2,3,4] and d not in hols %}
-                {% set ns.days = ns.days + [d] %}
-              {% endif %}
-            {% endfor %}
-            {% set paydate = ns.days[-3] %}
-            {{ paydate.isoformat() }}
-          {% endmacro %}
     
           {% set this_pay = as_datetime(payday_for_month(y, m)).date() %}
+    
           {% if today <= this_pay %}
             {{ this_pay.isoformat() }}
           {% else %}
@@ -317,25 +269,44 @@
           {% endif %}
     
         dmy_date: >
-          {% set d = as_datetime(state_attr('sensor.next_pay_day','iso_date')).date() %}
-          {{ d.strftime('%d/%m/%Y') }}
+          {% set iso = state_attr('sensor.next_pay_day','iso_date') %}
+          {% if iso in [None, 'unknown', 'unavailable'] %}
+            {{ '' }}
+          {% else %}
+            {% set d = as_datetime(iso).date() %}
+            {{ d.strftime('%d/%m/%Y') }}
+          {% endif %}
     
         weekday: >
-          {% set d = as_datetime(state_attr('sensor.next_pay_day','iso_date')).date() %}
-          {{ d.strftime('%A') }}
+          {% set iso = state_attr('sensor.next_pay_day','iso_date') %}
+          {% if iso in [None, 'unknown', 'unavailable'] %}
+            {{ '' }}
+          {% else %}
+            {% set d = as_datetime(iso).date() %}
+            {{ d.strftime('%A') }}
+          {% endif %}
     
         days_remaining: >
-          {% set today = now().date() %}
-          {% set d = as_datetime(state_attr('sensor.next_pay_day','iso_date')).date() %}
-          {{ (d - today).days }}
+          {% set iso = state_attr('sensor.next_pay_day','iso_date') %}
+          {% if iso in [None, 'unknown', 'unavailable'] %}
+            {{ '' }}
+          {% else %}
+            {% set today = now().date() %}
+            {% set d = as_datetime(iso).date() %}
+            {{ (d - today).days }}
+          {% endif %}
     
         source_month: >
-          {% set today = now().date() %}
-          {% set d = as_datetime(state_attr('sensor.next_pay_day','iso_date')).date() %}
-          {% if d.month == today.month %}
-            current
+          {% set iso = state_attr('sensor.next_pay_day','iso_date') %}
+          {% if iso in [None, 'unknown', 'unavailable'] %}
+            {{ '' }}
           {% else %}
-            next
+            {% set d = as_datetime(iso).date() %}
+            {% if d.month == now().month %}
+              current
+            {% else %}
+              next
+            {% endif %}
           {% endif %}
       
     - name: "Daylight Duration"
