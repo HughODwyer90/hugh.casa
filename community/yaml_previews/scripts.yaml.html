@@ -847,28 +847,27 @@ update_date_generic:
   fields:
     target_entity:
       description: Input_datetime entity to update
-      example: input_datetime.tv_subscription
     add_months:
-      description: Months to add
-      example: 12
-      default: 12
+      description: Months to add (can be negative)
+      default: 0
     add_years:
-      description: Years to add
-      example: 0
+      description: Years to add (can be negative)
       default: 0
     notification_icon:
       description: Icon for notification
-      example: mdi:calendar-alert
       default: mdi:calendar-alert
     notify_message:
       description: Notification message prefix
-      example: TV Subscription date updated
       default: Date updated
   sequence:
   - variables:
       raw: &#x27;{{ states(target_entity) }}&#x27;
-      dt: &quot;{{ raw | as_datetime | as_local\n   if raw not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n
-        \  else now() }}&quot;
+      dt: &quot;{% if raw in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;, None] %}\n  {{ now() }}\n{%
+        else %}\n  {# Try full datetime parse #}\n  {% set parsed = raw | as_datetime(default=None)
+        %}\n  {% if parsed != None %}\n    {{ parsed }}\n  {% else %}\n    {# DATE-ONLY
+        FORMAT #}\n    {% if raw | regex_match(&#x27;^\\\\d{4}-\\\\d{2}-\\\\d{2}$&#x27;) %}\n
+        \     {{ strptime(raw ~ &#x27; 00:00:00&#x27;, &#x27;%Y-%m-%d %H:%M:%S&#x27;) }}\n    {% else
+        %}\n      {{ now() }}\n    {% endif %}\n  {% endif %}\n{% endif %}&quot;
       new_month: &#x27;{{ dt.month + add_months }}&#x27;
       year_shift: &#x27;{{ (new_month - 1) // 12 }}&#x27;
       final_month: &#x27;{{ ((new_month - 1) % 12) + 1 }}&#x27;
@@ -888,7 +887,6 @@ update_date_generic:
       message: &#x27;{{ notify_message }}: {{ final_dt.strftime(&#x27;&#x27;%Y-%m-%d %H:%M&#x27;&#x27;) }}&#x27;
       data:
         notification_icon: &#x27;{{ notification_icon }}&#x27;
-  description: &#x27;&#x27;
 </pre>
             </div>
             <script>
