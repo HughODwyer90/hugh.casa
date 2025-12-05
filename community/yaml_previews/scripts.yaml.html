@@ -841,63 +841,6 @@ recast_to_stereo_with_media:
       media_id: &#x27;{{ media_id }}&#x27;
       enqueue: play
       radio_mode: true
-update_date_generic:
-  alias: Update Date – Generic
-  mode: single
-  fields:
-    target_entity:
-      description: input_datetime to update
-    months_to_add:
-      description: Months to add
-      default: 0
-    years_to_add:
-      description: Years to add
-      default: 0
-    notify_message:
-      default: Date updated
-    notification_icon:
-      default: mdi:calendar-alert
-  sequence:
-  - variables:
-      tgt: &#x27;{{ target_entity }}&#x27;
-      add_m: &#x27;{{ months_to_add | int }}&#x27;
-      add_y: &#x27;{{ years_to_add | int }}&#x27;
-      msg: &#x27;{{ notify_message }}&#x27;
-      icon: &#x27;{{ notification_icon }}&#x27;
-      raw: &#x27;{{ state_attr(tgt, &#x27;&#x27;date&#x27;&#x27;) or states(tgt) }}&#x27;
-      clean: &#x27;{{ raw.replace(&#x27;&#x27;T&#x27;&#x27;, &#x27;&#x27; &#x27;&#x27;) }}&#x27;
-      parts: &#x27;{{ clean.split(&#x27;&#x27; &#x27;&#x27;) }}&#x27;
-      base_dt: &quot;{% if parts|length == 2 %}\n  {{ strptime(clean, &#x27;%Y-%m-%d %H:%M:%S&#x27;)
-        }}\n{% else %}\n  {{ strptime(clean ~ &#x27; 00:00:00&#x27;, &#x27;%Y-%m-%d %H:%M:%S&#x27;) }}\n{%
-        endif %}&quot;
-      y: &#x27;{{ base_dt.year }}&#x27;
-      m: &#x27;{{ base_dt.month }}&#x27;
-      d: &#x27;{{ base_dt.day }}&#x27;
-      nm: &#x27;{{ m + add_m }}&#x27;
-      ny: &#x27;{{ y + add_y }}&#x27;
-      final_year: &#x27;{{ ny + ((nm - 1) // 12) }}&#x27;
-      final_month: &#x27;{{ ((nm - 1) % 12) + 1 }}&#x27;
-      month_start: &quot;{{ strptime(\n  (final_year|string) ~ &#x27;-&#x27; ~ (final_month|string)
-        ~ &#x27;-01&#x27;,\n  &#x27;%Y-%m-%d&#x27;\n) }}\n&quot;
-      next_month_start: &quot;{% if final_month == 12 %}\n  {{ strptime(((final_year +
-        1)|string) ~ &#x27;-01-01&#x27;, &#x27;%Y-%m-%d&#x27;) }}\n{% else %}\n  {{ strptime(\n    (final_year|string)
-        ~ &#x27;-&#x27; ~ ((final_month + 1)|string) ~ &#x27;-01&#x27;,\n    &#x27;%Y-%m-%d&#x27;\n  ) }}\n{% endif
-        %}&quot;
-      last_day: &#x27;{{ ((next_month_start.timestamp() - 86400) | timestamp_custom(&#x27;&#x27;%d&#x27;&#x27;))
-        | int }}&#x27;
-      final_day: &#x27;{{ d if d &lt;= last_day else last_day }}&#x27;
-      final_date: &#x27;{{ &#x27;&#x27;%04d-%02d-%02d&#x27;&#x27; | format(final_year, final_month, final_day)
-        }}&#x27;
-  - action: input_datetime.set_datetime
-    data:
-      entity_id: &#x27;{{ tgt }}&#x27;
-      date: &#x27;{{ final_date }}&#x27;
-      time: 00:00:00
-  - action: notify.notifications
-    data:
-      message: &#x27;{{ msg }}: {{ final_date }}&#x27;
-      data:
-        notification_icon: &#x27;{{ icon }}&#x27;
 </pre>
             </div>
             <script>
