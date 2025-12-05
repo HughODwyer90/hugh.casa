@@ -826,3 +826,51 @@ recast_to_stereo_with_media:
       media_id: '{{ media_id }}'
       enqueue: play
       radio_mode: true
+update_date_generic:
+  alias: Update Date – Generic
+  mode: single
+  fields:
+    target_entity:
+      description: Input_datetime entity to update
+      example: input_datetime.tv_subscription
+    add_months:
+      description: Months to add
+      example: 12
+      default: 12
+    add_years:
+      description: Years to add
+      example: 0
+      default: 0
+    notification_icon:
+      description: Icon for notification
+      example: mdi:calendar-alert
+      default: mdi:calendar-alert
+    notify_message:
+      description: Notification message prefix
+      example: TV Subscription date updated
+      default: Date updated
+  sequence:
+  - variables:
+      raw: '{{ states(target_entity) }}'
+      dt: "{{ raw | as_datetime | as_local\n   if raw not in ['unknown','unavailable','none','']\n
+        \  else now() }}"
+      new_month: '{{ dt.month + add_months }}'
+      year_shift: '{{ (new_month - 1) // 12 }}'
+      final_month: '{{ ((new_month - 1) % 12) + 1 }}'
+      final_year: '{{ dt.year + add_years + year_shift }}'
+      max_day: "{{ (dt.replace(year=final_year, month=final_month, day=1)\n    + timedelta(days=32)).replace(day=1)\n
+        \   - timedelta(days=1) }}"
+      final_day: '{{ dt.day if dt.day <= max_day.day else max_day.day }}'
+      final_dt: '{{ dt.replace(year=final_year, month=final_month, day=final_day)
+        }}'
+  - action: input_datetime.set_datetime
+    data:
+      entity_id: '{{ target_entity }}'
+      date: '{{ final_dt.strftime(''%Y-%m-%d'') }}'
+      time: '{{ final_dt.strftime(''%H:%M:%S'') }}'
+  - action: notify.notifications
+    data:
+      message: '{{ notify_message }}: {{ final_dt.strftime(''%Y-%m-%d %H:%M'') }}'
+      data:
+        notification_icon: '{{ notification_icon }}'
+  description: ''
