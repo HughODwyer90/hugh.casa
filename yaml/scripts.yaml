@@ -832,10 +832,10 @@ update_date_generic:
   fields:
     target_entity:
       description: input_datetime to update
-    add_months:
+    months_to_add:
       description: Months to add
       default: 0
-    add_years:
+    years_to_add:
       description: Years to add
       default: 0
     notify_message:
@@ -844,33 +844,42 @@ update_date_generic:
       default: mdi:calendar-alert
   sequence:
   - variables:
-      raw_date: '{{ state_attr(target_entity, ''date'') or states(target_entity) }}'
-      base_ts: '{{ strptime(raw_date, ''%Y-%m-%d'').timestamp() }}'
-      base_year: '{{ raw_date[:4] | int }}'
-      base_month: '{{ raw_date[5:7] | int }}'
-      base_day: '{{ raw_date[8:10] | int }}'
-      new_year_calc: '{{ base_year + (add_years | int) }}'
-      new_month_calc: '{{ base_month + (add_months | int) }}'
-      final_year: '{{ new_year_calc + ((new_month_calc - 1) // 12) }}'
-      final_month: '{{ ((new_month_calc - 1) % 12) + 1 }}'
-      month_start_ts: '{{ strptime(final_year ~ ''-'' ~ final_month ~ ''-01'', ''%Y-%m-%d'').timestamp()
+      tgt: '{{ target_entity }}'
+      add_m: '{{ months_to_add | int }}'
+      add_y: '{{ years_to_add | int }}'
+      msg: '{{ notify_message }}'
+      icon: '{{ notification_icon }}'
+      raw: '{{ state_attr(tgt, ''date'') or states(tgt) }}'
+      clean: '{{ raw.replace(''T'', '' '') }}'
+      parts: '{{ clean.split('' '') }}'
+      base_dt: "{% if parts|length == 2 %}\n  {{ strptime(clean, '%Y-%m-%d %H:%M:%S')
+        }}\n{% else %}\n  {{ strptime(clean ~ ' 00:00:00', '%Y-%m-%d %H:%M:%S') }}\n{%
+        endif %}"
+      y: '{{ base_dt.year }}'
+      m: '{{ base_dt.month }}'
+      d: '{{ base_dt.day }}'
+      nm: '{{ m + add_m }}'
+      ny: '{{ y + add_y }}'
+      final_year: '{{ ny + ((nm - 1) // 12) }}'
+      final_month: '{{ ((nm - 1) % 12) + 1 }}'
+      month_start: "{{ strptime(\n  (final_year|string) ~ '-' ~ (final_month|string)
+        ~ '-01',\n  '%Y-%m-%d'\n) }}\n"
+      next_month_start: "{% if final_month == 12 %}\n  {{ strptime(((final_year +
+        1)|string) ~ '-01-01', '%Y-%m-%d') }}\n{% else %}\n  {{ strptime(\n    (final_year|string)
+        ~ '-' ~ ((final_month + 1)|string) ~ '-01',\n    '%Y-%m-%d'\n  ) }}\n{% endif
+        %}"
+      last_day: '{{ ((next_month_start.timestamp() - 86400) | timestamp_custom(''%d''))
+        | int }}'
+      final_day: '{{ d if d <= last_day else last_day }}'
+      final_date: '{{ ''%04d-%02d-%02d'' | format(final_year, final_month, final_day)
         }}'
-      next_month_start_ts: '{{ strptime(final_year ~ ''-'' ~ (final_month + 1 if final_month
-        < 12 else 1) ~ ''-'' ~ ''01'', ''%Y-%m-%d'').timestamp() + (final_month ==
-        12) * 31536000 }}'
-      last_day_ts: '{{ next_month_start_ts - 86400 }}'
-      last_day: '{{ last_day_ts | timestamp_custom(''%d'') | int }}'
-      final_day: '{{ base_day if base_day <= last_day else last_day }}'
-      final_date_ts: '{{ strptime(final_year ~ ''-'' ~ final_month ~ ''-'' ~ final_day,
-        ''%Y-%m-%d'').timestamp() }}'
-      final_date: '{{ final_date_ts | timestamp_custom(''%Y-%m-%d'') }}'
   - action: input_datetime.set_datetime
     data:
-      entity_id: '{{ target_entity }}'
+      entity_id: '{{ tgt }}'
       date: '{{ final_date }}'
       time: 00:00:00
   - action: notify.notifications
     data:
-      message: '{{ notify_message }}: {{ final_date }}'
+      message: '{{ msg }}: {{ final_date }}'
       data:
-        notification_icon: '{{ notification_icon }}'
+        notification_icon: '{{ icon }}'
