@@ -237,26 +237,6 @@ find_car:
       data:
         notification_icon: mdi:car-search
         clickAction: &#x27;{{ states(&#x27;&#x27;input_text.car_gps_map_url&#x27;&#x27;) }}&#x27;
-update_umail_expiration:
-  alias: Update Umail Expiration
-  sequence:
-  - action: input_datetime.set_datetime
-    data_template:
-      entity_id: input_datetime.umail_account_expiration
-      date: &quot;{% set current_date = as_datetime(now()) %}\n        {% set new_month
-        = (current_date.month + 11) %}\n        {% set new_year = current_date.year
-        + (1 if new_month &gt; 12 else 0) %}\n        {% set final_month = new_month
-        - 12 if new_month &gt; 12 else new_month %}\n        {{ current_date.replace(year=new_year,
-        month=final_month).strftime(&#x27;%Y-%m-%d&#x27;) }}&quot;
-      time: &#x27;{{ now().strftime(&#x27;&#x27;%H:%M:%S&#x27;&#x27;) }}&#x27;
-  - action: notify.notifications
-    data:
-      message: Umail account expiration date updated.
-      data:
-        notification_icon: mdi:calendar-alert
-  icon: mdi:calendar-alert
-  mode: single
-  description: &#x27;&#x27;
 reload_vesync:
   alias: Reload VeSync Integration
   sequence:
@@ -269,26 +249,6 @@ reload_spotify:
   - action: homeassistant.reload_config_entry
     data:
       entry_id: 51cc8b5d71654625b84481b41649a6b8
-update_car_data_expiration:
-  alias: Update Car Data Expiration
-  sequence:
-  - data_template:
-      entity_id: input_datetime.car_data_expiration
-      date: &quot;{% set current_date = as_datetime(now()) %}\n        {% set new_month
-        = (current_date.month + 12) %}\n        {% set new_year = current_date.year
-        + (1 if new_month &gt; 12 else 0) %}\n        {% set final_month = new_month
-        - 12 if new_month &gt; 12 else new_month %}\n        {{ current_date.replace(year=new_year,
-        month=final_month).strftime(&#x27;%Y-%m-%d&#x27;) }}&quot;
-      time: &#x27;{{ now().strftime(&#x27;&#x27;%H:%M:%S&#x27;&#x27;) }}&#x27;
-    action: input_datetime.set_datetime
-  - data:
-      message: Car data expiration date updated.
-      data:
-        notification_icon: mdi:calendar-alert
-    action: notify.notifications
-  icon: mdi:calendar-alert
-  mode: single
-  description: &#x27;&#x27;
 update_liverpool_sensors:
   alias: Update Liverpool Sensors
   sequence:
@@ -470,60 +430,6 @@ calculate_last_day_of_next_month:
   mode: single
   icon: mdi:calendar
   description: &#x27;&#x27;
-update_tv_subscription_date:
-  alias: Update TV Subscription date
-  description: &#x27;&#x27;
-  icon: mdi:calendar-alert
-  mode: single
-  sequence:
-  - action: input_datetime.set_datetime
-    target:
-      entity_id: input_datetime.tv_subscription
-    data:
-      date: &#x27;{% set raw = states(&#x27;&#x27;input_datetime.tv_subscription&#x27;&#x27;) %} {% set dt
-        = raw | as_datetime | as_local if raw not in [&#x27;&#x27;unknown&#x27;&#x27;,&#x27;&#x27;unavailable&#x27;&#x27;,&#x27;&#x27;none&#x27;&#x27;,&#x27;&#x27;&#x27;&#x27;]
-        else now() %} {% set y = dt.year + 1 %} {% set m = dt.month %} {% set d =
-        dt.day %} {% set is_leap = (y % 4 == 0) and ((y % 100 != 0) or (y % 400 ==
-        0)) %} {% set new_day = 28 if (m == 2 and d == 29 and not is_leap) else d
-        %} {{ dt.replace(year=y, month=m, day=new_day).strftime(&#x27;&#x27;%Y-%m-%d&#x27;&#x27;) }}&#x27;
-      time: &#x27;{% set raw = states(&#x27;&#x27;input_datetime.tv_subscription&#x27;&#x27;) %} {% set dt
-        = raw | as_datetime | as_local if raw not in [&#x27;&#x27;unknown&#x27;&#x27;,&#x27;&#x27;unavailable&#x27;&#x27;,&#x27;&#x27;none&#x27;&#x27;,&#x27;&#x27;&#x27;&#x27;]
-        else now() %} {% set y = dt.year + 1 %} {% set m = dt.month %} {% set d =
-        dt.day %} {% set is_leap = (y % 4 == 0) and ((y % 100 != 0) or (y % 400 ==
-        0)) %} {% set new_day = 28 if (m == 2 and d == 29 and not is_leap) else d
-        %} {{ dt.replace(year=y, month=m, day=new_day).strftime(&#x27;&#x27;%H:%M:%S&#x27;&#x27;) }}&#x27;
-  - action: notify.notifications
-    data:
-      message: &quot;TV Subscription date updated to {{\n  (\n    (states(&#x27;input_datetime.tv_subscription&#x27;)
-        | as_datetime | as_local\n      if states(&#x27;input_datetime.tv_subscription&#x27;)
-        not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n      else now()\n    ).replace(\n
-        \     year=( (states(&#x27;input_datetime.tv_subscription&#x27;) | as_datetime | as_local).year\n
-        \            if states(&#x27;input_datetime.tv_subscription&#x27;) not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n
-        \            else now().year),\n      month=( (states(&#x27;input_datetime.tv_subscription&#x27;)
-        | as_datetime | as_local).month\n              if states(&#x27;input_datetime.tv_subscription&#x27;)
-        not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n              else now().month
-        ),\n      day=(28 if (\n              ( (states(&#x27;input_datetime.tv_subscription&#x27;)
-        | as_datetime | as_local).month\n                if states(&#x27;input_datetime.tv_subscription&#x27;)
-        not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n                else now().month
-        ) == 2\n              and\n              ( (states(&#x27;input_datetime.tv_subscription&#x27;)
-        | as_datetime | as_local).day\n                if states(&#x27;input_datetime.tv_subscription&#x27;)
-        not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n                else now().day
-        ) == 29\n              and not (\n                (( (states(&#x27;input_datetime.tv_subscription&#x27;)
-        | as_datetime | as_local).year\n                   if states(&#x27;input_datetime.tv_subscription&#x27;)
-        not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n                   else now().year)
-        % 4 == 0)\n                and (\n                  (( (states(&#x27;input_datetime.tv_subscription&#x27;)
-        | as_datetime | as_local).year\n                     if states(&#x27;input_datetime.tv_subscription&#x27;)
-        not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n                     else now().year
-        ) % 100 != 0)\n                  or\n                  (( (states(&#x27;input_datetime.tv_subscription&#x27;)
-        | as_datetime | as_local).year\n                     if states(&#x27;input_datetime.tv_subscription&#x27;)
-        not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n                     else now().year
-        ) % 400 == 0)\n                )\n              )\n            ) else (\n
-        \             (states(&#x27;input_datetime.tv_subscription&#x27;) | as_datetime | as_local).day\n
-        \             if states(&#x27;input_datetime.tv_subscription&#x27;) not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n
-        \             else now().day\n            )\n      )\n    )\n  ).strftime(&#x27;%Y-%m-%d
-        %H:%M:%S&#x27;)\n}}&quot;
-      data:
-        notification_icon: mdi:television
 ai_plant_message_direct:
   alias: AI Plant Message Direct
   mode: single
