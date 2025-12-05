@@ -140,19 +140,6 @@ execute_alarm_actions:
           entity_id: light.hugh_room_ceiling
   mode: single
   icon: mdi:alarm-bell
-calculate_last_day_of_month:
-  alias: Calculate Last Day of Month
-  sequence:
-  - action: input_datetime.set_datetime
-    target:
-      entity_id: input_datetime.last_day_of_month
-    data:
-      date: '{{ ((now().replace(day=1) + timedelta(days=32)).replace(day=1) - timedelta(days=1)).strftime(''%Y-%m-%d'')
-        }}
-
-        '
-  mode: single
-  icon: mdi:calendar
 feed_patrick:
   alias: Feed Patrick
   sequence:
