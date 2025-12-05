@@ -3692,11 +3692,11 @@
     event_data:
       action: RENEWED_TV
   actions:
-  - action: script.update_date_generic
+  - action: shell_command.update_dates
     data:
-      target_entity: input_datetime.tv_subscription
-      months: 0
+      target: input_datetime.tv_subscription
       years: 1
+      months: 0
   - action: notify.notifications
     data:
       message: TV Subscription date updated
