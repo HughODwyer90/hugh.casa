@@ -416,20 +416,6 @@ play_spotify_playlist_2:
       device_id: 61df364729816b14e75f325311b07257
   alias: Play Spotify Playlist (Shuffled)
   mode: single
-calculate_last_day_of_next_month:
-  alias: Calculate Last Day of Next Month
-  sequence:
-  - action: input_datetime.set_datetime
-    target:
-      entity_id: input_datetime.last_day_of_month
-    data:
-      date: &#x27;{{ ((now().replace(day=1) + timedelta(days=63)).replace(day=1) - timedelta(days=1)).strftime(&#x27;&#x27;%Y-%m-%d&#x27;&#x27;)
-        }}
-
-        &#x27;
-  mode: single
-  icon: mdi:calendar
-  description: &#x27;&#x27;
 ai_plant_message_direct:
   alias: AI Plant Message Direct
   mode: single
