@@ -3686,16 +3686,18 @@
   mode: single
 - id: &#x27;1757190236828&#x27;
   alias: Handle TV Subscription update
-  description: &#x27;&#x27;
   triggers:
   - trigger: event
     event_type: mobile_app_notification_action
     event_data:
       action: RENEWED_TV
-  conditions: []
   actions:
-  - action: script.update_tv_subscription_date
-    data: {}
+  - action: script.update_date_generic
+    data:
+      target_entity: input_datetime.tv_subscription
+      add_years: 1
+      notify_message: TV Subscription date updated
+      notification_icon: mdi:television
   mode: single
 - id: &#x27;1757190365144&#x27;
   alias: Renew TV Subscription notification
