@@ -841,6 +841,54 @@ recast_to_stereo_with_media:
       media_id: &#x27;{{ media_id }}&#x27;
       enqueue: play
       radio_mode: true
+update_date_generic:
+  alias: Update Date – Generic
+  mode: single
+  fields:
+    target_entity:
+      description: Input_datetime entity to update
+      example: input_datetime.tv_subscription
+    add_months:
+      description: Months to add
+      example: 12
+      default: 12
+    add_years:
+      description: Years to add
+      example: 0
+      default: 0
+    notification_icon:
+      description: Icon for notification
+      example: mdi:calendar-alert
+      default: mdi:calendar-alert
+    notify_message:
+      description: Notification message prefix
+      example: TV Subscription date updated
+      default: Date updated
+  sequence:
+  - variables:
+      raw: &#x27;{{ states(target_entity) }}&#x27;
+      dt: &quot;{{ raw | as_datetime | as_local\n   if raw not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]\n
+        \  else now() }}&quot;
+      new_month: &#x27;{{ dt.month + add_months }}&#x27;
+      year_shift: &#x27;{{ (new_month - 1) // 12 }}&#x27;
+      final_month: &#x27;{{ ((new_month - 1) % 12) + 1 }}&#x27;
+      final_year: &#x27;{{ dt.year + add_years + year_shift }}&#x27;
+      max_day: &quot;{{ (dt.replace(year=final_year, month=final_month, day=1)\n    + timedelta(days=32)).replace(day=1)\n
+        \   - timedelta(days=1) }}&quot;
+      final_day: &#x27;{{ dt.day if dt.day &lt;= max_day.day else max_day.day }}&#x27;
+      final_dt: &#x27;{{ dt.replace(year=final_year, month=final_month, day=final_day)
+        }}&#x27;
+  - action: input_datetime.set_datetime
+    data:
+      entity_id: &#x27;{{ target_entity }}&#x27;
+      date: &#x27;{{ final_dt.strftime(&#x27;&#x27;%Y-%m-%d&#x27;&#x27;) }}&#x27;
+      time: &#x27;{{ final_dt.strftime(&#x27;&#x27;%H:%M:%S&#x27;&#x27;) }}&#x27;
+  - action: notify.notifications
+    data:
+      message: &#x27;{{ notify_message }}: {{ final_dt.strftime(&#x27;&#x27;%Y-%m-%d %H:%M&#x27;&#x27;) }}&#x27;
+      data:
+        notification_icon: &#x27;{{ notification_icon }}&#x27;
+  description: &#x27;&#x27;
 </pre>
             </div>
             <script>
