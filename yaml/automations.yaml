@@ -1871,50 +1871,17 @@
       action: notify.notifications
   mode: single
 - id: '1715361346211'
-  alias: Calculate Next Pay Day (Simplified)
+  alias: Calculate Next Pay Day (Conditional)
   triggers:
   - trigger: time
     at: 00:10:00
   conditions:
   - condition: template
     value_template: "{% set pd = states('input_datetime.next_pay_day') %} {% if pd
-      in ['unknown','unavailable','none',''] %}\n  true\n{% else %}\n  {{ (pd | as_datetime).date()
+      in ['unknown','unavailable','none',''] %}\n  true\n{% else %}\n  {{ as_datetime(pd).date()
       < now().date() }}\n{% endif %}\n"
   actions:
-  - variables:
-      next_month_last_day: '{% set d = now().replace(day=1) %} {% set d = (d + timedelta(days=32)).replace(day=1)
-        %} {{ (d + timedelta(days=32)).replace(day=1) - timedelta(days=1) }}
-
-        '
-      last_day_datetime: '{{ next_month_last_day }}'
-      last_day_weekday: '{{ last_day_datetime.weekday() }}'
-  - action: input_datetime.set_datetime
-    target:
-      entity_id: input_datetime.next_pay_day
-    data:
-      date: "{% set last_day_datetime = last_day_datetime %} {% set last_day_weekday
-        = last_day_weekday %}\n{# --- Your existing full payday logic reused here
-        --- #}\n{% if last_day_weekday == 5 %}\n  {% set third_last = last_day_datetime
-        - timedelta(days=3) %}\n{% elif last_day_weekday == 6 %}\n  {% set third_last
-        = last_day_datetime - timedelta(days=4) %}\n{% else %}\n  {% if last_day_weekday
-        == 0 %}{% set third_last = last_day_datetime - timedelta(days=4) %}\n  {%
-        elif last_day_weekday == 1 %}{% set third_last = last_day_datetime - timedelta(days=3)
-        %}\n  {% elif last_day_weekday == 2 %}{% set third_last = last_day_datetime
-        - timedelta(days=2) %}\n  {% elif last_day_weekday == 3 %}{% set third_last
-        = last_day_datetime - timedelta(days=2) %}\n  {% elif last_day_weekday ==
-        4 %}{% set third_last = last_day_datetime - timedelta(days=2) %}\n  {% endif
-        %}\n{% endif %}\n{# October bank holiday rule #} {% set bank_adj = false %}
-        {% if last_day_datetime.month == 10 %}\n  {% set last_monday = last_day_datetime.replace(day=31)
-        - timedelta(days=last_day_datetime.replace(day=31).weekday()) %}\n  {% if
-        last_day_datetime >= last_monday and last_day_datetime.weekday() in [0,1,2]
-        %}\n    {% set third_last = third_last - timedelta(days=1) %}\n    {% set
-        bank_adj = true %}\n  {% endif %}\n{% endif %}\n{# December rule #} {% if
-        last_day_datetime.month == 12 %}\n  {% set third_last = third_last - timedelta(weeks=1)
-        %}\n{% endif %}\n{# Weekend correction #} {% if third_last.weekday() == 5
-        %}\n  {% set third_last = third_last - timedelta(days=2 if not bank_adj else
-        3) %}\n{% elif third_last.weekday() == 6 %}\n  {% set third_last = third_last
-        - timedelta(days=1 if not bank_adj else 3) %}\n{% endif %}\n{{ third_last.strftime('%Y-%m-%d')
-        }}\n"
+  - action: shell_command.next_payday
   mode: single
 - id: '1715594297562'
   alias: Alarm Start
