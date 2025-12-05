@@ -846,45 +846,47 @@ update_date_generic:
   mode: single
   fields:
     target_entity:
-      description: Input_datetime entity to update
+      description: input_datetime to update
     add_months:
-      description: Months to add (can be negative)
+      description: Months to add
       default: 0
     add_years:
-      description: Years to add (can be negative)
+      description: Years to add
       default: 0
-    notification_icon:
-      description: Icon for notification
-      default: mdi:calendar-alert
     notify_message:
-      description: Notification message prefix
       default: Date updated
+    notification_icon:
+      default: mdi:calendar-alert
   sequence:
   - variables:
-      raw: &#x27;{{ states(target_entity) }}&#x27;
-      dt: &quot;{% if raw in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;, None] %}\n  {{ now() }}\n{%
-        else %}\n  {# Try full datetime parse #}\n  {% set parsed = raw | as_datetime(default=None)
-        %}\n  {% if parsed != None %}\n    {{ parsed }}\n  {% else %}\n    {# DATE-ONLY
-        FORMAT #}\n    {% if raw | regex_match(&#x27;^\\\\d{4}-\\\\d{2}-\\\\d{2}$&#x27;) %}\n
-        \     {{ strptime(raw ~ &#x27; 00:00:00&#x27;, &#x27;%Y-%m-%d %H:%M:%S&#x27;) }}\n    {% else
-        %}\n      {{ now() }}\n    {% endif %}\n  {% endif %}\n{% endif %}&quot;
-      new_month: &#x27;{{ dt.month + add_months }}&#x27;
-      year_shift: &#x27;{{ (new_month - 1) // 12 }}&#x27;
-      final_month: &#x27;{{ ((new_month - 1) % 12) + 1 }}&#x27;
-      final_year: &#x27;{{ dt.year + add_years + year_shift }}&#x27;
-      max_day: &quot;{{ (dt.replace(year=final_year, month=final_month, day=1)\n    + timedelta(days=32)).replace(day=1)\n
-        \   - timedelta(days=1) }}&quot;
-      final_day: &#x27;{{ dt.day if dt.day &lt;= max_day.day else max_day.day }}&#x27;
-      final_dt: &#x27;{{ dt.replace(year=final_year, month=final_month, day=final_day)
+      raw_date: &#x27;{{ state_attr(target_entity, &#x27;&#x27;date&#x27;&#x27;) or states(target_entity) }}&#x27;
+      base_ts: &#x27;{{ strptime(raw_date, &#x27;&#x27;%Y-%m-%d&#x27;&#x27;).timestamp() }}&#x27;
+      base_year: &#x27;{{ raw_date[:4] | int }}&#x27;
+      base_month: &#x27;{{ raw_date[5:7] | int }}&#x27;
+      base_day: &#x27;{{ raw_date[8:10] | int }}&#x27;
+      new_year_calc: &#x27;{{ base_year + (add_years | int) }}&#x27;
+      new_month_calc: &#x27;{{ base_month + (add_months | int) }}&#x27;
+      final_year: &#x27;{{ new_year_calc + ((new_month_calc - 1) // 12) }}&#x27;
+      final_month: &#x27;{{ ((new_month_calc - 1) % 12) + 1 }}&#x27;
+      month_start_ts: &#x27;{{ strptime(final_year ~ &#x27;&#x27;-&#x27;&#x27; ~ final_month ~ &#x27;&#x27;-01&#x27;&#x27;, &#x27;&#x27;%Y-%m-%d&#x27;&#x27;).timestamp()
         }}&#x27;
+      next_month_start_ts: &#x27;{{ strptime(final_year ~ &#x27;&#x27;-&#x27;&#x27; ~ (final_month + 1 if final_month
+        &lt; 12 else 1) ~ &#x27;&#x27;-&#x27;&#x27; ~ &#x27;&#x27;01&#x27;&#x27;, &#x27;&#x27;%Y-%m-%d&#x27;&#x27;).timestamp() + (final_month ==
+        12) * 31536000 }}&#x27;
+      last_day_ts: &#x27;{{ next_month_start_ts - 86400 }}&#x27;
+      last_day: &#x27;{{ last_day_ts | timestamp_custom(&#x27;&#x27;%d&#x27;&#x27;) | int }}&#x27;
+      final_day: &#x27;{{ base_day if base_day &lt;= last_day else last_day }}&#x27;
+      final_date_ts: &#x27;{{ strptime(final_year ~ &#x27;&#x27;-&#x27;&#x27; ~ final_month ~ &#x27;&#x27;-&#x27;&#x27; ~ final_day,
+        &#x27;&#x27;%Y-%m-%d&#x27;&#x27;).timestamp() }}&#x27;
+      final_date: &#x27;{{ final_date_ts | timestamp_custom(&#x27;&#x27;%Y-%m-%d&#x27;&#x27;) }}&#x27;
   - action: input_datetime.set_datetime
     data:
       entity_id: &#x27;{{ target_entity }}&#x27;
-      date: &#x27;{{ final_dt.strftime(&#x27;&#x27;%Y-%m-%d&#x27;&#x27;) }}&#x27;
-      time: &#x27;{{ final_dt.strftime(&#x27;&#x27;%H:%M:%S&#x27;&#x27;) }}&#x27;
+      date: &#x27;{{ final_date }}&#x27;
+      time: 00:00:00
   - action: notify.notifications
     data:
-      message: &#x27;{{ notify_message }}: {{ final_dt.strftime(&#x27;&#x27;%Y-%m-%d %H:%M&#x27;&#x27;) }}&#x27;
+      message: &#x27;{{ notify_message }}: {{ final_date }}&#x27;
       data:
         notification_icon: &#x27;{{ notification_icon }}&#x27;
 </pre>
