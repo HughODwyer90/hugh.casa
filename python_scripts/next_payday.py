@@ -11,22 +11,28 @@ INPUT_DATETIME_ENTITY = "input_datetime.next_pay_day"
 OVERRIDE_ENTITY = "input_datetime.override_pay_day"
 
 
+# ---------------------------------------------------------------------
+# Helper: Read HA input_datetime
+# ---------------------------------------------------------------------
 def get_input_datetime(entity_id: str):
-    """Retrieve input_datetime value (returns None if empty/unset)."""
     url = f"{HOME_ASSISTANT_URL}/api/states/{entity_id}"
     headers = {"Authorization": f"Bearer {ACCESS_TOKEN}"}
-
-    r = requests.get(url, headers=headers, timeout=5)
-    r.raise_for_status()
-    data = r.json()
-
-    val = data.get("state")
-    if val in ["unknown", "unavailable", "none", "", None]:
-        return None
-
     try:
-        return date.fromisoformat(val)
-    except Exception:
+        r = requests.get(url, headers=headers, timeout=5)
+        r.raise_for_status()
+        data = r.json()
+        raw = data.get("state")
+        print(f"[DEBUG] Read {entity_id}: raw='{raw}'")
+
+        if raw in ["unknown", "unavailable", "none", "", None]:
+            print(f"[DEBUG] {entity_id} is empty/unset.")
+            return None
+
+        parsed = date.fromisoformat(raw)
+        print(f"[DEBUG] Parsed {entity_id}: {parsed}")
+        return parsed
+    except Exception as e:
+        print(f"[ERROR] Failed to read {entity_id}: {e}")
         return None
 
 
@@ -37,9 +43,15 @@ def set_input_datetime(entity_id: str, dt: date):
         "Content-Type": "application/json"
     }
     payload = {"entity_id": entity_id, "date": dt.strftime("%Y-%m-%d")}
+    print(f"[DEBUG] Writing {entity_id} = {dt}")
+
     r = requests.post(url, json=payload, headers=headers, timeout=5)
-    r.raise_for_status()
-    return r.json()
+    try:
+        r.raise_for_status()
+        print(f"[DEBUG] Successfully updated {entity_id}.")
+    except Exception as e:
+        print(f"[ERROR] Failed to update {entity_id}: {e}")
+    return r.json() if r.text else None
 
 
 # ---------------------------------------------------------------------
@@ -50,32 +62,31 @@ def october_bank_holiday(year: int) -> date:
     d = date(year, 10, 31)
     while d.weekday() != 0:
         d -= timedelta(days=1)
+    print(f"[DEBUG] October bank holiday {year}: {d}")
     return d
 
 
 def december_holidays(year: int):
     d25 = date(year, 12, 25)
     d26 = date(year, 12, 26)
-
     hols = {d25, d26}
 
-    # Observed Christmas
     if d25.weekday() == 5:
         hols.add(d25 + timedelta(days=2))
     elif d25.weekday() == 6:
         hols.add(d25 + timedelta(days=1))
 
-    # Observed St Stephen's Day
     if d26.weekday() == 5:
         hols.add(d26 + timedelta(days=2))
     elif d26.weekday() == 6:
         hols.add(d26 + timedelta(days=1))
 
+    print(f"[DEBUG] December holidays {year}: {sorted(hols)}")
     return hols
 
 
 # ---------------------------------------------------------------------
-# WORKING DAY CALCULATIONS
+# WORKING DAYS
 # ---------------------------------------------------------------------
 
 def working_days_for_month(year: int, month: int):
@@ -95,14 +106,18 @@ def working_days_for_month(year: int, month: int):
             days.append(d)
         d += timedelta(days=1)
 
+    print(f"[DEBUG] Working days for {year}-{month:02d}: {days}")
     return days
 
 
 def third_last_working_day(year: int, month: int):
     days = working_days_for_month(year, month)
     if len(days) < 3:
+        print(f"[WARN] Less than 3 working days in {year}-{month:02d}")
         return None
-    return days[-3]
+    result = days[-3]
+    print(f"[DEBUG] Third-last working day for {year}-{month:02d}: {result}")
+    return result
 
 
 # ---------------------------------------------------------------------
@@ -110,48 +125,55 @@ def third_last_working_day(year: int, month: int):
 # ---------------------------------------------------------------------
 
 def december_override_payday(year: int) -> date:
-    """
-    Return the last Friday on or before December 23.
-    Companies usually pay on this day before Christmas break.
-    """
     d = date(year, 12, 23)
-    while d.weekday() != 4:  # Friday
+    while d.weekday() != 4:
         d -= timedelta(days=1)
+    print(f"[DEBUG] December override payday {year}: {d}")
     return d
 
 
 # ---------------------------------------------------------------------
-# MAIN PAYDAY LOGIC
+# MAIN LOGIC
 # ---------------------------------------------------------------------
 
 def compute_next_payday():
     today = date.today()
+    print(f"[DEBUG] Today: {today}")
 
-    # --- 1. Check Home Assistant override ---
+    # --- 1. Try override in HA ---
     override = get_input_datetime(OVERRIDE_ENTITY)
-    if override and override >= today:
-        return override
+    if override:
+        print(f"[DEBUG] Found override: {override}")
+        if override >= today:
+            print("[DEBUG] Using override payday.")
+            return override
+        else:
+            print("[DEBUG] Override exists but is in the past. Ignoring.")
 
     # --- 2. December special rule ---
     if today.month == 12:
         dec_pd = december_override_payday(today.year)
         if today <= dec_pd:
+            print(f"[DEBUG] Using December override payday: {dec_pd}")
             return dec_pd
         else:
-            # Move to January logic
+            print("[DEBUG] December payday passed, moving to January…")
             return third_last_working_day(today.year + 1, 1)
 
-    # --- 3. Normal rule (Jan–Nov): 3rd last working day ---
+    # --- 3. Normal rule (Jan–Nov): third-last working day ---
     y, m = today.year, today.month
     payday = third_last_working_day(y, m)
+    print(f"[DEBUG] Normal payday computed: {payday}")
 
     if payday is None or today > payday:
+        print("[DEBUG] Payday passed or missing → shifting to next month.")
         if m == 12:
             y += 1
             m = 1
         else:
             m += 1
         payday = third_last_working_day(y, m)
+        print(f"[DEBUG] Next-month payday: {payday}")
 
     return payday
 
@@ -163,9 +185,10 @@ def compute_next_payday():
 payday = compute_next_payday()
 
 if payday is None:
-    # Emergency fallback
+    print("[ERROR] Payday computation failed. Setting fallback date = today.")
     set_input_datetime(INPUT_DATETIME_ENTITY, date.today())
 else:
+    print(f"[INFO] Final computed next payday: {payday}")
     set_input_datetime(INPUT_DATETIME_ENTITY, payday)
 
-print(f"Next pay day set to {payday}")
+print(f"[INFO] Script completed. Next pay day set to {payday}")
