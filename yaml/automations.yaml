@@ -4105,3 +4105,27 @@
     target:
       entity_id: input_boolean.bed_automation_enabled
   mode: single
+- id: '1765226668434'
+  alias: Pause Music When TV Turns On
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id: media_player.hugh_room_tv
+    to: 'on'
+  conditions:
+  - condition: template
+    value_template: "{{ [\n  'media_player.hugh_room_display',\n  'media_player.hugh_room_speaker',\n
+      \ 'media_player.hugh_room_speaker_2',\n  'media_player.battery_speaker',\n  'media_player.hugh_room_stereo'\n]
+      | select('is_state','playing') | list | count > 0 }}\n"
+  actions:
+  - variables:
+      players: "{{ [\n  'media_player.hugh_room_display',\n  'media_player.hugh_room_speaker',\n
+        \ 'media_player.hugh_room_speaker_2',\n  'media_player.battery_speaker',\n
+        \ 'media_player.hugh_room_stereo'\n] }}\n"
+      active: '{{ players | select(''is_state'',''playing'') | list }}
+
+        '
+  - action: media_player.media_pause
+    target:
+      entity_id: '{{ active }}'
+  mode: single
