@@ -1090,17 +1090,15 @@
   alias: Hugh Room Door Button Double
   description: ''
   triggers:
-  - entity_id:
-    - sensor.hugh_room_aqara_door_button_action
-    trigger: state
+  - trigger: state
+    entity_id: sensor.hugh_room_aqara_door_button_action
     to: double
-  conditions: []
   actions:
   - choose:
     - conditions:
-      - condition: template
-        value_template: '{{ states(''input_number.hugh_room_blinds_position'') | int
-          < 20 }}'
+      - condition: state
+        entity_id: input_select.hugh_room_blinds_mode
+        state: Closed
       sequence:
       - action: input_select.select_option
         target:
@@ -1109,8 +1107,10 @@
           option: Open
     - conditions:
       - condition: template
-        value_template: '{{ states(''input_number.hugh_room_blinds_position'') | int
-          > 20 }}'
+        value_template: '{{ states(''input_select.hugh_room_blinds_mode'') in [''Half'',
+          ''Open''] }}
+
+          '
       sequence:
       - action: input_select.select_option
         target:
