@@ -29,6 +29,8 @@ class HTMLGenerator:
                     .replace("_", " ")  # ✅ Convert underscores to spaces
                     .title()  # ✅ Capitalize properly
                     .replace("Ir ", "IR ")  # ✅ Ensure "IR Receiver" remains correct
+                    .replace("Ip ", "IP ")
+                    .replace("Espn ", "ESPN ")
             )
             + '</a>'
             for file in yaml_files
