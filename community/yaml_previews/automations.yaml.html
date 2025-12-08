@@ -4122,11 +4122,16 @@
   mode: single
 - id: &#x27;1765226668434&#x27;
   alias: Pause Music When TV Turns On
-  description: &#x27;&#x27;
   triggers:
   - trigger: state
-    entity_id: media_player.hugh_room_tv
-    to: &#x27;on&#x27;
+    entity_id:
+    - binary_sensor.monitor_state
+    to:
+    - &#x27;on&#x27;
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 2
   conditions:
   - condition: template
     value_template: &quot;{{ [\n  &#x27;media_player.hugh_room_display&#x27;,\n  &#x27;media_player.hugh_room_speaker&#x27;,\n
@@ -4134,12 +4139,10 @@
       | select(&#x27;is_state&#x27;,&#x27;playing&#x27;) | list | count &gt; 0 }}\n&quot;
   actions:
   - variables:
-      players: &quot;{{ [\n  &#x27;media_player.hugh_room_display&#x27;,\n  &#x27;media_player.hugh_room_speaker&#x27;,\n
+      active: &quot;{{ [\n  &#x27;media_player.hugh_room_display&#x27;,\n  &#x27;media_player.hugh_room_speaker&#x27;,\n
         \ &#x27;media_player.hugh_room_speaker_2&#x27;,\n  &#x27;media_player.battery_speaker&#x27;,\n
-        \ &#x27;media_player.hugh_room_stereo&#x27;\n] }}\n&quot;
-      active: &#x27;{{ players | select(&#x27;&#x27;is_state&#x27;&#x27;,&#x27;&#x27;playing&#x27;&#x27;) | list }}
-
-        &#x27;
+        \ &#x27;media_player.hugh_room_stereo&#x27;\n] | select(&#x27;is_state&#x27;,&#x27;playing&#x27;) | list
+        }}\n&quot;
   - action: media_player.media_pause
     target:
       entity_id: &#x27;{{ active }}&#x27;
