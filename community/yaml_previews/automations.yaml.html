@@ -676,21 +676,6 @@
     data:
       value: 1200
   mode: restart
-- id: &#x27;1704468879583&#x27;
-  alias: Hugh Room Diffuser Empty Warning
-  description: Sends a notification when the diffuser is empty.
-  triggers:
-  - trigger: state
-    entity_id:
-    - binary_sensor.aroma_diffuser_problem
-    to: &#x27;on&#x27;
-  conditions: []
-  actions:
-  - action: notify.notifications
-    data:
-      title: Diffuser Warning
-      message: Add Water
-  mode: single
 - id: &#x27;1704750146680&#x27;
   alias: Living Room Aqara Button Single
   description: Toggle between scenes.
@@ -1208,61 +1193,6 @@
         target:
           entity_id: scene.lamp
         action: scene.turn_on
-  mode: single
-- id: &#x27;1710016461336&#x27;
-  alias: Shopping List Add Flour
-  description: Adds different types of flour to the shopping list based on scanned
-    tag.
-  trigger:
-  - trigger: tag
-    tag_id:
-    - d9f4e28a-1761-4e6f-ac2c-da0a7b18fb9f
-    - 67d13460-bda2-469a-b86c-1ce393e52463
-    - 8f840629-5642-477e-a3c5-e183bcb42611
-    - 7cdb4894-6e0e-4397-baa5-a1d8e88a50b9
-    - a4a48045-54d7-4310-80eb-327aa0d85bec
-  action:
-  - choose:
-    - conditions:
-      - condition: template
-        value_template: &#x27;{{ trigger.event.data.tag_id == &#x27;&#x27;d9f4e28a-1761-4e6f-ac2c-da0a7b18fb9f&#x27;&#x27;
-          }}&#x27;
-      sequence:
-      - action: shopping_list.add_item
-        data:
-          name: Strong Flour
-    - conditions:
-      - condition: template
-        value_template: &#x27;{{ trigger.event.data.tag_id == &#x27;&#x27;67d13460-bda2-469a-b86c-1ce393e52463&#x27;&#x27;
-          }}&#x27;
-      sequence:
-      - action: shopping_list.add_item
-        data:
-          name: Plain Flour
-    - conditions:
-      - condition: template
-        value_template: &#x27;{{ trigger.event.data.tag_id == &#x27;&#x27;8f840629-5642-477e-a3c5-e183bcb42611&#x27;&#x27;
-          }}&#x27;
-      sequence:
-      - action: shopping_list.add_item
-        data:
-          name: 00 Flour
-    - conditions:
-      - condition: template
-        value_template: &#x27;{{ trigger.event.data.tag_id == &#x27;&#x27;7cdb4894-6e0e-4397-baa5-a1d8e88a50b9&#x27;&#x27;
-          }}&#x27;
-      sequence:
-      - action: shopping_list.add_item
-        data:
-          name: Self Raising Flour
-    - conditions:
-      - condition: template
-        value_template: &#x27;{{ trigger.event.data.tag_id == &#x27;&#x27;a4a48045-54d7-4310-80eb-327aa0d85bec&#x27;&#x27;
-          }}&#x27;
-      sequence:
-      - action: shopping_list.add_item
-        data:
-          name: Whole Wheat Flour
   mode: single
 - id: &#x27;1710203141837&#x27;
   alias: Alarm Dismiss
@@ -1925,46 +1855,6 @@
       message: https://hugh.casa/todo?entity_id=todo.shopping_list
       data: {}
   mode: single
-- id: &#x27;1716211534568&#x27;
-  alias: Shopping List Clear Notification
-  description: &#x27;&#x27;
-  trigger:
-  - trigger: zone
-    entity_id: device_tracker.hugh_phone
-    zone: zone.home
-    event: enter
-  condition:
-  - condition: template
-    value_template: &#x27;{{ state_attr(&#x27;&#x27;todo.shopping_list&#x27;&#x27;, &#x27;&#x27;items&#x27;&#x27;) | selectattr(&#x27;&#x27;state&#x27;&#x27;,
-      &#x27;&#x27;eq&#x27;&#x27;, &#x27;&#x27;active&#x27;&#x27;) | list | length &gt; 0 }}
-
-      &#x27;
-  action:
-  - action: notify.notifications
-    data:
-      title: Shopping List
-      message: You&#x27;ve left the shopping zone. Do you want to clear the shopping list?
-      data:
-        actions:
-        - action: CLEAR_SHOPPING_LIST
-          title: Clear
-        - action: DISMISS
-          title: Dismiss
-  mode: single
-- id: &#x27;1716211753542&#x27;
-  alias: Shopping List Cleared
-  description: Clear the shopping list when the clear button in the notification is
-    pressed.
-  trigger:
-  - trigger: event
-    event_type: mobile_app_notification_action
-    event_data:
-      action: CLEAR_SHOPPING_LIST
-  action:
-  - action: shopping_list.complete_all
-    data: {}
-  - action: shopping_list.clear_completed_items
-    data: {}
 - id: &#x27;1716420785913&#x27;
   alias: Air Purifier Filter Warning
   description: &#x27;&#x27;
@@ -3739,34 +3629,6 @@
     data:
       datetime: &#x27;{{ now().strftime(&#x27;&#x27;%Y-%m-%d %H:%M:%S&#x27;&#x27;) }}&#x27;
     action: input_datetime.set_datetime
-  mode: single
-- id: &#x27;1759252822326&#x27;
-  alias: Hugh Room Unoccupied Phone Away
-  description: &#x27;&#x27;
-  triggers:
-  - trigger: state
-    entity_id:
-    - device_tracker.hugh_phone
-    from: home
-    for:
-      hours: 0
-      minutes: 5
-      seconds: 0
-  conditions:
-  - condition: state
-    entity_id: binary_sensor.bed_sensor
-    state: &#x27;off&#x27;
-  - condition: not
-    conditions:
-    - condition: state
-      entity_id: device_tracker.hugh_phone
-      state: unavailable
-  actions:
-  - action: input_boolean.turn_off
-    metadata: {}
-    data: {}
-    target:
-      entity_id: input_boolean.hugh_room_occupied
   mode: single
 - id: &#x27;1759692786195&#x27;
   alias: Auto Unoccupy Room
