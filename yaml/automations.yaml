@@ -1821,25 +1821,6 @@
   - data: {}
     action: script.execute_alarm_actions
   mode: single
-- id: '1716211262186'
-  alias: Shopping List Open
-  description: ''
-  trigger:
-  - trigger: zone
-    entity_id: device_tracker.hugh_phone
-    zone: zone.aldi
-    event: enter
-  condition:
-  - condition: numeric_state
-    entity_id: todo.shopping_list
-    above: 0
-  action:
-  - action: notify.notifications
-    data:
-      title: Arrived at Shop
-      message: https://hugh.casa/todo?entity_id=todo.shopping_list
-      data: {}
-  mode: single
 - id: '1716420785913'
   alias: Air Purifier Filter Warning
   description: ''
