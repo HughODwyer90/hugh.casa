@@ -2205,7 +2205,7 @@
       entity_id: input_boolean.pc_on
   mode: single
 - id: &#x27;1722250261847&#x27;
-  alias: Umail Account Renewal Notification
+  alias: Renew Umail Account Notification
   description: Sends a notification to renew umail account 1 day before it expires.
   triggers:
   - trigger: time
@@ -2223,26 +2223,6 @@
         actions:
         - action: RENEWED_UMAIL
           title: Renewed
-  mode: single
-- id: &#x27;1722250405426&#x27;
-  alias: Handle Umail renew
-  description: &#x27;&#x27;
-  triggers:
-  - trigger: event
-    event_type: mobile_app_notification_action
-    event_data:
-      action: RENEWED_UMAIL
-  actions:
-  - action: shell_command.update_dates
-    data:
-      target: input_datetime.umail_account_expiration
-      years: 0
-      months: 11
-  - action: notify.notifications
-    data:
-      message: Umail account expiration updated
-      data:
-        notification_icon: mdi:calendar-alert
   mode: single
 - id: &#x27;1722258094912&#x27;
   alias: Reload VeSync Integration on State Change
@@ -2370,7 +2350,7 @@
       value: &#x27;{{ states(&#x27;&#x27;sensor.car_fuel_quantity&#x27;&#x27;) | float }}&#x27;
     action: input_number.set_value
 - id: &#x27;1723126078057&#x27;
-  alias: Renew Car Data
+  alias: Renew Car Data Notification
   description: Sends a notification to renew car data on the day it expires.
   triggers:
   - at: 00:10:00
@@ -2389,21 +2369,6 @@
         - action: RENEWED_CAR
           title: Renewed
     action: notify.notifications
-  mode: single
-- id: &#x27;1723126142278&#x27;
-  alias: Handle Car Data renew
-  description: &#x27;&#x27;
-  triggers:
-  - trigger: event
-    event_type: mobile_app_notification_action
-    event_data:
-      action: RENEWED_CAR
-  actions:
-  - action: shell_command.update_dates
-    data:
-      target: input_datetime.car_data_expiration
-      years: 1
-      months: 0
   mode: single
 - id: &#x27;1724788680813&#x27;
   alias: IR Typhoon Blinds Control
@@ -3384,28 +3349,8 @@
         clickAction: https://mail.google.com/mail/u/0/#inbox
         tag: payslip_notification
   mode: single
-- id: &#x27;1757190236828&#x27;
-  alias: Handle TV Subscription update
-  description: &#x27;&#x27;
-  triggers:
-  - trigger: event
-    event_type: mobile_app_notification_action
-    event_data:
-      action: RENEWED_TV
-  actions:
-  - action: shell_command.update_dates
-    data:
-      target: input_datetime.tv_subscription
-      years: 1
-      months: 0
-  - action: notify.notifications
-    data:
-      message: TV Subscription date updated
-      data:
-        notification_icon: mdi:television
-  mode: single
 - id: &#x27;1757190365144&#x27;
-  alias: Renew TV Subscription notification
+  alias: Renew TV Subscription Notification
   description: Sends a notification the day before the TV subscription date.
   triggers:
   - at: &#x27;19:00:00&#x27;
