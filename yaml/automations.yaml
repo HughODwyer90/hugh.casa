@@ -4132,3 +4132,54 @@
     target:
       entity_id: '{{ active }}'
   mode: single
+- id: '1765381948757'
+  alias: Handle All Renewal Actions
+  description: ''
+  triggers:
+  - trigger: event
+    event_type: mobile_app_notification_action
+  actions:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.action == ''RENEWED_UMAIL'' }}'
+      sequence:
+      - action: shell_command.update_dates
+        data:
+          target: input_datetime.umail_account_expiration
+          years: 0
+          months: 11
+      - action: notify.notifications
+        data:
+          message: Umail account expiration updated
+          data:
+            notification_icon: mdi:calendar-alert
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.action == ''RENEWED_CAR'' }}'
+      sequence:
+      - action: shell_command.update_dates
+        data:
+          target: input_datetime.car_data_expiration
+          years: 1
+          months: 0
+      - action: notify.notifications
+        data:
+          message: Car data expiration updated
+          data:
+            notification_icon: mdi:car-info
+    - conditions:
+      - condition: template
+        value_template: '{{ trigger.event.data.action == ''RENEWED_TV'' }}'
+      sequence:
+      - action: shell_command.update_dates
+        data:
+          target: input_datetime.tv_subscription
+          years: 1
+          months: 0
+      - action: notify.notifications
+        data:
+          message: TV subscription date updated
+          data:
+            notification_icon: mdi:television
+  mode: single
