@@ -202,7 +202,7 @@
           {% endif %}
         {% endif %}
       attributes:
-        iso_date: &quot;{{ states(&#x27;input_datetime.next_pay_day&#x27;) }}&quot;
+        date: &quot;{{ states(&#x27;input_datetime.next_pay_day&#x27;) }}&quot;
         weekday: &gt;
           {% set raw = states(&#x27;input_datetime.next_pay_day&#x27;) %}
           {% if raw not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,None,&#x27;&#x27;] %}
