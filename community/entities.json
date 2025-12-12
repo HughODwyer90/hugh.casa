@@ -1,18 +1,29 @@
 [
     {
         "entity_id": "media_player.universal_player",
-        "state": "off",
+        "state": "playing",
         "attributes": {
+            "volume_level": 0.20000000298023224,
+            "is_volume_muted": false,
+            "media_content_id": "http://192.168.0.254:8097/flow/eg2Lx5dF/media_player.hugh_room_stereo/6c54574922b945c880232ed84e4c4b78.mp3",
+            "media_content_type": "music",
+            "media_position": 0.600375,
+            "media_position_updated_at": "2025-12-12T07:15:07.842266+00:00",
+            "media_title": "Music Assistant",
+            "app_id": "CC1AD845",
+            "app_name": "Default Media Receiver",
+            "active_child": "media_player.hugh_room_stereo",
+            "entity_picture": "https://github.com/music-assistant/server/blob/dev/music_assistant/logo.png",
             "friendly_name": "universal_player",
-            "supported_features": 0
+            "supported_features": 152463
         },
-        "last_changed": "2025-12-11T21:28:31.245534+00:00",
-        "last_reported": "2025-12-11T21:28:31.245534+00:00",
-        "last_updated": "2025-12-11T21:28:31.245534+00:00",
+        "last_changed": "2025-12-12T07:15:07.111800+00:00",
+        "last_reported": "2025-12-12T07:15:07.853952+00:00",
+        "last_updated": "2025-12-12T07:15:07.853952+00:00",
         "context": {
-            "id": "01KC7N1J6YHZ7D78TTJKJ9QXK0",
+            "id": "01KC8PKH3YNF1GB9EWSJR56514",
             "parent_id": null,
-            "user_id": null
+            "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
     },
     {
@@ -610,7 +621,7 @@
     },
     {
         "entity_id": "scene.living_room_all_lights_off",
-        "state": "2025-12-12T07:14:17.889752+00:00",
+        "state": "2025-12-12T07:33:01.560994+00:00",
         "attributes": {
             "entity_id": [
                 "light.living_room_ceiling",
@@ -620,12 +631,12 @@
             "id": "1702948036144",
             "friendly_name": "Living Room All Lights Off"
         },
-        "last_changed": "2025-12-12T07:14:17.889888+00:00",
-        "last_reported": "2025-12-12T07:14:17.889888+00:00",
-        "last_updated": "2025-12-12T07:14:17.889888+00:00",
+        "last_changed": "2025-12-12T07:33:01.561099+00:00",
+        "last_reported": "2025-12-12T07:33:01.561099+00:00",
+        "last_updated": "2025-12-12T07:33:01.561099+00:00",
         "context": {
-            "id": "01KC8PJ54G1ANPX9KFVE2V5BM5",
-            "parent_id": "01KC8PJ54EQGAT89TCMJYD40RX",
+            "id": "01KC8QMEFBT8KTHC8HNV3HBCWT",
+            "parent_id": "01KC8QMEF02HZ0Q5ZMGC3TY81T",
             "user_id": null
         }
     },
@@ -689,20 +700,19 @@
     },
     {
         "entity_id": "script.execute_alarm_actions",
-        "state": "on",
+        "state": "off",
         "attributes": {
             "last_triggered": "2025-12-12T07:10:01.473412+00:00",
             "mode": "single",
-            "current": 1,
-            "last_action": "delay 0:05:00",
+            "current": 0,
             "icon": "mdi:alarm-bell",
             "friendly_name": "Execute Alarm Actions"
         },
-        "last_changed": "2025-12-12T07:10:01.473545+00:00",
-        "last_reported": "2025-12-12T07:10:01.499560+00:00",
-        "last_updated": "2025-12-12T07:10:01.499560+00:00",
+        "last_changed": "2025-12-12T07:15:07.805503+00:00",
+        "last_reported": "2025-12-12T07:15:07.805503+00:00",
+        "last_updated": "2025-12-12T07:15:07.805503+00:00",
         "context": {
-            "id": "01KC8PAAQVKTXW0NVHTAW4HHPM",
+            "id": "01KC8PKNWX7BDBC8GZFTTXM4PM",
             "parent_id": null,
             "user_id": null
         }
@@ -806,18 +816,18 @@
         "entity_id": "script.update_entities_html",
         "state": "on",
         "attributes": {
-            "last_triggered": "2025-12-12T07:14:17.893404+00:00",
+            "last_triggered": "2025-12-12T07:33:01.568987+00:00",
             "mode": "single",
             "current": 1,
             "icon": "mdi:git",
             "friendly_name": "Github Backup"
         },
-        "last_changed": "2025-12-12T07:14:17.893507+00:00",
-        "last_reported": "2025-12-12T07:14:17.893507+00:00",
-        "last_updated": "2025-12-12T07:14:17.893507+00:00",
+        "last_changed": "2025-12-12T07:33:01.569071+00:00",
+        "last_reported": "2025-12-12T07:33:01.569071+00:00",
+        "last_updated": "2025-12-12T07:33:01.569071+00:00",
         "context": {
-            "id": "01KC8PJ5532B4BDDZBABBYAVV8",
-            "parent_id": "01KC8PGP7ZY1B840YGJ66CF367",
+            "id": "01KC8QMEFY2X669HX7G29ESFD4",
+            "parent_id": "01KC8QJYNC500CSPNXTW2CE119",
             "user_id": null
         }
     },
@@ -901,18 +911,18 @@
         "entity_id": "script.set_purifier_speed",
         "state": "off",
         "attributes": {
-            "last_triggered": "2025-12-11T22:12:45.823411+00:00",
+            "last_triggered": "2025-12-12T07:15:07.141136+00:00",
             "mode": "single",
             "current": 0,
             "icon": "mdi:air-purifier",
             "friendly_name": "Set Purifier Speed"
         },
-        "last_changed": "2025-12-11T22:12:46.595254+00:00",
-        "last_reported": "2025-12-11T22:12:46.595254+00:00",
-        "last_updated": "2025-12-11T22:12:46.595254+00:00",
+        "last_changed": "2025-12-12T07:15:08.057867+00:00",
+        "last_reported": "2025-12-12T07:15:08.057867+00:00",
+        "last_updated": "2025-12-12T07:15:08.057867+00:00",
         "context": {
-            "id": "01KC7QJJKP6S2QTY6K9YYZ5DGA",
-            "parent_id": "01KC7QJJJS4JEWTKSHSXKW5P3S",
+            "id": "01KC8PKN80M8GNC0H3SJX8JASE",
+            "parent_id": "01KC8PKH3YNF1GB9EWSJR56514",
             "user_id": null
         }
     },
@@ -1017,7 +1027,7 @@
     },
     {
         "entity_id": "input_number.previous_bathroom_humidity",
-        "state": "66.79",
+        "state": "66.86",
         "attributes": {
             "initial": null,
             "editable": true,
@@ -1029,18 +1039,18 @@
             "icon": "mdi:water-percent",
             "friendly_name": "Previous Bathroom Humidity"
         },
-        "last_changed": "2025-12-12T06:53:53.349398+00:00",
-        "last_reported": "2025-12-12T06:53:53.349398+00:00",
-        "last_updated": "2025-12-12T06:53:53.349398+00:00",
+        "last_changed": "2025-12-12T07:27:19.582026+00:00",
+        "last_reported": "2025-12-12T07:27:19.582026+00:00",
+        "last_updated": "2025-12-12T07:27:19.582026+00:00",
         "context": {
-            "id": "01KC8NCFHG7EH5982JMKPY3T4S",
-            "parent_id": "01KC8NCFHD259K2MRZ0P1YE26W",
+            "id": "01KC8Q9PR7N5E52J4BNZV7S4BT",
+            "parent_id": "01KC8Q9PR5FHGSDZW5H03JN5DZ",
             "user_id": null
         }
     },
     {
         "entity_id": "input_number.universal_player_volume",
-        "state": "4.0",
+        "state": "2.0",
         "attributes": {
             "initial": null,
             "editable": true,
@@ -1051,12 +1061,12 @@
             "icon": "mdi:volume-high",
             "friendly_name": "Volume"
         },
-        "last_changed": "2025-12-11T18:54:26.436143+00:00",
-        "last_reported": "2025-12-11T18:54:26.927166+00:00",
-        "last_updated": "2025-12-11T18:54:26.436143+00:00",
+        "last_changed": "2025-12-12T07:15:08.372328+00:00",
+        "last_reported": "2025-12-12T07:15:08.372328+00:00",
+        "last_updated": "2025-12-12T07:15:08.372328+00:00",
         "context": {
-            "id": "01KC7C7D3J6XP0R06BDYJD7Q5J",
-            "parent_id": "01KC7C7C15DHB72SCFJ13E3ZP8",
+            "id": "01KC8PKNAKRHWWP5M1HM0PKVED",
+            "parent_id": "01KC8PAAQVKTXW0NVHTAW4HHPM",
             "user_id": null
         }
     },
@@ -1279,7 +1289,7 @@
     },
     {
         "entity_id": "input_number.previous_bathroom_temperature",
-        "state": "16.47",
+        "state": "16.85",
         "attributes": {
             "initial": null,
             "editable": true,
@@ -1291,12 +1301,12 @@
             "icon": "mdi:temperature-celsius",
             "friendly_name": "Previous Bathroom Temperature"
         },
-        "last_changed": "2025-12-12T06:53:53.352233+00:00",
-        "last_reported": "2025-12-12T06:53:53.352233+00:00",
-        "last_updated": "2025-12-12T06:53:53.352233+00:00",
+        "last_changed": "2025-12-12T07:27:19.584345+00:00",
+        "last_reported": "2025-12-12T07:27:19.584345+00:00",
+        "last_updated": "2025-12-12T07:27:19.584345+00:00",
         "context": {
-            "id": "01KC8NCFHG7EH5982JMKPY3T4S",
-            "parent_id": "01KC8NCFHD259K2MRZ0P1YE26W",
+            "id": "01KC8Q9PR7N5E52J4BNZV7S4BT",
+            "parent_id": "01KC8Q9PR5FHGSDZW5H03JN5DZ",
             "user_id": null
         }
     },
@@ -1323,7 +1333,7 @@
     },
     {
         "entity_id": "input_number.hugh_room_blinds_position",
-        "state": "100.0",
+        "state": "90.0",
         "attributes": {
             "initial": null,
             "editable": true,
@@ -1334,12 +1344,12 @@
             "icon": "mdi:blinds-horizontal",
             "friendly_name": "Hugh Room Blinds Position"
         },
-        "last_changed": "2025-12-11T22:12:54.658016+00:00",
-        "last_reported": "2025-12-11T22:12:54.658016+00:00",
-        "last_updated": "2025-12-11T22:12:54.658016+00:00",
+        "last_changed": "2025-12-12T07:15:09.887436+00:00",
+        "last_reported": "2025-12-12T07:15:13.110697+00:00",
+        "last_updated": "2025-12-12T07:15:09.887436+00:00",
         "context": {
-            "id": "01KC7QJV7MV9E2262217G22S90",
-            "parent_id": "01KC7QJS92NKYSJ4YWQB4XQR0K",
+            "id": "01KC8PKQXNDWDXEM7T1V0T9QGG",
+            "parent_id": "01KC8PKNWYPQ98FF7JQ24RD2X7",
             "user_id": null
         }
     },
@@ -1559,7 +1569,7 @@
     },
     {
         "entity_id": "input_select.hugh_room_blinds_mode",
-        "state": "Closed",
+        "state": "Half",
         "attributes": {
             "options": [
                 "Open",
@@ -1570,12 +1580,12 @@
             "icon": "mdi:blinds-horizontal",
             "friendly_name": "Hugh Room Window Blinds"
         },
-        "last_changed": "2025-12-11T22:12:54.652227+00:00",
-        "last_reported": "2025-12-11T22:12:54.652227+00:00",
-        "last_updated": "2025-12-11T22:12:54.652227+00:00",
+        "last_changed": "2025-12-12T07:15:07.802966+00:00",
+        "last_reported": "2025-12-12T07:15:07.802966+00:00",
+        "last_updated": "2025-12-12T07:15:07.802966+00:00",
         "context": {
-            "id": "01KC7QJV7MV9E2262217G22S90",
-            "parent_id": "01KC7QJS92NKYSJ4YWQB4XQR0K",
+            "id": "01KC8PAAQVKTXW0NVHTAW4HHPM",
+            "parent_id": null,
             "user_id": null
         }
     },
@@ -2215,16 +2225,16 @@
             "next_noon": "2025-12-12T12:27:32+00:00",
             "next_rising": "2025-12-12T08:31:18.555877+00:00",
             "next_setting": "2025-12-12T16:24:05.559190+00:00",
-            "elevation": -11.6,
-            "azimuth": 112.75,
+            "elevation": -8.79,
+            "azimuth": 116.45,
             "rising": true,
             "friendly_name": "Sun"
         },
         "last_changed": "2025-12-11T16:26:08.290110+00:00",
-        "last_reported": "2025-12-12T07:11:12.156556+00:00",
-        "last_updated": "2025-12-12T07:11:12.156556+00:00",
+        "last_reported": "2025-12-12T07:31:24.678365+00:00",
+        "last_updated": "2025-12-12T07:31:12.160247+00:00",
         "context": {
-            "id": "01KC8PCFRWEDV4KFZF5PSV78AK",
+            "id": "01KC8QH3N0XR327A76T4F79091",
             "parent_id": null,
             "user_id": null
         }
@@ -2733,19 +2743,19 @@
     },
     {
         "entity_id": "sensor.network_scanner_devices_list",
-        "state": "22",
+        "state": "23",
         "attributes": {
             "state_class": "measurement",
-            "devices": "IP: 192.168.0.70  | MAC: 5C:85:7E:34:04:49  Vendor: Cable Matters\n  .....................................................................\n  IP: 192.168.0.27  | MAC: E0:5A:1B:D7:19:B0  Vendor: Espressif\n  .....................................................................\n  IP: 192.168.0.35  | MAC: 0C:B8:15:3A:64:1C  Vendor: Espressif\n  .....................................................................\n  IP: 192.168.0.140 | MAC: 34:94:54:AB:1D:70  Vendor: Espressif\n  .....................................................................\n  IP: 192.168.0.201 | MAC: C8:2E:18:16:E9:04  Vendor: Espressif\n  .....................................................................\n  IP: 192.168.0.5   | MAC: 1C:53:F9:B5:6B:C7  Vendor: Google\n  .....................................................................\n  IP: 192.168.0.10  | MAC: 14:C1:4E:0A:C0:AF  Vendor: Google\n  .....................................................................\n  IP: 192.168.0.38  | MAC: 90:CA:FA:B6:EC:76  Vendor: Google\n  .....................................................................\n  IP: 192.168.0.84  | MAC: 1C:53:F9:18:96:1E  Vendor: Google\n  .....................................................................\n  IP: 192.168.0.99  | MAC: 20:DF:B9:7B:EC:50  Vendor: Google\n  .....................................................................\n  IP: 192.168.0.175 | MAC: D4:F5:47:96:2A:2B  Vendor: Google\n  .....................................................................\n  IP: 192.168.0.182 | MAC: 14:C1:4E:3E:60:A3  Vendor: Google\n  .....................................................................\n  IP: 192.168.0.194 | MAC: 14:C1:4E:CA:57:8A  Vendor: Google\n  .....................................................................\n  IP: 192.168.0.228 | MAC: F8:0F:F9:44:35:E9  Vendor: Google\n  .....................................................................\n  IP: 192.168.0.255 | MAC: 14:C1:4E:3E:60:A3  Vendor: Google\n  .....................................................................\n  IP: 192.168.0.192 | MAC: D0:73:D5:5B:C1:BA  Vendor: Lifi Labs Management\n  .....................................................................\n  IP: 192.168.0.80  | MAC: B8:8A:EC:C1:4D:9C  Vendor: Nintendo\n  .....................................................................\n  IP: 192.168.0.152 | MAC: 00:C3:F4:DF:EE:2E  Vendor: Samsung Electronics\n  .....................................................................\n  IP: 192.168.0.1   | MAC: 14:EB:B6:DE:E8:C4  Vendor: TP-Link Limited\n  .....................................................................\n  IP: 192.168.0.90  | MAC: 0C:80:63:13:65:7D  Vendor: TP-Link Technologies\n  .....................................................................\n  IP: 192.168.0.30  | MAC: 10:5A:17:E0:40:F5  Vendor: Tuya Smart\n  .....................................................................\n  IP: 192.168.0.211 | MAC: DE:D5:92:46:73:DD  Vendor: Unknown\n  .....................................................................",
+            "devices": "IP: 192.168.0.207 | MAC: 14:1B:A0:86:C9:41  Vendor: Apple\n  .....................................................................\n  IP: 192.168.0.70  | MAC: 5C:85:7E:34:04:49  Vendor: Cable Matters\n  .....................................................................\n  IP: 192.168.0.27  | MAC: E0:5A:1B:D7:19:B0  Vendor: Espressif\n  .....................................................................\n  IP: 192.168.0.35  | MAC: 0C:B8:15:3A:64:1C  Vendor: Espressif\n  .....................................................................\n  IP: 192.168.0.140 | MAC: 34:94:54:AB:1D:70  Vendor: Espressif\n  .....................................................................\n  IP: 192.168.0.201 | MAC: C8:2E:18:16:E9:04  Vendor: Espressif\n  .....................................................................\n  IP: 192.168.0.5   | MAC: 1C:53:F9:B5:6B:C7  Vendor: Google\n  .....................................................................\n  IP: 192.168.0.10  | MAC: 14:C1:4E:0A:C0:AF  Vendor: Google\n  .....................................................................\n  IP: 192.168.0.38  | MAC: 90:CA:FA:B6:EC:76  Vendor: Google\n  .....................................................................\n  IP: 192.168.0.84  | MAC: 1C:53:F9:18:96:1E  Vendor: Google\n  .....................................................................\n  IP: 192.168.0.99  | MAC: 20:DF:B9:7B:EC:50  Vendor: Google\n  .....................................................................\n  IP: 192.168.0.175 | MAC: D4:F5:47:96:2A:2B  Vendor: Google\n  .....................................................................\n  IP: 192.168.0.182 | MAC: 14:C1:4E:3E:60:A3  Vendor: Google\n  .....................................................................\n  IP: 192.168.0.194 | MAC: 14:C1:4E:CA:57:8A  Vendor: Google\n  .....................................................................\n  IP: 192.168.0.228 | MAC: F8:0F:F9:44:35:E9  Vendor: Google\n  .....................................................................\n  IP: 192.168.0.255 | MAC: 1C:53:F9:18:96:1E  Vendor: Google\n  .....................................................................\n  IP: 192.168.0.192 | MAC: D0:73:D5:5B:C1:BA  Vendor: Lifi Labs Management\n  .....................................................................\n  IP: 192.168.0.80  | MAC: B8:8A:EC:C1:4D:9C  Vendor: Nintendo\n  .....................................................................\n  IP: 192.168.0.152 | MAC: 00:C3:F4:DF:EE:2E  Vendor: Samsung Electronics\n  .....................................................................\n  IP: 192.168.0.1   | MAC: 14:EB:B6:DE:E8:C4  Vendor: TP-Link Limited\n  .....................................................................\n  IP: 192.168.0.90  | MAC: 0C:80:63:13:65:7D  Vendor: TP-Link Technologies\n  .....................................................................\n  IP: 192.168.0.30  | MAC: 10:5A:17:E0:40:F5  Vendor: Tuya Smart\n  .....................................................................\n  IP: 192.168.0.211 | MAC: DE:D5:92:46:73:DD  Vendor: Unknown\n  .....................................................................",
             "unit_of_measurement": "devices",
             "icon": "mdi:lan-connect",
             "friendly_name": "Network Scanner Devices List"
         },
-        "last_changed": "2025-12-12T06:58:40.014098+00:00",
-        "last_reported": "2025-12-12T07:13:43.733112+00:00",
-        "last_updated": "2025-12-12T07:13:43.733112+00:00",
+        "last_changed": "2025-12-12T07:28:37.171846+00:00",
+        "last_reported": "2025-12-12T07:28:37.171846+00:00",
+        "last_updated": "2025-12-12T07:28:37.171846+00:00",
         "context": {
-            "id": "01KC8PH3SD0Y8XNP9Y8FD8YXZQ",
+            "id": "01KC8QCC9EVD8YH0DZ58JHJTEZ",
             "parent_id": null,
             "user_id": null
         }
@@ -2771,17 +2781,17 @@
     },
     {
         "entity_id": "sensor.air_purifier_speed",
-        "state": "Medium",
+        "state": "Low",
         "attributes": {
-            "raw_percentage": 66,
-            "icon": "mdi:fan-speed-2",
+            "raw_percentage": 33,
+            "icon": "mdi:fan-speed-1",
             "friendly_name": "Air Purifier Fan Speed"
         },
-        "last_changed": "2025-12-12T03:02:00.084187+00:00",
-        "last_reported": "2025-12-12T03:02:00.084187+00:00",
-        "last_updated": "2025-12-12T03:02:00.084187+00:00",
+        "last_changed": "2025-12-12T07:17:17.019371+00:00",
+        "last_reported": "2025-12-12T07:17:17.019371+00:00",
+        "last_updated": "2025-12-12T07:17:17.019371+00:00",
         "context": {
-            "id": "01KC88463QC7DDBC0R9T3FWE7Y",
+            "id": "01KC8PQM2P7TXHVR3YVT7AYREB",
             "parent_id": null,
             "user_id": null
         }
@@ -2878,11 +2888,11 @@
             "icon": "mdi:counter",
             "friendly_name": "Total Entities"
         },
-        "last_changed": "2025-12-12T07:14:17.883116+00:00",
-        "last_reported": "2025-12-12T07:14:17.883116+00:00",
-        "last_updated": "2025-12-12T07:14:17.883116+00:00",
+        "last_changed": "2025-12-12T07:33:01.557513+00:00",
+        "last_reported": "2025-12-12T07:33:01.557513+00:00",
+        "last_updated": "2025-12-12T07:33:01.557513+00:00",
         "context": {
-            "id": "01KC8PJ54TREY1V3FJ407NRC2K",
+            "id": "01KC8QMEFM4KFQGEZPV505PF7Y",
             "parent_id": null,
             "user_id": null
         }
@@ -3021,16 +3031,16 @@
     },
     {
         "entity_id": "sensor.date_time_iso",
-        "state": "2025-12-12T07:14:00",
+        "state": "2025-12-12T07:33:00",
         "attributes": {
             "icon": "mdi:calendar-clock",
             "friendly_name": "Date & Time (ISO)"
         },
-        "last_changed": "2025-12-12T07:14:00.001427+00:00",
-        "last_reported": "2025-12-12T07:14:00.002979+00:00",
-        "last_updated": "2025-12-12T07:14:00.001427+00:00",
+        "last_changed": "2025-12-12T07:33:00.001483+00:00",
+        "last_reported": "2025-12-12T07:33:00.003231+00:00",
+        "last_updated": "2025-12-12T07:33:00.001483+00:00",
         "context": {
-            "id": "01KC8PHKP1R57TW5E9J5WQAAC4",
+            "id": "01KC8QMCZ1V5SZBPEBTSFHA3P3",
             "parent_id": null,
             "user_id": null
         }
@@ -3558,7 +3568,7 @@
         "attributes": {
             "configuration": {},
             "manual_control": [],
-            "brightness_pct": 70.54185806863147,
+            "brightness_pct": 76.87062281732545,
             "color_temp_kelvin": 2000,
             "color_temp_mired": 500,
             "rgb_color": [
@@ -3574,17 +3584,17 @@
                 30.504,
                 93.333
             ],
-            "sun_position": -0.2975569892057427,
+            "sun_position": -0.2336300725522681,
             "force_rgb_color": false,
             "autoreset_time_remaining": {},
             "icon": "mdi:theme-light-dark",
             "friendly_name": "Adaptive Lighting: Hallways"
         },
         "last_changed": "2025-12-10T15:25:39.562484+00:00",
-        "last_reported": "2025-12-12T07:13:42.113237+00:00",
-        "last_updated": "2025-12-12T07:13:39.030086+00:00",
+        "last_reported": "2025-12-12T07:31:52.278285+00:00",
+        "last_updated": "2025-12-12T07:31:45.048701+00:00",
         "context": {
-            "id": "01KC8PGZ6PFYFQ7MBCVZRPJ0M4",
+            "id": "01KC8QJ3RR2VD78W7PC9W7GT19",
             "parent_id": null,
             "user_id": null
         }
@@ -3643,7 +3653,7 @@
         "attributes": {
             "configuration": {},
             "manual_control": [],
-            "brightness_pct": 80.06372488286505,
+            "brightness_pct": 84.34682591943104,
             "color_temp_kelvin": 2000,
             "color_temp_mired": 500,
             "rgb_color": [
@@ -3659,17 +3669,17 @@
                 30.504,
                 93.333
             ],
-            "sun_position": -0.2975563450318651,
+            "sun_position": -0.2336294638890889,
             "force_rgb_color": false,
             "autoreset_time_remaining": {},
             "icon": "mdi:theme-light-dark",
             "friendly_name": "Adaptive Lighting: Bathroom"
         },
         "last_changed": "2025-12-10T15:25:39.576476+00:00",
-        "last_reported": "2025-12-12T07:13:42.114173+00:00",
-        "last_updated": "2025-12-12T07:13:39.041322+00:00",
+        "last_reported": "2025-12-12T07:31:52.279593+00:00",
+        "last_updated": "2025-12-12T07:31:45.059081+00:00",
         "context": {
-            "id": "01KC8PGZ71YZJ5NWMHR7W8ZZXN",
+            "id": "01KC8QJ3S39M4PVE6Q19E6SW6N",
             "parent_id": null,
             "user_id": null
         }
@@ -5141,7 +5151,7 @@
                 "auto",
                 "sleep"
             ],
-            "percentage": 66,
+            "percentage": 33,
             "percentage_step": 33.333333333333336,
             "preset_mode": null,
             "active_time": null,
@@ -5152,10 +5162,10 @@
             "supported_features": 57
         },
         "last_changed": "2025-12-12T03:02:00.055946+00:00",
-        "last_reported": "2025-12-12T03:02:00.055946+00:00",
-        "last_updated": "2025-12-12T03:02:00.055946+00:00",
+        "last_reported": "2025-12-12T07:17:17.014287+00:00",
+        "last_updated": "2025-12-12T07:17:17.014287+00:00",
         "context": {
-            "id": "01KC88463QC7DDBC0R9T3FWE7Y",
+            "id": "01KC8PQM2P7TXHVR3YVT7AYREB",
             "parent_id": null,
             "user_id": null
         }
@@ -5253,35 +5263,57 @@
     },
     {
         "entity_id": "media_player.battery_speaker",
-        "state": "off",
+        "state": "playing",
         "attributes": {
+            "volume_level": 0.20000000298023224,
+            "is_volume_muted": false,
+            "media_content_id": "http://192.168.0.254:8097/flow/eg2Lx5dF/media_player.hugh_room_stereo/6c54574922b945c880232ed84e4c4b78.mp3",
+            "media_content_type": "music",
+            "media_position": 0.600375,
+            "media_position_updated_at": "2025-12-12T07:15:07.842215+00:00",
+            "media_title": "Music Assistant",
+            "app_id": "705D30C6",
+            "app_name": "Default Media Receiver",
+            "entity_picture_local": "/api/media_player_proxy/media_player.battery_speaker?token=e5afad1f91012fd8186020a8c33aaf12142ba769db6ddb10c94e389fed5cad42&cache=6bdf4d1f8c6d1564",
             "device_class": "speaker",
+            "entity_picture": "https://github.com/music-assistant/server/blob/dev/music_assistant/logo.png",
             "friendly_name": "Battery Speaker",
-            "supported_features": 152461
+            "supported_features": 152463
         },
-        "last_changed": "2025-12-12T04:46:48.679639+00:00",
-        "last_reported": "2025-12-12T04:46:48.839664+00:00",
-        "last_updated": "2025-12-12T04:46:48.679639+00:00",
+        "last_changed": "2025-12-12T07:15:06.832006+00:00",
+        "last_reported": "2025-12-12T07:15:08.279392+00:00",
+        "last_updated": "2025-12-12T07:15:07.848239+00:00",
         "context": {
-            "id": "01KC8E43B7XQYVC86EKPXD942Y",
-            "parent_id": null,
+            "id": "01KC8PKNAKRHWWP5M1HM0PKVED",
+            "parent_id": "01KC8PAAQVKTXW0NVHTAW4HHPM",
             "user_id": null
         }
     },
     {
         "entity_id": "media_player.hugh_room_speaker_2",
-        "state": "off",
+        "state": "playing",
         "attributes": {
+            "volume_level": 0.20000000298023224,
+            "is_volume_muted": false,
+            "media_content_id": "http://192.168.0.254:8097/flow/eg2Lx5dF/media_player.hugh_room_stereo/6c54574922b945c880232ed84e4c4b78.mp3",
+            "media_content_type": "music",
+            "media_position": 0.600375,
+            "media_position_updated_at": "2025-12-12T07:15:07.842093+00:00",
+            "media_title": "Music Assistant",
+            "app_id": "705D30C6",
+            "app_name": "Default Media Receiver",
+            "entity_picture_local": "/api/media_player_proxy/media_player.hugh_room_speaker_2?token=b429f94ef0c9b43fc8faff402a5e4e26421341945747c456cda4752eeccd7e38&cache=6bdf4d1f8c6d1564",
             "device_class": "speaker",
+            "entity_picture": "https://github.com/music-assistant/server/blob/dev/music_assistant/logo.png",
             "friendly_name": "Hugh Room Speaker 2",
-            "supported_features": 152461
+            "supported_features": 152463
         },
-        "last_changed": "2025-12-12T04:14:39.934381+00:00",
-        "last_reported": "2025-12-12T04:14:40.006324+00:00",
-        "last_updated": "2025-12-12T04:14:39.934381+00:00",
+        "last_changed": "2025-12-12T07:15:07.115770+00:00",
+        "last_reported": "2025-12-12T07:15:08.276961+00:00",
+        "last_updated": "2025-12-12T07:15:07.846139+00:00",
         "context": {
-            "id": "01KC8C97SYT7D15TPZCS6PDYGF",
-            "parent_id": null,
+            "id": "01KC8PKNAKRHWWP5M1HM0PKVED",
+            "parent_id": "01KC8PAAQVKTXW0NVHTAW4HHPM",
             "user_id": null
         }
     },
@@ -5506,7 +5538,7 @@
     },
     {
         "entity_id": "sensor.weather_pressure",
-        "state": "1013",
+        "state": "1012",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "hPa",
@@ -5514,11 +5546,11 @@
             "device_class": "pressure",
             "friendly_name": "weather Pressure"
         },
-        "last_changed": "2025-12-12T06:35:44.648709+00:00",
-        "last_reported": "2025-12-12T06:35:44.648709+00:00",
-        "last_updated": "2025-12-12T06:35:44.648709+00:00",
+        "last_changed": "2025-12-12T07:15:44.585953+00:00",
+        "last_reported": "2025-12-12T07:15:44.585953+00:00",
+        "last_updated": "2025-12-12T07:15:44.585953+00:00",
         "context": {
-            "id": "01KC8MBJ484RDNR8FQKXDCXYK4",
+            "id": "01KC8PMST965TGG67AEZQ8SZXM",
             "parent_id": null,
             "user_id": null
         }
@@ -5674,7 +5706,7 @@
             "temperature_unit": "\u00b0C",
             "humidity": 93,
             "cloud_coverage": 20,
-            "pressure": 1013.0,
+            "pressure": 1012.0,
             "pressure_unit": "hPa",
             "wind_bearing": 190,
             "wind_speed": 7.42,
@@ -5687,27 +5719,38 @@
             "supported_features": 3
         },
         "last_changed": "2025-12-12T04:35:44.592114+00:00",
-        "last_reported": "2025-12-12T07:05:44.597910+00:00",
-        "last_updated": "2025-12-12T07:05:44.597910+00:00",
+        "last_reported": "2025-12-12T07:15:44.587761+00:00",
+        "last_updated": "2025-12-12T07:15:44.587761+00:00",
         "context": {
-            "id": "01KC8P2FWNNJVV3X8HBMQFPB8E",
+            "id": "01KC8PMSTB8GGRB9P7A7E69BJG",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "media_player.hugh_room_display",
-        "state": "off",
+        "state": "playing",
         "attributes": {
+            "volume_level": 0.20000000298023224,
+            "is_volume_muted": false,
+            "media_content_id": "http://192.168.0.254:8097/flow/eg2Lx5dF/media_player.hugh_room_stereo/6c54574922b945c880232ed84e4c4b78.mp3",
+            "media_content_type": "music",
+            "media_position": 0.600375,
+            "media_position_updated_at": "2025-12-12T07:15:07.835625+00:00",
+            "media_title": "Music Assistant",
+            "app_id": "531A4F84",
+            "app_name": "Default Media Receiver",
+            "entity_picture_local": "/api/media_player_proxy/media_player.hugh_room_display?token=d297190e73657d510db00b61d196777375cce9c858e0d007fb7a9b7dd41d472e&cache=6bdf4d1f8c6d1564",
+            "entity_picture": "https://github.com/music-assistant/server/blob/dev/music_assistant/logo.png",
             "friendly_name": "Hugh Room Display",
-            "supported_features": 152461
+            "supported_features": 152463
         },
-        "last_changed": "2025-12-12T02:32:50.651392+00:00",
-        "last_reported": "2025-12-12T02:32:55.552605+00:00",
-        "last_updated": "2025-12-12T02:32:50.651392+00:00",
+        "last_changed": "2025-12-12T07:15:07.110328+00:00",
+        "last_reported": "2025-12-12T07:15:08.369058+00:00",
+        "last_updated": "2025-12-12T07:15:07.837031+00:00",
         "context": {
-            "id": "01KC86ESPVVNJMPQCH5VVTXTZT",
-            "parent_id": null,
+            "id": "01KC8PKNAKRHWWP5M1HM0PKVED",
+            "parent_id": "01KC8PAAQVKTXW0NVHTAW4HHPM",
             "user_id": null
         }
     },
@@ -5767,34 +5810,56 @@
     },
     {
         "entity_id": "media_player.hugh_room_stereo",
-        "state": "off",
+        "state": "playing",
         "attributes": {
+            "volume_level": 0.20000000298023224,
+            "is_volume_muted": false,
+            "media_content_id": "http://192.168.0.254:8097/flow/eg2Lx5dF/media_player.hugh_room_stereo/6c54574922b945c880232ed84e4c4b78.mp3",
+            "media_content_type": "music",
+            "media_position": 0.600375,
+            "media_position_updated_at": "2025-12-12T07:15:07.842266+00:00",
+            "media_title": "Music Assistant",
+            "app_id": "CC1AD845",
+            "app_name": "Default Media Receiver",
+            "entity_picture_local": "/api/media_player_proxy/media_player.hugh_room_stereo?token=8d16458020c9f665dadaecea1d1bfb75895043ec19f8c6d89df84b8889955550&cache=6bdf4d1f8c6d1564",
             "device_class": "speaker",
+            "entity_picture": "https://github.com/music-assistant/server/blob/dev/music_assistant/logo.png",
             "friendly_name": "Hugh Room Stereo",
-            "supported_features": 152461
+            "supported_features": 152463
         },
-        "last_changed": "2025-12-12T02:34:46.995434+00:00",
-        "last_reported": "2025-12-12T02:34:47.009510+00:00",
-        "last_updated": "2025-12-12T02:34:46.995434+00:00",
+        "last_changed": "2025-12-12T07:15:06.833894+00:00",
+        "last_reported": "2025-12-12T07:15:09.393184+00:00",
+        "last_updated": "2025-12-12T07:15:07.852056+00:00",
         "context": {
-            "id": "01KC86JBAKM3CYWFQC85NWPY30",
+            "id": "01KC8PKH3YNF1GB9EWSJR56514",
             "parent_id": null,
-            "user_id": null
+            "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
     },
     {
         "entity_id": "media_player.hugh_room_speaker",
-        "state": "off",
+        "state": "playing",
         "attributes": {
+            "volume_level": 0.20000000298023224,
+            "is_volume_muted": false,
+            "media_content_id": "http://192.168.0.254:8097/flow/eg2Lx5dF/media_player.hugh_room_stereo/6c54574922b945c880232ed84e4c4b78.mp3",
+            "media_content_type": "music",
+            "media_position": 0.600375,
+            "media_position_updated_at": "2025-12-12T07:15:07.838104+00:00",
+            "media_title": "Music Assistant",
+            "app_id": "705D30C6",
+            "app_name": "Default Media Receiver",
+            "entity_picture_local": "/api/media_player_proxy/media_player.hugh_room_speaker?token=622df7bb0c1567b926e9516b50707f97b84aadea7d8ba860bd6daf7971a30fef&cache=6bdf4d1f8c6d1564",
             "device_class": "speaker",
+            "entity_picture": "https://github.com/music-assistant/server/blob/dev/music_assistant/logo.png",
             "friendly_name": "Hugh Room Speaker",
-            "supported_features": 152461
+            "supported_features": 152463
         },
-        "last_changed": "2025-12-12T02:21:04.597760+00:00",
-        "last_reported": "2025-12-12T02:21:04.663779+00:00",
-        "last_updated": "2025-12-12T02:21:04.597760+00:00",
+        "last_changed": "2025-12-12T07:15:07.114090+00:00",
+        "last_reported": "2025-12-12T07:15:07.838938+00:00",
+        "last_updated": "2025-12-12T07:15:07.838938+00:00",
         "context": {
-            "id": "01KC85S86NVQN5EV5CE7A7CZ1C",
+            "id": "01KC8PAAQVKTXW0NVHTAW4HHPM",
             "parent_id": null,
             "user_id": null
         }
@@ -5841,7 +5906,7 @@
             "media_content_type": "video",
             "media_duration": 1583,
             "media_position": 1566.974,
-            "media_position_updated_at": "2025-12-12T05:27:30.098692+00:00",
+            "media_position_updated_at": "2025-12-12T07:15:06.848324+00:00",
             "media_title": "Azula: A Broken Child | Avatar The Last Airbender",
             "media_artist": "Merphy Napier | Mang\u2026",
             "app_id": "AndroidNativeApp",
@@ -5851,10 +5916,10 @@
             "supported_features": 152499
         },
         "last_changed": "2025-12-12T05:27:30.095971+00:00",
-        "last_reported": "2025-12-12T05:27:30.100351+00:00",
-        "last_updated": "2025-12-12T05:27:30.100351+00:00",
+        "last_reported": "2025-12-12T07:15:07.124082+00:00",
+        "last_updated": "2025-12-12T07:15:07.124082+00:00",
         "context": {
-            "id": "01KC8GEKHMKFTWTPFGD2NG0EDA",
+            "id": "01KC8PKN7MS5ZMQX1YHHQHBJPH",
             "parent_id": null,
             "user_id": null
         }
@@ -6756,16 +6821,16 @@
     },
     {
         "entity_id": "sensor.phone_ble_rssi",
-        "state": "-92.0",
+        "state": "-100.0",
         "attributes": {
             "unit_of_measurement": "dBm",
             "friendly_name": "IR Receiver Phone BLE RSSI"
         },
-        "last_changed": "2025-12-12T07:14:09.625152+00:00",
-        "last_reported": "2025-12-12T07:14:09.625152+00:00",
-        "last_updated": "2025-12-12T07:14:09.625152+00:00",
+        "last_changed": "2025-12-12T07:32:55.197401+00:00",
+        "last_reported": "2025-12-12T07:32:55.197401+00:00",
+        "last_updated": "2025-12-12T07:32:55.197401+00:00",
         "context": {
-            "id": "01KC8PHX2S0J40J1J8727F9CY5",
+            "id": "01KC8QM88XK7YPQKX02WA75164",
             "parent_id": null,
             "user_id": null
         }
@@ -6836,11 +6901,11 @@
             "device_class": "occupancy",
             "friendly_name": "EPOne Occupancy"
         },
-        "last_changed": "2025-12-12T07:14:17.871000+00:00",
-        "last_reported": "2025-12-12T07:14:17.871000+00:00",
-        "last_updated": "2025-12-12T07:14:17.871000+00:00",
+        "last_changed": "2025-12-12T07:33:01.536632+00:00",
+        "last_reported": "2025-12-12T07:33:01.536632+00:00",
+        "last_updated": "2025-12-12T07:33:01.536632+00:00",
         "context": {
-            "id": "01KC8PJ54EQGAT89TCMJYD40RX",
+            "id": "01KC8QMEF02HZ0Q5ZMGC3TY81T",
             "parent_id": null,
             "user_id": null
         }
@@ -6852,11 +6917,11 @@
             "device_class": "occupancy",
             "friendly_name": "EPOne mmWave"
         },
-        "last_changed": "2025-12-12T07:14:01.813967+00:00",
-        "last_reported": "2025-12-12T07:14:01.813967+00:00",
-        "last_updated": "2025-12-12T07:14:01.813967+00:00",
+        "last_changed": "2025-12-12T07:32:44.630473+00:00",
+        "last_reported": "2025-12-12T07:32:44.630473+00:00",
+        "last_updated": "2025-12-12T07:32:44.630473+00:00",
         "context": {
-            "id": "01KC8PHNENGSNPSXY24799ZR2B",
+            "id": "01KC8QKXYPGY6JJ0YFDS0MNZMA",
             "parent_id": null,
             "user_id": null
         }
@@ -6867,47 +6932,47 @@
         "attributes": {
             "friendly_name": "EPOne Target 1 Active"
         },
-        "last_changed": "2025-12-12T07:14:01.811437+00:00",
-        "last_reported": "2025-12-12T07:14:01.811437+00:00",
-        "last_updated": "2025-12-12T07:14:01.811437+00:00",
+        "last_changed": "2025-12-12T07:32:44.628178+00:00",
+        "last_reported": "2025-12-12T07:32:44.628178+00:00",
+        "last_updated": "2025-12-12T07:32:44.628178+00:00",
         "context": {
-            "id": "01KC8PHNEKNJVV3VHZAS3H7C3X",
+            "id": "01KC8QKXYM15RGE9RYFE11S4JW",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.living_room_epone_temperature",
-        "state": "23.7720031738281",
+        "state": "23.734619140625",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
             "device_class": "temperature",
             "friendly_name": "EPOne Temperature"
         },
-        "last_changed": "2025-12-12T07:13:56.980168+00:00",
-        "last_reported": "2025-12-12T07:13:56.980168+00:00",
-        "last_updated": "2025-12-12T07:13:56.980168+00:00",
+        "last_changed": "2025-12-12T07:32:57.020775+00:00",
+        "last_reported": "2025-12-12T07:32:57.020775+00:00",
+        "last_updated": "2025-12-12T07:32:57.020775+00:00",
         "context": {
-            "id": "01KC8PHGQM7KYP4T37AWSY8G7S",
+            "id": "01KC8QMA1WSNCBTFWJR0VC1MMZ",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.living_room_epone_illuminance",
-        "state": "3.16863489151001",
+        "state": "3.86114168167114",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "lx",
             "device_class": "illuminance",
             "friendly_name": "EPOne Illuminance"
         },
-        "last_changed": "2025-12-12T07:14:18.587003+00:00",
-        "last_reported": "2025-12-12T07:14:18.587003+00:00",
-        "last_updated": "2025-12-12T07:14:18.587003+00:00",
+        "last_changed": "2025-12-12T07:32:55.308155+00:00",
+        "last_reported": "2025-12-12T07:32:55.308155+00:00",
+        "last_updated": "2025-12-12T07:32:55.308155+00:00",
         "context": {
-            "id": "01KC8PJ5TV9Z6B4482KKMHQFXV",
+            "id": "01KC8QM8CC2K4Q21KCPSFD0XGH",
             "parent_id": null,
             "user_id": null
         }
@@ -6920,29 +6985,29 @@
             "device_class": "distance",
             "friendly_name": "EPOne Target 1 Distance"
         },
-        "last_changed": "2025-12-12T07:14:01.812421+00:00",
-        "last_reported": "2025-12-12T07:14:01.812421+00:00",
-        "last_updated": "2025-12-12T07:14:01.812421+00:00",
+        "last_changed": "2025-12-12T07:32:44.629223+00:00",
+        "last_reported": "2025-12-12T07:32:44.629223+00:00",
+        "last_updated": "2025-12-12T07:32:44.629223+00:00",
         "context": {
-            "id": "01KC8PHNEMMEMAPQPCKM1HNMRJ",
+            "id": "01KC8QKXYND436FH5NMS75EDEK",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.living_room_epone_humidity",
-        "state": "37.2463989257812",
+        "state": "37.2784423828125",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "%",
             "device_class": "humidity",
             "friendly_name": "EPOne Humidity"
         },
-        "last_changed": "2025-12-12T07:13:56.981608+00:00",
-        "last_reported": "2025-12-12T07:13:56.981608+00:00",
-        "last_updated": "2025-12-12T07:13:56.981608+00:00",
+        "last_changed": "2025-12-12T07:32:57.022293+00:00",
+        "last_reported": "2025-12-12T07:32:57.022293+00:00",
+        "last_updated": "2025-12-12T07:32:57.022293+00:00",
         "context": {
-            "id": "01KC8PHGQN84VRMJSJBGJWTN57",
+            "id": "01KC8QMA1Y7SBKJAECEWT0T2DN",
             "parent_id": null,
             "user_id": null
         }
@@ -7758,17 +7823,17 @@
         "entity_id": "cover.hugh_room_blinds",
         "state": "open",
         "attributes": {
-            "current_position": 100,
+            "current_position": 90,
             "device_class": "blind",
             "friendly_name": "Hugh Room Blinds",
             "supported_features": 15
         },
-        "last_changed": "2025-12-11T21:23:38.215947+00:00",
-        "last_reported": "2025-12-11T22:12:52.642186+00:00",
-        "last_updated": "2025-12-11T22:12:52.642186+00:00",
+        "last_changed": "2025-12-12T07:15:11.162315+00:00",
+        "last_reported": "2025-12-12T07:15:11.162315+00:00",
+        "last_updated": "2025-12-12T07:15:11.162315+00:00",
         "context": {
-            "id": "01KC7QJS92NKYSJ4YWQB4XQR0K",
-            "parent_id": null,
+            "id": "01KC8PKNWYPQ98FF7JQ24RD2X7",
+            "parent_id": "01KC8PAAQVKTXW0NVHTAW4HHPM",
             "user_id": null
         }
     },
@@ -8215,12 +8280,12 @@
             "friendly_name": "Light Floor Back",
             "supported_features": 44
         },
-        "last_changed": "2025-12-12T07:14:18.002708+00:00",
-        "last_reported": "2025-12-12T07:14:18.002708+00:00",
-        "last_updated": "2025-12-12T07:14:18.002708+00:00",
+        "last_changed": "2025-12-12T07:33:01.683716+00:00",
+        "last_reported": "2025-12-12T07:33:01.683716+00:00",
+        "last_updated": "2025-12-12T07:33:01.683716+00:00",
         "context": {
-            "id": "01KC8PJ54G1ANPX9KFVE2V5BM5",
-            "parent_id": "01KC8PJ54EQGAT89TCMJYD40RX",
+            "id": "01KC8QMEFBT8KTHC8HNV3HBCWT",
+            "parent_id": "01KC8QMEF02HZ0Q5ZMGC3TY81T",
             "user_id": null
         }
     },
@@ -8259,12 +8324,12 @@
             "friendly_name": "Light Floor Front",
             "supported_features": 44
         },
-        "last_changed": "2025-12-12T07:14:18.043290+00:00",
-        "last_reported": "2025-12-12T07:14:18.043290+00:00",
-        "last_updated": "2025-12-12T07:14:18.043290+00:00",
+        "last_changed": "2025-12-12T07:33:01.723089+00:00",
+        "last_reported": "2025-12-12T07:33:01.723089+00:00",
+        "last_updated": "2025-12-12T07:33:01.723089+00:00",
         "context": {
-            "id": "01KC8PJ54G1ANPX9KFVE2V5BM5",
-            "parent_id": "01KC8PJ54EQGAT89TCMJYD40RX",
+            "id": "01KC8QMEFBT8KTHC8HNV3HBCWT",
+            "parent_id": "01KC8QMEF02HZ0Q5ZMGC3TY81T",
             "user_id": null
         }
     },
@@ -9189,11 +9254,11 @@
             "device_class": "power",
             "friendly_name": "PC Plug Power"
         },
-        "last_changed": "2025-12-12T07:09:11.828586+00:00",
-        "last_reported": "2025-12-12T07:09:11.828586+00:00",
-        "last_updated": "2025-12-12T07:09:11.828586+00:00",
+        "last_changed": "2025-12-12T07:26:15.990535+00:00",
+        "last_reported": "2025-12-12T07:26:15.990535+00:00",
+        "last_updated": "2025-12-12T07:26:15.990535+00:00",
         "context": {
-            "id": "01KC8P8T8MN42QRWVW9ZRMZ8XW",
+            "id": "01KC8Q82DPBDCAGQ4H9JYRV33N",
             "parent_id": null,
             "user_id": null
         }
@@ -9722,18 +9787,18 @@
     },
     {
         "entity_id": "sensor.hugh_room_plug_blanket_current",
-        "state": "0.01",
+        "state": "0",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "A",
             "device_class": "current",
             "friendly_name": "Hugh Room Plug Blanket Current"
         },
-        "last_changed": "2025-12-12T07:13:43.708108+00:00",
-        "last_reported": "2025-12-12T07:13:43.708108+00:00",
-        "last_updated": "2025-12-12T07:13:43.708108+00:00",
+        "last_changed": "2025-12-12T07:32:46.027861+00:00",
+        "last_reported": "2025-12-12T07:32:46.027861+00:00",
+        "last_updated": "2025-12-12T07:32:46.027861+00:00",
         "context": {
-            "id": "01KC8PH3RWRJJRKD2YBPWWBPP8",
+            "id": "01KC8QKZABCSEBKVJA7Y222MMQ",
             "parent_id": null,
             "user_id": null
         }
@@ -9747,11 +9812,11 @@
             "device_class": "voltage",
             "friendly_name": "Hugh Room Plug Blanket Voltage"
         },
-        "last_changed": "2025-12-12T07:12:43.593818+00:00",
-        "last_reported": "2025-12-12T07:12:43.593818+00:00",
-        "last_updated": "2025-12-12T07:12:43.593818+00:00",
+        "last_changed": "2025-12-12T07:32:46.028676+00:00",
+        "last_reported": "2025-12-12T07:32:46.028676+00:00",
+        "last_updated": "2025-12-12T07:32:46.028676+00:00",
         "context": {
-            "id": "01KC8PF929GZKH6198G6YVCAM4",
+            "id": "01KC8QKZAC3GZNMDTKJT0MZ0TA",
             "parent_id": null,
             "user_id": null
         }
@@ -9801,29 +9866,29 @@
             "device_class": "current",
             "friendly_name": "Hugh Room Plug Fan Bed Current"
         },
-        "last_changed": "2025-12-12T07:13:33.426044+00:00",
-        "last_reported": "2025-12-12T07:13:33.426044+00:00",
-        "last_updated": "2025-12-12T07:13:33.426044+00:00",
+        "last_changed": "2025-12-12T07:19:34.132824+00:00",
+        "last_reported": "2025-12-12T07:19:34.132824+00:00",
+        "last_updated": "2025-12-12T07:19:34.132824+00:00",
         "context": {
-            "id": "01KC8PGSQJK1407F02DGPY527C",
+            "id": "01KC8PVSZMK17J51BG7182JJ1Y",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.hugh_room_plug_fan_bed_voltage",
-        "state": "232",
+        "state": "233",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "V",
             "device_class": "voltage",
             "friendly_name": "Hugh Room Plug Fan Bed Voltage"
         },
-        "last_changed": "2025-12-12T07:13:33.426800+00:00",
-        "last_reported": "2025-12-12T07:13:33.426800+00:00",
-        "last_updated": "2025-12-12T07:13:33.426800+00:00",
+        "last_changed": "2025-12-12T07:27:35.126607+00:00",
+        "last_reported": "2025-12-12T07:27:35.126607+00:00",
+        "last_updated": "2025-12-12T07:27:35.126607+00:00",
         "context": {
-            "id": "01KC8PGSQJJ8F2K1XSP9N0TQY3",
+            "id": "01KC8QAFPPY9Q1E4AMA2VXJJ70",
             "parent_id": null,
             "user_id": null
         }
@@ -9866,54 +9931,54 @@
     },
     {
         "entity_id": "sensor.bathroom_aqara_temperature",
-        "state": "16.47",
+        "state": "16.85",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
             "device_class": "temperature",
             "friendly_name": "Aqara Temperature"
         },
-        "last_changed": "2025-12-12T06:53:43.341550+00:00",
-        "last_reported": "2025-12-12T06:53:43.341550+00:00",
-        "last_updated": "2025-12-12T06:53:43.341550+00:00",
+        "last_changed": "2025-12-12T07:27:09.573895+00:00",
+        "last_reported": "2025-12-12T07:27:09.573895+00:00",
+        "last_updated": "2025-12-12T07:27:09.573895+00:00",
         "context": {
-            "id": "01KC8NCFHD259K2MRZ0P1YE26W",
+            "id": "01KC8Q9PR5FHGSDZW5H03JN5DZ",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.bathroom_aqara_humidity",
-        "state": "66.79",
+        "state": "66.86",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "%",
             "device_class": "humidity",
             "friendly_name": "Aqara Humidity"
         },
-        "last_changed": "2025-12-12T06:53:43.343508+00:00",
-        "last_reported": "2025-12-12T06:53:43.343508+00:00",
-        "last_updated": "2025-12-12T06:53:43.343508+00:00",
+        "last_changed": "2025-12-12T07:27:09.583423+00:00",
+        "last_reported": "2025-12-12T07:27:09.583423+00:00",
+        "last_updated": "2025-12-12T07:27:09.583423+00:00",
         "context": {
-            "id": "01KC8NCFHFJ22CJKN1YGWBHW68",
+            "id": "01KC8Q9PRFBWJYX55D05YW8A9Y",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.bathroom_aqara_pressure",
-        "state": "1008.2",
+        "state": "1008.4",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "hPa",
             "device_class": "atmospheric_pressure",
             "friendly_name": "Bathroom Aqara Atmospheric pressure"
         },
-        "last_changed": "2025-12-12T06:53:43.342936+00:00",
-        "last_reported": "2025-12-12T06:53:43.342936+00:00",
-        "last_updated": "2025-12-12T06:53:43.342936+00:00",
+        "last_changed": "2025-12-12T07:27:09.593406+00:00",
+        "last_reported": "2025-12-12T07:27:09.593406+00:00",
+        "last_updated": "2025-12-12T07:27:09.593406+00:00",
         "context": {
-            "id": "01KC8NCFHEK1KBT2YDYTYNZGMK",
+            "id": "01KC8Q9PRSG9HN3BD2F9GH5SCR",
             "parent_id": null,
             "user_id": null
         }
@@ -9938,36 +10003,36 @@
     },
     {
         "entity_id": "sensor.hugh_room_aqara_temperature",
-        "state": "18.56",
+        "state": "18.76",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
             "device_class": "temperature",
             "friendly_name": "Aqara Temperature"
         },
-        "last_changed": "2025-12-12T06:47:10.919534+00:00",
-        "last_reported": "2025-12-12T06:47:10.919534+00:00",
-        "last_updated": "2025-12-12T06:47:10.919534+00:00",
+        "last_changed": "2025-12-12T07:15:37.293315+00:00",
+        "last_reported": "2025-12-12T07:15:37.293315+00:00",
+        "last_updated": "2025-12-12T07:15:37.293315+00:00",
         "context": {
-            "id": "01KC8N0GA7S2EQRMKV0PRP104T",
+            "id": "01KC8PMJPD8DE3AFBD5SGTJDTC",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.hugh_room_aqara_humidity",
-        "state": "61.45",
+        "state": "61.29",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "%",
             "device_class": "humidity",
             "friendly_name": "Aqara Humidity"
         },
-        "last_changed": "2025-12-12T06:47:10.926303+00:00",
-        "last_reported": "2025-12-12T06:47:10.926303+00:00",
-        "last_updated": "2025-12-12T06:47:10.926303+00:00",
+        "last_changed": "2025-12-12T07:15:37.291970+00:00",
+        "last_reported": "2025-12-12T07:15:37.291970+00:00",
+        "last_updated": "2025-12-12T07:15:37.291970+00:00",
         "context": {
-            "id": "01KC8N0GAEWAAAHQTSEVF4J46Y",
+            "id": "01KC8PMJPBRZNA9FFBTRNTDNHW",
             "parent_id": null,
             "user_id": null
         }
@@ -11572,18 +11637,18 @@
     },
     {
         "entity_id": "sensor.snake_plant_signal_strength",
-        "state": "-84",
+        "state": "-88",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "dBm",
             "device_class": "signal_strength",
             "friendly_name": "Snake Plant Signal Strength"
         },
-        "last_changed": "2025-12-12T07:14:02.300081+00:00",
-        "last_reported": "2025-12-12T07:14:02.300081+00:00",
-        "last_updated": "2025-12-12T07:14:02.300081+00:00",
+        "last_changed": "2025-12-12T07:32:59.237560+00:00",
+        "last_reported": "2025-12-12T07:32:59.237560+00:00",
+        "last_updated": "2025-12-12T07:32:59.237560+00:00",
         "context": {
-            "id": "01KC8PHNXWB6R9DZ5MKQV723MT",
+            "id": "01KC8QMC75978RYVAXS5HT91PV",
             "parent_id": null,
             "user_id": null
         }
@@ -11652,11 +11717,11 @@
             "device_class": "temperature",
             "friendly_name": "Snake Plant Temperature"
         },
-        "last_changed": "2025-12-12T07:10:51.311193+00:00",
-        "last_reported": "2025-12-12T07:10:51.311193+00:00",
-        "last_updated": "2025-12-12T07:10:51.311193+00:00",
+        "last_changed": "2025-12-12T07:29:31.276740+00:00",
+        "last_reported": "2025-12-12T07:29:31.276740+00:00",
+        "last_updated": "2025-12-12T07:29:31.276740+00:00",
         "context": {
-            "id": "01KC8PBVDFWHJMG87HJGPG37V0",
+            "id": "01KC8QE14C7ESQ5ANHGZ9NNSD1",
             "parent_id": null,
             "user_id": null
         }
@@ -11837,17 +11902,17 @@
         "state": "on",
         "attributes": {
             "id": "1702818164083",
-            "last_triggered": "2025-12-12T07:14:17.873930+00:00",
+            "last_triggered": "2025-12-12T07:33:01.548346+00:00",
             "mode": "restart",
             "current": 0,
             "friendly_name": "Living Room Lights Occupied"
         },
         "last_changed": "2025-12-10T15:25:54.241367+00:00",
-        "last_reported": "2025-12-12T07:14:17.917535+00:00",
-        "last_updated": "2025-12-12T07:14:17.917535+00:00",
+        "last_reported": "2025-12-12T07:33:01.597899+00:00",
+        "last_updated": "2025-12-12T07:33:01.597899+00:00",
         "context": {
-            "id": "01KC8PJ54G1ANPX9KFVE2V5BM5",
-            "parent_id": "01KC8PJ54EQGAT89TCMJYD40RX",
+            "id": "01KC8QMEFBT8KTHC8HNV3HBCWT",
+            "parent_id": "01KC8QMEF02HZ0Q5ZMGC3TY81T",
             "user_id": null
         }
     },
@@ -12369,16 +12434,16 @@
         "state": "on",
         "attributes": {
             "id": "1713039340245",
-            "last_triggered": "2025-12-12T07:00:00.051901+00:00",
+            "last_triggered": "2025-12-12T07:27:09.575875+00:00",
             "mode": "single",
             "current": 0,
             "friendly_name": "Bathroom Previous Readings"
         },
         "last_changed": "2025-12-10T15:25:54.259112+00:00",
-        "last_reported": "2025-12-12T07:00:10.059239+00:00",
-        "last_updated": "2025-12-12T07:00:10.059239+00:00",
+        "last_reported": "2025-12-12T07:27:19.585251+00:00",
+        "last_updated": "2025-12-12T07:27:19.585251+00:00",
         "context": {
-            "id": "01KC8NR96BQ1CAVYPNY4S0PYBH",
+            "id": "01KC8QA0H1SR7CZCWYSANJWT14",
             "parent_id": null,
             "user_id": null
         }
@@ -12428,14 +12493,14 @@
             "id": "1715594297562",
             "last_triggered": "2025-12-12T07:10:01.468436+00:00",
             "mode": "single",
-            "current": 1,
+            "current": 0,
             "friendly_name": "Alarm Start"
         },
         "last_changed": "2025-12-10T15:25:54.261636+00:00",
-        "last_reported": "2025-12-12T07:10:01.472198+00:00",
-        "last_updated": "2025-12-12T07:10:01.468589+00:00",
+        "last_reported": "2025-12-12T07:15:07.823579+00:00",
+        "last_updated": "2025-12-12T07:15:07.823579+00:00",
         "context": {
-            "id": "01KC8PAAQVKTXW0NVHTAW4HHPM",
+            "id": "01KC8PKNXFQ54SQCRBGX42BVWT",
             "parent_id": null,
             "user_id": null
         }
@@ -12502,17 +12567,17 @@
         "state": "on",
         "attributes": {
             "id": "1717237084062",
-            "last_triggered": "2025-12-11T21:28:31.236383+00:00",
+            "last_triggered": "2025-12-12T07:15:07.220233+00:00",
             "mode": "single",
             "current": 0,
             "friendly_name": "Sync Google Mini Volumes"
         },
         "last_changed": "2025-12-10T15:25:54.264814+00:00",
-        "last_reported": "2025-12-11T21:28:31.244366+00:00",
-        "last_updated": "2025-12-11T21:28:31.244366+00:00",
+        "last_reported": "2025-12-12T07:15:08.374634+00:00",
+        "last_updated": "2025-12-12T07:15:08.374634+00:00",
         "context": {
-            "id": "01KC7N1J830NDBGXBWX1QH3VDD",
-            "parent_id": "01KC7N1J6RMVEPY27BWKC4T3FK",
+            "id": "01KC8PKNGR7FQ9VNMBX15A94NG",
+            "parent_id": "01KC8PKNAKRHWWP5M1HM0PKVED",
             "user_id": null
         }
     },
@@ -12559,17 +12624,17 @@
         "state": "on",
         "attributes": {
             "id": "1717788981796",
-            "last_triggered": "2025-12-11T18:54:26.438732+00:00",
+            "last_triggered": "2025-12-12T07:15:08.376028+00:00",
             "mode": "single",
             "current": 0,
             "friendly_name": "Adjust Media Player Volume"
         },
         "last_changed": "2025-12-10T15:25:54.267798+00:00",
-        "last_reported": "2025-12-11T18:54:26.501835+00:00",
-        "last_updated": "2025-12-11T18:54:26.501835+00:00",
+        "last_reported": "2025-12-12T07:15:09.394453+00:00",
+        "last_updated": "2025-12-12T07:15:09.394453+00:00",
         "context": {
-            "id": "01KC7C7E46SRR99WRYX6S3WHW3",
-            "parent_id": "01KC7C7D3J6XP0R06BDYJD7Q5J",
+            "id": "01KC8PKPEQ65M8917WT0ED3ED8",
+            "parent_id": "01KC8PKNAKRHWWP5M1HM0PKVED",
             "user_id": null
         }
     },
@@ -12578,17 +12643,17 @@
         "state": "on",
         "attributes": {
             "id": "1717798872586",
-            "last_triggered": "2025-12-11T18:54:26.442754+00:00",
+            "last_triggered": "2025-12-12T07:15:08.380235+00:00",
             "mode": "single",
             "current": 0,
             "friendly_name": "Control Playback Based on Volume"
         },
         "last_changed": "2025-12-10T15:25:54.268651+00:00",
-        "last_reported": "2025-12-11T18:54:26.451525+00:00",
-        "last_updated": "2025-12-11T18:54:26.451525+00:00",
+        "last_reported": "2025-12-12T07:15:08.388471+00:00",
+        "last_updated": "2025-12-12T07:15:08.388471+00:00",
         "context": {
-            "id": "01KC7C7E4AB19EBDSPN4SJSXQR",
-            "parent_id": "01KC7C7D3J6XP0R06BDYJD7Q5J",
+            "id": "01KC8PKPEVRVPY32HZ7Z7C47ZE",
+            "parent_id": "01KC8PKNAKRHWWP5M1HM0PKVED",
             "user_id": null
         }
     },
@@ -13073,17 +13138,17 @@
         "state": "on",
         "attributes": {
             "id": "1734951741728",
-            "last_triggered": "2025-12-12T07:14:17.891749+00:00",
+            "last_triggered": "2025-12-12T07:33:01.567441+00:00",
             "mode": "single",
             "current": 1,
             "friendly_name": "Git Backup"
         },
         "last_changed": "2025-12-10T15:25:54.289461+00:00",
-        "last_reported": "2025-12-12T07:14:17.891821+00:00",
-        "last_updated": "2025-12-12T07:14:17.891821+00:00",
+        "last_reported": "2025-12-12T07:33:01.567516+00:00",
+        "last_updated": "2025-12-12T07:33:01.567516+00:00",
         "context": {
-            "id": "01KC8PJ5532B4BDDZBABBYAVV8",
-            "parent_id": "01KC8PGP7ZY1B840YGJ66CF367",
+            "id": "01KC8QMEFY2X669HX7G29ESFD4",
+            "parent_id": "01KC8QJYNC500CSPNXTW2CE119",
             "user_id": null
         }
     },
@@ -13282,17 +13347,17 @@
         "state": "on",
         "attributes": {
             "id": "1754809462445",
-            "last_triggered": "2025-12-11T22:12:54.660313+00:00",
+            "last_triggered": "2025-12-12T07:15:07.807018+00:00",
             "mode": "restart",
             "current": 0,
             "friendly_name": "Set Hugh Room Blinds from Mode"
         },
         "last_changed": "2025-12-10T15:25:54.298847+00:00",
-        "last_reported": "2025-12-11T22:12:54.664635+00:00",
-        "last_updated": "2025-12-11T22:12:54.664635+00:00",
+        "last_reported": "2025-12-12T07:15:07.831771+00:00",
+        "last_updated": "2025-12-12T07:15:07.831771+00:00",
         "context": {
-            "id": "01KC7QJV83288TECK8EM7V6PCG",
-            "parent_id": "01KC7QJV7MV9E2262217G22S90",
+            "id": "01KC8PKNWYPQ98FF7JQ24RD2X7",
+            "parent_id": "01KC8PAAQVKTXW0NVHTAW4HHPM",
             "user_id": null
         }
     },
@@ -13301,17 +13366,17 @@
         "state": "on",
         "attributes": {
             "id": "1754809515058",
-            "last_triggered": "2025-12-11T22:12:54.644963+00:00",
+            "last_triggered": "2025-12-12T07:15:13.103552+00:00",
             "mode": "restart",
             "current": 0,
             "friendly_name": "Sync Hugh Room Blinds Mode"
         },
         "last_changed": "2025-12-10T15:25:54.299545+00:00",
-        "last_reported": "2025-12-11T22:12:54.658957+00:00",
-        "last_updated": "2025-12-11T22:12:54.658957+00:00",
+        "last_reported": "2025-12-12T07:15:13.111076+00:00",
+        "last_updated": "2025-12-12T07:15:13.111076+00:00",
         "context": {
-            "id": "01KC7QJV7MV9E2262217G22S90",
-            "parent_id": "01KC7QJS92NKYSJ4YWQB4XQR0K",
+            "id": "01KC8PKV2F1HC7ERXQ6GZJMAFN",
+            "parent_id": "01KC8PKNWYPQ98FF7JQ24RD2X7",
             "user_id": null
         }
     },
@@ -13529,17 +13594,17 @@
         "state": "on",
         "attributes": {
             "id": "1762130255049",
-            "last_triggered": "2025-12-11T22:12:45.815651+00:00",
+            "last_triggered": "2025-12-12T07:15:07.136604+00:00",
             "mode": "restart",
             "current": 0,
             "friendly_name": "Hugh Room Purifier Unified Logic"
         },
         "last_changed": "2025-12-10T15:25:54.307992+00:00",
-        "last_reported": "2025-12-11T22:12:46.600116+00:00",
-        "last_updated": "2025-12-11T22:12:46.600116+00:00",
+        "last_reported": "2025-12-12T07:15:08.061032+00:00",
+        "last_updated": "2025-12-12T07:15:08.061032+00:00",
         "context": {
-            "id": "01KC7QJJKP6S2QTY6K9YYZ5DGA",
-            "parent_id": "01KC7QJJJS4JEWTKSHSXKW5P3S",
+            "id": "01KC8PKN80M8GNC0H3SJX8JASE",
+            "parent_id": "01KC8PKH3YNF1GB9EWSJR56514",
             "user_id": null
         }
     },
@@ -13659,7 +13724,7 @@
     },
     {
         "entity_id": "sensor.network_scanner",
-        "state": "22",
+        "state": "23",
         "attributes": {
             "devices": [
                 {
@@ -13815,6 +13880,14 @@
                     "hostname": ""
                 },
                 {
+                    "ip": "192.168.0.207",
+                    "mac": "14:1B:A0:86:C9:41",
+                    "name": "Unknown Device",
+                    "type": "Unknown Device",
+                    "vendor": "Apple",
+                    "hostname": ""
+                },
+                {
                     "ip": "192.168.0.211",
                     "mac": "DE:D5:92:46:73:DD",
                     "name": "Unknown Device",
@@ -13832,7 +13905,7 @@
                 },
                 {
                     "ip": "192.168.0.255",
-                    "mac": "14:C1:4E:3E:60:A3",
+                    "mac": "1C:53:F9:18:96:1E",
                     "name": "Unknown Device",
                     "type": "Unknown Device",
                     "vendor": "Google",
@@ -13842,11 +13915,11 @@
             "unit_of_measurement": "Devices",
             "friendly_name": "Network Scanner"
         },
-        "last_changed": "2025-12-12T06:58:40.008415+00:00",
-        "last_reported": "2025-12-12T07:13:43.725691+00:00",
-        "last_updated": "2025-12-12T07:13:43.725691+00:00",
+        "last_changed": "2025-12-12T07:28:37.166646+00:00",
+        "last_reported": "2025-12-12T07:28:37.166646+00:00",
+        "last_updated": "2025-12-12T07:28:37.166646+00:00",
         "context": {
-            "id": "01KC8PH3SD0Y8XNP9Y8FD8YXZQ",
+            "id": "01KC8QCC9EVD8YH0DZ58JHJTEZ",
             "parent_id": null,
             "user_id": null
         }
@@ -13985,8 +14058,14 @@
     },
     {
         "entity_id": "media_player.battery_speaker_2",
-        "state": "off",
+        "state": "playing",
         "attributes": {
+            "volume_level": 0.2,
+            "media_content_type": "music",
+            "app_id": "music_assistant",
+            "shuffle": false,
+            "repeat": "off",
+            "entity_picture_local": null,
             "mass_player_type": "player",
             "active_queue": "media_player.battery_speaker",
             "device_class": "speaker",
@@ -13994,31 +14073,42 @@
             "friendly_name": "Battery Speaker",
             "supported_features": 7796671
         },
-        "last_changed": "2025-12-12T04:46:48.699847+00:00",
-        "last_reported": "2025-12-12T04:46:48.699847+00:00",
-        "last_updated": "2025-12-12T04:46:48.699847+00:00",
+        "last_changed": "2025-12-12T07:15:07.344070+00:00",
+        "last_reported": "2025-12-12T07:15:07.431930+00:00",
+        "last_updated": "2025-12-12T07:15:07.431930+00:00",
         "context": {
-            "id": "01KC8E43BV82AKZMSF9H3EQRYZ",
+            "id": "01KC8PKNH7NXT5GA2BRQTTJ27P",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "media_player.hugh_room_stereo_2",
-        "state": "off",
+        "state": "playing",
         "attributes": {
+            "volume_level": 0.2,
+            "media_content_id": "library://radio/3",
+            "media_content_type": "music",
+            "media_position": 0,
+            "media_position_updated_at": "2025-12-12T07:15:07.202445+00:00",
+            "media_title": "Today FM",
+            "app_id": "music_assistant",
+            "shuffle": false,
+            "repeat": "off",
+            "entity_picture_local": "/api/media_player_proxy/media_player.hugh_room_stereo_2?token=f4dc6ea231f0eaaf0fb0a1fc201ecdd1cc8e1e23315a6a36400fb47fb204cd5d&cache=84f138d8c04e70fd",
             "mass_player_type": "player",
             "active_queue": "media_player.hugh_room_stereo",
             "device_class": "speaker",
+            "entity_picture": "https://img.resized.co/shuffle/eyJkYXRhIjoie1widXJsXCI6XCJodHRwczovL21lZGlhLmdvbG91ZG5vdy5jb20vdXBsb2Fkcy8xNzIxMTQ0MzY1L1RERk1fUHVibGlzaGVyLnBuZ1wiLFwid2lkdGhcIjpcIjEyMFwiLFwiaGVpZ2h0XCI6XCIxMjBcIixcImRlZmF1bHRcIjpcImh0dHBzOi8vd3d3LmdvbG91ZG5vdy5jb20vaW1hZ2VzL2xvZ28uc3ZnXCJ9IiwiaGFzaCI6Ijk0ODdkMDVlMzI5Yjg3MzRkYjhlYWZhNmE5MGNjN2E4ZmNiYzVlZWIifQ==/TDFM_Publisher.png",
             "icon": "mdi:speaker",
             "friendly_name": "Hugh Room Stereo",
             "supported_features": 7796671
         },
-        "last_changed": "2025-12-12T02:34:47.021605+00:00",
-        "last_reported": "2025-12-12T02:34:47.021605+00:00",
-        "last_updated": "2025-12-12T02:34:47.021605+00:00",
+        "last_changed": "2025-12-12T07:15:07.347956+00:00",
+        "last_reported": "2025-12-12T07:15:07.525954+00:00",
+        "last_updated": "2025-12-12T07:15:07.525954+00:00",
         "context": {
-            "id": "01KC86JBBD2ES4CT257ZBRYV37",
+            "id": "01KC8PKNM513ZN047N39NR4JVZ",
             "parent_id": null,
             "user_id": null
         }
@@ -14115,35 +14205,41 @@
     },
     {
         "entity_id": "button.universal_player_favorite_current_song",
-        "state": "unavailable",
+        "state": "unknown",
         "attributes": {
-            "restored": true,
-            "friendly_name": "Favourite current song",
-            "supported_features": 0
+            "friendly_name": "universal_player Favourite current song"
         },
-        "last_changed": "2025-12-11T23:11:11.510315+00:00",
-        "last_reported": "2025-12-11T23:11:11.510315+00:00",
-        "last_updated": "2025-12-11T23:11:11.510315+00:00",
+        "last_changed": "2025-12-12T07:15:03.209232+00:00",
+        "last_reported": "2025-12-12T07:15:07.527266+00:00",
+        "last_updated": "2025-12-12T07:15:03.209232+00:00",
         "context": {
-            "id": "01KC7TXJ4PC9F5Y3CTRFGANZFF",
+            "id": "01KC8PKHD9CHNRJGR66RYES4SD",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "media_player.universal_player_2",
-        "state": "unavailable",
+        "state": "playing",
         "attributes": {
-            "restored": true,
+            "volume_level": 0.2,
+            "media_content_type": "music",
+            "app_id": "music_assistant",
+            "shuffle": false,
+            "repeat": "off",
+            "entity_picture_local": null,
+            "mass_player_type": "player",
+            "active_queue": "media_player.universal_player",
             "device_class": "speaker",
             "icon": "mdi:speaker",
+            "friendly_name": "universal_player",
             "supported_features": 7796671
         },
-        "last_changed": "2025-12-11T23:11:11.783730+00:00",
-        "last_reported": "2025-12-11T23:11:11.783730+00:00",
-        "last_updated": "2025-12-11T23:11:11.783730+00:00",
+        "last_changed": "2025-12-12T07:15:07.363544+00:00",
+        "last_reported": "2025-12-12T07:15:07.527730+00:00",
+        "last_updated": "2025-12-12T07:15:07.527730+00:00",
         "context": {
-            "id": "01KC7TXJD75J342HNP6NMVGG9E",
+            "id": "01KC8PKNM73YSDK0B7ADJ12034",
             "parent_id": null,
             "user_id": null
         }
@@ -14187,7 +14283,7 @@
     },
     {
         "entity_id": "scene.living_room_lights_last_state",
-        "state": "2025-12-12T07:13:29.867943+00:00",
+        "state": "2025-12-12T07:32:12.598128+00:00",
         "attributes": {
             "entity_id": [
                 "light.living_room_ceiling",
@@ -14197,11 +14293,11 @@
             ],
             "friendly_name": "living_room_lights_last_state"
         },
-        "last_changed": "2025-12-12T07:14:17.882017+00:00",
-        "last_reported": "2025-12-12T07:14:17.882017+00:00",
-        "last_updated": "2025-12-12T07:14:17.882017+00:00",
+        "last_changed": "2025-12-12T07:33:01.556396+00:00",
+        "last_reported": "2025-12-12T07:33:01.556396+00:00",
+        "last_updated": "2025-12-12T07:33:01.556396+00:00",
         "context": {
-            "id": "01KC8PJ54TREY1V3FJ407NRC2K",
+            "id": "01KC8QMEFM4KFQGEZPV505PF7Y",
             "parent_id": null,
             "user_id": null
         }
