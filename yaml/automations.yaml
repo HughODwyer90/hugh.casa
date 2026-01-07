@@ -1877,15 +1877,15 @@
 - id: '1717237084062'
   alias: Sync Google Mini Volumes
   description: Adjust all Google Minis to have the same volume when one changes
-  trigger:
+  triggers:
   - trigger: state
     entity_id:
     - media_player.battery_speaker
     - media_player.hugh_room_speaker
     - media_player.hugh_room_speaker_2
-    - media_player.hugh_room_display
+    - media_player.master_bedroom_display
     attribute: volume_level
-  action:
+  actions:
   - condition: template
     value_template: '{{ state_attr(trigger.entity_id, ''volume_level'') | float !=
       states(''input_number.universal_player_volume'') | float / 10 }}
@@ -1895,8 +1895,8 @@
     data_template:
       entity_id: '{% set changed_entity = trigger.entity_id %} {% set entities = [''media_player.battery_speaker'',
         ''media_player.hugh_room_speaker'', ''media_player.hugh_room_speaker_2'',
-        ''media_player.hugh_room_display''] %} {{ entities | reject(''equalto'', changed_entity)
-        | list }}
+        ''media_player.master_bedroom_display''] %} {{ entities | reject(''equalto'',
+        changed_entity) | list }}
 
         '
       volume_level: '{{ state_attr(trigger.entity_id, ''volume_level'') }}'
@@ -2048,37 +2048,37 @@
 - id: '1720953328203'
   alias: Redirect Display Audio to Stereo Group
   description: Redirect audio to hugh_room_stereo if it plays only on the display
-  trigger:
+  triggers:
   - trigger: state
-    entity_id: media_player.hugh_room_display
+    entity_id: media_player.master_bedroom_display
     attribute: state
     to: playing
-  condition:
+  conditions:
   - condition: template
     value_template: '{% set entities = [''media_player.battery_speaker'', ''media_player.hugh_room_speaker'',
-      ''media_player.hugh_room_speaker_2'', ''media_player.hugh_room_display''] %}
-      {% set playing_entities = entities | select(''search'', ''playing'') | list
-      %} {{ playing_entities | length == 1 and ''media_player.hugh_room_display''
+      ''media_player.hugh_room_speaker_2'', ''media_player.master_bedroom_display'']
+      %} {% set playing_entities = entities | select(''search'', ''playing'') | list
+      %} {{ playing_entities | length == 1 and ''media_player.master_bedroom_display''
       in playing_entities }}
 
       '
-  action:
+  actions:
   - action: media_player.media_stop
     data_template:
-      entity_id: media_player.hugh_room_display
+      entity_id: media_player.master_bedroom_display
   - delay: 00:00:03
   - action: media_player.play_media
     data_template:
       entity_id: media_player.hugh_room_stereo
-      media_content_id: '{{ state_attr(''media_player.hugh_room_display'', ''media_content_id'')
+      media_content_id: '{{ state_attr(''media_player.master_bedroom_display'', ''media_content_id'')
         }}'
-      media_content_type: '{{ state_attr(''media_player.hugh_room_display'', ''media_content_type'')
-        }}'
+      media_content_type: '{{ state_attr(''media_player.master_bedroom_display'',
+        ''media_content_type'') }}'
   - delay: 00:00:05
   - action: media_player.volume_set
     data_template:
       entity_id: media_player.hugh_room_stereo
-      volume_level: '{{ state_attr(''media_player.hugh_room_display'', ''volume_level'')
+      volume_level: '{{ state_attr(''media_player.master_bedroom_display'', ''volume_level'')
         }}'
 - id: '1721393948523'
   alias: Initialize Previous Odometer and Fuel Quantity
@@ -3910,14 +3910,14 @@
     - conditions:
       - condition: template
         value_template: "{% set players = [\n  'media_player.hugh_room_stereo_2',\n
-          \ 'media_player.hugh_room_stereo',\n  'media_player.hugh_room_display',\n
+          \ 'media_player.hugh_room_stereo',\n  'media_player.master_bedroom_display',\n
           \ 'media_player.hugh_room_speaker',\n  'media_player.hugh_room_speaker_2',\n
           \ 'media_player.battery_speaker'\n] %} {{ players | select('is_state','playing')
           | list | count > 0 }}\n"
       sequence:
       - data:
           entity_id: "{% set players = [\n  'media_player.hugh_room_stereo_2',\n  'media_player.hugh_room_stereo',\n
-            \ 'media_player.hugh_room_display',\n  'media_player.hugh_room_speaker',\n
+            \ 'media_player.master_bedroom_display',\n  'media_player.hugh_room_speaker',\n
             \ 'media_player.hugh_room_speaker_2',\n  'media_player.battery_speaker'\n]
             %} {{ players | select('is_state','playing') | list | first }}\n"
         action: media_player.media_previous_track
@@ -3933,18 +3933,18 @@
     - conditions:
       - condition: template
         value_template: "{% set players = [\n  'media_player.hugh_room_stereo_2',\n
-          \ 'media_player.hugh_room_stereo',\n  'media_player.hugh_room_display',\n
+          \ 'media_player.hugh_room_stereo',\n  'media_player.master_bedroom_display',\n
           \ 'media_player.hugh_room_speaker',\n  'media_player.hugh_room_speaker_2',\n
           \ 'media_player.battery_speaker'\n] %} {{ players | select('is_state','playing')
           | list | count > 0 }}\n"
       sequence:
       - data:
           entity_id: "{% set players = [\n  'media_player.hugh_room_stereo_2',\n  'media_player.hugh_room_stereo',\n
-            \ 'media_player.hugh_room_display',\n  'media_player.hugh_room_speaker',\n
+            \ 'media_player.master_bedroom_display',\n  'media_player.hugh_room_speaker',\n
             \ 'media_player.hugh_room_speaker_2',\n  'media_player.battery_speaker'\n]
             %} {{ players | select('is_state','playing') | list | first }}\n"
         action: "{% set players = [\n  'media_player.hugh_room_stereo_2',\n  'media_player.hugh_room_stereo',\n
-          \ 'media_player.hugh_room_display',\n  'media_player.hugh_room_speaker',\n
+          \ 'media_player.master_bedroom_display',\n  'media_player.hugh_room_speaker',\n
           \ 'media_player.hugh_room_speaker_2',\n  'media_player.battery_speaker'\n]
           %} media_player.media_next_track\n"
   mode: single
@@ -3958,7 +3958,7 @@
   - choose:
     - conditions:
       - condition: template
-        value_template: "{% set singles = [\n  'media_player.hugh_room_display',\n
+        value_template: "{% set singles = [\n  'media_player.master_bedroom_display',\n
           \ 'media_player.hugh_room_speaker',\n  'media_player.hugh_room_speaker_2',\n
           \ 'media_player.battery_speaker'\n] %} {% set active = singles | select('is_state','playing')
           | list %}\n{% if active | count == 0 %}\n  false\n{% else %}\n  {% set p
@@ -3967,7 +3967,7 @@
           }}\n{% endif %}\n"
       sequence:
       - variables:
-          single_player: "{% set singles = [\n  'media_player.hugh_room_display',\n
+          single_player: "{% set singles = [\n  'media_player.master_bedroom_display',\n
             \ 'media_player.hugh_room_speaker',\n  'media_player.hugh_room_speaker_2',\n
             \ 'media_player.battery_speaker'\n] %} {{ singles | select('is_state','playing')
             | list | first }}\n"
@@ -3997,7 +3997,7 @@
     - conditions:
       - condition: template
         value_template: "{{ not is_state('media_player.hugh_room_stereo','playing')\n
-          \  and not is_state('media_player.hugh_room_display','playing')\n   and
+          \  and not is_state('media_player.master_bedroom_display','playing')\n   and
           not is_state('media_player.hugh_room_speaker','playing')\n   and not is_state('media_player.hugh_room_speaker_2','playing')\n
           \  and not is_state('media_player.battery_speaker','playing') }}\n"
       sequence:
@@ -4064,12 +4064,12 @@
       seconds: 2
   conditions:
   - condition: template
-    value_template: "{{ [\n  'media_player.hugh_room_display',\n  'media_player.hugh_room_speaker',\n
+    value_template: "{{ [\n  'media_player.master_bedroom_display',\n  'media_player.hugh_room_speaker',\n
       \ 'media_player.hugh_room_speaker_2',\n  'media_player.battery_speaker',\n  'media_player.hugh_room_stereo'\n]
       | select('is_state','playing') | list | count > 0 }}\n"
   actions:
   - variables:
-      active: "{{ [\n  'media_player.hugh_room_display',\n  'media_player.hugh_room_speaker',\n
+      active: "{{ [\n  'media_player.master_bedroom_display',\n  'media_player.hugh_room_speaker',\n
         \ 'media_player.hugh_room_speaker_2',\n  'media_player.battery_speaker',\n
         \ 'media_player.hugh_room_stereo'\n] | select('is_state','playing') | list
         }}\n"
