@@ -19,7 +19,7 @@
   - action: media_player.volume_up
     target:
       entity_id:
-      - media_player.hugh_room_display
+      - media_player.master_bedroom_display
     data: {}
   mode: single
   icon: mdi:volume-plus
@@ -30,7 +30,7 @@ hugh_room_stereo_volume_down:
     data: {}
     enabled: true
     target:
-      entity_id: media_player.hugh_room_display
+      entity_id: media_player.master_bedroom_display
   mode: single
   icon: mdi:volume-minus
 execute_alarm_actions:
@@ -87,8 +87,10 @@ execute_alarm_actions:
           sequence:
           - action: media_player.play_media
             data:
-              media_content_id: media-source://radio_browser/d0a1da9f-46b3-11e9-aa55-52543be04c81
-              media_content_type: audio/mpeg
+              media:
+                media_content_id: media-source://radio_browser/d0a1da9f-46b3-11e9-aa55-52543be04c81
+                media_content_type: audio/mpeg
+                metadata: {}
             target:
               entity_id: media_player.hugh_room_speaker
   - action: media_player.volume_set
@@ -99,7 +101,7 @@ execute_alarm_actions:
       - media_player.battery_speaker
       - media_player.hugh_room_speaker
       - media_player.hugh_room_speaker_2
-      - media_player.hugh_room_display
+      - media_player.master_bedroom_display
   - choose:
     - conditions:
       - condition: state
