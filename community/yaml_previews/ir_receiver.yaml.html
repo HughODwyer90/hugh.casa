@@ -16,7 +16,7 @@
                 <pre class="yaml-content">esphome:
   name: esphome-web-ab1d70
   friendly_name: IR Receiver
-  compile_process_limit: 2
+  compile_process_limit: 1
 
   on_boot:
     priority: 900
@@ -37,12 +37,13 @@ logger:
     binary_sensor: DEBUG
 
 wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
+  ssid: &#x27;Nat1&#x27;
+  password: &#x27;CritRoll&#x27;
   manual_ip:
     static_ip: 192.168.0.140
     gateway: 192.168.0.1
     subnet: 255.255.255.0
+
 
 ota:
   platform: esphome
