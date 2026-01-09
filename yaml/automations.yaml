@@ -299,8 +299,9 @@
           after_offset: -01:30:00
       - target:
           entity_id:
-          - light.hall_downstairs_ceiling
-          - light.hall_upstairs_ceiling
+          - light.hall_wall_1
+          - light.hall_wall_2
+          - light.hall_wall_3
         data: {}
         action: light.turn_on
     - conditions:
@@ -310,8 +311,9 @@
       sequence:
       - target:
           entity_id:
-          - light.hall_downstairs_ceiling
-          - light.hall_upstairs_ceiling
+          - light.hall_wall_1
+          - light.hall_wall_2
+          - light.hall_wall_3
         data: {}
         action: light.turn_off
     default: []
