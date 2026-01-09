@@ -78,3 +78,17 @@
         {% else %}
           mdi:alert
         {% endif %}
+
+    - name: "Bed Sensor"
+      unique_id: bed_sensor
+      device_class: occupancy
+      state: >
+        {{ is_state('binary_sensor.pressure_bed_sensor_left', 'on')
+          or is_state('binary_sensor.pressure_bed_sensor_right', 'on') }}
+      icon: >
+        {% if is_state('binary_sensor.bed_sensor', 'on') %}
+          mdi:bed
+        {% else %}
+          mdi:bed-empty
+        {% endif %}
+
