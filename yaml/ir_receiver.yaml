@@ -22,8 +22,8 @@ logger:
     binary_sensor: DEBUG
 
 wifi:
-  ssid: 'Nat1'
-  password: 'CritRoll'
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
   manual_ip:
     static_ip: 192.168.0.140
     gateway: 192.168.0.1
