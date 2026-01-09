@@ -87,19 +87,19 @@ binary_sensor:
       number: 13
       inverted: true
       mode: INPUT_PULLUP
-    name: "Rug Sensor"
+    name: "Bed Sensor Right"
     id: rug_sensor
     device_class: occupancy
     filters:
-      - delayed_on: 0s
-      - delayed_off: 5s
+      - delayed_on: 2s
+      - delayed_off: 2s
 
   - platform: gpio
     pin:
       number: 15
       inverted: true
       mode: INPUT_PULLUP
-    name: "Bed Sensor"
+    name: "Bed Sensor Left"
     id: bed_sensor
     device_class: occupancy
     filters:
