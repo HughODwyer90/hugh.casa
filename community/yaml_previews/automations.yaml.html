@@ -1209,10 +1209,6 @@
     event_data:
       action: TURN_OFF_ALARM
   - trigger: state
-    id: rug
-    entity_id: binary_sensor.rug_sensor
-    to: &#x27;on&#x27;
-  - trigger: state
     id: pc
     entity_id: binary_sensor.pc_status
     to: &#x27;on&#x27;
@@ -3616,10 +3612,6 @@
     \ but ignores rug or phone triggers while bed, PC, or monitor are on.\n- Skips
     during 03:20–03:40 maintenance window.\n&quot;
   triggers:
-  - trigger: state
-    entity_id: binary_sensor.rug_sensor
-    to: &#x27;on&#x27;
-    id: rug_press
   - trigger: state
     entity_id: binary_sensor.bed_sensor
     to: &#x27;on&#x27;
