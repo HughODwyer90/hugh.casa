@@ -12,7 +12,7 @@
             <div class="fixed-header">
                 <h1>Home Assistant Entities</h1>
                 <p>Total Entities: 730 (Redacted: 16)</p>
-                <p>Version: 2026-01-10-002614</p>
+                <p>Version: 2026-01-10-003343</p>
                 <div class="search-container">
                     <input type="text" id="entitySearch" class="search-box" placeholder="🔍 Search entities...">
                 </div>
@@ -1269,14 +1269,6 @@
             </tr>
         
             <tr>
-                <td>button.0x980c33fffeffc9ac_identify</td>
-                <td>0x980c33fffeffc9ac Identify</td>
-                <td>N/A</td>
-                <td>unknown</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>button.bathroom_aqara_battery_replaced</td>
                 <td>Bathroom Aqara Battery replaced</td>
                 <td>N/A</td>
@@ -1506,6 +1498,14 @@
                 <td>N/A</td>
                 <td>unavailable</td>
                 <td>No</td>
+            </tr>
+        
+            <tr>
+                <td>button.utility_identify</td>
+                <td>Utility Identify</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -2277,14 +2277,6 @@
             </tr>
         
             <tr>
-                <td>light.0x980c33fffeffc9ac</td>
-                <td>Light Ceiling</td>
-                <td>N/A</td>
-                <td>unknown</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>light.aroma_diffuser</td>
                 <td>Aroma diffuser</td>
                 <td>N/A</td>
@@ -2361,6 +2353,14 @@
                 <td>Rory Room Ceiling</td>
                 <td>N/A</td>
                 <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>light.utility</td>
+                <td>Light Ceiling</td>
+                <td>N/A</td>
+                <td>unknown</td>
                 <td>Yes</td>
             </tr>
         
@@ -2957,14 +2957,6 @@
             </tr>
         
             <tr>
-                <td>select.0x980c33fffeffc9ac_power_on_behavior</td>
-                <td>0x980c33fffeffc9ac Power-on behavior</td>
-                <td>N/A</td>
-                <td>unknown</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>select.aroma_diffuser_mood_lighting</td>
                 <td>Aroma diffuser Mood lighting</td>
                 <td>N/A</td>
@@ -3141,18 +3133,18 @@
             </tr>
         
             <tr>
-                <td>select.zigbee2mqtt_bridge_log_level</td>
-                <td>Zigbee2MQTT Bridge Log level</td>
+                <td>select.utility_power_on_behavior</td>
+                <td>Utility Power-on behavior</td>
                 <td>N/A</td>
-                <td>info</td>
+                <td>unknown</td>
                 <td>Yes</td>
             </tr>
         
             <tr>
-                <td>sensor.0x980c33fffeffc9ac_color_options</td>
-                <td>0x980c33fffeffc9ac Color options</td>
+                <td>select.zigbee2mqtt_bridge_log_level</td>
+                <td>Zigbee2MQTT Bridge Log level</td>
                 <td>N/A</td>
-                <td>unknown</td>
+                <td>info</td>
                 <td>Yes</td>
             </tr>
         
@@ -3392,7 +3384,7 @@
                 <td>sensor.bathroom_motion_temperature</td>
                 <td>Hue Temperature</td>
                 <td>°C</td>
-                <td>15.43</td>
+                <td>15.46</td>
                 <td>Yes</td>
             </tr>
         
@@ -3512,7 +3504,7 @@
                 <td>sensor.buttons</td>
                 <td>Home Assistant Buttons</td>
                 <td>N/A</td>
-                <td>30</td>
+                <td>31</td>
                 <td>Yes</td>
             </tr>
         
@@ -3680,7 +3672,7 @@
                 <td>sensor.date_time_iso</td>
                 <td>Date & Time (ISO)</td>
                 <td>N/A</td>
-                <td>2026-01-10 00:26:00</td>
+                <td>2026-01-10 00:33:00</td>
                 <td>Yes</td>
             </tr>
         
@@ -3728,7 +3720,7 @@
                 <td>sensor.devices</td>
                 <td>Home Assistant Devices</td>
                 <td>N/A</td>
-                <td>106</td>
+                <td>107</td>
                 <td>Yes</td>
             </tr>
         
@@ -3736,7 +3728,7 @@
                 <td>sensor.entities</td>
                 <td>Home Assistant Entities</td>
                 <td>N/A</td>
-                <td>725</td>
+                <td>730</td>
                 <td>Yes</td>
             </tr>
         
@@ -4288,7 +4280,7 @@
                 <td>sensor.lights</td>
                 <td>Home Assistant Lights</td>
                 <td>N/A</td>
-                <td>10</td>
+                <td>11</td>
                 <td>Yes</td>
             </tr>
         
@@ -4712,7 +4704,7 @@
                 <td>sensor.selects</td>
                 <td>Home Assistant Selects</td>
                 <td>N/A</td>
-                <td>23</td>
+                <td>24</td>
                 <td>Yes</td>
             </tr>
         
@@ -4720,7 +4712,7 @@
                 <td>sensor.sensors</td>
                 <td>Home Assistant Sensors</td>
                 <td>N/A</td>
-                <td>249</td>
+                <td>250</td>
                 <td>Yes</td>
             </tr>
         
@@ -4776,7 +4768,7 @@
                 <td>sensor.snake_plant_illuminance</td>
                 <td>Snake Plant Illuminance</td>
                 <td>lx</td>
-                <td>120</td>
+                <td>145</td>
                 <td>Yes</td>
             </tr>
         
@@ -4792,7 +4784,7 @@
                 <td>sensor.snake_plant_signal_strength</td>
                 <td>Snake Plant Signal Strength</td>
                 <td>dBm</td>
-                <td>-100</td>
+                <td>-96</td>
                 <td>Yes</td>
             </tr>
         
@@ -4800,7 +4792,7 @@
                 <td>sensor.snake_plant_temperature</td>
                 <td>Snake Plant Temperature</td>
                 <td>°C</td>
-                <td>18.1</td>
+                <td>18.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -4928,7 +4920,15 @@
                 <td>sensor.update</td>
                 <td>Home Assistant Update</td>
                 <td>N/A</td>
-                <td>43</td>
+                <td>44</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.utility_color_options</td>
+                <td>Utility Color options</td>
+                <td>N/A</td>
+                <td>unknown</td>
                 <td>Yes</td>
             </tr>
         
@@ -5461,14 +5461,6 @@
             </tr>
         
             <tr>
-                <td>update.0x980c33fffeffc9ac</td>
-                <td>0x980c33fffeffc9ac</td>
-                <td>N/A</td>
-                <td>unknown</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>update.adaptive_lighting_update</td>
                 <td>Adaptive Lighting update</td>
                 <td>N/A</td>
@@ -5793,6 +5785,14 @@
                 <td>Tuya Local update</td>
                 <td>N/A</td>
                 <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.utility</td>
+                <td>Utility</td>
+                <td>N/A</td>
+                <td>unknown</td>
                 <td>Yes</td>
             </tr>
         
