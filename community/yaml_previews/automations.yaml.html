@@ -317,7 +317,10 @@
           - light.hall_wall_1
           - light.hall_wall_2
           - light.hall_wall_3
-        data: {}
+        data:
+          color_temp_kelvin: 2750
+          brightness_pct: 100
+          transition: 3
         action: light.turn_on
     - conditions:
       - condition: state
@@ -329,7 +332,8 @@
           - light.hall_wall_1
           - light.hall_wall_2
           - light.hall_wall_3
-        data: {}
+        data:
+          transition: 3
         action: light.turn_off
     default: []
   mode: single
