@@ -516,6 +516,7 @@
       - condition: state
         entity_id: light.hugh_room_lamp
         state: 'on'
+        enabled: false
       sequence:
       - entity_id: light.hugh_room_ceiling
         action: light.turn_off
@@ -529,10 +530,17 @@
           entity_id: input_select.hugh_room_blinds_mode
         data:
           option: Closed
+    - conditions: []
+      sequence:
+      - action: light.toggle
+        target:
+          entity_id: light.hugh_room_ceiling
+        data: {}
     - conditions:
       - condition: state
         entity_id: light.hugh_room_lamp
         state: 'on'
+        enabled: true
       sequence:
       - entity_id: light.hugh_room_lamp
         action: light.turn_off
@@ -548,6 +556,7 @@
       - condition: state
         entity_id: light.hugh_room_lamp
         state: 'off'
+        enabled: false
       - condition: state
         entity_id: light.hugh_room_ceiling
         state: 'off'
@@ -556,7 +565,6 @@
           entity_id: light.hugh_room_lamp
           transition: 2
         action: light.turn_on
-    default: []
   mode: restart
 - id: '1703009827757'
   alias: Hugh Room Door Button Single
