@@ -103,19 +103,19 @@
 - id: '1700841548515'
   alias: Living Room Brighten
   description: Brighten up any on lights in the living room.
-  trigger:
+  triggers:
   - trigger: device
     domain: mqtt
     device_id: 9f98b882a412e95e16f1addf1f9e8e27
     type: action
     subtype: up_press
     discovery_id: 0x0017880109a49868 action_up_press
-  condition: []
-  action:
+  conditions: []
+  actions:
   - choose:
     - conditions:
       - condition: state
-        entity_id: light.living_room_floor_back
+        entity_id: light.living_room_floor_lamp
         state: 'on'
       sequence:
       - action: light.turn_on
@@ -126,7 +126,7 @@
   - choose:
     - conditions:
       - condition: state
-        entity_id: light.living_room_floor_front
+        entity_id: light.living_room_bookshelf
         state: 'on'
       sequence:
       - action: light.turn_on
