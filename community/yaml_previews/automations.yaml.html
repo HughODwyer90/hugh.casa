@@ -1515,24 +1515,6 @@
           duration: 00:15:00
         action: timer.start
   mode: restart
-- id: &#x27;1712955954028&#x27;
-  alias: Living Room Floor Lamps
-  description: &#x27;&#x27;
-  trigger:
-  - trigger: device
-    domain: mqtt
-    device_id: 9f98b882a412e95e16f1addf1f9e8e27
-    type: action
-    subtype: off_hold
-  condition: []
-  action:
-  - action: light.toggle
-    target:
-      entity_id:
-      - light.living_room_floor_front
-      - light.living_room_floor_back
-    data: {}
-  mode: single
 - id: &#x27;1713004095933&#x27;
   alias: Admin Home Assistant Restart
   description: &#x27;Restarts HA every 2 weeks on Sunday at 03:30, via mobile action, or
