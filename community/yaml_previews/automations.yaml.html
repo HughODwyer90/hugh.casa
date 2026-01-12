@@ -15,59 +15,40 @@
             <div class="scrollable-content">
                 <pre class="yaml-content">- id: &#x27;1700840909519&#x27;
   alias: Living Room Light Toggle
-  description: Toggle living room lights on or off.
+  description: Toggle living room lights on or off (and snapshot before turning off).
   triggers:
-  - event_type: z2m_event
-    event_data:
-      device: living_room_phillips_switch
-      action: on_press
-    trigger: event
+  - domain: mqtt
+    device_id: 9f98b882a412e95e16f1addf1f9e8e27
+    type: action
+    subtype: on_press
+    trigger: device
   conditions: []
   actions:
+  - variables:
+      lr_lights:
+      - light.living_room_floor_lamp
+      - light.living_room_bookshelf
+      - light.living_room_ceiling
+      lr_any_on: &#x27;{{ lr_lights | select(&#x27;&#x27;is_state&#x27;&#x27;,&#x27;&#x27;on&#x27;&#x27;) | list | length &gt; 0 }}&#x27;
   - choose:
     - conditions:
-      - condition: state
-        entity_id: light.living_room_floor_back
-        state: &#x27;off&#x27;
-      - condition: state
-        entity_id: light.living_room_floor_front
-        state: &#x27;off&#x27;
-      - condition: state
-        entity_id: light.living_room_ceiling
-        state: &#x27;off&#x27;
+      - condition: template
+        value_template: &#x27;{{ lr_any_on }}&#x27;
       sequence:
-      - target:
-          entity_id: scene.living_room_all_lights_on
-        data: {}
-        action: scene.turn_on
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: light.living_room_floor_back
-          state: &#x27;on&#x27;
-        - condition: state
-          entity_id: light.living_room_floor_front
-          state: &#x27;on&#x27;
-        - condition: state
-          entity_id: light.living_room_ceiling
-          state: &#x27;on&#x27;
-      sequence:
-      - data:
+      - action: scene.create
+        data:
           scene_id: living_room_lights_last_state
-          snapshot_entities:
-          - light.living_room_ceiling
-          - light.living_room_floor_front
-          - light.living_room_floor_back
-        action: scene.create
-      - target:
+          snapshot_entities: &#x27;{{ lr_lights }}&#x27;
+      - action: input_boolean.turn_on
+        target:
           entity_id: input_boolean.living_room_occupancy_scene_saved
-        data: {}
-        action: input_boolean.turn_on
-      - target:
+      - action: scene.turn_on
+        target:
           entity_id: scene.living_room_all_lights_off
-        data: {}
-        action: scene.turn_on
+    default:
+    - action: scene.turn_on
+      target:
+        entity_id: scene.living_room_all_lights_on
   mode: single
 - id: &#x27;1700841493454&#x27;
   alias: Living Room Dim
