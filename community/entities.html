@@ -12,7 +12,7 @@
             <div class="fixed-header">
                 <h1>Home Assistant Entities</h1>
                 <p>Total Entities: 726 (Redacted: 16)</p>
-                <p>Version: 2026-01-12-172957</p>
+                <p>Version: 2026-01-12-173334</p>
                 <div class="search-container">
                     <input type="text" id="entitySearch" class="search-box" placeholder="🔍 Search entities...">
                 </div>
@@ -1672,7 +1672,7 @@
                 <td>event.repair</td>
                 <td>Repairs</td>
                 <td>N/A</td>
-                <td>2026-01-12 17:25:24</td>
+                <td>2026-01-12 17:30:17</td>
                 <td>Yes</td>
             </tr>
         
@@ -2277,14 +2277,6 @@
             </tr>
         
             <tr>
-                <td>light.0x001788010cd40ea2</td>
-                <td>0x001788010cd40ea2</td>
-                <td>N/A</td>
-                <td>unknown</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>light.aroma_diffuser</td>
                 <td>Aroma diffuser</td>
                 <td>N/A</td>
@@ -2296,7 +2288,7 @@
                 <td>light.bathroom_ceiling</td>
                 <td>Bathroom ceiling</td>
                 <td>N/A</td>
-                <td>unknown</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -2312,7 +2304,7 @@
                 <td>light.bookshelf</td>
                 <td>Bookshelf</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -2327,6 +2319,14 @@
             <tr>
                 <td>light.hall_upstairs_ceiling</td>
                 <td>Light Upstairs Ceiling</td>
+                <td>N/A</td>
+                <td>on</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>light.hall_wall_1</td>
+                <td>Hall Wall 1</td>
                 <td>N/A</td>
                 <td>on</td>
                 <td>Yes</td>
@@ -2949,14 +2949,6 @@
             </tr>
         
             <tr>
-                <td>select.0x001788010cd40ea2_power_on_behavior</td>
-                <td>0x001788010cd40ea2 Power-on behavior</td>
-                <td>N/A</td>
-                <td>unknown</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>select.aroma_diffuser_mood_lighting</td>
                 <td>Aroma diffuser Mood lighting</td>
                 <td>N/A</td>
@@ -2997,6 +2989,14 @@
             </tr>
         
             <tr>
+                <td>select.bookshelf_power_on_behavior</td>
+                <td>Bookshelf Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>select.hall_downstairs_ceiling_power_on_behavior</td>
                 <td>Hall Downstairs Ceiling Power-on behavior</td>
                 <td>N/A</td>
@@ -3015,6 +3015,14 @@
             <tr>
                 <td>select.hall_upstairs_ceiling_power_on_behavior</td>
                 <td>Hall Upstairs Ceiling Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.hall_wall_1_power_on_behavior</td>
+                <td>Hall Wall 1 Power-on behavior</td>
                 <td>N/A</td>
                 <td>unknown</td>
                 <td>Yes</td>
@@ -3049,14 +3057,6 @@
                 <td>Hugh Room Blinds Opening mode</td>
                 <td>N/A</td>
                 <td>tilt</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>select.hugh_room_lamp_power_on_behavior</td>
-                <td>Hall Wall 1 Power-on behavior</td>
-                <td>N/A</td>
-                <td>unknown</td>
                 <td>Yes</td>
             </tr>
         
@@ -3144,7 +3144,7 @@
                 <td>sensor.active_issues</td>
                 <td>Repairs Active</td>
                 <td>issues</td>
-                <td>23</td>
+                <td>22</td>
                 <td>Yes</td>
             </tr>
         
@@ -3664,7 +3664,7 @@
                 <td>sensor.date_time_iso</td>
                 <td>Date & Time (ISO)</td>
                 <td>N/A</td>
-                <td>2026-01-12 17:29:00</td>
+                <td>2026-01-12 17:33:00</td>
                 <td>Yes</td>
             </tr>
         
@@ -3712,7 +3712,7 @@
                 <td>sensor.devices</td>
                 <td>Home Assistant Devices</td>
                 <td>N/A</td>
-                <td>105</td>
+                <td>106</td>
                 <td>Yes</td>
             </tr>
         
@@ -3720,7 +3720,7 @@
                 <td>sensor.entities</td>
                 <td>Home Assistant Entities</td>
                 <td>N/A</td>
-                <td>723</td>
+                <td>726</td>
                 <td>Yes</td>
             </tr>
         
@@ -3768,7 +3768,7 @@
                 <td>sensor.hall_motion_illuminance</td>
                 <td>Hall Motion Illuminance</td>
                 <td>lx</td>
-                <td>219</td>
+                <td>216</td>
                 <td>Yes</td>
             </tr>
         
@@ -3776,7 +3776,7 @@
                 <td>sensor.hall_motion_temperature</td>
                 <td>Hue Temperature</td>
                 <td>°C</td>
-                <td>17.09</td>
+                <td>16.98</td>
                 <td>Yes</td>
             </tr>
         
@@ -4144,7 +4144,7 @@
                 <td>sensor.hugh_room_plug_fan_bed_voltage</td>
                 <td>Hugh Room Plug Fan Bed Voltage</td>
                 <td>V</td>
-                <td>233</td>
+                <td>232</td>
                 <td>Yes</td>
             </tr>
         
@@ -4272,7 +4272,7 @@
                 <td>sensor.issues</td>
                 <td>Repairs Total</td>
                 <td>issues</td>
-                <td>23</td>
+                <td>22</td>
                 <td>Yes</td>
             </tr>
         
@@ -4280,7 +4280,7 @@
                 <td>sensor.lights</td>
                 <td>Home Assistant Lights</td>
                 <td>N/A</td>
-                <td>10</td>
+                <td>11</td>
                 <td>Yes</td>
             </tr>
         
@@ -4656,7 +4656,7 @@
                 <td>sensor.phone_ble_rssi</td>
                 <td>IR Receiver Phone BLE RSSI</td>
                 <td>dBm</td>
-                <td>unknown</td>
+                <td>-96.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -4704,7 +4704,7 @@
                 <td>sensor.selects</td>
                 <td>Home Assistant Selects</td>
                 <td>N/A</td>
-                <td>23</td>
+                <td>24</td>
                 <td>Yes</td>
             </tr>
         
@@ -4784,7 +4784,7 @@
                 <td>sensor.snake_plant_signal_strength</td>
                 <td>Snake Plant Signal Strength</td>
                 <td>dBm</td>
-                <td>-96</td>
+                <td>-98</td>
                 <td>Yes</td>
             </tr>
         
@@ -4920,7 +4920,7 @@
                 <td>sensor.update</td>
                 <td>Home Assistant Update</td>
                 <td>N/A</td>
-                <td>43</td>
+                <td>44</td>
                 <td>Yes</td>
             </tr>
         
@@ -4944,7 +4944,7 @@
                 <td>sensor.watchman_last_updated</td>
                 <td>Last Updated</td>
                 <td>N/A</td>
-                <td>2026-01-12 17:29:06</td>
+                <td>2026-01-12 17:30:16</td>
                 <td>Yes</td>
             </tr>
         
@@ -4952,7 +4952,7 @@
                 <td>sensor.watchman_missing_entities</td>
                 <td>Missing Entities</td>
                 <td>items</td>
-                <td>19</td>
+                <td>18</td>
                 <td>Yes</td>
             </tr>
         
@@ -5344,7 +5344,7 @@
                 <td>switch.zigbee2mqtt_bridge_permit_join</td>
                 <td>Zigbee Permit Join</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -5429,14 +5429,6 @@
             </tr>
         
             <tr>
-                <td>update.0x001788010cd40ea2</td>
-                <td>0x001788010cd40ea2</td>
-                <td>N/A</td>
-                <td>unknown</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>update.adaptive_lighting_update</td>
                 <td>Adaptive Lighting update</td>
                 <td>N/A</td>
@@ -5464,7 +5456,7 @@
                 <td>update.bathroom_ceiling</td>
                 <td>Bathroom Ceiling</td>
                 <td>N/A</td>
-                <td>unknown</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -5479,6 +5471,14 @@
             <tr>
                 <td>update.battery_notes_update</td>
                 <td>Battery Notes update</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.bookshelf</td>
+                <td>Bookshelf</td>
                 <td>N/A</td>
                 <td>off</td>
                 <td>Yes</td>
@@ -5549,6 +5549,14 @@
             </tr>
         
             <tr>
+                <td>update.hall_wall_1</td>
+                <td>Hall Wall 1</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>update.hall_wall_2</td>
                 <td>Hall Wall 2</td>
                 <td>N/A</td>
@@ -5593,14 +5601,6 @@
                 <td>Home Assistant Yellow Radio firmware</td>
                 <td>N/A</td>
                 <td>unknown</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>update.hugh_room_lamp</td>
-                <td>Hall Wall 1</td>
-                <td>N/A</td>
-                <td>off</td>
                 <td>Yes</td>
             </tr>
         
