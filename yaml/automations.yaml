@@ -1,13 +1,12 @@
 - id: '1700840909519'
   alias: Living Room Light Toggle
-  description: Toggle living room lights on or off (and snapshot before turning off).
+  description: Toggle living room lights on or off.
   triggers:
-  - domain: mqtt
-    device_id: 9f98b882a412e95e16f1addf1f9e8e27
-    type: action
-    subtype: off_press
-    trigger: device
-  conditions: []
+  - trigger: event
+    event_type: z2m_event
+    event_data:
+      device: living_room_phillips_switch
+      action: on_press_release
   actions:
   - variables:
       lr_lights:
@@ -31,6 +30,9 @@
         target:
           entity_id: scene.living_room_all_lights_off
     default:
+    - action: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.living_room_occupancy_scene_saved
     - action: scene.turn_on
       target:
         entity_id: scene.living_room_all_lights_on
@@ -122,31 +124,6 @@
         data:
           brightness_pct: 30
           transition: 0.5
-  mode: single
-- id: '1700862361704'
-  alias: Living Room Scene Toggle
-  description: Toggle between scenes.
-  triggers:
-  - entity_id: sensor.living_room_phillips_switch_action
-    to: on_press
-    trigger: state
-  conditions: []
-  actions:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: light.living_room_ceiling
-        state: 'on'
-      sequence:
-      - target:
-          entity_id: scene.dimmers
-        data: {}
-        action: scene.turn_on
-    default:
-    - data: {}
-      target:
-        entity_id: scene.living_room_all_lights_on
-      action: scene.turn_on
   mode: single
 - id: '1700867338603'
   alias: Hugh Room Scene Toggle
