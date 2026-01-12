@@ -57,52 +57,33 @@
 - id: '1700841493454'
   alias: Living Room Dim
   description: Dim down any on lights in the living room.
-  trigger:
+  triggers:
   - trigger: device
     domain: mqtt
     device_id: 9f98b882a412e95e16f1addf1f9e8e27
     type: action
     subtype: down_press
     discovery_id: 0x0017880109a49868 action_down_press
-  condition: []
-  action:
+  actions:
+  - variables:
+      lr_on_lights: "{{ expand('light.living_room_lights')\n   | selectattr('state','eq','on')\n
+        \  | map(attribute='entity_id')\n   | list }}\n"
   - choose:
     - conditions:
-      - condition: state
-        entity_id: light.living_room_floor_back
-        state: 'on'
+      - condition: template
+        value_template: '{{ lr_on_lights | length > 0 }}'
       sequence:
       - action: light.turn_on
+        target:
+          entity_id: '{{ lr_on_lights }}'
         data:
           brightness_step_pct: -10
-        target:
-          entity_id: light.living_room_floor_back
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: light.living_room_floor_front
-        state: 'on'
-      sequence:
-      - action: light.turn_on
-        data:
-          brightness_step_pct: -10
-        target:
-          entity_id: light.living_room_floor_front
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: light.living_room_ceiling
-        state: 'on'
-      sequence:
-      - action: light.turn_on
-        data:
-          brightness_step_pct: -10
-        target:
-          entity_id: light.living_room_ceiling
+          transition: 0.5
+    default: []
   mode: single
 - id: '1700841548515'
   alias: Living Room Brighten
-  description: Brighten up any on lights in the living room.
+  description: Brighten on lights; if all off, turn all on; if already max, blink.
   triggers:
   - trigger: device
     domain: mqtt
@@ -110,41 +91,56 @@
     type: action
     subtype: up_press
     discovery_id: 0x0017880109a49868 action_up_press
-  conditions: []
   actions:
+  - variables:
+      lr_lights:
+      - light.living_room_floor_lamp
+      - light.living_room_bookshelf
+      - light.living_room_ceiling
+      lr_on_lights: '{{ lr_lights | select(''is_state'',''on'') | list }}'
+      lr_all_dimmable_on_maxed: "{% set ns = namespace(dimmable_on=0, maxed_on=0)
+        %} {% for e in lr_on_lights %}\n  {% set b = state_attr(e, 'brightness') %}\n
+        \ {% if b is not none %}\n    {% set ns.dimmable_on = ns.dimmable_on + 1 %}\n
+        \   {% if (b | int) >= 254 %}\n      {% set ns.maxed_on = ns.maxed_on + 1
+        %}\n    {% endif %}\n  {% endif %}\n{% endfor %} {{ ns.dimmable_on > 0 and
+        ns.maxed_on == ns.dimmable_on }}"
   - choose:
     - conditions:
-      - condition: state
-        entity_id: light.living_room_floor_lamp
-        state: 'on'
+      - condition: template
+        value_template: '{{ (lr_on_lights | length > 0) and lr_all_dimmable_on_maxed
+          }}'
       sequence:
-      - action: light.turn_on
+      - action: scene.create
         data:
-          brightness_step_pct: 10
+          scene_id: living_room_brighten_snapshot
+          snapshot_entities: '{{ lr_on_lights }}'
+      - action: light.turn_off
         target:
-          device_id: aae30628062947ead603de046e89f8c9
-  - choose:
+          entity_id: '{{ lr_on_lights }}'
+      - delay: '00:00:00.15'
+      - action: scene.turn_on
+        target:
+          entity_id: scene.living_room_brighten_snapshot
     - conditions:
-      - condition: state
-        entity_id: light.living_room_bookshelf
-        state: 'on'
+      - condition: template
+        value_template: '{{ lr_on_lights | length > 0 }}'
       sequence:
       - action: light.turn_on
+        target:
+          entity_id: '{{ lr_on_lights }}'
         data:
           brightness_step_pct: 10
-        target:
-          device_id: 7a872e5c4ec4d38e13278349475d104f
-  - choose:
+          transition: 0.5
     - conditions:
-      - condition: state
-        entity_id: light.living_room_ceiling
-        state: 'on'
+      - condition: template
+        value_template: '{{ lr_on_lights | length == 0 }}'
       sequence:
       - action: light.turn_on
-        data:
-          brightness_step_pct: 10
         target:
-          device_id: edad814eece20813435abb3e6c100ecb
+          entity_id: '{{ lr_lights }}'
+        data:
+          brightness_pct: 30
+          transition: 0.5
   mode: single
 - id: '1700862361704'
   alias: Living Room Scene Toggle
