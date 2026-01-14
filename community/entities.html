@@ -12,7 +12,7 @@
             <div class="fixed-header">
                 <h1>Home Assistant Entities</h1>
                 <p>Total Entities: 727 (Redacted: 16)</p>
-                <p>Version: 2026-01-14-184639</p>
+                <p>Version: 2026-01-14-184751</p>
                 <div class="search-container">
                     <input type="text" id="entitySearch" class="search-box" placeholder="🔍 Search entities...">
                 </div>
@@ -944,7 +944,7 @@
                 <td>binary_sensor.hall_motion_occupancy</td>
                 <td>Hue Motion</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -1728,7 +1728,7 @@
                 <td>input_boolean.hugh_room_occupied</td>
                 <td>Occupied</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -2104,7 +2104,7 @@
                 <td>input_number.previous_bathroom_humidity</td>
                 <td>Previous Bathroom Humidity</td>
                 <td>%</td>
-                <td>66.53</td>
+                <td>66.71</td>
                 <td>Yes</td>
             </tr>
         
@@ -2112,7 +2112,7 @@
                 <td>input_number.previous_bathroom_temperature</td>
                 <td>Previous Bathroom Temperature</td>
                 <td>°C</td>
-                <td>15.03</td>
+                <td>15.1</td>
                 <td>Yes</td>
             </tr>
         
@@ -2261,14 +2261,6 @@
             </tr>
         
             <tr>
-                <td>light.0x001788010d05b5c8</td>
-                <td>0x001788010d05b5c8</td>
-                <td>N/A</td>
-                <td>unknown</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>light.aroma_diffuser</td>
                 <td>Aroma diffuser</td>
                 <td>N/A</td>
@@ -2296,7 +2288,7 @@
                 <td>light.hall_wall_1</td>
                 <td>Hall Wall 1</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -2304,7 +2296,7 @@
                 <td>light.hall_wall_2</td>
                 <td>Hall Wall 2</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -2312,7 +2304,7 @@
                 <td>light.hall_wall_3</td>
                 <td>Hall Wall 3</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -2320,7 +2312,7 @@
                 <td>light.hugh_room_ceiling</td>
                 <td>Light Ceiling</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -2345,6 +2337,14 @@
                 <td>Living Room Lights</td>
                 <td>N/A</td>
                 <td>on</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>light.spare_room_ceiling</td>
+                <td>Spare Room Ceiling</td>
+                <td>N/A</td>
+                <td>unknown</td>
                 <td>Yes</td>
             </tr>
         
@@ -2768,7 +2768,7 @@
                 <td>scene.hugh_room_all_lights_off</td>
                 <td>Hugh Room All Lights Off</td>
                 <td>N/A</td>
-                <td>2026-01-14 07:56:01</td>
+                <td>2026-01-14 18:47:01</td>
                 <td>Yes</td>
             </tr>
         
@@ -2957,14 +2957,6 @@
             </tr>
         
             <tr>
-                <td>select.0x001788010d05b5c8_power_on_behavior</td>
-                <td>0x001788010d05b5c8 Power-on behavior</td>
-                <td>N/A</td>
-                <td>unknown</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>select.aroma_diffuser_mood_lighting</td>
                 <td>Aroma diffuser Mood lighting</td>
                 <td>N/A</td>
@@ -3129,6 +3121,14 @@
                 <td>PC Plug Power outage memory</td>
                 <td>N/A</td>
                 <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.spare_room_ceiling_power_on_behavior</td>
+                <td>Spare Room Ceiling Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
                 <td>Yes</td>
             </tr>
         
@@ -3328,7 +3328,7 @@
                 <td>sensor.bathroom_aqara_humidity</td>
                 <td>Aqara Humidity</td>
                 <td>%</td>
-                <td>66.53</td>
+                <td>66.71</td>
                 <td>Yes</td>
             </tr>
         
@@ -3336,7 +3336,7 @@
                 <td>sensor.bathroom_aqara_pressure</td>
                 <td>Bathroom Aqara Atmospheric pressure</td>
                 <td>hPa</td>
-                <td>998.8</td>
+                <td>998.9</td>
                 <td>Yes</td>
             </tr>
         
@@ -3344,7 +3344,7 @@
                 <td>sensor.bathroom_aqara_temperature</td>
                 <td>Aqara Temperature</td>
                 <td>°C</td>
-                <td>15.03</td>
+                <td>15.1</td>
                 <td>Yes</td>
             </tr>
         
@@ -3672,7 +3672,7 @@
                 <td>sensor.date_time_iso</td>
                 <td>Date & Time (ISO)</td>
                 <td>N/A</td>
-                <td>2026-01-14 18:46:00</td>
+                <td>2026-01-14 18:47:00</td>
                 <td>Yes</td>
             </tr>
         
@@ -3720,7 +3720,7 @@
                 <td>sensor.devices</td>
                 <td>Home Assistant Devices</td>
                 <td>N/A</td>
-                <td>105</td>
+                <td>107</td>
                 <td>Yes</td>
             </tr>
         
@@ -3728,7 +3728,7 @@
                 <td>sensor.entities</td>
                 <td>Home Assistant Entities</td>
                 <td>N/A</td>
-                <td>724</td>
+                <td>730</td>
                 <td>Yes</td>
             </tr>
         
@@ -4120,7 +4120,7 @@
                 <td>sensor.hugh_room_plug_blanket_voltage</td>
                 <td>Hugh Room Plug Blanket Voltage</td>
                 <td>V</td>
-                <td>234</td>
+                <td>237</td>
                 <td>Yes</td>
             </tr>
         
@@ -4152,7 +4152,7 @@
                 <td>sensor.hugh_room_plug_fan_bed_voltage</td>
                 <td>Hugh Room Plug Fan Bed Voltage</td>
                 <td>V</td>
-                <td>234</td>
+                <td>237</td>
                 <td>Yes</td>
             </tr>
         
@@ -4288,7 +4288,7 @@
                 <td>sensor.lights</td>
                 <td>Home Assistant Lights</td>
                 <td>N/A</td>
-                <td>11</td>
+                <td>13</td>
                 <td>Yes</td>
             </tr>
         
@@ -4712,7 +4712,7 @@
                 <td>sensor.selects</td>
                 <td>Home Assistant Selects</td>
                 <td>N/A</td>
-                <td>23</td>
+                <td>25</td>
                 <td>Yes</td>
             </tr>
         
@@ -4792,7 +4792,7 @@
                 <td>sensor.snake_plant_signal_strength</td>
                 <td>Snake Plant Signal Strength</td>
                 <td>dBm</td>
-                <td>-98</td>
+                <td>-92</td>
                 <td>Yes</td>
             </tr>
         
@@ -4928,7 +4928,7 @@
                 <td>sensor.update</td>
                 <td>Home Assistant Update</td>
                 <td>N/A</td>
-                <td>43</td>
+                <td>45</td>
                 <td>Yes</td>
             </tr>
         
@@ -5437,14 +5437,6 @@
             </tr>
         
             <tr>
-                <td>update.0x001788010d05b5c8</td>
-                <td>0x001788010d05b5c8</td>
-                <td>N/A</td>
-                <td>unknown</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>update.adaptive_lighting_update</td>
                 <td>Adaptive Lighting update</td>
                 <td>N/A</td>
@@ -5737,6 +5729,14 @@
                 <td>smartlife update</td>
                 <td>N/A</td>
                 <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.spare_room_ceiling</td>
+                <td>Spare Room Ceiling</td>
+                <td>N/A</td>
+                <td>unknown</td>
                 <td>Yes</td>
             </tr>
         
