@@ -474,7 +474,7 @@
       - condition: state
         entity_id: light.hugh_room_lamp
         state: 'on'
-        enabled: false
+        enabled: true
       sequence:
       - entity_id: light.hugh_room_ceiling
         action: light.turn_off
@@ -488,12 +488,6 @@
           entity_id: input_select.hugh_room_blinds_mode
         data:
           option: Closed
-    - conditions: []
-      sequence:
-      - action: light.toggle
-        target:
-          entity_id: light.hugh_room_ceiling
-        data: {}
     - conditions:
       - condition: state
         entity_id: light.hugh_room_lamp
@@ -514,7 +508,7 @@
       - condition: state
         entity_id: light.hugh_room_lamp
         state: 'off'
-        enabled: false
+        enabled: true
       - condition: state
         entity_id: light.hugh_room_ceiling
         state: 'off'
