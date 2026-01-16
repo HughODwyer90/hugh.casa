@@ -529,9 +529,12 @@
         state: &#x27;off&#x27;
       sequence:
       - data:
-          entity_id: light.hugh_room_lamp
           transition: 2
         action: light.turn_on
+        target:
+          entity_id:
+          - light.hugh_room_lamp
+          - light.hugh_room_ceiling
   mode: restart
 - id: &#x27;1703009827757&#x27;
   alias: Hugh Room Door Button Single
