@@ -55,7 +55,7 @@ execute_alarm_actions:
       media_type: radio
       media_id: Today FM
     target:
-      device_id: 1f447f64820ecb49639b472fbca40ea8
+      entity_id: media_player.master_bedroom_display_ma
   - wait_template: &#x27;{{ is_state(&#x27;&#x27;media_player.hugh_room_speaker&#x27;&#x27;, &#x27;&#x27;playing&#x27;&#x27;) }}&#x27;
     timeout: 00:00:08
     continue_on_timeout: true
