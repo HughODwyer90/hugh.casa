@@ -256,6 +256,7 @@
           - light.hall_wall_1
           - light.hall_wall_2
           - light.hall_wall_3
+          - light.utility
         data:
           color_temp_kelvin: 2750
           brightness_pct: 100
@@ -274,8 +275,19 @@
         data:
           transition: 3
         action: light.turn_off
+      - delay:
+          hours: 0
+          minutes: 2
+          seconds: 0
+          milliseconds: 0
+      - target:
+          entity_id:
+          - light.utility
+        data:
+          transition: 3
+        action: light.turn_off
     default: []
-  mode: single
+  mode: restart
 - id: '1702207044468'
   alias: Admin on Start
   description: Executes actions when Home Assistant starts.
