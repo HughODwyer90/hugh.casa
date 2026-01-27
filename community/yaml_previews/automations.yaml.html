@@ -292,7 +292,7 @@
         action: light.turn_off
       - delay:
           hours: 0
-          minutes: 2
+          minutes: 30
           seconds: 0
           milliseconds: 0
       - target:
@@ -3091,6 +3091,9 @@
       - condition: state
         entity_id: light.hugh_room_lamp
         state: &#x27;off&#x27;
+      - condition: state
+        entity_id: binary_sensor.bed_sensor
+        state: &#x27;off&#x27;
       - condition: or
         conditions:
         - condition: time
@@ -3207,11 +3210,13 @@
             target:
               entity_id: input_select.hugh_room_blinds_mode
             data:
-              option: &quot;{% set lux = states(&#x27;sensor.snake_plant_illuminance&#x27;) | float(0)
-                %} {% set low = states(&#x27;input_number.hugh_room_lux_lower&#x27;) | float(0)
-                %} {% set high = states(&#x27;input_number.hugh_room_lux_upper&#x27;) | float(0)
-                %} {% if lux &gt; high %}\n  Open\n{% elif lux &lt; low %}\n  Half\n{% else
-                %}\n  Closed\n{% endif %}\n&quot;
+              option: &#x27;{% set lux = states(&#x27;&#x27;sensor.snake_plant_illuminance&#x27;&#x27;) | float(0)
+                %} {% set low = states(&#x27;&#x27;input_number.hugh_room_lux_lower&#x27;&#x27;) | float(0)
+                %} {% set high = states(&#x27;&#x27;input_number.hugh_room_lux_upper&#x27;&#x27;) | float(0)
+                %} {% if lux &gt; high %}Open {% elif lux &lt; low %}Half {% else %}Closed
+                {% endif %}
+
+                &#x27;
       - choose:
         - conditions:
           - condition: template
