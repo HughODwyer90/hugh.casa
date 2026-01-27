@@ -277,7 +277,7 @@
         action: light.turn_off
       - delay:
           hours: 0
-          minutes: 2
+          minutes: 30
           seconds: 0
           milliseconds: 0
       - target:
@@ -3076,6 +3076,9 @@
       - condition: state
         entity_id: light.hugh_room_lamp
         state: 'off'
+      - condition: state
+        entity_id: binary_sensor.bed_sensor
+        state: 'off'
       - condition: or
         conditions:
         - condition: time
@@ -3192,11 +3195,13 @@
             target:
               entity_id: input_select.hugh_room_blinds_mode
             data:
-              option: "{% set lux = states('sensor.snake_plant_illuminance') | float(0)
-                %} {% set low = states('input_number.hugh_room_lux_lower') | float(0)
-                %} {% set high = states('input_number.hugh_room_lux_upper') | float(0)
-                %} {% if lux > high %}\n  Open\n{% elif lux < low %}\n  Half\n{% else
-                %}\n  Closed\n{% endif %}\n"
+              option: '{% set lux = states(''sensor.snake_plant_illuminance'') | float(0)
+                %} {% set low = states(''input_number.hugh_room_lux_lower'') | float(0)
+                %} {% set high = states(''input_number.hugh_room_lux_upper'') | float(0)
+                %} {% if lux > high %}Open {% elif lux < low %}Half {% else %}Closed
+                {% endif %}
+
+                '
       - choose:
         - conditions:
           - condition: template
