@@ -1152,11 +1152,11 @@
       - condition: template
         value_template: &#x27;{{ trigger.to_state.state == &#x27;&#x27;on&#x27;&#x27; }}&#x27;
       sequence:
-      - target:
+      - action: scene.turn_on
+        target:
           entity_id: scene.hugh_room_all_lights_off
         data:
           transition: 2
-        action: scene.turn_on
       - action: input_select.select_option
         target:
           entity_id: input_select.hugh_room_blinds_mode
@@ -1166,11 +1166,11 @@
       - condition: template
         value_template: &#x27;{{ trigger.to_state.state == &#x27;&#x27;off&#x27;&#x27; }}&#x27;
       sequence:
-      - data:
-          transition: 1
+      - action: scene.turn_on
         target:
           entity_id: scene.lamp
-        action: scene.turn_on
+        data:
+          transition: 1
   mode: single
 - id: &#x27;1710203141837&#x27;
   alias: Alarm Dismiss
