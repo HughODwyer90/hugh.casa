@@ -107,6 +107,28 @@
           mdi:bed-empty
         {% endif %}
 
+    - name: &quot;PC Webcam Active&quot;
+      unique_id: &quot;pc_webcam_active&quot;
+      device_class: occupancy
+      state: &gt;
+        {% set lucifer = states(&#x27;binary_sensor.lucifer_webcamactive&#x27;) %}
+        {% set datamars = states(&#x27;binary_sensor.datamars_webcamactive&#x27;) %}
+        {{ lucifer == &#x27;on&#x27; or datamars == &#x27;on&#x27; }}
+      availability: &gt;
+        {% set lucifer = states(&#x27;binary_sensor.lucifer_webcamactive&#x27;) %}
+        {% set datamars = states(&#x27;binary_sensor.datamars_webcamactive&#x27;) %}
+        {{ lucifer not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;] or datamars not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;] }}
+      attributes:
+        source: &gt;
+          {% if states(&#x27;binary_sensor.lucifer_webcamactive&#x27;) == &#x27;on&#x27; %}
+            lucifer
+          {% elif states(&#x27;binary_sensor.datamars_webcamactive&#x27;) == &#x27;on&#x27; %}
+            datamars
+          {% else %}
+            none
+          {% endif %}
+
+
 </pre>
             </div>
             <script>
