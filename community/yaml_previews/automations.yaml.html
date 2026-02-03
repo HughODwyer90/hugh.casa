@@ -4119,6 +4119,51 @@
           data:
             notification_icon: mdi:television
   mode: single
+- id: &#x27;1770148197573&#x27;
+  alias: Hugh Room Lamp Camera Control
+  description: &#x27;&#x27;
+  triggers:
+  - entity_id: binary_sensor.pc_webcam_active
+    to: &#x27;on&#x27;
+    id: cam_on
+    trigger: state
+  - entity_id: binary_sensor.pc_webcam_active
+    to: &#x27;off&#x27;
+    id: cam_off
+    trigger: state
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: cam_on
+      - condition: state
+        entity_id: light.hugh_room_lamp
+        state: &#x27;on&#x27;
+      sequence:
+      - data:
+          scene_id: hugh_room_lamp_before_webcam
+          snapshot_entities:
+          - light.hugh_room_lamp
+        action: scene.create
+      - target:
+          entity_id: light.hugh_room_lamp
+        action: light.turn_off
+    - conditions:
+      - condition: trigger
+        id: cam_off
+      sequence:
+      - condition: template
+        value_template: &#x27;{{ states(&#x27;&#x27;scene.hugh_room_lamp_before_webcam&#x27;&#x27;) not in
+          [&#x27;&#x27;unknown&#x27;&#x27;,&#x27;&#x27;unavailable&#x27;&#x27;] }}
+
+          &#x27;
+      - target:
+          entity_id: scene.hugh_room_lamp_before_webcam
+        action: scene.turn_on
+      - target:
+          entity_id: scene.hugh_room_lamp_before_webcam
+        action: scene.delete
+  mode: single
 </pre>
             </div>
             <script>
