@@ -4121,14 +4121,15 @@
   mode: single
 - id: &#x27;1770148197573&#x27;
   alias: Hugh Room Lamp Camera Control
-  description: &#x27;&#x27;
   triggers:
   - entity_id: binary_sensor.pc_webcam_active
     to: &#x27;on&#x27;
+    for: 00:00:02
     id: cam_on
     trigger: state
   - entity_id: binary_sensor.pc_webcam_active
     to: &#x27;off&#x27;
+    for: 00:00:10
     id: cam_off
     trigger: state
   actions:
@@ -4139,6 +4140,9 @@
       - condition: state
         entity_id: light.hugh_room_lamp
         state: &#x27;on&#x27;
+      - condition: state
+        entity_id: input_boolean.hugh_room_lamp_webcam_override
+        state: &#x27;off&#x27;
       sequence:
       - data:
           scene_id: hugh_room_lamp_before_webcam
@@ -4146,23 +4150,36 @@
           - light.hugh_room_lamp
         action: scene.create
       - target:
+          entity_id: input_boolean.hugh_room_lamp_webcam_override
+        action: input_boolean.turn_on
+      - target:
           entity_id: light.hugh_room_lamp
         action: light.turn_off
     - conditions:
       - condition: trigger
         id: cam_off
+      - condition: state
+        entity_id: input_boolean.hugh_room_lamp_webcam_override
+        state: &#x27;on&#x27;
       sequence:
-      - condition: template
-        value_template: &#x27;{{ states(&#x27;&#x27;scene.hugh_room_lamp_before_webcam&#x27;&#x27;) not in
-          [&#x27;&#x27;unknown&#x27;&#x27;,&#x27;&#x27;unavailable&#x27;&#x27;] }}
+      - choose:
+        - conditions:
+          - condition: template
+            value_template: &#x27;{{ states(&#x27;&#x27;scene.hugh_room_lamp_before_webcam&#x27;&#x27;) not
+              in [&#x27;&#x27;unknown&#x27;&#x27;,&#x27;&#x27;unavailable&#x27;&#x27;] }}
 
-          &#x27;
+              &#x27;
+          sequence:
+          - target:
+              entity_id: scene.hugh_room_lamp_before_webcam
+            action: scene.turn_on
+          - target:
+              entity_id: scene.hugh_room_lamp_before_webcam
+            action: scene.delete
+        default: []
       - target:
-          entity_id: scene.hugh_room_lamp_before_webcam
-        action: scene.turn_on
-      - target:
-          entity_id: scene.hugh_room_lamp_before_webcam
-        action: scene.delete
+          entity_id: input_boolean.hugh_room_lamp_webcam_override
+        action: input_boolean.turn_off
   mode: single
 </pre>
             </div>
