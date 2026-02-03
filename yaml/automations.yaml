@@ -488,10 +488,12 @@
         state: 'on'
         enabled: true
       sequence:
-      - entity_id: light.hugh_room_ceiling
-        action: light.turn_off
-      - entity_id: light.hugh_room_lamp
-        action: light.turn_off
+      - action: scene.turn_on
+        metadata: {}
+        target:
+          entity_id: scene.hugh_room_all_lights_off
+        data:
+          transition: 3
       - condition: template
         value_template: '{{ states(''input_number.hugh_room_blinds_position'') | int
           > 20 }}'
@@ -525,13 +527,12 @@
         entity_id: light.hugh_room_ceiling
         state: 'off'
       sequence:
-      - data:
-          transition: 2
-        action: light.turn_on
+      - action: scene.turn_on
+        metadata: {}
         target:
-          entity_id:
-          - light.hugh_room_lamp
-          - light.hugh_room_ceiling
+          entity_id: scene.hugh_room_all_lights_on
+        data:
+          transition: 3
   mode: restart
 - id: '1703009827757'
   alias: Hugh Room Door Button Single
