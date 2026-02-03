@@ -92,3 +92,25 @@
           mdi:bed-empty
         {% endif %}
 
+    - name: "PC Webcam Active"
+      unique_id: "pc_webcam_active"
+      device_class: occupancy
+      state: >
+        {% set lucifer = states('binary_sensor.lucifer_webcamactive') %}
+        {% set datamars = states('binary_sensor.datamars_webcamactive') %}
+        {{ lucifer == 'on' or datamars == 'on' }}
+      availability: >
+        {% set lucifer = states('binary_sensor.lucifer_webcamactive') %}
+        {% set datamars = states('binary_sensor.datamars_webcamactive') %}
+        {{ lucifer not in ['unknown','unavailable'] or datamars not in ['unknown','unavailable'] }}
+      attributes:
+        source: >
+          {% if states('binary_sensor.lucifer_webcamactive') == 'on' %}
+            lucifer
+          {% elif states('binary_sensor.datamars_webcamactive') == 'on' %}
+            datamars
+          {% else %}
+            none
+          {% endif %}
+
+
