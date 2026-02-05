@@ -292,7 +292,7 @@
         action: light.turn_off
       - delay:
           hours: 0
-          minutes: 30
+          minutes: 2
           seconds: 0
           milliseconds: 0
       - target:
@@ -3084,6 +3084,10 @@
   - condition: state
     entity_id: input_boolean.wake_up_alarm_running
     state: &#x27;off&#x27;
+  - condition: state
+    entity_id: binary_sensor.pc_webcam_active
+    state:
+    - &#x27;off&#x27;
   actions:
   - choose:
     - conditions:
