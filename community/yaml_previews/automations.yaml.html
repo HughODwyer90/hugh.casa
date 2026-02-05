@@ -4120,67 +4120,65 @@
             notification_icon: mdi:television
   mode: single
 - id: &#x27;1770148197573&#x27;
-  alias: Hugh Room Lamp Camera Control
+  alias: Hugh Room Webcam Lamp Control
+  description: Snapshots lamp state when webcam turns on, turns lamp off, restores
+    when webcam turns off.
   triggers:
-  - entity_id: binary_sensor.pc_webcam_active
+  - id: webcam_on
+    entity_id: binary_sensor.pc_webcam_active
     to: &#x27;on&#x27;
     for: 00:00:02
-    id: cam_on
     trigger: state
-  - entity_id: binary_sensor.pc_webcam_active
+  - id: webcam_off
+    entity_id: binary_sensor.pc_webcam_active
     to: &#x27;off&#x27;
     for: 00:00:10
-    id: cam_off
     trigger: state
   actions:
   - choose:
     - conditions:
       - condition: trigger
-        id: cam_on
-      - condition: state
-        entity_id: light.hugh_room_lamp
-        state: &#x27;on&#x27;
-      - condition: state
-        entity_id: input_boolean.hugh_room_lamp_webcam_override
-        state: &#x27;off&#x27;
-      sequence:
-      - data:
-          scene_id: hugh_room_lamp_before_webcam
-          snapshot_entities:
-          - light.hugh_room_lamp
-        action: scene.create
-      - target:
-          entity_id: input_boolean.hugh_room_lamp_webcam_override
-        action: input_boolean.turn_on
-      - target:
-          entity_id: light.hugh_room_lamp
-        action: light.turn_off
-    - conditions:
-      - condition: trigger
-        id: cam_off
-      - condition: state
-        entity_id: input_boolean.hugh_room_lamp_webcam_override
-        state: &#x27;on&#x27;
+        id: webcam_on
       sequence:
       - choose:
         - conditions:
-          - condition: template
-            value_template: &#x27;{{ states(&#x27;&#x27;scene.hugh_room_lamp_before_webcam&#x27;&#x27;) not
-              in [&#x27;&#x27;unknown&#x27;&#x27;,&#x27;&#x27;unavailable&#x27;&#x27;] }}
-
-              &#x27;
+          - condition: state
+            entity_id: input_boolean.hugh_room_webcam_scene_saved
+            state: &#x27;off&#x27;
           sequence:
+          - action: scene.create
+            data:
+              scene_id: hugh_room_lamp_last_state_before_webcam
+              snapshot_entities:
+              - light.hugh_room_lamp
           - target:
-              entity_id: scene.hugh_room_lamp_before_webcam
-            action: scene.turn_on
-          - target:
-              entity_id: scene.hugh_room_lamp_before_webcam
-            action: scene.delete
-        default: []
+              entity_id: input_boolean.hugh_room_webcam_scene_saved
+            action: input_boolean.turn_on
+            data: {}
       - target:
-          entity_id: input_boolean.hugh_room_lamp_webcam_override
+          entity_id: light.hugh_room_lamp
+        action: light.turn_off
+        data: {}
+    - conditions:
+      - condition: trigger
+        id: webcam_off
+      sequence:
+      - condition: state
+        entity_id: input_boolean.hugh_room_webcam_scene_saved
+        state: &#x27;on&#x27;
+      - target:
+          entity_id: scene.hugh_room_lamp_last_state_before_webcam
+        action: scene.turn_on
+        data: {}
+      - delay: 00:00:01
+      - target:
+          entity_id: input_boolean.hugh_room_webcam_scene_saved
         action: input_boolean.turn_off
-  mode: single
+        data: {}
+      - action: scene.delete
+        target:
+          entity_id: scene.hugh_room_lamp_last_state_before_webcam
+  mode: restart
 </pre>
             </div>
             <script>
