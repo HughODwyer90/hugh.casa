@@ -4175,9 +4175,14 @@
     - sensor.air_purifier_speed
   conditions: []
   actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 15
+      milliseconds: 0
   - action: switch.turn_off
     metadata: {}
     target:
       entity_id: switch.air_purifier_display
     data: {}
-  mode: single
+  mode: restart
