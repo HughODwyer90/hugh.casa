@@ -604,16 +604,6 @@ set_purifier_speed:
           entity_id: fan.air_purifier
         data:
           percentage: '{{ states(''input_number.fan_speed_high'') | int }}'
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 15
-      milliseconds: 0
-  - action: switch.turn_off
-    metadata: {}
-    target:
-      entity_id: switch.air_purifier_display
-    data: {}
 set_diffuser_color:
   alias: Set Diffuser Color
   description: Controls diffuser color and ensures Fixed lighting mode.
