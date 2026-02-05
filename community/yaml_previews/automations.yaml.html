@@ -3854,6 +3854,8 @@
       - action: script.set_purifier_speed
         data:
           level: &#x27;off&#x27;
+      - stop: In bed at night -&gt; keep purifier off
+  - choose:
     - conditions:
       - condition: state
         entity_id: input_boolean.hugh_room_occupied
