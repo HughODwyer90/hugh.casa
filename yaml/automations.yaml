@@ -4166,3 +4166,18 @@
         target:
           entity_id: scene.hugh_room_lamp_last_state_before_webcam
   mode: restart
+- id: '1770299469577'
+  alias: Turn off purifier display
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - sensor.air_purifier_speed
+  conditions: []
+  actions:
+  - action: switch.turn_off
+    metadata: {}
+    target:
+      entity_id: switch.air_purifier_display
+    data: {}
+  mode: single
