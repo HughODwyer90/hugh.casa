@@ -4252,39 +4252,46 @@
   description: &#x27;&#x27;
   triggers:
   - trigger: time
-    at: 07:00:00
+    at: 08:00:00
     weekday:
-    - sat
+    - tue
     id: Charge
   - trigger: time
-    at: 09:00:00
+    at: &#x27;12:00:00&#x27;
     weekday:
-    - sat
+    - tue
     id: Discharge
-  conditions: []
+  conditions:
+  - condition: state
+    entity_id: binary_sensor.living_room_tv_state
+    state: &#x27;off&#x27;
   actions:
   - choose:
     - conditions:
       - condition: trigger
-        id:
-        - Charge
+        id: Charge
+      - condition: or
+        conditions:
+        - condition: numeric_state
+          entity_id: sensor.left_window_battery
+          below: 20
+        - condition: numeric_state
+          entity_id: sensor.middle_window_battery
+          below: 20
+        - condition: numeric_state
+          entity_id: sensor.right_window_battery
+          below: 20
       sequence:
       - action: scene.turn_on
-        metadata: {}
         target:
           entity_id: scene.curtains_charging
-        data: {}
     - conditions:
       - condition: trigger
-        id:
-        - Discharge
+        id: Discharge
       sequence:
       - action: scene.turn_on
-        metadata: {}
         target:
-          entity_id:
-          - scene.curtains_open
-        data: {}
+          entity_id: scene.curtains_open
   mode: single
 </pre>
             </div>
