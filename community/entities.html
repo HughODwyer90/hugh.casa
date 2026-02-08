@@ -12,7 +12,7 @@
             <div class="fixed-header">
                 <h1>Home Assistant Entities</h1>
                 <p>Total Entities: 744 (Redacted: 16)</p>
-                <p>Version: 2026-02-08-122648</p>
+                <p>Version: 2026-02-08-122811</p>
                 <div class="search-container">
                     <input type="text" id="entitySearch" class="search-box" placeholder="🔍 Search entities...">
                 </div>
@@ -949,22 +949,6 @@
             </tr>
         
             <tr>
-                <td>binary_sensor.curtain_3_1404_calibration</td>
-                <td>Curtain 3 1404 Calibration</td>
-                <td>N/A</td>
-                <td>on</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>binary_sensor.curtain_3_985b_calibration</td>
-                <td>Curtain 3 985B Calibration</td>
-                <td>N/A</td>
-                <td>on</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>binary_sensor.datamars_webcamactive</td>
                 <td>Datamars webcamactive</td>
                 <td>N/A</td>
@@ -1049,6 +1033,14 @@
                 <td>Hugh Room Phillips Switch Battery low</td>
                 <td>N/A</td>
                 <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>binary_sensor.left_window_calibration</td>
+                <td>Left Window Calibration</td>
+                <td>N/A</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -1177,6 +1169,14 @@
                 <td>Pressure Toothbrush</td>
                 <td>N/A</td>
                 <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>binary_sensor.right_window_calibration</td>
+                <td>Right Window Calibration</td>
+                <td>N/A</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -1621,22 +1621,6 @@
             </tr>
         
             <tr>
-                <td>cover.curtain_3_1404</td>
-                <td>Curtain 3 1404</td>
-                <td>N/A</td>
-                <td>closed</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>cover.curtain_3_985b</td>
-                <td>Curtain 3 985B</td>
-                <td>N/A</td>
-                <td>closed</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>cover.hugh_room_blinds</td>
                 <td>Hugh Room Blinds</td>
                 <td>N/A</td>
@@ -1645,10 +1629,26 @@
             </tr>
         
             <tr>
+                <td>cover.left_window</td>
+                <td>Left Window</td>
+                <td>N/A</td>
+                <td>closed</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>cover.middle_window</td>
                 <td>Middle Window</td>
                 <td>N/A</td>
                 <td>open</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>cover.right_window</td>
+                <td>Right Window</td>
+                <td>N/A</td>
+                <td>closed</td>
                 <td>Yes</td>
             </tr>
         
@@ -3709,38 +3709,6 @@
             </tr>
         
             <tr>
-                <td>sensor.curtain_3_1404_battery</td>
-                <td>Curtain 3 1404 Battery</td>
-                <td>%</td>
-                <td>88</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>sensor.curtain_3_1404_light_level</td>
-                <td>Curtain 3 1404 Light level</td>
-                <td>N/A</td>
-                <td>8</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>sensor.curtain_3_985b_battery</td>
-                <td>Curtain 3 985B Battery</td>
-                <td>%</td>
-                <td>86</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>sensor.curtain_3_985b_light_level</td>
-                <td>Curtain 3 985B Light level</td>
-                <td>N/A</td>
-                <td>6</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>sensor.custom_integrations</td>
                 <td>Home Assistant Custom integrations</td>
                 <td>N/A</td>
@@ -3768,7 +3736,7 @@
                 <td>sensor.date_time_iso</td>
                 <td>Date & Time (ISO)</td>
                 <td>N/A</td>
-                <td>2026-02-08 12:26:00</td>
+                <td>2026-02-08 12:28:00</td>
                 <td>Yes</td>
             </tr>
         
@@ -4192,7 +4160,7 @@
                 <td>sensor.hugh_room_plug_blanket_current</td>
                 <td>Hugh Room Plug Blanket Current</td>
                 <td>A</td>
-                <td>0.01</td>
+                <td>0</td>
                 <td>Yes</td>
             </tr>
         
@@ -4377,6 +4345,22 @@
                 <td>Repairs Total</td>
                 <td>issues</td>
                 <td>13</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.left_window_battery</td>
+                <td>Left Window Battery</td>
+                <td>%</td>
+                <td>86</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.left_window_light_level</td>
+                <td>Left Window Light level</td>
+                <td>N/A</td>
+                <td>7</td>
                 <td>Yes</td>
             </tr>
         
@@ -4805,6 +4789,22 @@
             </tr>
         
             <tr>
+                <td>sensor.right_window_battery</td>
+                <td>Right Window Battery</td>
+                <td>%</td>
+                <td>88</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.right_window_light_level</td>
+                <td>Right Window Light level</td>
+                <td>N/A</td>
+                <td>8</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>sensor.scenes</td>
                 <td>Home Assistant Scenes</td>
                 <td>N/A</td>
@@ -4888,7 +4888,7 @@
                 <td>sensor.snake_plant_illuminance</td>
                 <td>Snake Plant Illuminance</td>
                 <td>lx</td>
-                <td>160</td>
+                <td>134</td>
                 <td>Yes</td>
             </tr>
         
@@ -4904,7 +4904,7 @@
                 <td>sensor.snake_plant_signal_strength</td>
                 <td>Snake Plant Signal Strength</td>
                 <td>dBm</td>
-                <td>-86</td>
+                <td>-84</td>
                 <td>Yes</td>
             </tr>
         
@@ -4912,7 +4912,7 @@
                 <td>sensor.snake_plant_temperature</td>
                 <td>Snake Plant Temperature</td>
                 <td>°C</td>
-                <td>22.0</td>
+                <td>21.8</td>
                 <td>Yes</td>
             </tr>
         
