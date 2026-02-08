@@ -414,22 +414,53 @@
     cover.left_window:
       device_class: curtain
       supported_features: 15
-      current_position: 18
+      current_position: 100
       last_run_success: true
       friendly_name: Left Window
-      state: closed
+      state: open
     cover.middle_window:
       device_class: curtain
       supported_features: 15
-      current_position: 48
+      current_position: 100
       last_run_success: true
       friendly_name: Middle Window
       state: open
     cover.right_window:
       device_class: curtain
       supported_features: 15
+      current_position: 99
+      last_run_success: true
+      friendly_name: Right Window
+      state: open
+  metadata:
+    cover.left_window:
+      entity_only: true
+    cover.middle_window:
+      entity_only: true
+    cover.right_window:
+      entity_only: true
+- id: &#x27;1770554016516&#x27;
+  name: Curtains Close
+  entities:
+    cover.left_window:
+      device_class: curtain
+      supported_features: 15
+      current_position: 0
+      last_run_success: true
+      friendly_name: Left Window
+      state: closed
+    cover.middle_window:
+      device_class: curtain
+      supported_features: 15
+      current_position: 0
+      last_run_success: true
+      friendly_name: Middle Window
+      state: closed
+    cover.right_window:
+      device_class: curtain
+      supported_features: 15
       current_position: 3
-      last_run_success:
+      last_run_success: true
       friendly_name: Right Window
       state: closed
   metadata:
