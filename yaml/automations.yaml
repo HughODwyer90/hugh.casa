@@ -4232,3 +4232,42 @@
       entity_id: scene.living_room_all_lights_on
     action: scene.turn_on
   mode: single
+- id: '1770563657139'
+  alias: Charge Curtains
+  description: ''
+  triggers:
+  - trigger: time
+    at: 07:00:00
+    weekday:
+    - sat
+    id: Charge
+  - trigger: time
+    at: 09:00:00
+    weekday:
+    - sat
+    id: Discharge
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Charge
+      sequence:
+      - action: scene.turn_on
+        metadata: {}
+        target:
+          entity_id: scene.curtains_charging
+        data: {}
+    - conditions:
+      - condition: trigger
+        id:
+        - Discharge
+      sequence:
+      - action: scene.turn_on
+        metadata: {}
+        target:
+          entity_id:
+          - scene.curtains_open
+        data: {}
+  mode: single
