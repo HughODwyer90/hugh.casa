@@ -901,47 +901,31 @@
   mode: single
 - id: '1707218902478'
   alias: Living Room TV Lighting Control
-  description: Activates the 'dimmers' scene based on the living room occupancy and
-    the state of the TV.
+  description: "When occupied: applies dimmers. Curtains close when TV is on. When
+    TV turns off:\n - if lights are on -> close curtains (privacy)\n - if lights are
+    off + daytime -> open curtains\n - if lights are off + night -> close curtains\n"
   triggers:
   - trigger: state
-    entity_id:
-    - binary_sensor.living_room_tv_state
+    entity_id: binary_sensor.living_room_tv_state
     from: 'on'
     to: 'off'
+    id: tv_off
   - trigger: state
-    entity_id:
-    - binary_sensor.living_room_tv_state
+    entity_id: binary_sensor.living_room_tv_state
     from: 'off'
     to: 'on'
+    id: tv_on
+  - trigger: state
+    entity_id:
+    - light.living_room_bookshelf
+    - light.living_room_floor_lamp
+    id: lights_change
   conditions:
   - condition: state
     entity_id: binary_sensor.living_room_eppro_occupancy
-    state:
-    - 'on'
+    state: 'on'
   actions:
   - choose:
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.living_room_tv_state
-        state: 'off'
-      sequence:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: light.living_room_bookshelf
-          state:
-          - 'off'
-        - condition: state
-          entity_id: light.living_room_floor_lamp
-          state:
-          - 'off'
-      - action: scene.turn_on
-        target:
-          entity_id:
-          - scene.dimmers
-          - scene.curtains_open
-        data: {}
     - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_tv_state
@@ -952,9 +936,52 @@
           entity_id:
           - scene.dimmers
           - scene.curtains_close
-        data: {}
-    default: []
-  mode: single
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.living_room_tv_state
+        state: 'off'
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: light.living_room_bookshelf
+          state: 'on'
+        - condition: state
+          entity_id: light.living_room_floor_lamp
+          state: 'on'
+      sequence:
+      - action: scene.turn_on
+        target:
+          entity_id:
+          - scene.dimmers
+          - scene.curtains_close
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.living_room_tv_state
+        state: 'off'
+      - condition: state
+        entity_id: light.living_room_bookshelf
+        state: 'off'
+      - condition: state
+        entity_id: light.living_room_floor_lamp
+        state: 'off'
+      - condition: sun
+        after: sunrise
+        after_offset: 00:15:00
+        before: sunset
+        before_offset: -00:30:00
+      sequence:
+      - action: scene.turn_on
+        target:
+          entity_id:
+          - scene.dimmers
+          - scene.curtains_open
+    default:
+    - action: scene.turn_on
+      target:
+        entity_id:
+        - scene.dimmers
+        - scene.curtains_close
+  mode: restart
 - id: '1707620611866'
   alias: Admin Ignore Alert
   description: Does nothing, simply triggered by the Ignore action.
@@ -4198,8 +4225,9 @@
   mode: restart
 - id: '1770554582964'
   alias: Living Room Toggle Curtains
-  description: Toggle living room curtains (3 windows). Button toggles; 06:00 always
-    opens.
+  description: 'Baseline curtain control using sunrise/sunset with manual button toggle.
+
+    '
   triggers:
   - domain: mqtt
     device_id: 9f98b882a412e95e16f1addf1f9e8e27
@@ -4207,31 +4235,34 @@
     subtype: off_press
     trigger: device
     id: Button
-  - trigger: time
-    at: 06:00:00
-    id: Time
-  - trigger: time
-    at: '21:00:00'
-    id: TimeNight
+  - trigger: sun
+    event: sunrise
+    id: Sunrise
+  - trigger: sun
+    event: sunset
+    id: Sunset
   actions:
   - choose:
     - conditions:
       - condition: trigger
-        id: Time
+        id: Sunrise
       sequence:
+      - condition: sun
+        after: sunrise
+        after_offset: 00:15:00
       - action: scene.turn_on
         target:
           entity_id: scene.curtains_open
     - conditions:
       - condition: trigger
-        id:
-        - TimeNight
+        id: Sunset
       sequence:
+      - condition: sun
+        before: sunset
+        before_offset: -00:30:00
       - action: scene.turn_on
         target:
-          entity_id:
-          - scene.curtains_close
-        data: {}
+          entity_id: scene.curtains_close
     - conditions:
       - condition: trigger
         id: Button
@@ -4252,7 +4283,7 @@
     - action: scene.turn_on
       target:
         entity_id: scene.curtains_open
-  mode: single
+  mode: restart
 - id: '1770563657139'
   alias: Charge Curtains
   description: ''
