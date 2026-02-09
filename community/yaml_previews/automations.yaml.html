@@ -4301,7 +4301,10 @@
   mode: restart
 - id: &#x27;1770563657139&#x27;
   alias: Charge Curtains
-  description: &#x27;&#x27;
+  description: &#x27;Charges curtains on Tuesday morning only if needed. Restores at noon
+    only if charging actually happened.
+
+    &#x27;
   triggers:
   - trigger: time
     at: 08:00:00
@@ -4337,14 +4340,23 @@
       - action: scene.turn_on
         target:
           entity_id: scene.curtains_charging
+      - action: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.charged_curtains_today
     - conditions:
       - condition: trigger
         id: Discharge
+      - condition: state
+        entity_id: input_boolean.charged_curtains_today
+        state: &#x27;on&#x27;
       sequence:
       - action: scene.turn_on
         target:
           entity_id: scene.curtains_open
-  mode: single
+      - action: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.charged_curtains_today
+  mode: restart
 </pre>
             </div>
             <script>
