@@ -1,7 +1,7 @@
 - id: '1700843249346'
   name: Living Room Dimmers
   entities:
-    light.living_room_floor_front:
+    light.living_room_bookshelf:
       min_color_temp_kelvin: 2000
       max_color_temp_kelvin: 6535
       min_mireds: 153
@@ -20,15 +20,9 @@
       supported_color_modes:
       - color_temp
       - xy
-      friendly_name: Living Room Floor Front
-      supported_features: 44
-      linkquality: 184
-      update:
-        installed_version: 16785162
-        latest_version: 16785162
-        state: idle
+      effect:
       color_mode: color_temp
-      brightness: 178
+      brightness: 255
       color_temp_kelvin: 2000
       color_temp: 500
       hs_color:
@@ -36,13 +30,15 @@
       - 94.547
       rgb_color:
       - 255
-      - 136
-      - 13
+      - 137
+      - 14
       xy_color:
-      - 0.599
-      - 0.382
+      - 0.598
+      - 0.383
+      friendly_name: Bookshelf
+      supported_features: 44
       state: 'on'
-    light.living_room_floor_back:
+    light.living_room_floor_lamp:
       min_color_temp_kelvin: 2000
       max_color_temp_kelvin: 6535
       min_mireds: 153
@@ -61,15 +57,9 @@
       supported_color_modes:
       - color_temp
       - xy
-      friendly_name: Living Room Floor Back
-      supported_features: 44
-      linkquality: 255
-      update:
-        installed_version: 16785162
-        latest_version: 16785162
-        state: idle
+      effect:
       color_mode: color_temp
-      brightness: 178
+      brightness: 255
       color_temp_kelvin: 2000
       color_temp: 500
       hs_color:
@@ -77,45 +67,19 @@
       - 94.547
       rgb_color:
       - 255
-      - 136
-      - 13
+      - 137
+      - 14
       xy_color:
-      - 0.599
-      - 0.382
-      state: 'on'
-    light.living_room_ceiling:
-      min_color_temp_kelvin: 2000
-      max_color_temp_kelvin: 6535
-      min_mireds: 153
-      max_mireds: 500
-      effect_list:
-      - blink
-      - breathe
-      - okay
-      - channel_change
-      - candle
-      - fireplace
-      - colorloop
-      - finish_effect
-      - stop_effect
-      - stop_hue_effect
-      supported_color_modes:
-      - color_temp
-      - xy
-      friendly_name: Living Room Ceiling
+      - 0.598
+      - 0.383
+      friendly_name: Living Room Floor Lamp
       supported_features: 44
-      linkquality: 208
-      update:
-        installed_version: 16785162
-        latest_version: 16785162
-        state: idle
-      color_mode:
-      color_temp_kelvin:
-      hs_color:
-      rgb_color:
-      xy_color:
-      state: 'off'
-  metadata: {}
+      state: 'on'
+  metadata:
+    light.living_room_bookshelf:
+      entity_only: true
+    light.living_room_floor_lamp:
+      entity_only: true
 - id: '1700843318558'
   name: Living Room All Lights On
   entities:
