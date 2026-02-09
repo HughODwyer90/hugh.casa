@@ -260,7 +260,7 @@
         data:
           color_temp_kelvin: 2000
           brightness_pct: 100
-          transition: 3
+          transition: 2
         action: light.turn_on
     - conditions:
       - condition: state
@@ -273,7 +273,7 @@
           - light.hall_wall_2
           - light.hall_wall_3
         data:
-          transition: 3
+          transition: 2
         action: light.turn_off
       - delay:
           hours: 0
@@ -284,7 +284,7 @@
           entity_id:
           - light.utility
         data:
-          transition: 3
+          transition: 2
         action: light.turn_off
     default: []
   mode: restart
@@ -4358,7 +4358,8 @@
         metadata: {}
         target:
           entity_id: scene.kitchen_lights_on
-        data: {}
+        data:
+          transition: 2
     - conditions:
       - condition: state
         entity_id: binary_sensor.kitchen_epone_occupancy
@@ -4370,5 +4371,6 @@
         target:
           entity_id:
           - scene.kitchen_lights_off
-        data: {}
+        data:
+          transition: 2
   mode: single
