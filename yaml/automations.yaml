@@ -314,7 +314,7 @@
       entity_id:
       - number.living_room_epone_mmwave_zone_1_end
     data:
-      value: 705
+      value: '350'
   - action: shell_command.patch_tuya_diffuser
   - delay: 00:00:05
   - action: script.reload_tuya_local_integration
@@ -368,9 +368,9 @@
   mode: single
 - id: '1702818164083'
   alias: Living Room Lights – Occupancy + TV
-  description: 'Lights only. Occupancy decides whether we act. TV on while occupied
-    -> dimmers. TV off while occupied -> daytime: do nothing; night: dimmers. Christmas
-    switch toggled with occupancy (if available).
+  description: 'Lights only. If occupancy clears, we only turn lights off when the
+    TV is OFF. TV on while occupied -> dimmers. TV off while occupied -> daytime:
+    do nothing; night: dimmers. Christmas switch toggled with occupancy (if available).
 
     '
   triggers:
@@ -385,6 +385,9 @@
     - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_eppro_occupancy
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.living_room_tv_state
         state: 'off'
       sequence:
       - action: scene.create
@@ -406,6 +409,15 @@
       - action: switch.turn_off
         target:
           entity_id: switch.christmas
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.living_room_eppro_occupancy
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.living_room_tv_state
+        state: 'on'
+      sequence:
+      - stop: TV is on — keep lights as-is
     - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_eppro_occupancy
@@ -900,14 +912,23 @@
   triggers:
   - trigger: state
     entity_id: binary_sensor.living_room_tv_state
+    id: tv
   - trigger: state
     entity_id: binary_sensor.living_room_eppro_occupancy
     to: 'on'
+    id: occupancy
   conditions:
   - condition: state
     entity_id: binary_sensor.living_room_eppro_occupancy
     state: 'on'
   actions:
+  - condition: or
+    conditions:
+    - condition: trigger
+      id: tv
+    - condition: state
+      entity_id: binary_sensor.living_room_tv_state
+      state: 'off'
   - choose:
     - conditions:
       - condition: state
