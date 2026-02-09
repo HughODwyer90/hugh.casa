@@ -474,7 +474,7 @@ update_esphome_devices:
   - condition: or
     conditions:
     - condition: state
-      entity_id: update.living_room_eppro_firmware
+      entity_id: update.living_room_eppro_firmware_2
       state:
       - 'on'
     - condition: state
@@ -494,14 +494,14 @@ update_esphome_devices:
   - choose:
     - conditions:
       - condition: state
-        entity_id: update.living_room_eppro_firmware
+        entity_id: update.living_room_eppro_firmware_2
         state:
         - 'on'
       sequence:
       - action: update.install
         target:
           entity_id:
-          - update.living_room_eppro_firmware
+          - update.living_room_eppro_firmware_2
         continue_on_error: true
         data: {}
       - wait_template: '{{ is_state(''update.living_room_eppro_firmware'', ''off'')
@@ -516,11 +516,10 @@ update_esphome_devices:
         - 'on'
       sequence:
       - action: update.install
-        target:
-          entity_id:
-          - update.kitchen_epone_firmware
         continue_on_error: true
         data: {}
+        target:
+          entity_id: update.kitchen_epone_firmware
       - wait_template: '{{ is_state(''update.kitchen_epone_firmware'', ''off'') }}'
         timeout: 00:15:00
         continue_on_timeout: true
