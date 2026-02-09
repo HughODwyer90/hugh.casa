@@ -4198,16 +4198,30 @@
   mode: restart
 - id: '1770554582964'
   alias: Living Room Toggle Curtains
-  description: Toggle living room curtains (3 windows)
+  description: Toggle living room curtains (3 windows). Button toggles; 06:00 always
+    opens.
   triggers:
   - domain: mqtt
     device_id: 9f98b882a412e95e16f1addf1f9e8e27
     type: action
     subtype: off_press
     trigger: device
+    id: Button
+  - trigger: time
+    at: 06:00:00
+    id: Time
   actions:
   - choose:
     - conditions:
+      - condition: trigger
+        id: Time
+      sequence:
+      - action: scene.turn_on
+        target:
+          entity_id: scene.curtains_open
+    - conditions:
+      - condition: trigger
+        id: Button
       - condition: state
         entity_id: cover.left_window
         state: open
@@ -4218,19 +4232,13 @@
         entity_id: cover.right_window
         state: open
       sequence:
-      - target:
+      - action: scene.turn_on
+        target:
           entity_id: scene.curtains_close
-        action: scene.turn_on
     default:
-    - target:
+    - action: scene.turn_on
+      target:
         entity_id: scene.curtains_open
-      action: scene.turn_on
-  - target:
-      entity_id: input_boolean.living_room_occupancy_scene_saved
-    action: input_boolean.turn_off
-  - target:
-      entity_id: scene.living_room_all_lights_on
-    action: scene.turn_on
   mode: single
 - id: '1770563657139'
   alias: Charge Curtains
