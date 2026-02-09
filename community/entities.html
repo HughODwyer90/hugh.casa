@@ -12,7 +12,7 @@
             <div class="fixed-header">
                 <h1>Home Assistant Entities</h1>
                 <p>Total Entities: 855 (Redacted: 16)</p>
-                <p>Version: 2026-02-09-212913</p>
+                <p>Version: 2026-02-09-213047</p>
                 <div class="search-container">
                     <input type="text" id="entitySearch" class="search-box" placeholder="🔍 Search entities...">
                 </div>
@@ -1120,7 +1120,7 @@
                 <td>binary_sensor.living_room_eppro_mmwave_presence</td>
                 <td>Living Room EPPro mmWave Presence</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -1152,7 +1152,7 @@
                 <td>binary_sensor.living_room_eppro_tracking_presence</td>
                 <td>Living Room EPPro Tracking Presence</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -1168,7 +1168,7 @@
                 <td>binary_sensor.living_room_occupancy_scene</td>
                 <td>Living Room Occupancy Scene Saved</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -1800,7 +1800,7 @@
                 <td>cover.left_window</td>
                 <td>Left Window</td>
                 <td>N/A</td>
-                <td>opening</td>
+                <td>open</td>
                 <td>Yes</td>
             </tr>
         
@@ -1808,7 +1808,7 @@
                 <td>cover.middle_window</td>
                 <td>Middle Window</td>
                 <td>N/A</td>
-                <td>opening</td>
+                <td>open</td>
                 <td>Yes</td>
             </tr>
         
@@ -1816,7 +1816,7 @@
                 <td>cover.right_window</td>
                 <td>Right Window</td>
                 <td>N/A</td>
-                <td>opening</td>
+                <td>open</td>
                 <td>Yes</td>
             </tr>
         
@@ -1904,7 +1904,7 @@
                 <td>event.living_room_phillips_switch_action</td>
                 <td>Living Room Phillips Switch Action</td>
                 <td>N/A</td>
-                <td>2026-02-09 21:28:57</td>
+                <td>2026-02-09 21:30:46</td>
                 <td>Yes</td>
             </tr>
         
@@ -2008,7 +2008,7 @@
                 <td>input_boolean.living_room_occupancy_scene_saved</td>
                 <td>Living Room Occupancy Scene Saved</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -2533,14 +2533,6 @@
             </tr>
         
             <tr>
-                <td>light.0xa4c1384fede67bb4</td>
-                <td>0xa4c1384fede67bb4</td>
-                <td>N/A</td>
-                <td>unknown</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>light.aroma_diffuser</td>
                 <td>Aroma diffuser</td>
                 <td>N/A</td>
@@ -2605,10 +2597,18 @@
             </tr>
         
             <tr>
+                <td>light.kitchen_ceiling_1</td>
+                <td>Kitchen Ceiling 1</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>light.living_room_bookshelf</td>
                 <td>Bookshelf</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -2632,7 +2632,7 @@
                 <td>light.living_room_floor_lamp</td>
                 <td>Living Room Floor Lamp</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -2640,7 +2640,7 @@
                 <td>light.living_room_lights</td>
                 <td>Living Room Lights</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3224,7 +3224,7 @@
                 <td>scene.living_room_all_lights_off</td>
                 <td>Living Room All Lights Off</td>
                 <td>N/A</td>
-                <td>2026-02-09 21:27:33</td>
+                <td>2026-02-09 21:30:46</td>
                 <td>Yes</td>
             </tr>
         
@@ -3381,14 +3381,6 @@
             </tr>
         
             <tr>
-                <td>select.0xa4c1384fede67bb4_power_on_behavior</td>
-                <td>0xa4c1384fede67bb4 Power-on behavior</td>
-                <td>N/A</td>
-                <td>unknown</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>select.aroma_diffuser_mood_lighting</td>
                 <td>Aroma diffuser Mood lighting</td>
                 <td>N/A</td>
@@ -3529,6 +3521,14 @@
                 <td>Hugh Room Plug Fan Desk Power outage memory</td>
                 <td>N/A</td>
                 <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.kitchen_ceiling_1_power_on_behavior</td>
+                <td>Kitchen Ceiling 1 Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
                 <td>Yes</td>
             </tr>
         
@@ -4208,7 +4208,7 @@
                 <td>sensor.date_time_iso</td>
                 <td>Date & Time (ISO)</td>
                 <td>N/A</td>
-                <td>2026-02-09 21:29:00</td>
+                <td>2026-02-09 21:30:00</td>
                 <td>Yes</td>
             </tr>
         
@@ -4264,7 +4264,7 @@
                 <td>sensor.entities</td>
                 <td>Home Assistant Entities</td>
                 <td>N/A</td>
-                <td>852</td>
+                <td>855</td>
                 <td>Yes</td>
             </tr>
         
@@ -4656,7 +4656,7 @@
                 <td>sensor.hugh_room_plug_blanket_voltage</td>
                 <td>Hugh Room Plug Blanket Voltage</td>
                 <td>V</td>
-                <td>234</td>
+                <td>232</td>
                 <td>Yes</td>
             </tr>
         
@@ -4688,7 +4688,7 @@
                 <td>sensor.hugh_room_plug_fan_bed_voltage</td>
                 <td>Hugh Room Plug Fan Bed Voltage</td>
                 <td>V</td>
-                <td>234</td>
+                <td>232</td>
                 <td>Yes</td>
             </tr>
         
@@ -4824,7 +4824,7 @@
                 <td>sensor.kitchen_epone_humidity</td>
                 <td>Kitchen EPOne Humidity</td>
                 <td>%</td>
-                <td>35.7846069335938</td>
+                <td>35.8670043945312</td>
                 <td>Yes</td>
             </tr>
         
@@ -4832,7 +4832,7 @@
                 <td>sensor.kitchen_epone_illuminance</td>
                 <td>Kitchen EPOne Illuminance</td>
                 <td>lx</td>
-                <td>19.992151260376</td>
+                <td>23.8860244750977</td>
                 <td>Yes</td>
             </tr>
         
@@ -4840,7 +4840,7 @@
                 <td>sensor.kitchen_epone_target_1_distance</td>
                 <td>Kitchen EPOne Target 1 Distance</td>
                 <td>m</td>
-                <td>0.663999974727631</td>
+                <td>0.921999990940094</td>
                 <td>Yes</td>
             </tr>
         
@@ -4848,7 +4848,7 @@
                 <td>sensor.kitchen_epone_temperature</td>
                 <td>Kitchen EPOne Temperature</td>
                 <td>°C</td>
-                <td>29.7561645507812</td>
+                <td>29.7801971435547</td>
                 <td>Yes</td>
             </tr>
         
@@ -4896,7 +4896,7 @@
                 <td>sensor.lights</td>
                 <td>Home Assistant Lights</td>
                 <td>N/A</td>
-                <td>16</td>
+                <td>17</td>
                 <td>Yes</td>
             </tr>
         
@@ -5080,7 +5080,7 @@
                 <td>sensor.living_room_eppro_humidity</td>
                 <td>Living Room EPPro Humidity</td>
                 <td>%</td>
-                <td>30.3909301757812</td>
+                <td>30.3421020507812</td>
                 <td>Yes</td>
             </tr>
         
@@ -5088,7 +5088,7 @@
                 <td>sensor.living_room_eppro_illuminance</td>
                 <td>Living Room EPPro Illuminance</td>
                 <td>lx</td>
-                <td>3.96161389350891</td>
+                <td>1.81102347373962</td>
                 <td>Yes</td>
             </tr>
         
@@ -5096,7 +5096,7 @@
                 <td>sensor.living_room_eppro_target_1_angle</td>
                 <td>Living Room EPPro Target 1 Angle</td>
                 <td>°</td>
-                <td>47.3188514709473</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5104,7 +5104,7 @@
                 <td>sensor.living_room_eppro_target_1_distance</td>
                 <td>Living Room EPPro Target 1 Distance</td>
                 <td>mm</td>
-                <td>3670.06103515625</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5112,7 +5112,7 @@
                 <td>sensor.living_room_eppro_target_1_resolution</td>
                 <td>Living Room EPPro Target 1 Resolution</td>
                 <td>mm</td>
-                <td>360.0</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5128,7 +5128,7 @@
                 <td>sensor.living_room_eppro_target_1_x</td>
                 <td>Living Room EPPro Target 1 X</td>
                 <td>mm</td>
-                <td>-3361.0</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5136,7 +5136,7 @@
                 <td>sensor.living_room_eppro_target_1_y</td>
                 <td>Living Room EPPro Target 1 Y</td>
                 <td>mm</td>
-                <td>1474.0</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5240,7 +5240,7 @@
                 <td>sensor.living_room_eppro_temperature</td>
                 <td>Living Room EPPro Temperature</td>
                 <td>°C</td>
-                <td>19.9106101989746</td>
+                <td>19.9159507751465</td>
                 <td>Yes</td>
             </tr>
         
@@ -5544,7 +5544,7 @@
                 <td>sensor.selects</td>
                 <td>Home Assistant Selects</td>
                 <td>N/A</td>
-                <td>37</td>
+                <td>38</td>
                 <td>Yes</td>
             </tr>
         
@@ -5760,7 +5760,7 @@
                 <td>sensor.update</td>
                 <td>Home Assistant Update</td>
                 <td>N/A</td>
-                <td>49</td>
+                <td>50</td>
                 <td>Yes</td>
             </tr>
         
@@ -6413,14 +6413,6 @@
             </tr>
         
             <tr>
-                <td>update.0xa4c1384fede67bb4</td>
-                <td>0xa4c1384fede67bb4</td>
-                <td>N/A</td>
-                <td>unknown</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>update.adaptive_lighting_update</td>
                 <td>Adaptive Lighting update</td>
                 <td>N/A</td>
@@ -6623,6 +6615,14 @@
             <tr>
                 <td>update.ir_receiver_firmware</td>
                 <td>IR Receiver Firmware</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.kitchen_ceiling_1</td>
+                <td>Kitchen Ceiling 1</td>
                 <td>N/A</td>
                 <td>off</td>
                 <td>Yes</td>
