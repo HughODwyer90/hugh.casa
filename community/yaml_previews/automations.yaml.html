@@ -382,108 +382,100 @@
         message: System has restarted and is now ready.
   mode: single
 - id: &#x27;1702818164083&#x27;
-  alias: Living Room Lights Occupied
-  description: &#x27;Controls living room lights based on occupancy. Restores last state
-    and checks if lights are off, turns all lights on if they are off. Turns on the
-    Christmas tree if present. Does not change lights if TV is on.
+  alias: Living Room Lights – Occupancy + TV
+  description: &#x27;Lights only. Occupancy decides whether we act. TV on while occupied
+    -&gt; dimmers. TV off while occupied -&gt; daytime: do nothing; night: dimmers. Christmas
+    switch toggled with occupancy (if available).
 
     &#x27;
   triggers:
-  - entity_id:
-    - binary_sensor.living_room_eppro_occupancy
-    trigger: state
-  conditions:
-  - condition: or
-    conditions:
-    - condition: state
-      entity_id: binary_sensor.living_room_tv_state
-      state: &#x27;off&#x27;
-    - condition: state
-      entity_id: binary_sensor.living_room_tv_state
-      state: unavailable
+  - trigger: state
+    entity_id: binary_sensor.living_room_eppro_occupancy
+    id: occupancy
+  - trigger: state
+    entity_id: binary_sensor.living_room_tv_state
+    id: tv
   actions:
   - choose:
     - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_eppro_occupancy
-        state:
-        - &#x27;on&#x27;
+        state: &#x27;off&#x27;
       sequence:
-      - choose:
-        - conditions:
-          - condition: state
-            entity_id: input_boolean.living_room_occupancy_scene_saved
-            state: &#x27;on&#x27;
-          sequence:
-          - target:
-              entity_id: scene.living_room_lights_last_state
-            action: scene.turn_on
-            data: {}
-          - delay: 00:00:01
-          - condition: template
-            value_template: &quot;{{ is_state(&#x27;light.living_room_bookshelf&#x27;, &#x27;off&#x27;) and\n
-              \  is_state(&#x27;light.living_room_floor_lamp&#x27;, &#x27;off&#x27;) }}\n&quot;
-          - target:
-              entity_id: scene.living_room_all_lights_on
-            action: scene.turn_on
-            data: {}
-          - condition: template
-            value_template: &#x27;{{ states(&#x27;&#x27;switch.christmas&#x27;&#x27;) not in [&#x27;&#x27;unknown&#x27;&#x27;,
-              &#x27;&#x27;unavailable&#x27;&#x27;] }}
-
-              &#x27;
-          - target:
-              entity_id: switch.christmas
-            action: switch.turn_on
-            data: {}
-        - conditions:
-          - condition: state
-            entity_id: input_boolean.living_room_occupancy_scene_saved
-            state: &#x27;off&#x27;
-          sequence:
-          - target:
-              entity_id: scene.living_room_all_lights_on
-            action: scene.turn_on
-            data: {}
-          - condition: template
-            value_template: &#x27;{{ states(&#x27;&#x27;switch.christmas&#x27;&#x27;) not in [&#x27;&#x27;unknown&#x27;&#x27;,
-              &#x27;&#x27;unavailable&#x27;&#x27;] }}
-
-              &#x27;
-          - target:
-              entity_id: switch.christmas
-            action: switch.turn_on
-            data: {}
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.living_room_eppro_occupancy
-        state:
-        - &#x27;off&#x27;
-      sequence:
-      - data:
+      - action: scene.create
+        data:
           scene_id: living_room_lights_last_state
           snapshot_entities:
           - switch.christmas
           - light.living_room_bookshelf
           - light.living_room_floor_lamp
-        action: scene.create
-      - target:
+      - action: input_boolean.turn_on
+        target:
           entity_id: input_boolean.living_room_occupancy_scene_saved
-        action: input_boolean.turn_on
-        data: {}
-      - target:
+      - action: scene.turn_on
+        target:
           entity_id: scene.living_room_all_lights_off
-        action: scene.turn_on
-        data: {}
       - condition: template
-        value_template: &#x27;{{ states(&#x27;&#x27;switch.christmas&#x27;&#x27;) not in [&#x27;&#x27;unknown&#x27;&#x27;, &#x27;&#x27;unavailable&#x27;&#x27;]
-          }}
-
-          &#x27;
-      - target:
+        value_template: &#x27;{{ states(&#x27;&#x27;switch.christmas&#x27;&#x27;) not in [&#x27;&#x27;unknown&#x27;&#x27;,&#x27;&#x27;unavailable&#x27;&#x27;]
+          }}&#x27;
+      - action: switch.turn_off
+        target:
           entity_id: switch.christmas
-        action: switch.turn_off
-        data: {}
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.living_room_eppro_occupancy
+        state: &#x27;on&#x27;
+      - condition: state
+        entity_id: binary_sensor.living_room_tv_state
+        state: &#x27;on&#x27;
+      sequence:
+      - action: scene.turn_on
+        target:
+          entity_id: scene.dimmers
+      - condition: template
+        value_template: &#x27;{{ states(&#x27;&#x27;switch.christmas&#x27;&#x27;) not in [&#x27;&#x27;unknown&#x27;&#x27;,&#x27;&#x27;unavailable&#x27;&#x27;]
+          }}&#x27;
+      - action: switch.turn_on
+        target:
+          entity_id: switch.christmas
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.living_room_eppro_occupancy
+        state: &#x27;on&#x27;
+      - condition: state
+        entity_id: binary_sensor.living_room_tv_state
+        state: &#x27;off&#x27;
+      - condition: sun
+        after: sunrise
+        after_offset: 00:15:00
+        before: sunset
+        before_offset: -01:30:00
+      sequence:
+      - condition: template
+        value_template: &#x27;{{ states(&#x27;&#x27;switch.christmas&#x27;&#x27;) not in [&#x27;&#x27;unknown&#x27;&#x27;,&#x27;&#x27;unavailable&#x27;&#x27;]
+          }}&#x27;
+      - action: switch.turn_on
+        target:
+          entity_id: switch.christmas
+      - stop: Daytime – leave lights as-is
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.living_room_eppro_occupancy
+        state: &#x27;on&#x27;
+      - condition: state
+        entity_id: binary_sensor.living_room_tv_state
+        state: &#x27;off&#x27;
+      sequence:
+      - action: scene.turn_on
+        target:
+          entity_id: scene.dimmers
+      - condition: template
+        value_template: &#x27;{{ states(&#x27;&#x27;switch.christmas&#x27;&#x27;) not in [&#x27;&#x27;unknown&#x27;&#x27;,&#x27;&#x27;unavailable&#x27;&#x27;]
+          }}&#x27;
+      - action: switch.turn_on
+        target:
+          entity_id: switch.christmas
+    default: []
   mode: restart
 - id: &#x27;1702941352805&#x27;
   alias: Hugh Room Bed Button Single
@@ -916,26 +908,16 @@
       data: {}
   mode: single
 - id: &#x27;1707218902478&#x27;
-  alias: Living Room TV Lighting Control
-  description: &quot;When occupied: applies dimmers. Curtains close when TV is on. When
-    TV turns off:\n - if lights are on -&gt; close curtains (privacy)\n - if lights are
-    off + daytime -&gt; open curtains\n - if lights are off + night -&gt; close curtains\n&quot;
+  alias: Living Room Curtains – TV / Daylight / Privacy
+  description: &quot;Curtains only. Priority:\n 1) TV on -&gt; close\n 2) TV off + daytime
+    -&gt; open (even if lights on)\n 3) TV off + night + any light on -&gt; close (privacy)\n
+    4) TV off + night + lights off -&gt; close\n&quot;
   triggers:
   - trigger: state
     entity_id: binary_sensor.living_room_tv_state
-    from: &#x27;on&#x27;
-    to: &#x27;off&#x27;
-    id: tv_off
   - trigger: state
-    entity_id: binary_sensor.living_room_tv_state
-    from: &#x27;off&#x27;
+    entity_id: binary_sensor.living_room_eppro_occupancy
     to: &#x27;on&#x27;
-    id: tv_on
-  - trigger: state
-    entity_id:
-    - light.living_room_bookshelf
-    - light.living_room_floor_lamp
-    id: lights_change
   conditions:
   - condition: state
     entity_id: binary_sensor.living_room_eppro_occupancy
@@ -949,9 +931,20 @@
       sequence:
       - action: scene.turn_on
         target:
-          entity_id:
-          - scene.dimmers
-          - scene.curtains_close
+          entity_id: scene.curtains_close
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.living_room_tv_state
+        state: &#x27;off&#x27;
+      - condition: sun
+        after: sunrise
+        after_offset: 00:15:00
+        before: sunset
+        before_offset: -00:30:00
+      sequence:
+      - action: scene.turn_on
+        target:
+          entity_id: scene.curtains_open
     - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_tv_state
@@ -967,36 +960,16 @@
       sequence:
       - action: scene.turn_on
         target:
-          entity_id:
-          - scene.dimmers
-          - scene.curtains_close
+          entity_id: scene.curtains_close
     - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_tv_state
         state: &#x27;off&#x27;
-      - condition: state
-        entity_id: light.living_room_bookshelf
-        state: &#x27;off&#x27;
-      - condition: state
-        entity_id: light.living_room_floor_lamp
-        state: &#x27;off&#x27;
-      - condition: sun
-        after: sunrise
-        after_offset: 00:15:00
-        before: sunset
-        before_offset: -00:30:00
       sequence:
       - action: scene.turn_on
         target:
-          entity_id:
-          - scene.dimmers
-          - scene.curtains_open
-    default:
-    - action: scene.turn_on
-      target:
-        entity_id:
-        - scene.dimmers
-        - scene.curtains_close
+          entity_id: scene.curtains_close
+    default: []
   mode: restart
 - id: &#x27;1707620611866&#x27;
   alias: Admin Ignore Alert
@@ -4253,44 +4226,45 @@
     id: Button
   - trigger: sun
     event: sunrise
-    id: Sunrise
+    offset: 00:15:00
+    id: SunrisePlus15
   - trigger: sun
     event: sunset
-    id: Sunset
+    offset: -00:30:00
+    id: SunsetMinus30
   actions:
   - choose:
     - conditions:
       - condition: trigger
-        id: Sunrise
+        id: SunrisePlus15
       sequence:
-      - condition: sun
-        after: sunrise
-        after_offset: 00:15:00
       - action: scene.turn_on
         target:
           entity_id: scene.curtains_open
     - conditions:
       - condition: trigger
-        id: Sunset
+        id: SunsetMinus30
       sequence:
-      - condition: sun
-        before: sunset
-        before_offset: -00:30:00
       - action: scene.turn_on
         target:
           entity_id: scene.curtains_close
     - conditions:
       - condition: trigger
         id: Button
-      - condition: state
-        entity_id: cover.left_window
-        state: open
-      - condition: state
-        entity_id: cover.middle_window
-        state: open
-      - condition: state
-        entity_id: cover.right_window
-        state: open
+      - condition: and
+        conditions:
+        - condition: numeric_state
+          entity_id: cover.left_window
+          attribute: current_position
+          above: 95
+        - condition: numeric_state
+          entity_id: cover.middle_window
+          attribute: current_position
+          above: 95
+        - condition: numeric_state
+          entity_id: cover.right_window
+          attribute: current_position
+          above: 95
       sequence:
       - action: scene.turn_on
         target:
