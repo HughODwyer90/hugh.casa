@@ -4353,6 +4353,40 @@
         target:
           entity_id: input_boolean.charged_curtains_today
   mode: restart
+- id: &#x27;1770673901367&#x27;
+  alias: Kitchen Occupancy
+  description: &#x27;&#x27;
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.kitchen_epone_occupancy
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.kitchen_epone_occupancy
+        state:
+        - &#x27;on&#x27;
+      sequence:
+      - action: scene.turn_on
+        metadata: {}
+        target:
+          entity_id: scene.kitchen_lights_on
+        data: {}
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.kitchen_epone_occupancy
+        state:
+        - &#x27;off&#x27;
+      sequence:
+      - action: scene.turn_on
+        metadata: {}
+        target:
+          entity_id:
+          - scene.kitchen_lights_off
+        data: {}
+  mode: single
 </pre>
             </div>
             <script>
