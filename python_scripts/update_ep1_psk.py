@@ -5,74 +5,106 @@ import subprocess
 from pathlib import Path
 from time import sleep
 
-YAML_PATH = Path("/config/esphome/everything-presence-one-d719b0.yaml")
 CORE_ENTRIES_PATH = Path("/config/.storage/core.config_entries")
-TARGET_TITLE = "Everything Presence One"
 
-# --- Extract key from ESPHome YAML ---
-yaml_text = YAML_PATH.read_text(encoding="utf-8")
+DEVICES = [
+    {
+        "yaml_path": Path("/config/esphome/everything-presence-one-d719b0.yaml"),
+        "title": "Everything Presence One",
+    },
+    {
+        "yaml_path": Path("/config/esphome/everything-presence-pro-cfbaf0.yaml"),
+        "title": "Everything Presence Pro",
+    },
+]
 
-pattern = re.compile(
+KEY_PATTERN = re.compile(
     r"api:\s*(?:#.*\n|\s)*"
     r"encryption:\s*(?:#.*\n|\s)*"
     r"key:\s*[\"']?([^\"'\n]+)[\"']?",
-    re.MULTILINE
+    re.MULTILINE,
 )
 
-match = pattern.search(yaml_text)
-if not match:
-    print("[ERROR] Could not extract api.encryption.key from YAML.")
-    sys.exit(2)
+def extract_yaml_key(yaml_path: Path) -> str:
+    if not yaml_path.exists():
+        raise FileNotFoundError(f"YAML not found: {yaml_path}")
+    text = yaml_path.read_text(encoding="utf-8")
+    m = KEY_PATTERN.search(text)
+    if not m:
+        raise ValueError(f"Could not extract api.encryption.key from: {yaml_path}")
+    return m.group(1).strip()
 
-yaml_key = match.group(1).strip()
-print(f"[INFO] ESPHome YAML key: {yaml_key}")
+def load_core_entries():
+    if not CORE_ENTRIES_PATH.exists():
+        raise FileNotFoundError(f"HA core entries not found: {CORE_ENTRIES_PATH}")
+    core_data = json.loads(CORE_ENTRIES_PATH.read_text(encoding="utf-8"))
+    entries = core_data.get("data", {}).get("entries", [])
+    return core_data, entries
 
-# --- Load Home Assistant storage file ---
-core_data = json.loads(CORE_ENTRIES_PATH.read_text(encoding="utf-8"))
-entries = core_data.get("data", {}).get("entries", [])
+def find_esphome_entry(entries, title: str):
+    for entry in entries:
+        if entry.get("domain") == "esphome" and entry.get("title") == title:
+            return entry
+    return None
 
-ha_key = None
-target_entry = None
+def stop_ha():
+    print("[INFO] Stopping Home Assistant Core...")
+    subprocess.run(["ha", "core", "stop"], check=False)
+    sleep(2)
 
-for entry in entries:
-    if entry.get("domain") == "esphome" and entry.get("title") == TARGET_TITLE:
+def start_ha():
+    print("[INFO] Restarting Home Assistant Core...")
+    subprocess.run(["ha", "core", "start"], check=False)
+    sleep(2)
+
+def main():
+    core_data, entries = load_core_entries()
+
+    updates = []  # list of (title, old_psk, new_psk)
+    for d in DEVICES:
+        title = d["title"]
+        yaml_path = d["yaml_path"]
+
+        try:
+            yaml_key = extract_yaml_key(yaml_path)
+        except Exception as e:
+            print(f"[ERROR] {title}: {e}")
+            sys.exit(2)
+
+        print(f"[INFO] {title} YAML key: {yaml_key}")
+
+        entry = find_esphome_entry(entries, title)
+        if not entry:
+            print(f"[ERROR] No ESPHome entry titled '{title}'.")
+            sys.exit(3)
+
         ha_key = entry.get("data", {}).get("noise_psk")
-        target_entry = entry
-        break
+        print(f"[INFO] {title} HA stored PSK: {ha_key}")
 
-if ha_key is None:
-    print(f"[ERROR] No ESPHome entry titled '{TARGET_TITLE}'.")
-    sys.exit(3)
+        if ha_key != yaml_key:
+            updates.append((title, ha_key, yaml_key))
+            entry.setdefault("data", {})["noise_psk"] = yaml_key
 
-print(f"[INFO] HA stored PSK: {ha_key}")
+    if not updates:
+        print("[INFO] All keys already match. No restart or update needed.")
+        sys.exit(0)
 
-# --- If keys match, do nothing ---
-if ha_key == yaml_key:
-    print("[INFO] Keys already match. No restart or update needed.")
+    print("[INFO] Keys differ for:")
+    for title, old_psk, new_psk in updates:
+        print(f"  - {title}: HA={old_psk} -> YAML={new_psk}")
+
+    stop_ha()
+
+    CORE_ENTRIES_PATH.write_text(
+        json.dumps(core_data, indent=2, sort_keys=True),
+        encoding="utf-8",
+    )
+    print("[INFO] Updated PSK(s) in storage file.")
+
+    start_ha()
+
+    print("[INFO] PSK sync complete. Device(s) will reconnect with new key(s).")
     sys.exit(0)
 
-# --- Keys differ → Update required ---
-print("[INFO] Keys differ. Preparing to update Home Assistant...")
-
-# --- Stop Home Assistant Core ---
-print("[INFO] Stopping Home Assistant Core...")
-subprocess.run(["ha", "core", "stop"])
-sleep(2)
-
-# --- Update storage file ---
-target_entry["data"]["noise_psk"] = yaml_key
-
-CORE_ENTRIES_PATH.write_text(
-    json.dumps(core_data, indent=2, sort_keys=True),
-    encoding="utf-8"
-)
-
-print("[INFO] Updated PSK in storage file.")
-
-# --- Restart Home Assistant Core ---
-print("[INFO] Restarting Home Assistant Core...")
-subprocess.run(["ha", "core", "start"])
-sleep(2)
-
-print("[INFO] PSK sync complete. Device will reconnect with new key.")
-sys.exit(0)
+if __name__ == "__main__":
+    main()
