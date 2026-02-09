@@ -733,6 +733,70 @@
       supported_color_modes:
       - brightness
       effect:
+      color_mode: brightness
+      brightness: 255
+      friendly_name: Hall Wall 1
+      supported_features: 44
+      state: &#x27;on&#x27;
+    light.hall_wall_2:
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - candle
+      - finish_effect
+      - stop_effect
+      - stop_hue_effect
+      supported_color_modes:
+      - brightness
+      effect:
+      color_mode: brightness
+      brightness: 255
+      friendly_name: Hall Wall 2
+      supported_features: 44
+      state: &#x27;on&#x27;
+    light.hall_wall_3:
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - candle
+      - finish_effect
+      - stop_effect
+      - stop_hue_effect
+      supported_color_modes:
+      - brightness
+      effect:
+      color_mode: brightness
+      brightness: 255
+      friendly_name: Hall Wall 3
+      supported_features: 44
+      state: &#x27;on&#x27;
+  metadata:
+    light.hall_wall_1:
+      entity_only: true
+    light.hall_wall_2:
+      entity_only: true
+    light.hall_wall_3:
+      entity_only: true
+- id: &#x27;1770674697108&#x27;
+  name: Hall Lights Off
+  entities:
+    light.hall_wall_1:
+      effect_list:
+      - blink
+      - breathe
+      - okay
+      - channel_change
+      - candle
+      - finish_effect
+      - stop_effect
+      - stop_hue_effect
+      supported_color_modes:
+      - brightness
+      effect:
       color_mode:
       brightness:
       friendly_name: Hall Wall 1
@@ -774,39 +838,12 @@
       friendly_name: Hall Wall 3
       supported_features: 44
       state: &#x27;off&#x27;
-    light.utility:
-      min_color_temp_kelvin: 2202
-      max_color_temp_kelvin: 4000
-      min_mireds: 250
-      max_mireds: 454
-      effect_list:
-      - blink
-      - breathe
-      - okay
-      - channel_change
-      - finish_effect
-      - stop_effect
-      supported_color_modes:
-      - color_temp
-      effect:
-      color_mode:
-      brightness:
-      color_temp_kelvin:
-      color_temp:
-      hs_color:
-      rgb_color:
-      xy_color:
-      friendly_name: Light Ceiling
-      supported_features: 44
-      state: &#x27;off&#x27;
   metadata:
     light.hall_wall_1:
       entity_only: true
     light.hall_wall_2:
       entity_only: true
     light.hall_wall_3:
-      entity_only: true
-    light.utility:
       entity_only: true
 </pre>
             </div>
