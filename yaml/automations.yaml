@@ -405,9 +405,8 @@
             data: {}
           - delay: 00:00:01
           - condition: template
-            value_template: "{{ is_state('light.living_room_ceiling', 'off') and\n
-              \  is_state('light.living_room_floor_front', 'off') and\n   is_state('light.living_room_floor_back',
-              'off') }}\n"
+            value_template: "{{ is_state('light.living_room_bookshelf', 'off') and\n
+              \  is_state('light.living_room_floor_lamp', 'off') }}\n"
           - target:
               entity_id: scene.living_room_all_lights_on
             action: scene.turn_on
@@ -917,8 +916,9 @@
     to: 'on'
   conditions:
   - condition: state
-    entity_id: binary_sensor.living_room_epone_occupancy
-    state: 'on'
+    entity_id: binary_sensor.living_room_eppro_occupancy
+    state:
+    - 'on'
   actions:
   - choose:
     - conditions:
@@ -929,14 +929,13 @@
       - condition: or
         conditions:
         - condition: state
-          entity_id: light.living_room_ceiling
-          state: 'off'
+          entity_id: light.living_room_bookshelf
+          state:
+          - 'off'
         - condition: state
-          entity_id: light.living_room_floor_front
-          state: 'off'
-        - condition: state
-          entity_id: light.living_room_floor_back
-          state: 'off'
+          entity_id: light.living_room_floor_lamp
+          state:
+          - 'off'
       - action: scene.turn_on
         target:
           entity_id:
@@ -4211,6 +4210,9 @@
   - trigger: time
     at: 06:00:00
     id: Time
+  - trigger: time
+    at: '21:00:00'
+    id: TimeNight
   actions:
   - choose:
     - conditions:
@@ -4220,6 +4222,16 @@
       - action: scene.turn_on
         target:
           entity_id: scene.curtains_open
+    - conditions:
+      - condition: trigger
+        id:
+        - TimeNight
+      sequence:
+      - action: scene.turn_on
+        target:
+          entity_id:
+          - scene.curtains_close
+        data: {}
     - conditions:
       - condition: trigger
         id: Button
