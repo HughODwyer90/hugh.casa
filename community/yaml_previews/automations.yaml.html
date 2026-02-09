@@ -420,9 +420,8 @@
             data: {}
           - delay: 00:00:01
           - condition: template
-            value_template: &quot;{{ is_state(&#x27;light.living_room_ceiling&#x27;, &#x27;off&#x27;) and\n
-              \  is_state(&#x27;light.living_room_floor_front&#x27;, &#x27;off&#x27;) and\n   is_state(&#x27;light.living_room_floor_back&#x27;,
-              &#x27;off&#x27;) }}\n&quot;
+            value_template: &quot;{{ is_state(&#x27;light.living_room_bookshelf&#x27;, &#x27;off&#x27;) and\n
+              \  is_state(&#x27;light.living_room_floor_lamp&#x27;, &#x27;off&#x27;) }}\n&quot;
           - target:
               entity_id: scene.living_room_all_lights_on
             action: scene.turn_on
@@ -932,8 +931,9 @@
     to: &#x27;on&#x27;
   conditions:
   - condition: state
-    entity_id: binary_sensor.living_room_epone_occupancy
-    state: &#x27;on&#x27;
+    entity_id: binary_sensor.living_room_eppro_occupancy
+    state:
+    - &#x27;on&#x27;
   actions:
   - choose:
     - conditions:
@@ -944,14 +944,13 @@
       - condition: or
         conditions:
         - condition: state
-          entity_id: light.living_room_ceiling
-          state: &#x27;off&#x27;
+          entity_id: light.living_room_bookshelf
+          state:
+          - &#x27;off&#x27;
         - condition: state
-          entity_id: light.living_room_floor_front
-          state: &#x27;off&#x27;
-        - condition: state
-          entity_id: light.living_room_floor_back
-          state: &#x27;off&#x27;
+          entity_id: light.living_room_floor_lamp
+          state:
+          - &#x27;off&#x27;
       - action: scene.turn_on
         target:
           entity_id:
@@ -4226,6 +4225,9 @@
   - trigger: time
     at: 06:00:00
     id: Time
+  - trigger: time
+    at: &#x27;21:00:00&#x27;
+    id: TimeNight
   actions:
   - choose:
     - conditions:
@@ -4235,6 +4237,16 @@
       - action: scene.turn_on
         target:
           entity_id: scene.curtains_open
+    - conditions:
+      - condition: trigger
+        id:
+        - TimeNight
+      sequence:
+      - action: scene.turn_on
+        target:
+          entity_id:
+          - scene.curtains_close
+        data: {}
     - conditions:
       - condition: trigger
         id: Button
