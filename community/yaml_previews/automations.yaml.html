@@ -268,28 +268,29 @@
       sequence:
       - target:
           entity_id:
-          - light.hall_wall_1
-          - light.hall_wall_2
-          - light.hall_wall_3
           - light.utility
         data:
           color_temp_kelvin: 2000
           brightness_pct: 100
           transition: 2
         action: light.turn_on
+      - action: scene.turn_on
+        metadata: {}
+        target:
+          entity_id: scene.hall_lights_on
+        data:
+          transition: 2
     - conditions:
       - condition: state
         entity_id: binary_sensor.hall_motion_occupancy
         state: &#x27;off&#x27;
       sequence:
-      - target:
-          entity_id:
-          - light.hall_wall_1
-          - light.hall_wall_2
-          - light.hall_wall_3
+      - action: scene.turn_on
+        metadata: {}
+        target:
+          entity_id: scene.hall_lights_off
         data:
           transition: 2
-        action: light.turn_off
       - delay:
           hours: 0
           minutes: 2
