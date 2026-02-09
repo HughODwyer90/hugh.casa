@@ -389,8 +389,9 @@
   - choose:
     - conditions:
       - condition: state
-        entity_id: binary_sensor.living_room_epone_occupancy
-        state: 'on'
+        entity_id: binary_sensor.living_room_eppro_occupancy
+        state:
+        - 'on'
       sequence:
       - choose:
         - conditions:
@@ -440,16 +441,16 @@
             data: {}
     - conditions:
       - condition: state
-        entity_id: binary_sensor.living_room_epone_occupancy
-        state: 'off'
+        entity_id: binary_sensor.living_room_eppro_occupancy
+        state:
+        - 'off'
       sequence:
       - data:
           scene_id: living_room_lights_last_state
           snapshot_entities:
-          - light.living_room_ceiling
-          - light.living_room_floor_front
-          - light.living_room_floor_back
           - switch.christmas
+          - light.living_room_bookshelf
+          - light.living_room_floor_lamp
         action: scene.create
       - target:
           entity_id: input_boolean.living_room_occupancy_scene_saved
