@@ -4174,13 +4174,13 @@
     entity_id: binary_sensor.living_room_tv_state
     id: tv
   - trigger: numeric_state
-    entity_id: sun.sun
-    attribute: elevation
+    entity_id:
+    - sensor.sun_elevation
     above: 6
     id: bright
   - trigger: numeric_state
-    entity_id: sun.sun
-    attribute: elevation
+    entity_id:
+    - sensor.sun_elevation
     below: -9
     id: dark
   actions:
