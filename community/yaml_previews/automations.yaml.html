@@ -384,15 +384,21 @@
   mode: single
 - id: &#x27;1702818164083&#x27;
   alias: Living Room Lights – Occupancy + TV
-  description: &quot;Lights only. If occupancy clears, we only turn lights off when the
-    TV is OFF. If TV is ON, never auto-apply dimmers (manual control while watching).
-    If TV is OFF and room is occupied, use illuminance to decide:\n - dark -&gt; dimmers\n
-    - bright -&gt; leave as-is\nIf the Christmas switch exists, keep it ON while occupied
-    regardless of other conditions; turn it OFF when unoccupied (and TV off).\n&quot;
+  description: &#x27;Lights only. If occupancy clears, we only turn lights off when the
+    TV is OFF. While occupied, Christmas (if present) is always ON regardless of other
+    logic. TV ON -&gt; never auto-apply dimmers (manual control while watching). TV OFF
+    + occupied + dark -&gt; dimmers.
+
+    &#x27;
   triggers:
   - trigger: state
     entity_id: binary_sensor.living_room_eppro_occupancy
-    id: occupancy
+    to: &#x27;on&#x27;
+    id: occ_on
+  - trigger: state
+    entity_id: binary_sensor.living_room_eppro_occupancy
+    to: &#x27;off&#x27;
+    id: occ_off
   - trigger: state
     entity_id: binary_sensor.living_room_tv_state
     id: tv
@@ -418,12 +424,7 @@
   - choose:
     - conditions:
       - condition: trigger
-        id:
-        - occupancy
-        - tv
-      - condition: state
-        entity_id: binary_sensor.living_room_eppro_occupancy
-        state: &#x27;off&#x27;
+        id: occ_off
       - condition: state
         entity_id: binary_sensor.living_room_tv_state
         state: &#x27;off&#x27;
@@ -454,9 +455,8 @@
       sequence:
       - stop: TV is on — do not auto-apply dimmers
     - conditions:
-      - condition: state
-        entity_id: binary_sensor.living_room_eppro_occupancy
-        state: &#x27;on&#x27;
+      - condition: trigger
+        id: occ_on
       - condition: state
         entity_id: binary_sensor.living_room_tv_state
         state: &#x27;off&#x27;
@@ -468,6 +468,24 @@
         target:
           entity_id: scene.dimmers
     - conditions:
+      - condition: trigger
+        id: tv
+      - condition: state
+        entity_id: binary_sensor.living_room_tv_state
+        state: &#x27;off&#x27;
+      - condition: state
+        entity_id: binary_sensor.living_room_eppro_occupancy
+        state: &#x27;on&#x27;
+      - condition: numeric_state
+        entity_id: sensor.living_room_eppro_illuminance
+        below: 50
+      sequence:
+      - action: scene.turn_on
+        target:
+          entity_id: scene.dimmers
+    - conditions:
+      - condition: trigger
+        id: lux_dark
       - condition: state
         entity_id: binary_sensor.living_room_eppro_occupancy
         state: &#x27;on&#x27;
@@ -475,7 +493,9 @@
         entity_id: binary_sensor.living_room_tv_state
         state: &#x27;off&#x27;
       sequence:
-      - stop: Bright enough – leave lights as-is
+      - action: scene.turn_on
+        target:
+          entity_id: scene.dimmers
     default: []
   mode: restart
 - id: &#x27;1702941352805&#x27;
