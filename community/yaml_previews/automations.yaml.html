@@ -1809,9 +1809,9 @@
   - trigger: state
     entity_id:
     - media_player.battery_speaker
-    - media_player.hugh_room_speaker
-    - media_player.hugh_room_speaker_2
-    - media_player.master_bedroom_display
+    - media_player.hugh_room_speaker_g
+    - media_player.hugh_room_speaker_2_g
+    - media_player.master_bedroom_display_g
     attribute: volume_level
   actions:
   - condition: template
@@ -1822,8 +1822,8 @@
   - action: media_player.volume_set
     data_template:
       entity_id: &#x27;{% set changed_entity = trigger.entity_id %} {% set entities = [&#x27;&#x27;media_player.battery_speaker&#x27;&#x27;,
-        &#x27;&#x27;media_player.hugh_room_speaker&#x27;&#x27;, &#x27;&#x27;media_player.hugh_room_speaker_2&#x27;&#x27;,
-        &#x27;&#x27;media_player.master_bedroom_display&#x27;&#x27;] %} {{ entities | reject(&#x27;&#x27;equalto&#x27;&#x27;,
+        &#x27;&#x27;media_player.hugh_room_speaker_g&#x27;&#x27;, &#x27;&#x27;media_player.hugh_room_speaker_2_g&#x27;&#x27;,
+        &#x27;&#x27;media_player.master_bedroom_display_g&#x27;&#x27;] %} {{ entities | reject(&#x27;&#x27;equalto&#x27;&#x27;,
         changed_entity) | list }}
 
         &#x27;
@@ -1978,35 +1978,35 @@
   description: Redirect audio to hugh_room_stereo if it plays only on the display
   triggers:
   - trigger: state
-    entity_id: media_player.master_bedroom_display
+    entity_id: media_player.master_bedroom_display_g
     attribute: state
     to: playing
   conditions:
   - condition: template
-    value_template: &#x27;{% set entities = [&#x27;&#x27;media_player.battery_speaker&#x27;&#x27;, &#x27;&#x27;media_player.hugh_room_speaker&#x27;&#x27;,
-      &#x27;&#x27;media_player.hugh_room_speaker_2&#x27;&#x27;, &#x27;&#x27;media_player.master_bedroom_display&#x27;&#x27;]
+    value_template: &#x27;{% set entities = [&#x27;&#x27;media_player.battery_speaker&#x27;&#x27;, &#x27;&#x27;media_player.hugh_room_speaker_g&#x27;&#x27;,
+      &#x27;&#x27;media_player.hugh_room_speaker_2_g&#x27;&#x27;, &#x27;&#x27;media_player.master_bedroom_display_g&#x27;&#x27;]
       %} {% set playing_entities = entities | select(&#x27;&#x27;search&#x27;&#x27;, &#x27;&#x27;playing&#x27;&#x27;) | list
-      %} {{ playing_entities | length == 1 and &#x27;&#x27;media_player.master_bedroom_display&#x27;&#x27;
+      %} {{ playing_entities | length == 1 and &#x27;&#x27;media_player.master_bedroom_display_g&#x27;&#x27;
       in playing_entities }}
 
       &#x27;
   actions:
   - action: media_player.media_stop
     data_template:
-      entity_id: media_player.master_bedroom_display
+      entity_id: media_player.master_bedroom_display_g
   - delay: 00:00:03
   - action: media_player.play_media
     data_template:
       entity_id: media_player.hugh_room_stereo
-      media_content_id: &#x27;{{ state_attr(&#x27;&#x27;media_player.master_bedroom_display&#x27;&#x27;, &#x27;&#x27;media_content_id&#x27;&#x27;)
-        }}&#x27;
-      media_content_type: &#x27;{{ state_attr(&#x27;&#x27;media_player.master_bedroom_display&#x27;&#x27;,
+      media_content_id: &#x27;{{ state_attr(&#x27;&#x27;media_player.master_bedroom_display_g&#x27;&#x27;,
+        &#x27;&#x27;media_content_id&#x27;&#x27;) }}&#x27;
+      media_content_type: &#x27;{{ state_attr(&#x27;&#x27;media_player.master_bedroom_display_g&#x27;&#x27;,
         &#x27;&#x27;media_content_type&#x27;&#x27;) }}&#x27;
   - delay: 00:00:05
   - action: media_player.volume_set
     data_template:
       entity_id: media_player.hugh_room_stereo
-      volume_level: &#x27;{{ state_attr(&#x27;&#x27;media_player.master_bedroom_display&#x27;&#x27;, &#x27;&#x27;volume_level&#x27;&#x27;)
+      volume_level: &#x27;{{ state_attr(&#x27;&#x27;media_player.master_bedroom_display_g&#x27;&#x27;, &#x27;&#x27;volume_level&#x27;&#x27;)
         }}&#x27;
 - id: &#x27;1721393948523&#x27;
   alias: Initialize Previous Odometer and Fuel Quantity
