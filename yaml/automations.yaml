@@ -371,7 +371,8 @@
   alias: Living Room Lights – Occupancy + TV
   description: 'Lights only. If occupancy clears, we only turn lights off when the
     TV is OFF. TV on while occupied -> dimmers. TV off while occupied -> daytime:
-    do nothing; night: dimmers. Christmas switch toggled with occupancy (if available).
+    use illuminance (dark -> dimmers, bright -> do nothing). Night: dimmers. Christmas
+    switch toggled with occupancy (if available).
 
     '
   triggers:
@@ -381,6 +382,9 @@
   - trigger: state
     entity_id: binary_sensor.living_room_tv_state
     id: tv
+  - trigger: state
+    entity_id: sensor.living_room_eppro_illuminance
+    id: lux
   actions:
   - choose:
     - conditions:
@@ -448,6 +452,9 @@
         after_offset: 00:15:00
         before: sunset
         before_offset: -01:30:00
+      - condition: numeric_state
+        entity_id: sensor.living_room_eppro_illuminance
+        above: 80
       sequence:
       - condition: template
         value_template: '{{ states(''switch.christmas'') not in [''unknown'',''unavailable'']
@@ -455,7 +462,32 @@
       - action: switch.turn_on
         target:
           entity_id: switch.christmas
-      - stop: Daytime – leave lights as-is
+      - stop: Daytime + bright – leave lights as-is
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.living_room_eppro_occupancy
+        state: 'on'
+      - condition: state
+        entity_id: binary_sensor.living_room_tv_state
+        state: 'off'
+      - condition: sun
+        after: sunrise
+        after_offset: 00:15:00
+        before: sunset
+        before_offset: -01:30:00
+      - condition: numeric_state
+        entity_id: sensor.living_room_eppro_illuminance
+        below: 80
+      sequence:
+      - action: scene.turn_on
+        target:
+          entity_id: scene.dimmers
+      - condition: template
+        value_template: '{{ states(''switch.christmas'') not in [''unknown'',''unavailable'']
+          }}'
+      - action: switch.turn_on
+        target:
+          entity_id: switch.christmas
     - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_eppro_occupancy
