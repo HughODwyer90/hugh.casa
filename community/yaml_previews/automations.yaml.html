@@ -386,7 +386,8 @@
   alias: Living Room Lights – Occupancy + TV
   description: &#x27;Lights only. If occupancy clears, we only turn lights off when the
     TV is OFF. TV on while occupied -&gt; dimmers. TV off while occupied -&gt; daytime:
-    do nothing; night: dimmers. Christmas switch toggled with occupancy (if available).
+    use illuminance (dark -&gt; dimmers, bright -&gt; do nothing). Night: dimmers. Christmas
+    switch toggled with occupancy (if available).
 
     &#x27;
   triggers:
@@ -396,6 +397,9 @@
   - trigger: state
     entity_id: binary_sensor.living_room_tv_state
     id: tv
+  - trigger: state
+    entity_id: sensor.living_room_eppro_illuminance
+    id: lux
   actions:
   - choose:
     - conditions:
@@ -463,6 +467,9 @@
         after_offset: 00:15:00
         before: sunset
         before_offset: -01:30:00
+      - condition: numeric_state
+        entity_id: sensor.living_room_eppro_illuminance
+        above: 80
       sequence:
       - condition: template
         value_template: &#x27;{{ states(&#x27;&#x27;switch.christmas&#x27;&#x27;) not in [&#x27;&#x27;unknown&#x27;&#x27;,&#x27;&#x27;unavailable&#x27;&#x27;]
@@ -470,7 +477,32 @@
       - action: switch.turn_on
         target:
           entity_id: switch.christmas
-      - stop: Daytime – leave lights as-is
+      - stop: Daytime + bright – leave lights as-is
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.living_room_eppro_occupancy
+        state: &#x27;on&#x27;
+      - condition: state
+        entity_id: binary_sensor.living_room_tv_state
+        state: &#x27;off&#x27;
+      - condition: sun
+        after: sunrise
+        after_offset: 00:15:00
+        before: sunset
+        before_offset: -01:30:00
+      - condition: numeric_state
+        entity_id: sensor.living_room_eppro_illuminance
+        below: 80
+      sequence:
+      - action: scene.turn_on
+        target:
+          entity_id: scene.dimmers
+      - condition: template
+        value_template: &#x27;{{ states(&#x27;&#x27;switch.christmas&#x27;&#x27;) not in [&#x27;&#x27;unknown&#x27;&#x27;,&#x27;&#x27;unavailable&#x27;&#x27;]
+          }}&#x27;
+      - action: switch.turn_on
+        target:
+          entity_id: switch.christmas
     - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_eppro_occupancy
