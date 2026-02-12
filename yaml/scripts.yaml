@@ -41,7 +41,8 @@ execute_alarm_actions:
       media_id: Today FM
     target:
       entity_id: media_player.master_bedroom_display_ma
-  - wait_template: '{{ is_state(''media_player.hugh_room_speaker'', ''playing'') }}'
+  - wait_template: '{{ is_state(''media_player.hugh_room_speaker_g'', ''playing'')
+      }}'
     timeout: 00:00:08
     continue_on_timeout: true
   - choose:
@@ -49,7 +50,7 @@ execute_alarm_actions:
       - condition: not
         conditions:
         - condition: state
-          entity_id: media_player.hugh_room_speaker
+          entity_id: media_player.hugh_room_speaker_g
           state: playing
       sequence:
       - action: music_assistant.play_media
@@ -58,7 +59,7 @@ execute_alarm_actions:
           media_id: Today FM
         target:
           device_id: 61df364729816b14e75f325311b07257
-      - wait_template: '{{ is_state(''media_player.hugh_room_speaker'', ''playing'')
+      - wait_template: '{{ is_state(''media_player.hugh_room_speaker_g'', ''playing'')
           }}'
         timeout: 00:00:05
         continue_on_timeout: true
@@ -67,7 +68,7 @@ execute_alarm_actions:
           - condition: not
             conditions:
             - condition: state
-              entity_id: media_player.hugh_room_speaker
+              entity_id: media_player.hugh_room_speaker_g
               state: playing
           sequence:
           - action: media_player.play_media
@@ -77,7 +78,7 @@ execute_alarm_actions:
                 media_content_type: audio/mpeg
                 metadata: {}
             target:
-              entity_id: media_player.hugh_room_speaker
+              entity_id: media_player.hugh_room_speaker_g
   - action: media_player.volume_set
     data:
       volume_level: 0.24
