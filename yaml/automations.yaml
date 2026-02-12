@@ -370,46 +370,47 @@
 - id: '1702818164083'
   alias: Living Room Lights – Occupancy + TV
   description: 'Lights only. If occupancy clears, we only turn lights off when the
-    TV is OFF. While occupied, Christmas (if present) is always ON regardless of other
-    logic. TV ON -> never auto-apply dimmers (manual control while watching). TV OFF
-    + occupied + dark -> dimmers.
+    TV is OFF. TV on while occupied -> dimmers. TV off while occupied -> if dark (lux)
+    dimmers; if bright do nothing. Christmas switch is controlled ONLY by occupancy
+    (if available).
 
     '
   triggers:
   - trigger: state
     entity_id: binary_sensor.living_room_eppro_occupancy
-    to: 'on'
-    id: occ_on
-  - trigger: state
-    entity_id: binary_sensor.living_room_eppro_occupancy
-    to: 'off'
-    id: occ_off
+    id: occupancy
   - trigger: state
     entity_id: binary_sensor.living_room_tv_state
     id: tv
-  - trigger: numeric_state
-    entity_id: sensor.living_room_eppro_illuminance
-    below: 50
-    for: 00:00:20
-    id: lux_dark
   actions:
   - choose:
     - conditions:
-      - condition: state
-        entity_id: binary_sensor.living_room_eppro_occupancy
-        state: 'on'
       - condition: template
         value_template: '{{ states(''switch.christmas'') not in [''unknown'',''unavailable'']
           }}'
+      - condition: state
+        entity_id: binary_sensor.living_room_eppro_occupancy
+        state: 'on'
       sequence:
       - action: switch.turn_on
         target:
           entity_id: switch.christmas
-    default: []
+    - conditions:
+      - condition: template
+        value_template: '{{ states(''switch.christmas'') not in [''unknown'',''unavailable'']
+          }}'
+      - condition: state
+        entity_id: binary_sensor.living_room_eppro_occupancy
+        state: 'off'
+      sequence:
+      - action: switch.turn_off
+        target:
+          entity_id: switch.christmas
   - choose:
     - conditions:
-      - condition: trigger
-        id: occ_off
+      - condition: state
+        entity_id: binary_sensor.living_room_eppro_occupancy
+        state: 'off'
       - condition: state
         entity_id: binary_sensor.living_room_tv_state
         state: 'off'
@@ -418,7 +419,6 @@
         data:
           scene_id: living_room_lights_last_state
           snapshot_entities:
-          - switch.christmas
           - light.living_room_bookshelf
           - light.living_room_floor_lamp
       - action: input_boolean.turn_on
@@ -427,50 +427,39 @@
       - action: scene.turn_on
         target:
           entity_id: scene.living_room_all_lights_off
-      - condition: template
-        value_template: '{{ states(''switch.christmas'') not in [''unknown'',''unavailable'']
-          }}'
-      - action: switch.turn_off
-        target:
-          entity_id: switch.christmas
     - conditions:
+      - condition: state
+        entity_id: binary_sensor.living_room_eppro_occupancy
+        state: 'off'
       - condition: state
         entity_id: binary_sensor.living_room_tv_state
         state: 'on'
       sequence:
-      - stop: TV is on — do not auto-apply dimmers
+      - stop: TV is on — keep lights as-is
     - conditions:
-      - condition: trigger
-        id: occ_on
-      - condition: state
-        entity_id: binary_sensor.living_room_tv_state
-        state: 'off'
-      - condition: numeric_state
-        entity_id: sensor.living_room_eppro_illuminance
-        below: 50
-      sequence:
-      - action: scene.turn_on
-        target:
-          entity_id: scene.dimmers
-    - conditions:
-      - condition: trigger
-        id: tv
-      - condition: state
-        entity_id: binary_sensor.living_room_tv_state
-        state: 'off'
       - condition: state
         entity_id: binary_sensor.living_room_eppro_occupancy
         state: 'on'
-      - condition: numeric_state
-        entity_id: sensor.living_room_eppro_illuminance
-        below: 50
+      - condition: state
+        entity_id: binary_sensor.living_room_tv_state
+        state: 'on'
       sequence:
       - action: scene.turn_on
         target:
           entity_id: scene.dimmers
     - conditions:
-      - condition: trigger
-        id: lux_dark
+      - condition: state
+        entity_id: binary_sensor.living_room_eppro_occupancy
+        state: 'on'
+      - condition: state
+        entity_id: binary_sensor.living_room_tv_state
+        state: 'off'
+      - condition: numeric_state
+        entity_id: sensor.living_room_eppro_illuminance
+        above: 200
+      sequence:
+      - stop: Bright enough – leave lights as-is
+    - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_eppro_occupancy
         state: 'on'
