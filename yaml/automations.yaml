@@ -1794,9 +1794,9 @@
   - trigger: state
     entity_id:
     - media_player.battery_speaker
-    - media_player.hugh_room_speaker
-    - media_player.hugh_room_speaker_2
-    - media_player.master_bedroom_display
+    - media_player.hugh_room_speaker_g
+    - media_player.hugh_room_speaker_2_g
+    - media_player.master_bedroom_display_g
     attribute: volume_level
   actions:
   - condition: template
@@ -1807,8 +1807,8 @@
   - action: media_player.volume_set
     data_template:
       entity_id: '{% set changed_entity = trigger.entity_id %} {% set entities = [''media_player.battery_speaker'',
-        ''media_player.hugh_room_speaker'', ''media_player.hugh_room_speaker_2'',
-        ''media_player.master_bedroom_display''] %} {{ entities | reject(''equalto'',
+        ''media_player.hugh_room_speaker_g'', ''media_player.hugh_room_speaker_2_g'',
+        ''media_player.master_bedroom_display_g''] %} {{ entities | reject(''equalto'',
         changed_entity) | list }}
 
         '
@@ -1963,35 +1963,35 @@
   description: Redirect audio to hugh_room_stereo if it plays only on the display
   triggers:
   - trigger: state
-    entity_id: media_player.master_bedroom_display
+    entity_id: media_player.master_bedroom_display_g
     attribute: state
     to: playing
   conditions:
   - condition: template
-    value_template: '{% set entities = [''media_player.battery_speaker'', ''media_player.hugh_room_speaker'',
-      ''media_player.hugh_room_speaker_2'', ''media_player.master_bedroom_display'']
+    value_template: '{% set entities = [''media_player.battery_speaker'', ''media_player.hugh_room_speaker_g'',
+      ''media_player.hugh_room_speaker_2_g'', ''media_player.master_bedroom_display_g'']
       %} {% set playing_entities = entities | select(''search'', ''playing'') | list
-      %} {{ playing_entities | length == 1 and ''media_player.master_bedroom_display''
+      %} {{ playing_entities | length == 1 and ''media_player.master_bedroom_display_g''
       in playing_entities }}
 
       '
   actions:
   - action: media_player.media_stop
     data_template:
-      entity_id: media_player.master_bedroom_display
+      entity_id: media_player.master_bedroom_display_g
   - delay: 00:00:03
   - action: media_player.play_media
     data_template:
       entity_id: media_player.hugh_room_stereo
-      media_content_id: '{{ state_attr(''media_player.master_bedroom_display'', ''media_content_id'')
-        }}'
-      media_content_type: '{{ state_attr(''media_player.master_bedroom_display'',
+      media_content_id: '{{ state_attr(''media_player.master_bedroom_display_g'',
+        ''media_content_id'') }}'
+      media_content_type: '{{ state_attr(''media_player.master_bedroom_display_g'',
         ''media_content_type'') }}'
   - delay: 00:00:05
   - action: media_player.volume_set
     data_template:
       entity_id: media_player.hugh_room_stereo
-      volume_level: '{{ state_attr(''media_player.master_bedroom_display'', ''volume_level'')
+      volume_level: '{{ state_attr(''media_player.master_bedroom_display_g'', ''volume_level'')
         }}'
 - id: '1721393948523'
   alias: Initialize Previous Odometer and Fuel Quantity
