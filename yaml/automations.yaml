@@ -3940,7 +3940,9 @@
   actions:
   - action: button.press
     target:
-      entity_id: button.hugh_room_stereo_favorite_current_song
+      entity_id:
+      - button.hugh_room_stereo_favourite_current_song
+    data: {}
   - choose:
     - conditions: []
       sequence:
