@@ -1790,11 +1790,9 @@
   triggers:
   - trigger: state
     entity_id:
-    - media_player.battery_speaker
     - media_player.hugh_room_speaker_g
     - media_player.hugh_room_speaker_2_g
     - media_player.master_bedroom_display_g
-    attribute: volume_level
   actions:
   - condition: template
     value_template: '{{ state_attr(trigger.entity_id, ''volume_level'') | float !=
@@ -1803,10 +1801,9 @@
       '
   - action: media_player.volume_set
     data_template:
-      entity_id: '{% set changed_entity = trigger.entity_id %} {% set entities = [''media_player.battery_speaker'',
-        ''media_player.hugh_room_speaker_g'', ''media_player.hugh_room_speaker_2_g'',
-        ''media_player.master_bedroom_display_g''] %} {{ entities | reject(''equalto'',
-        changed_entity) | list }}
+      entity_id: '{% set changed_entity = trigger.entity_id %} {% set entities = [''media_player.hugh_room_speaker_g'',
+        ''media_player.hugh_room_speaker_2_g'', ''media_player.master_bedroom_display_g'']
+        %} {{ entities | reject(''equalto'', changed_entity) | list }}
 
         '
       volume_level: '{{ state_attr(trigger.entity_id, ''volume_level'') }}'
@@ -1965,11 +1962,10 @@
     to: playing
   conditions:
   - condition: template
-    value_template: '{% set entities = [''media_player.battery_speaker'', ''media_player.hugh_room_speaker_g'',
-      ''media_player.hugh_room_speaker_2_g'', ''media_player.master_bedroom_display_g'']
-      %} {% set playing_entities = entities | select(''search'', ''playing'') | list
-      %} {{ playing_entities | length == 1 and ''media_player.master_bedroom_display_g''
-      in playing_entities }}
+    value_template: '{% set entities = [ ''media_player.hugh_room_speaker_g'', ''media_player.hugh_room_speaker_2_g'',
+      ''media_player.master_bedroom_display_g''] %} {% set playing_entities = entities
+      | select(''search'', ''playing'') | list %} {{ playing_entities | length ==
+      1 and ''media_player.master_bedroom_display_g'' in playing_entities }}
 
       '
   actions:
@@ -3845,16 +3841,15 @@
     - conditions:
       - condition: template
         value_template: "{% set players = [\n  'media_player.hugh_room_stereo_2',\n
-          \ 'media_player.hugh_room_stereo',\n  'media_player.master_bedroom_display',\n
-          \ 'media_player.hugh_room_speaker',\n  'media_player.hugh_room_speaker_2',\n
-          \ 'media_player.battery_speaker'\n] %} {{ players | select('is_state','playing')
-          | list | count > 0 }}\n"
+          \ 'media_player.hugh_room_stereo',\n  'media_player.master_bedroom_display_g',\n
+          \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
+          %} {{ players | select('is_state','playing') | list | count > 0 }}\n"
       sequence:
       - data:
           entity_id: "{% set players = [\n  'media_player.hugh_room_stereo_2',\n  'media_player.hugh_room_stereo',\n
-            \ 'media_player.master_bedroom_display',\n  'media_player.hugh_room_speaker',\n
-            \ 'media_player.hugh_room_speaker_2',\n  'media_player.battery_speaker'\n]
-            %} {{ players | select('is_state','playing') | list | first }}\n"
+            \ 'media_player.master_bedroom_display_g',\n  'media_player.hugh_room_speaker_g',\n
+            \ 'media_player.hugh_room_speaker_2_g'\n] %} {{ players | select('is_state','playing')
+            | list | first }}\n"
         action: media_player.media_previous_track
   mode: single
 - id: '1763117470810'
@@ -3868,20 +3863,18 @@
     - conditions:
       - condition: template
         value_template: "{% set players = [\n  'media_player.hugh_room_stereo_2',\n
-          \ 'media_player.hugh_room_stereo',\n  'media_player.master_bedroom_display',\n
-          \ 'media_player.hugh_room_speaker',\n  'media_player.hugh_room_speaker_2',\n
-          \ 'media_player.battery_speaker'\n] %} {{ players | select('is_state','playing')
-          | list | count > 0 }}\n"
+          \ 'media_player.hugh_room_stereo',\n  'media_player.master_bedroom_display_g',\n
+          \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
+          %} {{ players | select('is_state','playing') | list | count > 0 }}\n"
       sequence:
       - data:
           entity_id: "{% set players = [\n  'media_player.hugh_room_stereo_2',\n  'media_player.hugh_room_stereo',\n
-            \ 'media_player.master_bedroom_display',\n  'media_player.hugh_room_speaker',\n
-            \ 'media_player.hugh_room_speaker_2',\n  'media_player.battery_speaker'\n]
-            %} {{ players | select('is_state','playing') | list | first }}\n"
+            \ 'media_player.master_bedroom_display_g',\n  'media_player.hugh_room_speaker_g',\n
+            \ 'media_player.hugh_room_speaker_2_g'\n] %} {{ players | select('is_state','playing')
+            | list | first }}\n"
         action: "{% set players = [\n  'media_player.hugh_room_stereo_2',\n  'media_player.hugh_room_stereo',\n
-          \ 'media_player.master_bedroom_display',\n  'media_player.hugh_room_speaker',\n
-          \ 'media_player.hugh_room_speaker_2',\n  'media_player.battery_speaker'\n]
-          %} media_player.media_next_track\n"
+          \ 'media_player.master_bedroom_display_g',\n  'media_player.hugh_room_speaker_g',\n
+          \ 'media_player.hugh_room_speaker_2_g'\n] %} media_player.media_next_track\n"
   mode: single
 - id: '1763117507620'
   alias: IR Typhoon Center Up – Play / Pause / Move to Stereo
@@ -3893,19 +3886,18 @@
   - choose:
     - conditions:
       - condition: template
-        value_template: "{% set singles = [\n  'media_player.master_bedroom_display',\n
-          \ 'media_player.hugh_room_speaker',\n  'media_player.hugh_room_speaker_2',\n
-          \ 'media_player.battery_speaker'\n] %} {% set active = singles | select('is_state','playing')
-          | list %}\n{% if active | count == 0 %}\n  false\n{% else %}\n  {% set p
-          = active | first %}\n  {{ state_attr(p, 'media_content_id') not in [none,
-          '', 'unknown', 'unavailable']\n     and not is_state('media_player.hugh_room_stereo','playing')
+        value_template: "{% set singles = [\n  'media_player.master_bedroom_display_g',\n
+          \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
+          %} {% set active = singles | select('is_state','playing') | list %}\n{%
+          if active | count == 0 %}\n  false\n{% else %}\n  {% set p = active | first
+          %}\n  {{ state_attr(p, 'media_content_id') not in [none, '', 'unknown',
+          'unavailable']\n     and not is_state('media_player.hugh_room_stereo','playing')
           }}\n{% endif %}\n"
       sequence:
       - variables:
-          single_player: "{% set singles = [\n  'media_player.master_bedroom_display',\n
-            \ 'media_player.hugh_room_speaker',\n  'media_player.hugh_room_speaker_2',\n
-            \ 'media_player.battery_speaker'\n] %} {{ singles | select('is_state','playing')
-            | list | first }}\n"
+          single_player: "{% set singles = [\n  'media_player.master_bedroom_display_g',\n
+            \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
+            %} {{ singles | select('is_state','playing') | list | first }}\n"
           media_id: '{{ state_attr(single_player, ''media_content_id'') }}'
       - action: script.recast_to_stereo_with_media
         data:
@@ -3932,9 +3924,9 @@
     - conditions:
       - condition: template
         value_template: "{{ not is_state('media_player.hugh_room_stereo','playing')\n
-          \  and not is_state('media_player.master_bedroom_display','playing')\n   and
-          not is_state('media_player.hugh_room_speaker','playing')\n   and not is_state('media_player.hugh_room_speaker_2','playing')\n
-          \  and not is_state('media_player.battery_speaker','playing') }}\n"
+          \  and not is_state('media_player.master_bedroom_display_g','playing')\n
+          \  and not is_state('media_player.hugh_room_speaker_g','playing')\n   and
+          not is_state('media_player.hugh_room_speaker_2_g','playing') }}\n"
       sequence:
       - action: script.play_spotify_playlist_2
   mode: restart
@@ -3999,15 +3991,14 @@
       seconds: 2
   conditions:
   - condition: template
-    value_template: "{{ [\n  'media_player.master_bedroom_display',\n  'media_player.hugh_room_speaker',\n
-      \ 'media_player.hugh_room_speaker_2',\n  'media_player.battery_speaker',\n  'media_player.hugh_room_stereo'\n]
+    value_template: "{{ [\n  'media_player.master_bedroom_display_g',\n  'media_player.hugh_room_speaker_g',\n
+      \ 'media_player.hugh_room_speaker_2_g',\n  'media_player.hugh_room_stereo'\n]
       | select('is_state','playing') | list | count > 0 }}\n"
   actions:
   - variables:
-      active: "{{ [\n  'media_player.master_bedroom_display',\n  'media_player.hugh_room_speaker',\n
-        \ 'media_player.hugh_room_speaker_2',\n  'media_player.battery_speaker',\n
-        \ 'media_player.hugh_room_stereo'\n] | select('is_state','playing') | list
-        }}\n"
+      active: "{{ [\n  'media_player.master_bedroom_display_g',\n  'media_player.hugh_room_speaker_g',\n
+        \ 'media_player.hugh_room_speaker_2_g',\n  'media_player.hugh_room_stereo'\n]
+        | select('is_state','playing') | list }}\n"
   - action: media_player.media_pause
     target:
       entity_id: '{{ active }}'
