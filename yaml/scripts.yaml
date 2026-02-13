@@ -2,10 +2,9 @@ hugh_room_stereo_volume_up:
   alias: Hugh Room Stereo Volume Up
   sequence:
   - action: media_player.volume_up
-    target:
-      entity_id:
-      - media_player.master_bedroom_display_g
     data: {}
+    target:
+      entity_id: media_player.master_bedroom_display
   mode: single
   icon: mdi:volume-plus
 hugh_room_stereo_volume_down:
@@ -16,7 +15,7 @@ hugh_room_stereo_volume_down:
     enabled: true
     target:
       entity_id:
-      - media_player.master_bedroom_display_g
+      - media_player.master_bedroom_display
   mode: single
   icon: mdi:volume-minus
   description: ''
@@ -43,8 +42,7 @@ execute_alarm_actions:
       media_id: Today FM
     target:
       device_id: 61df364729816b14e75f325311b07257
-  - wait_template: '{{ is_state(''media_player.hugh_room_speaker_g'', ''playing'')
-      }}'
+  - wait_template: '{{ is_state(''media_player.hugh_room_speaker'', ''playing'') }}'
     timeout: 00:00:08
     continue_on_timeout: true
   - choose:
@@ -52,7 +50,7 @@ execute_alarm_actions:
       - condition: not
         conditions:
         - condition: state
-          entity_id: media_player.hugh_room_speaker_g
+          entity_id: media_player.hugh_room_speaker
           state: playing
       sequence:
       - action: music_assistant.play_media
@@ -61,7 +59,7 @@ execute_alarm_actions:
           media_id: Today FM
         target:
           device_id: 61df364729816b14e75f325311b07257
-      - wait_template: '{{ is_state(''media_player.hugh_room_speaker_g'', ''playing'')
+      - wait_template: '{{ is_state(''media_player.hugh_room_speaker'', ''playing'')
           }}'
         timeout: 00:00:05
         continue_on_timeout: true
@@ -70,7 +68,7 @@ execute_alarm_actions:
           - condition: not
             conditions:
             - condition: state
-              entity_id: media_player.hugh_room_speaker_g
+              entity_id: media_player.hugh_room_speaker
               state: playing
           sequence:
           - action: media_player.play_media
@@ -80,15 +78,15 @@ execute_alarm_actions:
                 media_content_type: audio/mpeg
                 metadata: {}
             target:
-              entity_id: media_player.hugh_room_speaker_g
+              entity_id: media_player.hugh_room_speaker
   - action: media_player.volume_set
     data:
       volume_level: 0.24
     target:
-      device_id:
-      - b64aa922ac9791caaeea17b5d1ead952
-      - f6e260e1c54d2e3a512febf7b71d758d
-      - fa6eca1e9b64e4de4d46c344eb571af9
+      entity_id:
+      - media_player.master_bedroom_display
+      - media_player.hugh_room_speaker
+      - media_player.hugh_room_speaker_2
   - choose:
     - conditions:
       - condition: state
