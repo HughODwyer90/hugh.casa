@@ -41,8 +41,10 @@ execute_alarm_actions:
       media_type: radio
       media_id: Today FM
     target:
-      device_id: 61df364729816b14e75f325311b07257
-  - wait_template: '{{ is_state(''media_player.hugh_room_speaker'', ''playing'') }}'
+      device_id:
+      - 0af7b3330b6e115c841a5f230c045a85
+  - wait_template: '{{ is_state(''media_player.master_bedroom_display_g'', ''playing'')
+      }}'
     timeout: 00:00:08
     continue_on_timeout: true
   - choose:
@@ -50,16 +52,18 @@ execute_alarm_actions:
       - condition: not
         conditions:
         - condition: state
-          entity_id: media_player.hugh_room_speaker
-          state: playing
+          entity_id: media_player.master_bedroom_display_g
+          state:
+          - playing
       sequence:
       - action: music_assistant.play_media
         data:
           media_type: radio
           media_id: Today FM
         target:
-          device_id: 61df364729816b14e75f325311b07257
-      - wait_template: '{{ is_state(''media_player.hugh_room_speaker'', ''playing'')
+          device_id:
+          - 0af7b3330b6e115c841a5f230c045a85
+      - wait_template: '{{ is_state(''media_player.master_bedroom_display_g'', ''playing'')
           }}'
         timeout: 00:00:05
         continue_on_timeout: true
@@ -68,8 +72,9 @@ execute_alarm_actions:
           - condition: not
             conditions:
             - condition: state
-              entity_id: media_player.hugh_room_speaker
-              state: playing
+              entity_id: media_player.master_bedroom_display_g
+              state:
+              - playing
           sequence:
           - action: media_player.play_media
             data:
@@ -78,15 +83,16 @@ execute_alarm_actions:
                 media_content_type: audio/mpeg
                 metadata: {}
             target:
-              entity_id: media_player.hugh_room_speaker
+              entity_id:
+              - media_player.master_bedroom_display_g
   - action: media_player.volume_set
     data:
-      volume_level: 0.24
+      volume_level: 0.2
     target:
       entity_id:
-      - media_player.master_bedroom_display
-      - media_player.hugh_room_speaker
-      - media_player.hugh_room_speaker_2
+      - media_player.master_bedroom_display_g
+      - media_player.hugh_room_speaker_g
+      - media_player.hugh_room_speaker_2_g
   - choose:
     - conditions:
       - condition: state
