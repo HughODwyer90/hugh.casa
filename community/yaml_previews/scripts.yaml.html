@@ -19,7 +19,7 @@
   - action: media_player.volume_up
     target:
       entity_id:
-      - media_player.master_bedroom_display
+      - media_player.master_bedroom_display_g
     data: {}
   mode: single
   icon: mdi:volume-plus
@@ -30,9 +30,11 @@ hugh_room_stereo_volume_down:
     data: {}
     enabled: true
     target:
-      entity_id: media_player.master_bedroom_display
+      entity_id:
+      - media_player.master_bedroom_display_g
   mode: single
   icon: mdi:volume-minus
+  description: &#x27;&#x27;
 execute_alarm_actions:
   alias: Execute Alarm Actions
   sequence:
@@ -55,7 +57,7 @@ execute_alarm_actions:
       media_type: radio
       media_id: Today FM
     target:
-      entity_id: media_player.master_bedroom_display_ma
+      device_id: 61df364729816b14e75f325311b07257
   - wait_template: &#x27;{{ is_state(&#x27;&#x27;media_player.hugh_room_speaker_g&#x27;&#x27;, &#x27;&#x27;playing&#x27;&#x27;)
       }}&#x27;
     timeout: 00:00:08
