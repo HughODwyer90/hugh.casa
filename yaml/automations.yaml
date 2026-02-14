@@ -643,32 +643,6 @@
     data:
       value: 1200
   mode: restart
-- id: '1704750146680'
-  alias: Living Room Aqara Button Single
-  description: Toggle between scenes.
-  trigger:
-  - trigger: state
-    entity_id:
-    - sensor.living_room_aqara_button_action
-    to: single
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: light.living_room_ceiling
-        state: 'on'
-      sequence:
-      - action: scene.turn_on
-        target:
-          entity_id: scene.dimmers
-        data: {}
-    default:
-    - action: scene.turn_on
-      data: {}
-      target:
-        entity_id: scene.living_room_all_lights_on
-  mode: single
 - id: '1705067814749'
   alias: Hugh Room Fan Bed Indicator
   description: Updates the indicator state based on the power state of the switch
