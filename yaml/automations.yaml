@@ -4311,3 +4311,19 @@
         data:
           transition: 2
   mode: single
+- id: '1771030546538'
+  alias: Vacuum Apartment
+  description: ''
+  triggers:
+  - trigger: time
+    at: 09:00:00
+    weekday:
+    - tue
+  conditions: []
+  actions:
+  - action: vacuum.start
+    metadata: {}
+    target:
+      entity_id: vacuum.vacuum_2
+    data: {}
+  mode: single
