@@ -1269,7 +1269,7 @@
     metadata: {}
     data: {}
     target:
-      entity_id: media_player.hugh_room_speaker
+      entity_id: media_player.master_bedroom_display_g
   mode: restart
 - id: '1712869374188'
   alias: Bathroom Humidity, Temperature, and Vibration Monitoring
@@ -1420,11 +1420,6 @@
     - conditions:
       - condition: trigger
         id: time
-      - condition: time
-        weekday:
-        - sun
-      - condition: template
-        value_template: '{{ now().isocalendar().week % 2 == 0 }}'
       sequence:
       - action: homeassistant.restart
     - conditions:
@@ -1438,11 +1433,6 @@
           - condition: time
             after: 03:00:00
             before: 03:30:00
-          - condition: time
-            weekday:
-            - sun
-          - condition: template
-            value_template: '{{ now().isocalendar().week % 2 == 0 }}'
       - condition: template
         value_template: '{{ is_state(''fan.air_purifier'',''unavailable'') }}'
       - choose:
@@ -3923,7 +3913,7 @@
   - action: button.press
     target:
       entity_id:
-      - button.hugh_room_speaker_favourite_current_song
+      - button.master_bedroom_display_favourite_current_song_2
     data: {}
   - choose:
     - conditions: []
@@ -4137,7 +4127,7 @@
   - trigger: numeric_state
     entity_id:
     - sensor.sun_elevation
-    above: 6
+    above: 0
     id: bright
   - trigger: numeric_state
     entity_id:
@@ -4373,4 +4363,28 @@
   - target:
       entity_id: input_boolean.vacuum_ran_this_weekend
     action: input_boolean.turn_off
+  mode: single
+- id: '1771066582395'
+  alias: Vacuum Apartment - Set weekend helper when vacuum starts
+  description: If vacuum is started manually (or by any other automation), mark weekend
+    run as done.
+  triggers:
+  - entity_id: vacuum.vacuum_2
+    to:
+    - cleaning
+    - returning
+    - paused
+    trigger: state
+  conditions:
+  - condition: time
+    weekday:
+    - sat
+    - sun
+  - condition: state
+    entity_id: input_boolean.vacuum_ran_this_weekend
+    state: 'off'
+  actions:
+  - target:
+      entity_id: input_boolean.vacuum_ran_this_weekend
+    action: input_boolean.turn_on
   mode: single
