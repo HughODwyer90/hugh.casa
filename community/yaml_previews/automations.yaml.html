@@ -4346,39 +4346,6 @@
       entity_id: vacuum.vacuum_2
     action: vacuum.start
   mode: single
-- id: &#x27;1771031660895&#x27;
-  alias: Vacuum Apartment (Weekend - when I leave)
-  triggers:
-  - entity_id: person.hugh
-    from: home
-    to: not_home
-    trigger: state
-  conditions:
-  - condition: time
-    weekday:
-    - sat
-    - sun
-  - condition: time
-    after: 08:00:00
-    before: &#x27;18:00:00&#x27;
-  - condition: state
-    entity_id: input_boolean.vacuum_ran_this_weekend
-    state: &#x27;off&#x27;
-  - condition: state
-    entity_id: vacuum.vacuum_2
-    state: docked
-  actions:
-  - delay: 00:05:00
-  - condition: state
-    entity_id: person.hugh
-    state: not_home
-  - target:
-      entity_id: input_boolean.vacuum_ran_this_weekend
-    action: input_boolean.turn_on
-  - target:
-      entity_id: vacuum.vacuum_2
-    action: vacuum.start
-  mode: single
 - id: &#x27;1771032068438&#x27;
   alias: Reset Weekend Vacuum Flag
   description: &#x27;&#x27;
