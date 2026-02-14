@@ -4326,6 +4326,22 @@
         data:
           transition: 2
   mode: single
+- id: &#x27;1771030546538&#x27;
+  alias: Vacuum Apartment
+  description: &#x27;&#x27;
+  triggers:
+  - trigger: time
+    at: 09:00:00
+    weekday:
+    - tue
+  conditions: []
+  actions:
+  - action: vacuum.start
+    metadata: {}
+    target:
+      entity_id: vacuum.vacuum_2
+    data: {}
+  mode: single
 </pre>
             </div>
             <script>
