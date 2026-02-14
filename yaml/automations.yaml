@@ -4365,3 +4365,18 @@
       entity_id: vacuum.vacuum_2
     action: vacuum.start
   mode: single
+- id: '1771032303153'
+  alias: Reset Weekend Vacuum Flag
+  description: ''
+  triggers:
+  - at: '23:55:00'
+    trigger: time
+  conditions:
+  - condition: time
+    weekday:
+    - fri
+  actions:
+  - target:
+      entity_id: input_boolean.vacuum_ran_this_weekend
+    action: input_boolean.turn_off
+  mode: single
