@@ -19,7 +19,8 @@
   - action: media_player.volume_up
     data: {}
     target:
-      entity_id: media_player.master_bedroom_display
+      entity_id:
+      - media_player.hugh_room_speaker_g
   mode: single
   icon: mdi:volume-plus
 hugh_room_stereo_volume_down:
@@ -30,7 +31,7 @@ hugh_room_stereo_volume_down:
     enabled: true
     target:
       entity_id:
-      - media_player.master_bedroom_display
+      - media_player.hugh_room_speaker_g
   mode: single
   icon: mdi:volume-minus
   description: &#x27;&#x27;
@@ -391,7 +392,7 @@ play_spotify_playlist_2:
       enqueue: play
       media_id: spotify:playlist:7Gtodbwg48bzliqflc1BE9
     target:
-      entity_id: media_player.hugh_room_stereo_2
+      device_id: 79b86013936e963577c4eeae9a8d8186
     enabled: true
   - delay: &#x27;00:00:00.4&#x27;
   - action: media_player.shuffle_set
@@ -755,7 +756,7 @@ recast_to_stereo_with_media:
   sequence:
   - action: music_assistant.play_media
     target:
-      entity_id: media_player.hugh_room_stereo_2
+      device_id: 79b86013936e963577c4eeae9a8d8186
     data:
       media_type: track
       media_id: &#x27;{{ media_id }}&#x27;
