@@ -1295,7 +1295,7 @@
     metadata: {}
     data: {}
     target:
-      entity_id: media_player.hugh_room_stereo_2
+      entity_id: media_player.hugh_room_speaker
   mode: restart
 - id: '1712869374188'
   alias: Bathroom Humidity, Temperature, and Vibration Monitoring
@@ -1697,10 +1697,11 @@
   - choose:
     - conditions:
       - condition: state
-        entity_id: media_player.hugh_room_stereo
-        state: playing
+        entity_id: media_player.master_bedroom_display_g
+        state:
+        - playing
       sequence:
-      - entity_id: media_player.hugh_room_stereo
+      - entity_id: media_player.master_bedroom_display_g
         action: media_player.media_stop
     default: []
   - target:
@@ -1837,23 +1838,24 @@
 - id: '1717788981796'
   alias: Adjust Media Player Volume
   description: ''
-  trigger:
+  triggers:
   - trigger: state
     entity_id: input_number.universal_player_volume
-  action:
+  actions:
   - action: media_player.volume_set
     data:
       volume_level: '{{ states(''input_number.universal_player_volume'') | float /
         10 }}'
     target:
-      entity_id: media_player.hugh_room_stereo
+      entity_id:
+      - media_player.hugh_room_speaker_g
 - id: '1717798872586'
   alias: Control Playback Based on Volume
   description: Pause playback when volume is 0 or below 1, resume when volume increases
-  trigger:
+  triggers:
   - trigger: state
     entity_id: input_number.universal_player_volume
-  action:
+  actions:
   - choose:
     - conditions:
       - condition: template
@@ -1863,13 +1865,15 @@
           '
       sequence:
       - condition: template
-        value_template: '{{ is_state(''media_player.hugh_room_stereo'', ''playing'')
+        value_template: '{{ is_state(''media_player.hugh_room_speaker_g'', ''playing'')
           }}
 
           '
       - action: media_player.media_pause
         target:
-          entity_id: media_player.hugh_room_stereo
+          entity_id:
+          - media_player.hugh_room_speaker_g
+        data: {}
     - conditions:
       - condition: template
         value_template: '{{ trigger.from_state.state | float < 1 and trigger.to_state.state
@@ -1878,13 +1882,15 @@
           '
       sequence:
       - condition: template
-        value_template: '{{ is_state(''media_player.hugh_room_stereo'', ''paused'')
+        value_template: '{{ is_state(''media_player.hugh_room_speaker_g'', ''paused'')
           }}
 
           '
       - action: media_player.media_play
         target:
-          entity_id: media_player.hugh_room_stereo
+          entity_id:
+          - media_player.hugh_room_speaker_g
+        data: {}
 - id: '1718016208552'
   alias: Manage Work From Home Days
   description: 'Logs work from home days, increments counter on Teams activity, or
@@ -1975,7 +1981,7 @@
   - delay: 00:00:03
   - action: media_player.play_media
     data_template:
-      entity_id: media_player.hugh_room_stereo
+      entity_id: media_player.hugh_room_speaker_g
       media_content_id: '{{ state_attr(''media_player.master_bedroom_display_g'',
         ''media_content_id'') }}'
       media_content_type: '{{ state_attr(''media_player.master_bedroom_display_g'',
@@ -1983,7 +1989,7 @@
   - delay: 00:00:05
   - action: media_player.volume_set
     data_template:
-      entity_id: media_player.hugh_room_stereo
+      entity_id: media_player.hugh_room_speaker_g
       volume_level: '{{ state_attr(''media_player.master_bedroom_display_g'', ''volume_level'')
         }}'
 - id: '1721393948523'
@@ -3840,17 +3846,16 @@
   - choose:
     - conditions:
       - condition: template
-        value_template: "{% set players = [\n  'media_player.hugh_room_stereo_2',\n
-          \ 'media_player.hugh_room_stereo',\n  'media_player.master_bedroom_display_g',\n
+        value_template: "{% set players = [\n'media_player.master_bedroom_display_g',\n
           \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
           %} {{ players | select('is_state','playing') | list | count > 0 }}\n"
       sequence:
-      - data:
-          entity_id: "{% set players = [\n  'media_player.hugh_room_stereo_2',\n  'media_player.hugh_room_stereo',\n
-            \ 'media_player.master_bedroom_display_g',\n  'media_player.hugh_room_speaker_g',\n
-            \ 'media_player.hugh_room_speaker_2_g'\n] %} {{ players | select('is_state','playing')
-            | list | first }}\n"
+      - data: {}
         action: media_player.media_previous_track
+        target:
+          entity_id: "{% set players = [\n  'media_player.master_bedroom_display_g',\n
+            \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
+            %} {{ players | select('is_state','playing') | list | first }}\n"
   mode: single
 - id: '1763117470810'
   alias: IR Typhoon Front Up → Next Track (Universal)
@@ -3862,19 +3867,17 @@
   - choose:
     - conditions:
       - condition: template
-        value_template: "{% set players = [\n  'media_player.hugh_room_stereo_2',\n
-          \ 'media_player.hugh_room_stereo',\n  'media_player.master_bedroom_display_g',\n
+        value_template: "{% set players = [\n  'media_player.master_bedroom_display_g',\n
           \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
           %} {{ players | select('is_state','playing') | list | count > 0 }}\n"
       sequence:
       - data:
-          entity_id: "{% set players = [\n  'media_player.hugh_room_stereo_2',\n  'media_player.hugh_room_stereo',\n
-            \ 'media_player.master_bedroom_display_g',\n  'media_player.hugh_room_speaker_g',\n
-            \ 'media_player.hugh_room_speaker_2_g'\n] %} {{ players | select('is_state','playing')
-            | list | first }}\n"
-        action: "{% set players = [\n  'media_player.hugh_room_stereo_2',\n  'media_player.hugh_room_stereo',\n
-          \ 'media_player.master_bedroom_display_g',\n  'media_player.hugh_room_speaker_g',\n
-          \ 'media_player.hugh_room_speaker_2_g'\n] %} media_player.media_next_track\n"
+          entity_id: "{% set players = [\n  'media_player.master_bedroom_display_g',\n
+            \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
+            %} {{ players | select('is_state','playing') | list | first }}\n"
+        action: "{% set players = [\n  'media_player.master_bedroom_display_g',\n
+          \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
+          %} media_player.media_next_track\n"
   mode: single
 - id: '1763117507620'
   alias: IR Typhoon Center Up – Play / Pause / Move to Stereo
@@ -3891,7 +3894,7 @@
           %} {% set active = singles | select('is_state','playing') | list %}\n{%
           if active | count == 0 %}\n  false\n{% else %}\n  {% set p = active | first
           %}\n  {{ state_attr(p, 'media_content_id') not in [none, '', 'unknown',
-          'unavailable']\n     and not is_state('media_player.hugh_room_stereo','playing')
+          'unavailable']\n     and not is_state('media_player.hugh_room_speaker_g','playing')
           }}\n{% endif %}\n"
       sequence:
       - variables:
@@ -3905,26 +3908,31 @@
       - stop: Recast handled by script
     - conditions:
       - condition: state
-        entity_id: media_player.hugh_room_stereo
-        state: playing
+        entity_id: media_player.hugh_room_speaker_g
+        state:
+        - playing
       sequence:
       - action: media_player.media_pause
         target:
-          entity_id: media_player.hugh_room_stereo_2
+          entity_id:
+          - media_player.hugh_room_speaker_g
+        data: {}
       - stop: Paused stereo
     - conditions:
       - condition: state
-        entity_id: media_player.hugh_room_stereo
-        state: paused
+        entity_id: media_player.hugh_room_speaker_g
+        state:
+        - paused
       sequence:
       - action: media_player.media_play
         target:
-          entity_id: media_player.hugh_room_stereo_2
+          entity_id:
+          - media_player.hugh_room_speaker_g
+        data: {}
       - stop: Resumed stereo
     - conditions:
       - condition: template
-        value_template: "{{ not is_state('media_player.hugh_room_stereo','playing')\n
-          \  and not is_state('media_player.master_bedroom_display_g','playing')\n
+        value_template: "{{ is_state('media_player.master_bedroom_display_g','playing')\n
           \  and not is_state('media_player.hugh_room_speaker_g','playing')\n   and
           not is_state('media_player.hugh_room_speaker_2_g','playing') }}\n"
       sequence:
@@ -3941,7 +3949,7 @@
   - action: button.press
     target:
       entity_id:
-      - button.hugh_room_stereo_favourite_current_song
+      - button.hugh_room_speaker_favourite_current_song
     data: {}
   - choose:
     - conditions: []
@@ -3949,8 +3957,8 @@
       - action: notify.notifications
         data:
           title: Liked Song
-          message: ❤️ {{ state_attr('media_player.hugh_room_stereo_2','media_title')
-            }} {% set a = state_attr('media_player.hugh_room_stereo_2','media_artist')
+          message: ❤️ {{ state_attr('media_player.hugh_room_speaker','media_title')
+            }} {% set a = state_attr('media_player.hugh_room_speaker','media_artist')
             %} {% if a %} – {{ a }}{% endif %}
   - action: script.set_diffuser_color_flash
     data:
@@ -3994,16 +4002,17 @@
   conditions:
   - condition: template
     value_template: "{{ [\n  'media_player.master_bedroom_display_g',\n  'media_player.hugh_room_speaker_g',\n
-      \ 'media_player.hugh_room_speaker_2_g',\n  'media_player.hugh_room_stereo'\n]
-      | select('is_state','playing') | list | count > 0 }}\n"
+      \ 'media_player.hugh_room_speaker_2_g'\n] | select('is_state','playing') | list
+      | count > 0 }}\n"
   actions:
   - variables:
       active: "{{ [\n  'media_player.master_bedroom_display_g',\n  'media_player.hugh_room_speaker_g',\n
-        \ 'media_player.hugh_room_speaker_2_g',\n  'media_player.hugh_room_stereo'\n]
-        | select('is_state','playing') | list }}\n"
+        \ 'media_player.hugh_room_speaker_2_g'\n] | select('is_state','playing') |
+        list }}\n"
   - action: media_player.media_pause
     target:
       entity_id: '{{ active }}'
+    data: {}
   mode: single
 - id: '1765381948757'
   alias: Handle All Renewal Actions
@@ -4321,8 +4330,9 @@
     trigger: time
   conditions:
   - condition: state
-    entity_id: person.hugh
-    state: not_home
+    entity_id: person.hughod90
+    state:
+    - not_home
   - condition: state
     entity_id: vacuum.vacuum_2
     state: docked
@@ -4335,9 +4345,12 @@
   alias: Vacuum Apartment (Weekend - when I leave)
   description: ''
   triggers:
-  - entity_id: person.hugh
-    from: home
-    to: not_home
+  - entity_id:
+    - person.hughod90
+    from:
+    - home
+    to:
+    - not_home
     trigger: state
   conditions:
   - condition: time
@@ -4350,14 +4363,21 @@
   - condition: state
     entity_id: input_boolean.vacuum_ran_this_weekend
     state: 'off'
-  - condition: state
-    entity_id: vacuum.vacuum_2
-    state: docked
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: vacuum.vacuum_2
+      state: docked
+    - condition: state
+      entity_id: vacuum.vacuum_2
+      state:
+      - paused
   actions:
   - delay: 00:05:00
   - condition: state
-    entity_id: person.hugh
-    state: not_home
+    entity_id: person.hughod90
+    state:
+    - not_home
   - target:
       entity_id: input_boolean.vacuum_ran_this_weekend
     action: input_boolean.turn_on
