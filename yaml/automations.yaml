@@ -4369,12 +4369,11 @@
   description: If vacuum is started manually (or by any other automation), mark weekend
     run as done.
   triggers:
-  - entity_id: vacuum.vacuum_2
+  - entity_id:
+    - vacuum.vacuum_2
+    trigger: state
     to:
     - cleaning
-    - returning
-    - paused
-    trigger: state
   conditions:
   - condition: time
     weekday:
