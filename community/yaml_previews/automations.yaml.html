@@ -3732,8 +3732,9 @@
 - id: &#x27;1762130255049&#x27;
   alias: Hugh Room Purifier Unified Logic
   description: &#x27;Adjusts purifier speed based on occupancy, PC, monitor, and music
-    activity. If it&#x27;&#x27;s night time and you&#x27;&#x27;re in bed, purifier is turned off. When
-    you get out of bed, it resumes the appropriate speed.
+    activity. If it&#x27;&#x27;s night time and you&#x27;&#x27;re in bed, purifier is turned off. If the
+    purifier is turned on by anything else while you&#x27;&#x27;re in bed at night, it is immediately
+    turned off again. When you get out of bed, it resumes the appropriate speed.
 
     &#x27;
   triggers:
@@ -3763,6 +3764,12 @@
   - trigger: state
     entity_id: binary_sensor.bed_sensor
     id: bed_change
+  - trigger: state
+    entity_id:
+    - fan.air_purifier
+    to:
+    - &#x27;on&#x27;
+    id: purifier_turned_on
   conditions: []
   actions:
   - choose:
