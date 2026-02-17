@@ -4309,8 +4309,9 @@
     state: docked
   actions:
   - target:
-      entity_id: vacuum.vacuum_2
+      device_id: 755139c516efc71273dd5e77ddcb40d5
     action: vacuum.start
+    data: {}
   mode: single
 - id: '1771032269366'
   alias: Vacuum Apartment (Weekend - when I leave)
@@ -4353,8 +4354,9 @@
       entity_id: input_boolean.vacuum_ran_this_weekend
     action: input_boolean.turn_on
   - target:
-      entity_id: vacuum.vacuum_2
+      device_id: 755139c516efc71273dd5e77ddcb40d5
     action: vacuum.start
+    data: {}
   mode: single
 - id: '1771032303153'
   alias: Reset Weekend Vacuum Flag
