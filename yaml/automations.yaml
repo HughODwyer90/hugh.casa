@@ -4305,8 +4305,9 @@
     state:
     - not_home
   - condition: state
-    entity_id: vacuum.vacuum_2
-    state: docked
+    entity_id: vacuum.vacuum
+    state:
+    - docked
   actions:
   - target:
       device_id: 755139c516efc71273dd5e77ddcb40d5
@@ -4338,14 +4339,19 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: vacuum.vacuum_2
-      state: docked
+      entity_id: vacuum.vacuum
+      state:
+      - docked
     - condition: state
-      entity_id: vacuum.vacuum_2
+      entity_id: vacuum.vacuum
       state:
       - paused
   actions:
-  - delay: 00:05:00
+  - delay:
+      hours: 0
+      minutes: 10
+      seconds: 0
+      milliseconds: 0
   - condition: state
     entity_id: person.hughod90
     state:
@@ -4379,7 +4385,7 @@
     run as done.
   triggers:
   - entity_id:
-    - vacuum.vacuum_2
+    - vacuum.vacuum
     trigger: state
     to:
     - cleaning
