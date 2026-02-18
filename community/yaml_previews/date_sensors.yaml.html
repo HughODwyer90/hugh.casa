@@ -356,9 +356,14 @@
           {% if secs &lt;= 0 %}
             0m
           {% else %}
-            {% set h = secs // 3600 %}
-            {% set m = (secs % 3600) // 60 %}
-            {% if h &gt; 0 %}{{ h }}h {{ m }}m{% else %}{{ m }}m{% endif %}
+            {% set total_mins = (secs + 59) // 60 %}
+            {% set h = total_mins // 60 %}
+            {% set m = total_mins % 60 %}
+            {% if h &gt; 0 %}
+              {{ h }}h {{ m }}m
+            {% else %}
+              {{ m }}m
+            {% endif %}
           {% endif %}
         {% endif %}
       attributes:
