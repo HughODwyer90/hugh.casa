@@ -949,20 +949,19 @@
     },
     {
         "entity_id": "script.update_liverpool_sensors",
-        "state": "on",
+        "state": "off",
         "attributes": {
             "last_triggered": "2026-02-18T00:00:01.341844+00:00",
             "mode": "single",
-            "current": 1,
-            "last_action": "delay 0:00:30",
+            "current": 0,
             "icon": "mdi:soccer",
             "friendly_name": "Update Liverpool Sensors"
         },
-        "last_changed": "2026-02-18T00:00:01.342011+00:00",
-        "last_reported": "2026-02-18T00:00:06.327760+00:00",
-        "last_updated": "2026-02-18T00:00:06.327760+00:00",
+        "last_changed": "2026-02-18T00:01:18.490589+00:00",
+        "last_reported": "2026-02-18T00:01:18.490589+00:00",
+        "last_updated": "2026-02-18T00:01:18.490589+00:00",
         "context": {
-            "id": "01KHQ0QV9SGVD6YGET6W3Y056B",
+            "id": "01KHQ0T6MTZF4JGD57JT344J2E",
             "parent_id": null,
             "user_id": null
         }
@@ -971,18 +970,18 @@
         "entity_id": "script.update_entities_html",
         "state": "on",
         "attributes": {
-            "last_triggered": "2026-02-18T00:00:19.544739+00:00",
+            "last_triggered": "2026-02-18T00:01:40.227627+00:00",
             "mode": "single",
             "current": 1,
             "icon": "mdi:git",
             "friendly_name": "Github Backup"
         },
-        "last_changed": "2026-02-18T00:00:19.544818+00:00",
-        "last_reported": "2026-02-18T00:00:19.544818+00:00",
-        "last_updated": "2026-02-18T00:00:19.544818+00:00",
+        "last_changed": "2026-02-18T00:01:40.227718+00:00",
+        "last_reported": "2026-02-18T00:01:40.227718+00:00",
+        "last_updated": "2026-02-18T00:01:40.227718+00:00",
         "context": {
-            "id": "01KHQ0RD2P6Z6EDVJ5WCXZS3FT",
-            "parent_id": "01KHQ0RD2GEM0SM1D5CCMYTT0F",
+            "id": "01KHQ0TVW0YKR17MJ7JJXK3PJ3",
+            "parent_id": "01KHQ0TVVTK721W88Z9BEKN6AQ",
             "user_id": null
         }
     },
@@ -2637,16 +2636,16 @@
     },
     {
         "entity_id": "sensor.date_time_iso",
-        "state": "2026-02-18T00:00:00",
+        "state": "2026-02-18T00:01:00",
         "attributes": {
             "icon": "mdi:calendar-clock",
             "friendly_name": "Date & Time (ISO)"
         },
-        "last_changed": "2026-02-18T00:00:00.003703+00:00",
-        "last_reported": "2026-02-18T00:00:00.003703+00:00",
-        "last_updated": "2026-02-18T00:00:00.003703+00:00",
+        "last_changed": "2026-02-18T00:01:00.001284+00:00",
+        "last_reported": "2026-02-18T00:01:00.001284+00:00",
+        "last_updated": "2026-02-18T00:01:00.001284+00:00",
         "context": {
-            "id": "01KHQ0QT03QXEMGKP7QBEPW298",
+            "id": "01KHQ0SMK1M6JVD63BY5F9RBKZ",
             "parent_id": null,
             "user_id": null
         }
@@ -2682,22 +2681,14 @@
     {
         "entity_id": "input_text.liverpool_tv_channel",
         "state": "FOX One, Sky Sports Main Event",
-        "attributes": {
-            "editable": true,
-            "min": 0,
-            "max": 100,
-            "pattern": null,
-            "mode": "text",
-            "icon": "mdi:television-classic",
-            "friendly_name": "Liverpool TV Channel"
-        },
+        "attributes": {},
         "last_changed": "2026-02-17T23:54:43.184474+00:00",
-        "last_reported": "2026-02-17T23:54:43.184474+00:00",
-        "last_updated": "2026-02-17T23:54:43.184474+00:00",
+        "last_reported": "2026-02-18T00:00:38.183139+00:00",
+        "last_updated": "2026-02-18T00:00:38.183139+00:00",
         "context": {
-            "id": "01KHQ0E4KGFW8S3KE17MDVFJDA",
+            "id": "01KHQ0RZ973TA75WEA8Z201E9H",
             "parent_id": null,
-            "user_id": null
+            "user_id": "f84f7cbfe32b4f3091c5defa1be3974b"
         }
     },
     {
@@ -2738,40 +2729,68 @@
         "entity_id": "input_text.epl_player_stats",
         "state": "Haaland: 22 (-12 Ekitik\u00e9)",
         "attributes": {
-            "editable": true,
-            "min": 0,
-            "max": 255,
-            "pattern": null,
-            "mode": "text",
-            "friendly_name": "EPL Player Stats"
+            "friendly_name": "Player Stats (EPL)",
+            "icon": "mdi:trophy",
+            "GOALS": "",
+            "g1": "Haaland \u2013 Man City \u2013 22",
+            "g2": "Thiago \u2013 Brentford \u2013 17",
+            "g3": "Semenyo \u2013 Man City \u2013 13",
+            "g4": "Semenyo \u2013 Man City \u2013 13",
+            "g5": "Ekitik\u00e9 \u2013 Liverpool \u2013 10",
+            "ASSISTS": "",
+            "a1": "Fernandes \u2013 Man Utd \u2013 12",
+            "a2": "Cherki \u2013 Man City \u2013 7",
+            "a3": "Haaland \u2013 Man City \u2013 6",
+            "a4": "Salah \u2013 Liverpool \u2013 6",
+            "a5": "Grealish \u2013 Everton \u2013 6",
+            "CLEAN SHEETS": "",
+            "c1": "Raya \u2013 Arsenal \u2013 13",
+            "c2": "Donnarumma \u2013 Man City \u2013 10",
+            "c3": "S\u00e1nchez \u2013 Chelsea \u2013 9",
+            "c4": "Henderson \u2013 Crystal Palace \u2013 9",
+            "c5": "Pickford \u2013 Everton \u2013 9"
         },
         "last_changed": "2026-02-17T23:54:43.186410+00:00",
-        "last_reported": "2026-02-17T23:54:43.186410+00:00",
-        "last_updated": "2026-02-17T23:54:43.186410+00:00",
+        "last_reported": "2026-02-18T00:00:39.062114+00:00",
+        "last_updated": "2026-02-18T00:00:39.062114+00:00",
         "context": {
-            "id": "01KHQ0E4KJ7C6XG3JBGZXKGYBH",
+            "id": "01KHQ0S04PVCW9090XCF2C8HM7",
             "parent_id": null,
-            "user_id": null
+            "user_id": "f84f7cbfe32b4f3091c5defa1be3974b"
         }
     },
     {
         "entity_id": "input_text.ucl_player_stats",
         "state": "Mbapp\u00e9: 13 (-9 Szoboszlai)",
         "attributes": {
-            "editable": true,
-            "min": 0,
-            "max": 100,
-            "pattern": null,
-            "mode": "text",
-            "friendly_name": "UCL Player Stats"
+            "friendly_name": "Player Stats (UCL)",
+            "icon": "mdi:soccer",
+            "GOALS": "",
+            "g1": "Mbapp\u00e9 \u2013 Real Madrid \u2013 13",
+            "g2": "Kane \u2013 Bayern M\u00fcnchen \u2013 8",
+            "g3": "Haaland \u2013 Man City \u2013 7",
+            "g4": "Martinelli \u2013 Arsenal \u2013 6",
+            "g5": "Osimhen \u2013 Galatasaray \u2013 6",
+            "ASSISTS": "",
+            "a1": "Olise \u2013 Bayern M\u00fcnchen \u2013 6",
+            "a2": "J\u00fanior \u2013 Real Madrid \u2013 6",
+            "a3": "Aubameyang \u2013 Marseille \u2013 5",
+            "a4": "G\u00fcler \u2013 Real Madrid \u2013 4",
+            "a5": "Szoboszlai \u2013 Liverpool \u2013 4",
+            "CLEAN SHEETS": "",
+            "c1": "Vicario \u2013 Tottenham \u2013 6",
+            "c2": "Raya \u2013 Arsenal \u2013 5",
+            "c3": "Sommer \u2013 Inter \u2013 4",
+            "c4": "Pope \u2013 Newcastle \u2013 4",
+            "c5": "S\u00e1nchez \u2013 Chelsea \u2013 3"
         },
         "last_changed": "2026-02-17T23:54:43.186861+00:00",
-        "last_reported": "2026-02-17T23:54:43.186861+00:00",
-        "last_updated": "2026-02-17T23:54:43.186861+00:00",
+        "last_reported": "2026-02-18T00:00:48.287251+00:00",
+        "last_updated": "2026-02-18T00:00:48.287251+00:00",
         "context": {
-            "id": "01KHQ0E4KJ3JNAYQAY9XVKP3BN",
+            "id": "01KHQ0S94Z78DDPYFBNC8WTGFC",
             "parent_id": null,
-            "user_id": null
+            "user_id": "f84f7cbfe32b4f3091c5defa1be3974b"
         }
     },
     {
@@ -3280,7 +3299,7 @@
         "attributes": {
             "configuration": {},
             "manual_control": [],
-            "brightness_pct": 50.65582163366963,
+            "brightness_pct": 50.61498365642181,
             "color_temp_kelvin": 2700,
             "color_temp_mired": 370,
             "rgb_color": [
@@ -3296,17 +3315,17 @@
                 28.554,
                 65.098
             ],
-            "sun_position": -0.9868835673266073,
+            "sun_position": -0.9877003268715637,
             "force_rgb_color": false,
             "autoreset_time_remaining": {},
             "icon": "mdi:theme-light-dark",
             "friendly_name": "Adaptive Lighting: Bathroom"
         },
         "last_changed": "2026-02-17T23:54:56.855350+00:00",
-        "last_reported": "2026-02-17T23:59:12.246199+00:00",
-        "last_updated": "2026-02-17T23:59:12.246199+00:00",
+        "last_reported": "2026-02-18T00:00:42.747008+00:00",
+        "last_updated": "2026-02-18T00:00:42.747008+00:00",
         "context": {
-            "id": "01KHQ0PBBP6FTMPWDAWC9GHNJT",
+            "id": "01KHQ0S3QVE9SS769EJND8ER5N",
             "parent_id": null,
             "user_id": null
         }
@@ -3890,18 +3909,18 @@
     },
     {
         "entity_id": "sensor.total_sensors_count",
-        "state": "964",
+        "state": "961",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "sensors",
             "icon": "mdi:counter",
             "friendly_name": "Total Entities"
         },
-        "last_changed": "2026-02-18T00:00:19.537347+00:00",
-        "last_reported": "2026-02-18T00:00:19.537347+00:00",
-        "last_updated": "2026-02-18T00:00:19.537347+00:00",
+        "last_changed": "2026-02-18T00:01:40.219955+00:00",
+        "last_reported": "2026-02-18T00:01:40.219955+00:00",
+        "last_updated": "2026-02-18T00:01:40.219955+00:00",
         "context": {
-            "id": "01KHQ0RD2GEM0SM1D5CCMYTT0F",
+            "id": "01KHQ0TVVTK721W88Z9BEKN6AQ",
             "parent_id": null,
             "user_id": null
         }
@@ -3942,68 +3961,68 @@
         "entity_id": "sensor.liverpool_epl_player_stats",
         "state": "Haaland: 22 (-12 Ekitik\u00e9)",
         "attributes": {
-            "GOALS": null,
-            "g1": null,
-            "g2": null,
-            "g3": null,
-            "g4": null,
-            "g5": null,
-            "ASSISTS": null,
-            "a1": null,
-            "a2": null,
-            "a3": null,
-            "a4": null,
-            "a5": null,
-            "CLEAN SHEETS": null,
-            "c1": null,
-            "c2": null,
-            "c3": null,
-            "c4": null,
-            "c5": null,
+            "GOALS": "",
+            "g1": "Haaland \u2013 Man City \u2013 22",
+            "g2": "Thiago \u2013 Brentford \u2013 17",
+            "g3": "Semenyo \u2013 Man City \u2013 13",
+            "g4": "Semenyo \u2013 Man City \u2013 13",
+            "g5": "Ekitik\u00e9 \u2013 Liverpool \u2013 10",
+            "ASSISTS": "",
+            "a1": "Fernandes \u2013 Man Utd \u2013 12",
+            "a2": "Cherki \u2013 Man City \u2013 7",
+            "a3": "Haaland \u2013 Man City \u2013 6",
+            "a4": "Salah \u2013 Liverpool \u2013 6",
+            "a5": "Grealish \u2013 Everton \u2013 6",
+            "CLEAN SHEETS": "",
+            "c1": "Raya \u2013 Arsenal \u2013 13",
+            "c2": "Donnarumma \u2013 Man City \u2013 10",
+            "c3": "S\u00e1nchez \u2013 Chelsea \u2013 9",
+            "c4": "Henderson \u2013 Crystal Palace \u2013 9",
+            "c5": "Pickford \u2013 Everton \u2013 9",
             "icon": "mdi:trophy",
             "friendly_name": "Player Stats (EPL)"
         },
         "last_changed": "2026-02-17T23:56:07.987350+00:00",
-        "last_reported": "2026-02-17T23:56:07.987350+00:00",
-        "last_updated": "2026-02-17T23:56:07.987350+00:00",
+        "last_reported": "2026-02-18T00:00:39.076443+00:00",
+        "last_updated": "2026-02-18T00:00:39.076443+00:00",
         "context": {
-            "id": "01KHQ0GQDK05BGFKQP1A0KQ45A",
+            "id": "01KHQ0S04PVCW9090XCF2C8HM7",
             "parent_id": null,
-            "user_id": null
+            "user_id": "f84f7cbfe32b4f3091c5defa1be3974b"
         }
     },
     {
         "entity_id": "sensor.liverpool_ucl_player_stats",
         "state": "Mbapp\u00e9: 13 (-9 Szoboszlai)",
         "attributes": {
-            "GOALS": null,
-            "g1": null,
-            "g2": null,
-            "g3": null,
-            "g4": null,
-            "g5": null,
-            "ASSISTS": null,
-            "a1": null,
-            "a2": null,
-            "a3": null,
-            "a4": null,
-            "a5": null,
-            "CLEAN SHEETS": null,
-            "c1": null,
-            "c2": null,
-            "c3": null,
-            "c4": null,
-            "c5": null,
+            "GOALS": "",
+            "g1": "Mbapp\u00e9 \u2013 Real Madrid \u2013 13",
+            "g2": "Kane \u2013 Bayern M\u00fcnchen \u2013 8",
+            "g3": "Haaland \u2013 Man City \u2013 7",
+            "g4": "Martinelli \u2013 Arsenal \u2013 6",
+            "g5": "Osimhen \u2013 Galatasaray \u2013 6",
+            "ASSISTS": "",
+            "a1": "Olise \u2013 Bayern M\u00fcnchen \u2013 6",
+            "a2": "J\u00fanior \u2013 Real Madrid \u2013 6",
+            "a3": "Aubameyang \u2013 Marseille \u2013 5",
+            "a4": "G\u00fcler \u2013 Real Madrid \u2013 4",
+            "a5": "Szoboszlai \u2013 Liverpool \u2013 4",
+            "CLEAN SHEETS": "",
+            "c1": "Vicario \u2013 Tottenham \u2013 6",
+            "c2": "Raya \u2013 Arsenal \u2013 5",
+            "c3": "Sommer \u2013 Inter \u2013 4",
+            "c4": "Pope \u2013 Newcastle \u2013 4",
+            "c5": "S\u00e1nchez \u2013 Chelsea \u2013 3",
             "icon": "mdi:trophy",
             "friendly_name": "Player Stats (UCL)"
         },
         "last_changed": "2026-02-17T23:56:07.999632+00:00",
-        "last_reported": "2026-02-17T23:56:07.999632+00:00",
-        "last_updated": "2026-02-17T23:56:07.999632+00:00",
+        "last_reported": "2026-02-18T00:00:48.308787+00:00",
+        "last_updated": "2026-02-18T00:00:48.308787+00:00",
         "context": {
-            "id": "01KHQ0GQDZK0BA0ZG1B369JPDD",
+            "id": "01KHQ0S94Z78DDPYFBNC8WTGFC",
             "parent_id": null,
-            "user_id": null
+            "user_id": "f84f7cbfe32b4f3091c5defa1be3974b"
         }
     },
     {
@@ -6825,7 +6844,7 @@
     },
     {
         "entity_id": "vacuum.vacuum_2",
-        "state": "cleaning",
+        "state": "docked",
         "attributes": {
             "fan_speed_list": [
                 "Silent",
@@ -6870,7 +6889,7 @@
             ],
             "suction_level": "Standard",
             "tight_mopping": false,
-            "error": "No error",
+            "error": "Remove mop",
             "low_water_warning": "No warning",
             "cleaning_time": 0,
             "cleaned_area": 0,
@@ -6997,7 +7016,11 @@
             "floor_direction_cleaning": false,
             "intensive_carpet_cleaning": false,
             "mop_extend": true,
-            "mop_extend_frequency_list": [],
+            "mop_extend_frequency_list": [
+                "Standard",
+                "Intelligent",
+                "High"
+            ],
             "mop_extend_frequency": "High",
             "gap_cleaning_extension": true,
             "mopping_under_furnitures": false,
@@ -7051,19 +7074,19 @@
             "zone_cleaning": false,
             "spot_cleaning": false,
             "cruising": false,
-            "vacuum_state": "washing",
+            "vacuum_state": "drying",
             "has_saved_map": true,
             "has_temporary_map": false,
             "mapping": false,
             "mapping_available": false,
-            "dust_collection_available": false,
-            "washing": true,
-            "washing_paused": true,
-            "drying": false,
+            "dust_collection_available": true,
+            "washing": false,
+            "washing_paused": false,
+            "drying": true,
             "low_water": false,
             "washing_available": true,
-            "drying_available": false,
-            "draining_available": false,
+            "drying_available": true,
+            "draining_available": true,
             "cleangenius_cleaning": true,
             "wetness_level": 16,
             "active_segments": null,
@@ -7242,49 +7265,32 @@
                 "map"
             ],
             "device_class": "dreame_vacuum",
-            "icon": "mdi:water-sync",
+            "icon": "mdi:robot-vacuum-alert",
             "friendly_name": " Vacuum",
             "supported_features": 15292
         },
-        "last_changed": "2026-02-17T23:58:11.430839+00:00",
-        "last_reported": "2026-02-17T23:58:11.430839+00:00",
-        "last_updated": "2026-02-17T23:58:11.430839+00:00",
+        "last_changed": "2026-02-18T00:00:48.438639+00:00",
+        "last_reported": "2026-02-18T00:00:53.413106+00:00",
+        "last_updated": "2026-02-18T00:00:53.413106+00:00",
         "context": {
-            "id": "01KHQ0MFZ6PBRN5RZA27ZKDP9Y",
+            "id": "01KHQ0SE55BACXWBFC20QYNVG6",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.vacuum_state_2",
-        "state": "washing",
+        "state": "drying",
         "attributes": {
-            "value": 9,
+            "value": 8,
             "icon": "mdi:robot-vacuum",
             "friendly_name": "Vacuum State"
         },
-        "last_changed": "2026-02-17T23:58:11.434432+00:00",
-        "last_reported": "2026-02-17T23:58:11.434432+00:00",
-        "last_updated": "2026-02-17T23:58:11.434432+00:00",
+        "last_changed": "2026-02-18T00:00:53.415877+00:00",
+        "last_reported": "2026-02-18T00:00:53.415877+00:00",
+        "last_updated": "2026-02-18T00:00:53.415877+00:00",
         "context": {
-            "id": "01KHQ0MFZANDGETCZETV2ZSGT3",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.vacuum_status_2",
-        "state": "idle",
-        "attributes": {
-            "value": 6,
-            "icon": "mdi:vacuum",
-            "friendly_name": "Vacuum Status"
-        },
-        "last_changed": "2026-02-17T23:58:10.419677+00:00",
-        "last_reported": "2026-02-17T23:58:10.419677+00:00",
-        "last_updated": "2026-02-17T23:58:10.419677+00:00",
-        "context": {
-            "id": "01KHQ0MEZKQXD640TNPF33HKCS",
+            "id": "01KHQ0SE57CS87S4TJ646AV6M8",
             "parent_id": null,
             "user_id": null
         }
@@ -7302,23 +7308,6 @@
         "last_updated": "2026-02-17T23:57:36.267283+00:00",
         "context": {
             "id": "01KHQ0KDMBB4SNFP0F5N528ZA5",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.vacuum_self_wash_base_status_2",
-        "state": "washing",
-        "attributes": {
-            "value": 1,
-            "icon": "mdi:dishwasher",
-            "friendly_name": "Vacuum Self-Wash Base Status"
-        },
-        "last_changed": "2026-02-17T23:58:09.646027+00:00",
-        "last_reported": "2026-02-17T23:58:09.646027+00:00",
-        "last_updated": "2026-02-17T23:58:09.646027+00:00",
-        "context": {
-            "id": "01KHQ0ME7ED15PMBMKQ0DB2XYN",
             "parent_id": null,
             "user_id": null
         }
@@ -7358,19 +7347,21 @@
     },
     {
         "entity_id": "sensor.vacuum_error_2",
-        "state": "no_error",
+        "state": "remove_mop",
         "attributes": {
-            "value": 0,
-            "faults": [],
-            "description": "No error",
-            "icon": "mdi:check-circle-outline",
+            "value": 68,
+            "faults": [
+                68
+            ],
+            "description": "Mopping completed. Please remove and clean the mop in time.",
+            "icon": "mdi:alert-outline",
             "friendly_name": "Vacuum Error"
         },
-        "last_changed": "2026-02-17T23:57:36.284231+00:00",
-        "last_reported": "2026-02-17T23:57:36.284231+00:00",
-        "last_updated": "2026-02-17T23:57:36.284231+00:00",
+        "last_changed": "2026-02-18T00:00:47.473308+00:00",
+        "last_reported": "2026-02-18T00:00:48.444297+00:00",
+        "last_updated": "2026-02-18T00:00:48.444297+00:00",
         "context": {
-            "id": "01KHQ0KDMWQN0PNCS2WX5RVV78",
+            "id": "01KHQ0S99WAXHRTVD9NQ43GM78",
             "parent_id": null,
             "user_id": null
         }
@@ -7877,23 +7868,6 @@
         "last_updated": "2026-02-17T23:57:36.345254+00:00",
         "context": {
             "id": "01KHQ0KDPSWJZP7SE0ET3VNEK4",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "binary_sensor.vacuum_charging_state_2",
-        "state": "off",
-        "attributes": {
-            "device_class": "battery_charging",
-            "icon": "mdi:power-plug",
-            "friendly_name": "Vacuum Charging State"
-        },
-        "last_changed": "2026-02-17T23:57:36.350094+00:00",
-        "last_reported": "2026-02-17T23:57:36.350094+00:00",
-        "last_updated": "2026-02-17T23:57:36.350094+00:00",
-        "context": {
-            "id": "01KHQ0KDPY5H26BGERK14PCCMS",
             "parent_id": null,
             "user_id": null
         }
@@ -9884,18 +9858,18 @@
     },
     {
         "entity_id": "sensor.living_room_eppro_temperature",
-        "state": "19.8732261657715",
+        "state": "19.8652153015137",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
             "device_class": "temperature",
             "friendly_name": "Temperature"
         },
-        "last_changed": "2026-02-18T00:00:05.755707+00:00",
-        "last_reported": "2026-02-18T00:00:05.755707+00:00",
-        "last_updated": "2026-02-18T00:00:05.755707+00:00",
+        "last_changed": "2026-02-18T00:01:35.681946+00:00",
+        "last_reported": "2026-02-18T00:01:35.681946+00:00",
+        "last_updated": "2026-02-18T00:01:35.681946+00:00",
         "context": {
-            "id": "01KHQ0QZKVZYVVZQPS8NQ4PAXH",
+            "id": "01KHQ0TQE1GT6P1WGY9B980J22",
             "parent_id": null,
             "user_id": null
         }
@@ -9920,36 +9894,36 @@
     },
     {
         "entity_id": "sensor.living_room_eppro_target_1_x",
-        "state": "-1965.0",
+        "state": "-1878.0",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "mm",
             "device_class": "distance",
             "friendly_name": "Living Room EPPro Target 1 X"
         },
-        "last_changed": "2026-02-18T00:00:20.494310+00:00",
-        "last_reported": "2026-02-18T00:00:20.494310+00:00",
-        "last_updated": "2026-02-18T00:00:20.494310+00:00",
+        "last_changed": "2026-02-18T00:01:41.335574+00:00",
+        "last_reported": "2026-02-18T00:01:41.335574+00:00",
+        "last_updated": "2026-02-18T00:01:41.335574+00:00",
         "context": {
-            "id": "01KHQ0RE0EA1KZDDR3SE2ZPCY1",
+            "id": "01KHQ0TWYQMVKK2X0807P6K879",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.living_room_eppro_target_1_y",
-        "state": "3342.0",
+        "state": "3286.0",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "mm",
             "device_class": "distance",
             "friendly_name": "Living Room EPPro Target 1 Y"
         },
-        "last_changed": "2026-02-18T00:00:20.495203+00:00",
-        "last_reported": "2026-02-18T00:00:20.495203+00:00",
-        "last_updated": "2026-02-18T00:00:20.495203+00:00",
+        "last_changed": "2026-02-18T00:01:41.336319+00:00",
+        "last_reported": "2026-02-18T00:01:41.336319+00:00",
+        "last_updated": "2026-02-18T00:01:41.336319+00:00",
         "context": {
-            "id": "01KHQ0RE0FNYKNR6F6PGZN2173",
+            "id": "01KHQ0TWYR35ZP1TBT8X32SCMV",
             "parent_id": null,
             "user_id": null
         }
@@ -9963,11 +9937,11 @@
             "device_class": "speed",
             "friendly_name": "Living Room EPPro Target 1 Speed"
         },
-        "last_changed": "2026-02-18T00:00:18.683797+00:00",
-        "last_reported": "2026-02-18T00:00:18.683797+00:00",
-        "last_updated": "2026-02-18T00:00:18.683797+00:00",
+        "last_changed": "2026-02-18T00:01:39.575247+00:00",
+        "last_reported": "2026-02-18T00:01:39.575247+00:00",
+        "last_updated": "2026-02-18T00:01:39.575247+00:00",
         "context": {
-            "id": "01KHQ0RC7V1192HKC6KEQ3AHW0",
+            "id": "01KHQ0TV7QK9QZGF5J1M8D54F4",
             "parent_id": null,
             "user_id": null
         }
@@ -10136,17 +10110,17 @@
     },
     {
         "entity_id": "sensor.living_room_eppro_target_1_angle",
-        "state": "11.4548387527466",
+        "state": "10.7488975524902",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0",
             "friendly_name": "Living Room EPPro Target 1 Angle"
         },
-        "last_changed": "2026-02-18T00:00:20.492004+00:00",
-        "last_reported": "2026-02-18T00:00:20.492004+00:00",
-        "last_updated": "2026-02-18T00:00:20.492004+00:00",
+        "last_changed": "2026-02-18T00:01:41.333611+00:00",
+        "last_reported": "2026-02-18T00:01:41.333611+00:00",
+        "last_updated": "2026-02-18T00:01:41.333611+00:00",
         "context": {
-            "id": "01KHQ0RE0C20KVBGMJA5RBE6FA",
+            "id": "01KHQ0TWYN3Z4G2ZBNM8W58XCQ",
             "parent_id": null,
             "user_id": null
         }
@@ -10187,18 +10161,18 @@
     },
     {
         "entity_id": "sensor.living_room_eppro_target_1_distance",
-        "state": "3877.22827148438",
+        "state": "3785.4189453125",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "mm",
             "device_class": "distance",
             "friendly_name": "Living Room EPPro Target 1 Distance"
         },
-        "last_changed": "2026-02-18T00:00:20.493252+00:00",
-        "last_reported": "2026-02-18T00:00:20.493252+00:00",
-        "last_updated": "2026-02-18T00:00:20.493252+00:00",
+        "last_changed": "2026-02-18T00:01:41.334761+00:00",
+        "last_reported": "2026-02-18T00:01:41.334761+00:00",
+        "last_updated": "2026-02-18T00:01:41.334761+00:00",
         "context": {
-            "id": "01KHQ0RE0DVCEA8KK0K0AY5ZFE",
+            "id": "01KHQ0TWYPTH4RDMPCXKKNX2BT",
             "parent_id": null,
             "user_id": null
         }
@@ -10246,29 +10220,29 @@
             "unit_of_measurement": " ",
             "friendly_name": "Living Room EPPro Zone 1 Target Count"
         },
-        "last_changed": "2026-02-18T00:00:15.889764+00:00",
-        "last_reported": "2026-02-18T00:00:15.889764+00:00",
-        "last_updated": "2026-02-18T00:00:15.889764+00:00",
+        "last_changed": "2026-02-18T00:01:40.302921+00:00",
+        "last_reported": "2026-02-18T00:01:40.302921+00:00",
+        "last_updated": "2026-02-18T00:01:40.302921+00:00",
         "context": {
-            "id": "01KHQ0R9GHZT9QZ4XXSRP4Y65P",
+            "id": "01KHQ0TVYE3SX6VMHJ2Y1V2HZV",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.living_room_eppro_humidity",
-        "state": "26.6464233398438",
+        "state": "26.5838623046875",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "%",
             "device_class": "humidity",
             "friendly_name": "Humidity"
         },
-        "last_changed": "2026-02-18T00:00:05.757467+00:00",
-        "last_reported": "2026-02-18T00:00:05.757467+00:00",
-        "last_updated": "2026-02-18T00:00:05.757467+00:00",
+        "last_changed": "2026-02-18T00:01:35.683120+00:00",
+        "last_reported": "2026-02-18T00:01:35.683120+00:00",
+        "last_updated": "2026-02-18T00:01:35.683120+00:00",
         "context": {
-            "id": "01KHQ0QZKXH1J52TP2BTGS7Z9J",
+            "id": "01KHQ0TQE3CR6PS7YFS38NH0Y4",
             "parent_id": null,
             "user_id": null
         }
@@ -11401,18 +11375,18 @@
     },
     {
         "entity_id": "sensor.kitchen_epone_temperature",
-        "state": "27.3288726806641",
+        "state": "27.4036407470703",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
             "device_class": "temperature",
             "friendly_name": "Temperature"
         },
-        "last_changed": "2026-02-18T00:00:08.152003+00:00",
-        "last_reported": "2026-02-18T00:00:08.152003+00:00",
-        "last_updated": "2026-02-18T00:00:08.152003+00:00",
+        "last_changed": "2026-02-18T00:01:08.156969+00:00",
+        "last_reported": "2026-02-18T00:01:08.156969+00:00",
+        "last_updated": "2026-02-18T00:01:08.156969+00:00",
         "context": {
-            "id": "01KHQ0R1YRVZMBEXXHJGAEAQN8",
+            "id": "01KHQ0SWHW3N2QPVX8ZRVM3YNC",
             "parent_id": null,
             "user_id": null
         }
@@ -11454,18 +11428,18 @@
     },
     {
         "entity_id": "sensor.kitchen_epone_humidity",
-        "state": "34.5394897460938",
+        "state": "34.52880859375",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "%",
             "device_class": "humidity",
             "friendly_name": "Humidity"
         },
-        "last_changed": "2026-02-18T00:00:08.153181+00:00",
-        "last_reported": "2026-02-18T00:00:08.153181+00:00",
-        "last_updated": "2026-02-18T00:00:08.153181+00:00",
+        "last_changed": "2026-02-18T00:01:08.158926+00:00",
+        "last_reported": "2026-02-18T00:01:08.158926+00:00",
+        "last_updated": "2026-02-18T00:01:08.158926+00:00",
         "context": {
-            "id": "01KHQ0R1YSAMVF06WC2YFJ1HHR",
+            "id": "01KHQ0SWHYVBQ42AWN25V0RB72",
             "parent_id": null,
             "user_id": null
         }
@@ -14784,36 +14758,36 @@
     },
     {
         "entity_id": "sensor.hugh_room_plug_blanket_current",
-        "state": "0.01",
+        "state": "0.02",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "A",
             "device_class": "current",
             "friendly_name": "Hugh Room Plug Blanket Current"
         },
-        "last_changed": "2026-02-17T23:57:47.427877+00:00",
-        "last_reported": "2026-02-17T23:57:47.427877+00:00",
-        "last_updated": "2026-02-17T23:57:47.427877+00:00",
+        "last_changed": "2026-02-18T00:00:47.994986+00:00",
+        "last_reported": "2026-02-18T00:00:47.994986+00:00",
+        "last_updated": "2026-02-18T00:00:47.994986+00:00",
         "context": {
-            "id": "01KHQ0KRH39A50N2BF7AZCETD1",
+            "id": "01KHQ0S8VT0FSRMNDQZRSTXKDW",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.hugh_room_plug_blanket_voltage",
-        "state": "234",
+        "state": "235",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "V",
             "device_class": "voltage",
             "friendly_name": "Hugh Room Plug Blanket Voltage"
         },
-        "last_changed": "2026-02-17T23:59:47.786882+00:00",
-        "last_reported": "2026-02-17T23:59:47.786882+00:00",
-        "last_updated": "2026-02-17T23:59:47.786882+00:00",
+        "last_changed": "2026-02-18T00:00:47.993387+00:00",
+        "last_reported": "2026-02-18T00:00:47.993387+00:00",
+        "last_updated": "2026-02-18T00:00:47.993387+00:00",
         "context": {
-            "id": "01KHQ0QE2AW948VDQJG8NAJRK8",
+            "id": "01KHQ0S8VSWYP9SK13X0BJ4GXP",
             "parent_id": null,
             "user_id": null
         }
@@ -15958,17 +15932,17 @@
     },
     {
         "entity_id": "sensor.binary_sensors",
-        "state": "64",
+        "state": "63",
         "attributes": {
             "state_class": "total",
             "icon": "mdi:numeric-10",
             "friendly_name": "Home Assistant Binary sensors"
         },
-        "last_changed": "2026-02-17T23:56:16.907731+00:00",
-        "last_reported": "2026-02-17T23:56:16.907731+00:00",
-        "last_updated": "2026-02-17T23:56:16.907731+00:00",
+        "last_changed": "2026-02-18T00:01:07.108397+00:00",
+        "last_reported": "2026-02-18T00:01:07.108397+00:00",
+        "last_updated": "2026-02-18T00:01:07.108397+00:00",
         "context": {
-            "id": "01KHQ0H04BB6CQQW2XFDQWCT8E",
+            "id": "01KHQ0SVH49MCT9TTHY6G1DFY7",
             "parent_id": null,
             "user_id": null
         }
@@ -16128,17 +16102,17 @@
     },
     {
         "entity_id": "sensor.entities",
-        "state": "966",
+        "state": "962",
         "attributes": {
             "state_class": "total",
             "icon": "mdi:counter",
             "friendly_name": "Home Assistant Entities"
         },
-        "last_changed": "2026-02-18T00:00:06.424896+00:00",
-        "last_reported": "2026-02-18T00:00:06.424896+00:00",
-        "last_updated": "2026-02-18T00:00:06.424896+00:00",
+        "last_changed": "2026-02-18T00:01:07.110768+00:00",
+        "last_reported": "2026-02-18T00:01:07.110768+00:00",
+        "last_updated": "2026-02-18T00:01:07.110768+00:00",
         "context": {
-            "id": "01KHQ0R08RAD7YQQDRNWMQJ1W1",
+            "id": "01KHQ0SVH6E4QZ2M6CGVSM2WW1",
             "parent_id": null,
             "user_id": null
         }
@@ -16502,17 +16476,17 @@
     },
     {
         "entity_id": "sensor.sensors",
-        "state": "334",
+        "state": "331",
         "attributes": {
             "state_class": "total",
             "icon": "mdi:eye",
             "friendly_name": "Home Assistant Sensors"
         },
-        "last_changed": "2026-02-18T00:00:06.428049+00:00",
-        "last_reported": "2026-02-18T00:00:06.428049+00:00",
-        "last_updated": "2026-02-18T00:00:06.428049+00:00",
+        "last_changed": "2026-02-18T00:00:38.313505+00:00",
+        "last_reported": "2026-02-18T00:00:38.313505+00:00",
+        "last_updated": "2026-02-18T00:00:38.313505+00:00",
         "context": {
-            "id": "01KHQ0R08WVEXWDSJ6T582GPMZ",
+            "id": "01KHQ0RZD9AQCAEJKWKM8T904A",
             "parent_id": null,
             "user_id": null
         }
@@ -17008,18 +16982,18 @@
     },
     {
         "entity_id": "sensor.snake_plant_signal_strength",
-        "state": "-74",
+        "state": "-75",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "dBm",
             "device_class": "signal_strength",
             "friendly_name": "Snake Plant Signal Strength"
         },
-        "last_changed": "2026-02-18T00:00:17.882623+00:00",
-        "last_reported": "2026-02-18T00:00:17.882623+00:00",
-        "last_updated": "2026-02-18T00:00:17.882623+00:00",
+        "last_changed": "2026-02-18T00:01:25.927742+00:00",
+        "last_reported": "2026-02-18T00:01:25.927742+00:00",
+        "last_updated": "2026-02-18T00:01:25.927742+00:00",
         "context": {
-            "id": "01KHQ0RBETWMDV92SPD5RE60XK",
+            "id": "01KHQ0TDX7ASTCGKBKRQHZDSBX",
             "parent_id": null,
             "user_id": null
         }
@@ -18433,17 +18407,17 @@
         "state": "on",
         "attributes": {
             "id": "1734951741728",
-            "last_triggered": "2026-02-18T00:00:19.542737+00:00",
+            "last_triggered": "2026-02-18T00:01:40.225444+00:00",
             "mode": "single",
             "current": 1,
             "friendly_name": "Git Backup"
         },
         "last_changed": "2026-02-17T23:55:21.335554+00:00",
-        "last_reported": "2026-02-18T00:00:19.542821+00:00",
-        "last_updated": "2026-02-18T00:00:19.542821+00:00",
+        "last_reported": "2026-02-18T00:01:40.225645+00:00",
+        "last_updated": "2026-02-18T00:01:40.225645+00:00",
         "context": {
-            "id": "01KHQ0RD2P6Z6EDVJ5WCXZS3FT",
-            "parent_id": "01KHQ0RD2GEM0SM1D5CCMYTT0F",
+            "id": "01KHQ0TVW0YKR17MJ7JJXK3PJ3",
+            "parent_id": "01KHQ0TVVTK721W88Z9BEKN6AQ",
             "user_id": null
         }
     },
