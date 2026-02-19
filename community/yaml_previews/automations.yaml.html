@@ -4306,79 +4306,6 @@
         data:
           transition: 2
   mode: single
-- id: &#x27;1771030546538&#x27;
-  alias: Vacuum Apartment (Weekdays)
-  triggers:
-  - at: 09:00:00
-    weekday:
-    - tue
-    - thu
-    trigger: time
-  conditions:
-  - condition: state
-    entity_id: person.hughod90
-    state:
-    - not_home
-  - condition: state
-    entity_id: vacuum.vacuum
-    state:
-    - docked
-  actions:
-  - target:
-      device_id: 755139c516efc71273dd5e77ddcb40d5
-    action: vacuum.start
-    data: {}
-  mode: single
-- id: &#x27;1771032269366&#x27;
-  alias: Vacuum Apartment (Weekend - when I leave)
-  description: &#x27;&#x27;
-  triggers:
-  - entity_id:
-    - person.hughod90
-    from:
-    - home
-    to:
-    - not_home
-    trigger: state
-  conditions:
-  - condition: time
-    weekday:
-    - sat
-    - sun
-  - condition: time
-    after: 08:00:00
-    before: &#x27;18:00:00&#x27;
-  - condition: state
-    entity_id: input_boolean.vacuum_ran_this_weekend
-    state: &#x27;off&#x27;
-  - condition: or
-    conditions:
-    - condition: state
-      entity_id: vacuum.vacuum
-      state:
-      - docked
-    - condition: state
-      entity_id: vacuum.vacuum
-      state:
-      - paused
-  actions:
-  - delay:
-      hours: 0
-      minutes: 10
-      seconds: 0
-      milliseconds: 0
-  - condition: state
-    entity_id: person.hughod90
-    state:
-    - not_home
-  - target:
-      entity_id: input_boolean.vacuum_ran_this_weekend
-    action: input_boolean.turn_on
-  - target:
-      device_id: 755139c516efc71273dd5e77ddcb40d5
-    action: vacuum.start
-    data: {}
-  mode: single
 - id: &#x27;1771032303153&#x27;
   alias: Reset Weekend Vacuum Flag
   description: &#x27;&#x27;
@@ -4416,6 +4343,17 @@
   - target:
       entity_id: input_boolean.vacuum_ran_this_weekend
     action: input_boolean.turn_on
+  mode: single
+- id: &#x27;1771518592384&#x27;
+  alias: Reset Daily Vacuum Flag
+  description: &#x27;&#x27;
+  triggers:
+  - at: 00:01:00
+    trigger: time
+  actions:
+  - target:
+      entity_id: input_boolean.vacuum_ran_today
+    action: input_boolean.turn_off
   mode: single
 </pre>
             </div>
