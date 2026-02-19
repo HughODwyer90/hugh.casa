@@ -236,18 +236,14 @@
   mode: single
 - id: &#x27;1701870398205&#x27;
   alias: Hall Light Control
-  description: Control the landing light based on motion detection, with a disable
-    option.
+  description: Control the landing light based on motion detection.
   triggers:
   - entity_id: binary_sensor.hall_motion_occupancy
     to: &#x27;on&#x27;
     trigger: state
   - entity_id: binary_sensor.hall_motion_occupancy
     to: &#x27;off&#x27;
-    for:
-      seconds: 0
     trigger: state
-  conditions: []
   actions:
   - choose:
     - conditions:
@@ -267,38 +263,36 @@
           below: 130
       sequence:
       - target:
-          entity_id:
-          - light.utility
+          entity_id: light.utility
         data:
           color_temp_kelvin: 2000
           brightness_pct: 100
           transition: 2
         action: light.turn_on
-      - action: scene.turn_on
-        metadata: {}
-        target:
-          entity_id: scene.hall_lights_on
-        data:
+      - data:
+          occupancy_sensor: binary_sensor.hall_motion_occupancy
+          target_light: light.hall_lights
+          on_scene: scene.hallway_on
+          off_scene: scene.hallway_off
+          brightness_pct: 100
           transition: 2
+        action: script.occupancy_lights_with_scene_fallback
     - conditions:
       - condition: state
         entity_id: binary_sensor.hall_motion_occupancy
         state: &#x27;off&#x27;
       sequence:
-      - action: scene.turn_on
-        metadata: {}
-        target:
-          entity_id: scene.hall_lights_off
-        data:
+      - data:
+          occupancy_sensor: binary_sensor.hall_motion_occupancy
+          target_light: light.hall_lights
+          on_scene: scene.hallway_on
+          off_scene: scene.hallway_off
+          brightness_pct: 100
           transition: 2
-      - delay:
-          hours: 0
-          minutes: 2
-          seconds: 0
-          milliseconds: 0
+        action: script.occupancy_lights_with_scene_fallback
+      - delay: 00:02:00
       - target:
-          entity_id:
-          - light.utility
+          entity_id: light.utility
         data:
           transition: 2
         action: light.turn_off
