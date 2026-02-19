@@ -391,12 +391,12 @@
 
     &#x27;
   triggers:
-  - trigger: state
-    entity_id: binary_sensor.living_room_eppro_occupancy
+  - entity_id: binary_sensor.living_room_eppro_occupancy
     id: occupancy
-  - trigger: state
-    entity_id: binary_sensor.living_room_tv_state
+    trigger: state
+  - entity_id: binary_sensor.living_room_tv_state
     id: tv
+    trigger: state
   actions:
   - choose:
     - conditions:
@@ -407,9 +407,9 @@
         entity_id: binary_sensor.living_room_eppro_occupancy
         state: &#x27;on&#x27;
       sequence:
-      - action: switch.turn_on
-        target:
+      - target:
           entity_id: switch.christmas
+        action: switch.turn_on
     - conditions:
       - condition: template
         value_template: &#x27;{{ states(&#x27;&#x27;switch.christmas&#x27;&#x27;) not in [&#x27;&#x27;unknown&#x27;&#x27;,&#x27;&#x27;unavailable&#x27;&#x27;]
@@ -418,9 +418,9 @@
         entity_id: binary_sensor.living_room_eppro_occupancy
         state: &#x27;off&#x27;
       sequence:
-      - action: switch.turn_off
-        target:
+      - target:
           entity_id: switch.christmas
+        action: switch.turn_off
   - choose:
     - conditions:
       - condition: state
@@ -430,18 +430,18 @@
         entity_id: binary_sensor.living_room_tv_state
         state: &#x27;off&#x27;
       sequence:
-      - action: scene.create
-        data:
+      - data:
           scene_id: living_room_lights_last_state
           snapshot_entities:
           - light.living_room_bookshelf
           - light.living_room_floor_lamp
-      - action: input_boolean.turn_on
-        target:
+        action: scene.create
+      - target:
           entity_id: input_boolean.living_room_occupancy_scene_saved
-      - action: scene.turn_on
-        target:
+        action: input_boolean.turn_on
+      - target:
           entity_id: scene.living_room_all_lights_off
+        action: scene.turn_on
     - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_eppro_occupancy
@@ -459,9 +459,9 @@
         entity_id: binary_sensor.living_room_tv_state
         state: &#x27;on&#x27;
       sequence:
-      - action: scene.turn_on
-        target:
+      - target:
           entity_id: scene.dimmers
+        action: scene.turn_on
     - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_eppro_occupancy
@@ -482,9 +482,9 @@
         entity_id: binary_sensor.living_room_tv_state
         state: &#x27;off&#x27;
       sequence:
-      - action: scene.turn_on
-        target:
+      - target:
           entity_id: scene.dimmers
+        action: scene.turn_on
     default: []
   mode: restart
 - id: &#x27;1702941352805&#x27;
