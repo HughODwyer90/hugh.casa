@@ -4382,15 +4382,13 @@
     entity_id: vacuum.vacuum
     state: docked
   actions:
-  - target:
+  - action: dreame_vacuum.vacuum_clean_segment
+    target:
       entity_id: vacuum.vacuum
     data:
-      command: clean_segment
-      params:
-        segments:
-        - 1
-        - 6
-    action: vacuum.send_command
+      segments:
+      - 1
+      - 6
   mode: single
 - id: &#x27;1771519203894&#x27;
   alias: Vacuum Apartment (Wednesday - Full Apartment)
