@@ -4460,3 +4460,19 @@
       entity_id: input_boolean.vacuum_ran_this_weekend
     action: input_boolean.turn_on
   mode: single
+- id: '1771530420231'
+  alias: Kitchen Occupancy
+  description: ''
+  triggers:
+  - entity_id: binary_sensor.kitchen_epone_occupancy
+    trigger: state
+  actions:
+  - data:
+      occupancy_sensor: binary_sensor.kitchen_epone_occupancy
+      target_light: light.kitchen_lights
+      on_scene: scene.kitchen_lights_on
+      off_scene: scene.kitchen_lights_off
+      brightness_pct: 100
+      transition: 2
+    action: script.occupancy_lights_with_scene_fallback
+  mode: restart
