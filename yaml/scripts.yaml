@@ -747,3 +747,33 @@ recast_to_stereo_with_media:
       media_id: '{{ media_id }}'
       enqueue: play
       radio_mode: true
+occupancy_lights_with_scene_fallback:
+  sequence:
+  - choose:
+    - conditions: '{{ is_state(occupancy_sensor, ''on'') }}'
+      sequence:
+      - target:
+          entity_id: '{{ target_light }}'
+        data:
+          brightness_pct: '{{ brightness_pct | default(70) }}'
+          transition: '{{ transition | default(2) }}'
+        action: light.turn_on
+      - delay:
+          seconds: '{{ (transition | default(2)) | float + 0.2 }}'
+      - target:
+          entity_id: '{{ on_scene }}'
+        action: scene.turn_on
+    - conditions: '{{ is_state(occupancy_sensor, ''off'') }}'
+      sequence:
+      - target:
+          entity_id: '{{ target_light }}'
+        data:
+          transition: '{{ transition | default(2) }}'
+        action: light.turn_off
+      - delay:
+          seconds: '{{ (transition | default(2)) | float + 0.2 }}'
+      - target:
+          entity_id: '{{ off_scene }}'
+        action: scene.turn_on
+  alias: Occupancy lights with scene fallback
+  description: ''
