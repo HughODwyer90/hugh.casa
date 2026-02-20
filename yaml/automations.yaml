@@ -4282,38 +4282,39 @@
     action: input_boolean.turn_off
   mode: single
 - id: '1771519156286'
-  alias: Vacuum Apartment (Nightly – Kitchen + Living Room)
-  description: True vacuum-only using Dreame mop type
+  alias: Vacuum Kitchen (Vacuum Only)
   triggers:
-  - trigger: time
-    at: 01:00:00
+  - at: '22:30:00'
+    trigger: time
   conditions:
   - condition: state
     entity_id: person.hughod90
     state: home
   - condition: state
-    entity_id: vacuum.vacuum
+    entity_id: vacuum.vacuum_2
     state: docked
-  - condition: state
-    entity_id: input_boolean.vacuum_ran_today
-    state: 'off'
   actions:
-  - action: dreame_vacuum.vacuum_set_mop_type
-    target:
-      entity_id: vacuum.vacuum
+  - target:
+      entity_id: select.vacuum_cleangenius
     data:
-      mop_type: 0
-  - action: dreame_vacuum.vacuum_clean_segment
-    target:
-      entity_id: vacuum.vacuum
+      option: 'Off'
+    action: select.select_option
+  - target:
+      entity_id: select.vacuum_cleaning_mode
+    data:
+      option: Sweeping
+    action: select.select_option
+  - target:
+      entity_id: vacuum.vacuum_2
+    data:
+      fan_speed: Standard
+    action: vacuum.set_fan_speed
+  - target:
+      entity_id: vacuum.vacuum_2
     data:
       segments:
       - 1
-      - 2
-      - 6
-  - action: input_boolean.turn_on
-    target:
-      entity_id: input_boolean.vacuum_ran_today
+    action: vacuum.clean_segment
   mode: single
 - id: '1771519203894'
   alias: Vacuum Apartment (Wednesday - Full Apartment)
