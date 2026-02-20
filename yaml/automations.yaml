@@ -4281,44 +4281,6 @@
       entity_id: input_boolean.vacuum_ran_today
     action: input_boolean.turn_off
   mode: single
-- id: '1771518787446'
-  alias: Vacuum Apartment – Manual Run Counts
-  triggers:
-  - trigger: state
-    entity_id: vacuum.vacuum
-    to: cleaning
-  conditions:
-  - condition: state
-    entity_id: person.hughod90
-    state: not_home
-  actions:
-  - choose:
-    - conditions:
-      - condition: time
-        weekday:
-        - wed
-      - condition: state
-        entity_id: input_boolean.vacuum_ran_today
-        state: 'off'
-      sequence:
-      - action: input_boolean.turn_on
-        target:
-          entity_id: input_boolean.vacuum_ran_today
-    - conditions:
-      - condition: time
-        weekday:
-        - sat
-        - sun
-      - condition: state
-        entity_id: input_boolean.vacuum_ran_this_weekend
-        state: 'off'
-      sequence:
-      - action: input_boolean.turn_on
-        target:
-          entity_id:
-          - input_boolean.vacuum_ran_today
-          - input_boolean.vacuum_ran_this_weekend
-  mode: single
 - id: '1771519156286'
   alias: Vacuum Apartment (Nightly – Kitchen + Living Room)
   description: True vacuum-only using Dreame mop type
