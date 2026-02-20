@@ -434,18 +434,10 @@
         entity_id: binary_sensor.living_room_tv_state
         state: &#x27;off&#x27;
       sequence:
-      - action: scene.create
-        data:
-          scene_id: living_room_lights_last_state
-          snapshot_entities:
-          - light.living_room_bookshelf
-          - light.living_room_floor_lamp
-      - action: input_boolean.turn_on
-        target:
-          entity_id: input_boolean.living_room_occupancy_scene_saved
       - action: scene.turn_on
         target:
-          entity_id: scene.living_room_all_lights_off
+          entity_id: scene.living_room_lights_off
+        data: {}
     - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_eppro_occupancy
@@ -465,7 +457,8 @@
       sequence:
       - action: scene.turn_on
         target:
-          entity_id: scene.dimmers
+          entity_id: scene.living_room_lights_dimmers
+        data: {}
     - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_eppro_occupancy
@@ -490,7 +483,8 @@
       sequence:
       - action: scene.turn_on
         target:
-          entity_id: scene.dimmers
+          entity_id: scene.living_room_lights_on
+        data: {}
     default: []
   mode: restart
 - id: &#x27;1702941352805&#x27;
@@ -4295,7 +4289,7 @@
   alias: Reset Daily Vacuum Flag
   description: &#x27;&#x27;
   triggers:
-  - at: 00:01:00
+  - at: 01:02:00
     trigger: time
   actions:
   - target:
@@ -4305,9 +4299,9 @@
 - id: &#x27;1771518787446&#x27;
   alias: Vacuum Apartment – Manual Run Counts
   triggers:
-  - entity_id: vacuum.vacuum
+  - trigger: state
+    entity_id: vacuum.vacuum
     to: cleaning
-    trigger: state
   conditions:
   - condition: state
     entity_id: person.hughod90
@@ -4322,9 +4316,9 @@
         entity_id: input_boolean.vacuum_ran_today
         state: &#x27;off&#x27;
       sequence:
-      - target:
+      - action: input_boolean.turn_on
+        target:
           entity_id: input_boolean.vacuum_ran_today
-        action: input_boolean.turn_on
     - conditions:
       - condition: time
         weekday:
@@ -4334,16 +4328,18 @@
         entity_id: input_boolean.vacuum_ran_this_weekend
         state: &#x27;off&#x27;
       sequence:
-      - target:
-          entity_id: input_boolean.vacuum_ran_this_weekend
-        action: input_boolean.turn_on
+      - action: input_boolean.turn_on
+        target:
+          entity_id:
+          - input_boolean.vacuum_ran_today
+          - input_boolean.vacuum_ran_this_weekend
   mode: single
 - id: &#x27;1771519156286&#x27;
-  alias: Vacuum Apartment (Nightly - Kitchen + Living Room)
-  description: &#x27;&#x27;
+  alias: Vacuum Apartment (Nightly – Kitchen + Living Room)
+  description: True vacuum-only using Dreame mop type
   triggers:
-  - at: 01:00:00
-    trigger: time
+  - trigger: time
+    at: 01:00:00
   conditions:
   - condition: state
     entity_id: person.hughod90
@@ -4351,7 +4347,15 @@
   - condition: state
     entity_id: vacuum.vacuum
     state: docked
+  - condition: state
+    entity_id: input_boolean.vacuum_ran_today
+    state: &#x27;off&#x27;
   actions:
+  - action: dreame_vacuum.vacuum_set_mop_type
+    target:
+      entity_id: vacuum.vacuum
+    data:
+      mop_type: 0
   - action: dreame_vacuum.vacuum_clean_segment
     target:
       entity_id: vacuum.vacuum
@@ -4360,19 +4364,22 @@
       - 1
       - 2
       - 6
+  - action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.vacuum_ran_today
   mode: single
 - id: &#x27;1771519203894&#x27;
   alias: Vacuum Apartment (Wednesday - Full Apartment)
   description: &#x27;&#x27;
   triggers:
-  - at: 09:00:00
+  - trigger: time
+    at: 09:00:00
     id: wed_time
-    trigger: time
-  - entity_id: person.hughod90
+  - trigger: state
+    entity_id: person.hughod90
     from: home
     to: not_home
     id: leave
-    trigger: state
   conditions:
   - condition: time
     weekday:
@@ -4399,21 +4406,26 @@
       - condition: state
         entity_id: person.hughod90
         state: not_home
-  - target:
+  - action: dreame_vacuum.vacuum_set_mop_type
+    target:
       entity_id: vacuum.vacuum
-    action: vacuum.start
-  - target:
+    data:
+      mop_type: 0
+  - action: vacuum.start
+    target:
+      entity_id: vacuum.vacuum
+  - action: input_boolean.turn_on
+    target:
       entity_id: input_boolean.vacuum_ran_today
-    action: input_boolean.turn_on
   mode: single
 - id: &#x27;1771519238103&#x27;
   alias: Vacuum Apartment (Weekend - when I leave)
-  description: &#x27;&#x27;
+  description: Full apartment – Vac &amp; Mop (single pass)
   triggers:
-  - entity_id: person.hughod90
+  - trigger: state
+    entity_id: person.hughod90
     from: home
     to: not_home
-    trigger: state
   conditions:
   - condition: time
     weekday:
@@ -4422,6 +4434,9 @@
   - condition: time
     after: 08:00:00
     before: &#x27;18:00:00&#x27;
+  - condition: state
+    entity_id: input_boolean.vacuum_ran_today
+    state: &#x27;off&#x27;
   - condition: state
     entity_id: input_boolean.vacuum_ran_this_weekend
     state: &#x27;off&#x27;
@@ -4433,12 +4448,20 @@
   - condition: state
     entity_id: person.hughod90
     state: not_home
-  - target:
+  - action: dreame_vacuum.vacuum_set_mop_type
+    target:
       entity_id: vacuum.vacuum
-    action: vacuum.start
-  - target:
+    data:
+      mop_type: 1
+  - action: vacuum.start
+    target:
+      entity_id: vacuum.vacuum
+  - action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.vacuum_ran_today
+  - action: input_boolean.turn_on
+    target:
       entity_id: input_boolean.vacuum_ran_this_weekend
-    action: input_boolean.turn_on
   mode: single
 - id: &#x27;1771530420231&#x27;
   alias: Kitchen Occupancy
@@ -4456,6 +4479,23 @@
       transition: 1
     action: script.occupancy_lights_with_scene_fallback
   mode: restart
+- id: &#x27;1771596928836&#x27;
+  alias: Vacuum (Reset mop type to Vac &amp; Mop after docking)
+  description: After the robot has been docked for a while, reset mop type to single-pass
+    Vac &amp; Mop so the next manual/app run behaves normally.
+  triggers:
+  - trigger: state
+    entity_id: vacuum.vacuum
+    to: docked
+    for: 00:10:00
+  conditions: []
+  actions:
+  - action: dreame_vacuum.vacuum_set_mop_type
+    target:
+      entity_id: vacuum.vacuum
+    data:
+      mop_type: 1
+  mode: single
 </pre>
             </div>
             <script>
