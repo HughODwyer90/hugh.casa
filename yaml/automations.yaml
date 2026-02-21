@@ -4118,9 +4118,10 @@
   mode: restart
 - id: '1770554582964'
   alias: Living Room Curtains – Unified Control
-  description: "Priority:\n 1) Manual button toggle\n 2) TV on -> close\n 3) Baseline
-    by sun elevation:\n    - bright enough -> open (TV off)\n    - properly dark ->
-    close\n"
+  description: "Priority:\n 1) Manual button toggle (sets override for 2h)\n 2) TV
+    on -> close (unless override)\n 3) TV off + bright -> open (unless override)\n
+    4) Bright threshold crossing -> open (TV off, unless override)\n 5) Dark threshold
+    crossing -> close (unless override)\n"
   triggers:
   - domain: mqtt
     device_id: 9f98b882a412e95e16f1addf1f9e8e27
@@ -4132,21 +4133,39 @@
     entity_id: binary_sensor.living_room_tv_state
     id: tv
   - trigger: numeric_state
-    entity_id:
-    - sensor.sun_elevation
+    entity_id: sensor.sun_elevation
     above: 0
     id: bright
   - trigger: numeric_state
-    entity_id:
-    - sensor.sun_elevation
+    entity_id: sensor.sun_elevation
     below: -9
     id: dark
+  - trigger: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.living_room_curtains_manual_override
+    id: override_finished
   actions:
   - choose:
     - conditions:
       - condition: trigger
+        id: override_finished
+      sequence:
+      - action: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.living_room_curtains_manual_override
+    - conditions:
+      - condition: trigger
         id: button
       sequence:
+      - action: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.living_room_curtains_manual_override
+      - action: timer.start
+        target:
+          entity_id: timer.living_room_curtains_manual_override
+        data:
+          duration: 02:00:00
       - choose:
         - conditions:
           - condition: numeric_state
@@ -4172,6 +4191,11 @@
             entity_id: scene.curtains_close
     - conditions:
       - condition: state
+        entity_id: input_boolean.living_room_curtains_manual_override
+        state: 'off'
+      - condition: trigger
+        id: tv
+      - condition: state
         entity_id: binary_sensor.living_room_tv_state
         state: 'on'
       sequence:
@@ -4179,6 +4203,25 @@
         target:
           entity_id: scene.curtains_close
     - conditions:
+      - condition: state
+        entity_id: input_boolean.living_room_curtains_manual_override
+        state: 'off'
+      - condition: trigger
+        id: tv
+      - condition: state
+        entity_id: binary_sensor.living_room_tv_state
+        state: 'off'
+      - condition: numeric_state
+        entity_id: sensor.sun_elevation
+        above: 0
+      sequence:
+      - action: scene.turn_on
+        target:
+          entity_id: scene.curtains_open
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.living_room_curtains_manual_override
+        state: 'off'
       - condition: trigger
         id: bright
       - condition: state
@@ -4189,6 +4232,9 @@
         target:
           entity_id: scene.curtains_open
     - conditions:
+      - condition: state
+        entity_id: input_boolean.living_room_curtains_manual_override
+        state: 'off'
       - condition: trigger
         id: dark
       sequence:
