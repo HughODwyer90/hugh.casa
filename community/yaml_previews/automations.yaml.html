@@ -4274,12 +4274,11 @@
   alias: Reset Weekend Vacuum Flag
   description: &#x27;&#x27;
   triggers:
-  - at: &#x27;23:55:00&#x27;
+  - at: 01:02:00
     trigger: time
-  conditions:
-  - condition: time
     weekday:
-    - fri
+    - sat
+  conditions: []
   actions:
   - target:
       entity_id: input_boolean.vacuum_ran_this_weekend
@@ -4297,39 +4296,71 @@
     action: input_boolean.turn_off
   mode: single
 - id: &#x27;1771519156286&#x27;
-  alias: Vacuum Kitchen (Vacuum Only)
+  alias: Vacuum Kitchen and Living (Vacuum Only)
   triggers:
-  - at: &#x27;22:30:00&#x27;
-    trigger: time
+  - trigger: time
+    at: 00:01:00
   conditions:
   - condition: state
     entity_id: person.hughod90
     state: home
   - condition: state
-    entity_id: vacuum.vacuum_2
+    entity_id: vacuum.vacuum
     state: docked
   actions:
-  - target:
-      entity_id: select.vacuum_cleangenius
-    data:
-      option: &#x27;Off&#x27;
-    action: select.select_option
-  - target:
-      entity_id: select.vacuum_cleaning_mode
-    data:
-      option: Sweeping
-    action: select.select_option
-  - target:
-      entity_id: vacuum.vacuum_2
-    data:
-      fan_speed: Standard
-    action: vacuum.set_fan_speed
-  - target:
-      entity_id: vacuum.vacuum_2
+  - if:
+    - condition: template
+      value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleangenius&#x27;&#x27;) != &#x27;&#x27;off&#x27;&#x27; }}&#x27;
+    then:
+    - action: select.select_option
+      target:
+        entity_id: select.vacuum_cleangenius
+      data:
+        option: &#x27;off&#x27;
+    - delay: 00:00:02
+    - if:
+      - condition: template
+        value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleangenius&#x27;&#x27;) != &#x27;&#x27;off&#x27;&#x27; }}&#x27;
+      then:
+      - action: select.select_option
+        target:
+          entity_id: select.vacuum_cleangenius
+        data:
+          option: &#x27;off&#x27;
+      - delay: 00:00:02
+  - if:
+    - condition: template
+      value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleaning_mode&#x27;&#x27;) != &#x27;&#x27;sweeping&#x27;&#x27;
+        }}&#x27;
+    then:
+    - action: select.select_option
+      target:
+        entity_id: select.vacuum_cleaning_mode
+      data:
+        option: sweeping
+    - delay: 00:00:02
+    - if:
+      - condition: template
+        value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleaning_mode&#x27;&#x27;) != &#x27;&#x27;sweeping&#x27;&#x27;
+          }}&#x27;
+      then:
+      - action: select.select_option
+        target:
+          entity_id: select.vacuum_cleaning_mode
+        data:
+          option: sweeping
+      - delay: 00:00:02
+  - condition: template
+    value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleangenius&#x27;&#x27;) == &#x27;&#x27;off&#x27;&#x27; }}&#x27;
+  - condition: template
+    value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleaning_mode&#x27;&#x27;) == &#x27;&#x27;sweeping&#x27;&#x27; }}&#x27;
+  - action: dreame_vacuum.vacuum_clean_segment
+    target:
+      entity_id: vacuum.vacuum
     data:
       segments:
       - 1
-    action: vacuum.clean_segment
+      - 6
   mode: single
 - id: &#x27;1771519203894&#x27;
   alias: Vacuum Apartment (Wednesday - Full Apartment)
@@ -4348,7 +4379,7 @@
     weekday:
     - wed
   - condition: time
-    after: 09:00:00
+    after: 07:00:00
     before: &#x27;18:00:00&#x27;
   - condition: state
     entity_id: input_boolean.vacuum_ran_today
@@ -4369,11 +4400,51 @@
       - condition: state
         entity_id: person.hughod90
         state: not_home
-  - action: dreame_vacuum.vacuum_set_mop_type
-    target:
-      entity_id: vacuum.vacuum
-    data:
-      mop_type: 0
+  - if:
+    - condition: template
+      value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleangenius&#x27;&#x27;) != &#x27;&#x27;off&#x27;&#x27; }}&#x27;
+    then:
+    - action: select.select_option
+      target:
+        entity_id: select.vacuum_cleangenius
+      data:
+        option: &#x27;off&#x27;
+    - delay: 00:00:02
+    - if:
+      - condition: template
+        value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleangenius&#x27;&#x27;) != &#x27;&#x27;off&#x27;&#x27; }}&#x27;
+      then:
+      - action: select.select_option
+        target:
+          entity_id: select.vacuum_cleangenius
+        data:
+          option: &#x27;off&#x27;
+      - delay: 00:00:02
+  - if:
+    - condition: template
+      value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleaning_mode&#x27;&#x27;) != &#x27;&#x27;sweeping&#x27;&#x27;
+        }}&#x27;
+    then:
+    - action: select.select_option
+      target:
+        entity_id: select.vacuum_cleaning_mode
+      data:
+        option: sweeping
+    - delay: 00:00:02
+    - if:
+      - condition: template
+        value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleaning_mode&#x27;&#x27;) != &#x27;&#x27;sweeping&#x27;&#x27;
+          }}&#x27;
+      then:
+      - action: select.select_option
+        target:
+          entity_id: select.vacuum_cleaning_mode
+        data:
+          option: sweeping
+      - delay: 00:00:02
+  - condition: template
+    value_template: &quot;{{ states(&#x27;select.vacuum_cleangenius&#x27;) == &#x27;off&#x27;\n   and states(&#x27;select.vacuum_cleaning_mode&#x27;)
+      == &#x27;sweeping&#x27; }}\n&quot;
   - action: vacuum.start
     target:
       entity_id: vacuum.vacuum
@@ -4390,13 +4461,6 @@
     from: home
     to: not_home
   conditions:
-  - condition: time
-    weekday:
-    - sat
-    - sun
-  - condition: time
-    after: 08:00:00
-    before: &#x27;18:00:00&#x27;
   - condition: state
     entity_id: input_boolean.vacuum_ran_today
     state: &#x27;off&#x27;
@@ -4411,11 +4475,57 @@
   - condition: state
     entity_id: person.hughod90
     state: not_home
-  - action: dreame_vacuum.vacuum_set_mop_type
-    target:
-      entity_id: vacuum.vacuum
-    data:
-      mop_type: 1
+  - if:
+    - condition: template
+      value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleangenius&#x27;&#x27;) != &#x27;&#x27;routine_cleaning&#x27;&#x27;
+        }}&#x27;
+    then:
+    - action: select.select_option
+      target:
+        entity_id: select.vacuum_cleangenius
+      data:
+        option: routine_cleaning
+    - delay: 00:00:02
+    - if:
+      - condition: template
+        value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleangenius&#x27;&#x27;) != &#x27;&#x27;routine_cleaning&#x27;&#x27;
+          }}&#x27;
+      then:
+      - action: select.select_option
+        target:
+          entity_id: select.vacuum_cleangenius
+        data:
+          option: routine_cleaning
+      - delay: 00:00:02
+  - condition: template
+    value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleangenius&#x27;&#x27;) == &#x27;&#x27;routine_cleaning&#x27;&#x27;
+      }}&#x27;
+  - if:
+    - condition: template
+      value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleangenius_mode&#x27;&#x27;) != &#x27;&#x27;vacuum_and_mop&#x27;&#x27;
+        }}&#x27;
+    then:
+    - action: select.select_option
+      target:
+        entity_id: select.vacuum_cleangenius_mode
+      data:
+        option: vacuum_and_mop
+    - delay: 00:00:02
+    - if:
+      - condition: template
+        value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleangenius_mode&#x27;&#x27;) != &#x27;&#x27;vacuum_and_mop&#x27;&#x27;
+          }}&#x27;
+      then:
+      - action: select.select_option
+        target:
+          entity_id: select.vacuum_cleangenius_mode
+        data:
+          option: vacuum_and_mop
+      - delay: 00:00:02
+  - condition: template
+    value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleangenius_mode&#x27;&#x27;) == &#x27;&#x27;vacuum_and_mop&#x27;&#x27;
+      }}&#x27;
+  - delay: 00:00:02
   - action: vacuum.start
     target:
       entity_id: vacuum.vacuum
@@ -4443,9 +4553,11 @@
     action: script.occupancy_lights_with_scene_fallback
   mode: restart
 - id: &#x27;1771596928836&#x27;
-  alias: Vacuum (Reset mop type to Vac &amp; Mop after docking)
-  description: After the robot has been docked for a while, reset mop type to single-pass
+  alias: Vacuum (Reset mode to Vac &amp; Mop after docking)
+  description: &#x27;After the robot has been docked for a while, reset to single-pass
     Vac &amp; Mop so the next manual/app run behaves normally.
+
+    &#x27;
   triggers:
   - trigger: state
     entity_id: vacuum.vacuum
@@ -4453,11 +4565,53 @@
     for: 00:10:00
   conditions: []
   actions:
-  - action: dreame_vacuum.vacuum_set_mop_type
-    target:
-      entity_id: vacuum.vacuum
-    data:
-      mop_type: 1
+  - if:
+    - condition: template
+      value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleangenius&#x27;&#x27;) != &#x27;&#x27;routine_cleaning&#x27;&#x27;
+        }}&#x27;
+    then:
+    - action: select.select_option
+      target:
+        entity_id: select.vacuum_cleangenius
+      data:
+        option: routine_cleaning
+    - delay: 00:00:02
+    - if:
+      - condition: template
+        value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleangenius&#x27;&#x27;) != &#x27;&#x27;routine_cleaning&#x27;&#x27;
+          }}&#x27;
+      then:
+      - action: select.select_option
+        target:
+          entity_id: select.vacuum_cleangenius
+        data:
+          option: routine_cleaning
+      - delay: 00:00:02
+  - condition: template
+    value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleangenius&#x27;&#x27;) == &#x27;&#x27;routine_cleaning&#x27;&#x27;
+      }}&#x27;
+  - if:
+    - condition: template
+      value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleangenius_mode&#x27;&#x27;) != &#x27;&#x27;vacuum_and_mop&#x27;&#x27;
+        }}&#x27;
+    then:
+    - action: select.select_option
+      target:
+        entity_id: select.vacuum_cleangenius_mode
+      data:
+        option: vacuum_and_mop
+    - delay: 00:00:02
+    - if:
+      - condition: template
+        value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleangenius_mode&#x27;&#x27;) != &#x27;&#x27;vacuum_and_mop&#x27;&#x27;
+          }}&#x27;
+      then:
+      - action: select.select_option
+        target:
+          entity_id: select.vacuum_cleangenius_mode
+        data:
+          option: vacuum_and_mop
+      - delay: 00:00:02
   mode: single
 </pre>
             </div>
