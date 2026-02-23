@@ -1923,39 +1923,48 @@
         action: input_boolean.turn_off
   mode: restart
 - id: '1720953328203'
-  alias: Redirect Display Audio to Stereo Group
-  description: Redirect audio to hugh_room_stereo if it plays only on the display
+  alias: Redirect Cast to Group (best effort)
   triggers:
-  - trigger: state
-    entity_id: media_player.master_bedroom_display_g
-    attribute: state
+  - entity_id:
+    - media_player.hugh_room_speaker_g
+    - media_player.hugh_room_speaker_2_g
+    - media_player.master_bedroom_display_g
     to: playing
+    trigger: state
   conditions:
   - condition: template
-    value_template: '{% set entities = [ ''media_player.hugh_room_speaker_g'', ''media_player.hugh_room_speaker_2_g'',
-      ''media_player.master_bedroom_display_g''] %} {% set playing_entities = entities
-      | select(''search'', ''playing'') | list %} {{ playing_entities | length ==
-      1 and ''media_player.master_bedroom_display_g'' in playing_entities }}
-
-      '
+    value_template: "{% set trio = [\n  'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g',\n
+      \ 'media_player.master_bedroom_display_g'\n] %} {{ (trio | select('is_state','playing')
+      | list) | length == 1 }}\n"
   actions:
-  - action: media_player.media_stop
-    data_template:
-      entity_id: media_player.master_bedroom_display_g
-  - delay: 00:00:03
-  - action: media_player.play_media
-    data_template:
-      entity_id: media_player.hugh_room_speaker_g
-      media_content_id: '{{ state_attr(''media_player.master_bedroom_display_g'',
-        ''media_content_id'') }}'
-      media_content_type: '{{ state_attr(''media_player.master_bedroom_display_g'',
-        ''media_content_type'') }}'
-  - delay: 00:00:05
-  - action: media_player.volume_set
-    data_template:
-      entity_id: media_player.hugh_room_speaker_g
-      volume_level: '{{ state_attr(''media_player.master_bedroom_display_g'', ''volume_level'')
-        }}'
+  - variables:
+      src: '{{ trigger.entity_id }}'
+      mcid: '{{ state_attr(trigger.entity_id, ''media_content_id'') }}'
+      mctype: '{{ state_attr(trigger.entity_id, ''media_content_type'') }}'
+      vol: '{{ state_attr(trigger.entity_id, ''volume_level'') | default(none) }}'
+  - target:
+      entity_id: '{{ src }}'
+    action: media_player.media_stop
+  - delay: 00:00:02
+  - target:
+      entity_id: media_player.YOUR_GOOGLE_GROUP_ENTITY
+    data:
+      media:
+        media_content_id: '{{ mcid }}'
+        media_content_type: '{{ mctype }}'
+        metadata: {}
+    action: media_player.play_media
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ vol is not none }}'
+      sequence:
+      - target:
+          entity_id: media_player.YOUR_GOOGLE_GROUP_ENTITY
+        data:
+          volume_level: '{{ vol }}'
+        action: media_player.volume_set
+  mode: single
 - id: '1721393948523'
   alias: Initialize Previous Odometer and Fuel Quantity
   trigger:
