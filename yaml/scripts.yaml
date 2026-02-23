@@ -38,62 +38,18 @@ execute_alarm_actions:
   - delay:
       minutes: 5
   - action: music_assistant.play_media
+    target:
+      entity_id: media_player.hugh_speaker_group_2
     data:
       media_type: radio
       media_id: Today FM
-    target:
-      device_id:
-      - 0af7b3330b6e115c841a5f230c045a85
-  - wait_template: '{{ is_state(''media_player.master_bedroom_display_g'', ''playing'')
-      }}'
-    timeout: 00:00:08
-    continue_on_timeout: true
-  - choose:
-    - conditions:
-      - condition: not
-        conditions:
-        - condition: state
-          entity_id: media_player.master_bedroom_display_g
-          state:
-          - playing
-      sequence:
-      - action: music_assistant.play_media
-        data:
-          media_type: radio
-          media_id: Today FM
-        target:
-          device_id:
-          - 0af7b3330b6e115c841a5f230c045a85
-      - wait_template: '{{ is_state(''media_player.master_bedroom_display_g'', ''playing'')
-          }}'
-        timeout: 00:00:05
-        continue_on_timeout: true
-      - choose:
-        - conditions:
-          - condition: not
-            conditions:
-            - condition: state
-              entity_id: media_player.master_bedroom_display_g
-              state:
-              - playing
-          sequence:
-          - action: media_player.play_media
-            data:
-              media:
-                media_content_id: media-source://radio_browser/d0a1da9f-46b3-11e9-aa55-52543be04c81
-                media_content_type: audio/mpeg
-                metadata: {}
-            target:
-              entity_id:
-              - media_player.master_bedroom_display_g
+      enqueue: play
+      radio_mode: false
   - action: media_player.volume_set
     data:
       volume_level: 0.2
     target:
-      entity_id:
-      - media_player.master_bedroom_display_g
-      - media_player.hugh_room_speaker_g
-      - media_player.hugh_room_speaker_2_g
+      entity_id: media_player.hugh_speaker_group_2
   - choose:
     - conditions:
       - condition: state
@@ -369,35 +325,17 @@ play_spotify_playlist:
   mode: single
   description: ''
 play_spotify_playlist_2:
+  alias: Play Spotify Playlist Radio
+  mode: single
   sequence:
   - action: music_assistant.play_media
-    metadata: {}
+    target:
+      device_id: b8abe9e19c1fa21d3de27b89f6dddc4c
     data:
       media_type: playlist
       enqueue: play
       media_id: spotify:playlist:7Gtodbwg48bzliqflc1BE9
-    enabled: true
-    target:
-      device_id: 0af7b3330b6e115c841a5f230c045a85
-  - delay: '00:00:00.4'
-  - action: media_player.shuffle_set
-    metadata: {}
-    data:
-      shuffle: true
-    target:
-      device_id: 0af7b3330b6e115c841a5f230c045a85
-  - action: media_player.media_next_track
-    metadata: {}
-    data: {}
-    target:
-      device_id: 0af7b3330b6e115c841a5f230c045a85
-  - action: media_player.media_next_track
-    metadata: {}
-    data: {}
-    target:
-      device_id: 0af7b3330b6e115c841a5f230c045a85
-  alias: Play Spotify Playlist (Shuffled)
-  mode: single
+      radio_mode: true
 ai_plant_message_direct:
   alias: AI Plant Message Direct
   mode: single
@@ -737,17 +675,16 @@ recast_to_stereo_with_media:
   mode: single
   fields:
     media_id:
-      description: Raw media ID from the single player
+      description: Spotify URI/track id
   sequence:
-  - action: music_assistant.play_media
-    target:
-      device_id:
-      - b8abe9e19c1fa21d3de27b89f6dddc4c
+  - target:
+      entity_id: media_player.hugh_speaker_group_2
     data:
       media_type: track
       media_id: '{{ media_id }}'
       enqueue: play
-      radio_mode: true
+      radio_mode: false
+    action: music_assistant.play_media
 occupancy_lights_with_scene_fallback:
   sequence:
   - choose:
