@@ -1938,39 +1938,48 @@
         action: input_boolean.turn_off
   mode: restart
 - id: &#x27;1720953328203&#x27;
-  alias: Redirect Display Audio to Stereo Group
-  description: Redirect audio to hugh_room_stereo if it plays only on the display
+  alias: Redirect Cast to Group (best effort)
   triggers:
-  - trigger: state
-    entity_id: media_player.master_bedroom_display_g
-    attribute: state
+  - entity_id:
+    - media_player.hugh_room_speaker_g
+    - media_player.hugh_room_speaker_2_g
+    - media_player.master_bedroom_display_g
     to: playing
+    trigger: state
   conditions:
   - condition: template
-    value_template: &#x27;{% set entities = [ &#x27;&#x27;media_player.hugh_room_speaker_g&#x27;&#x27;, &#x27;&#x27;media_player.hugh_room_speaker_2_g&#x27;&#x27;,
-      &#x27;&#x27;media_player.master_bedroom_display_g&#x27;&#x27;] %} {% set playing_entities = entities
-      | select(&#x27;&#x27;search&#x27;&#x27;, &#x27;&#x27;playing&#x27;&#x27;) | list %} {{ playing_entities | length ==
-      1 and &#x27;&#x27;media_player.master_bedroom_display_g&#x27;&#x27; in playing_entities }}
-
-      &#x27;
+    value_template: &quot;{% set trio = [\n  &#x27;media_player.hugh_room_speaker_g&#x27;,\n  &#x27;media_player.hugh_room_speaker_2_g&#x27;,\n
+      \ &#x27;media_player.master_bedroom_display_g&#x27;\n] %} {{ (trio | select(&#x27;is_state&#x27;,&#x27;playing&#x27;)
+      | list) | length == 1 }}\n&quot;
   actions:
-  - action: media_player.media_stop
-    data_template:
-      entity_id: media_player.master_bedroom_display_g
-  - delay: 00:00:03
-  - action: media_player.play_media
-    data_template:
-      entity_id: media_player.hugh_room_speaker_g
-      media_content_id: &#x27;{{ state_attr(&#x27;&#x27;media_player.master_bedroom_display_g&#x27;&#x27;,
-        &#x27;&#x27;media_content_id&#x27;&#x27;) }}&#x27;
-      media_content_type: &#x27;{{ state_attr(&#x27;&#x27;media_player.master_bedroom_display_g&#x27;&#x27;,
-        &#x27;&#x27;media_content_type&#x27;&#x27;) }}&#x27;
-  - delay: 00:00:05
-  - action: media_player.volume_set
-    data_template:
-      entity_id: media_player.hugh_room_speaker_g
-      volume_level: &#x27;{{ state_attr(&#x27;&#x27;media_player.master_bedroom_display_g&#x27;&#x27;, &#x27;&#x27;volume_level&#x27;&#x27;)
-        }}&#x27;
+  - variables:
+      src: &#x27;{{ trigger.entity_id }}&#x27;
+      mcid: &#x27;{{ state_attr(trigger.entity_id, &#x27;&#x27;media_content_id&#x27;&#x27;) }}&#x27;
+      mctype: &#x27;{{ state_attr(trigger.entity_id, &#x27;&#x27;media_content_type&#x27;&#x27;) }}&#x27;
+      vol: &#x27;{{ state_attr(trigger.entity_id, &#x27;&#x27;volume_level&#x27;&#x27;) | default(none) }}&#x27;
+  - target:
+      entity_id: &#x27;{{ src }}&#x27;
+    action: media_player.media_stop
+  - delay: 00:00:02
+  - target:
+      entity_id: media_player.YOUR_GOOGLE_GROUP_ENTITY
+    data:
+      media:
+        media_content_id: &#x27;{{ mcid }}&#x27;
+        media_content_type: &#x27;{{ mctype }}&#x27;
+        metadata: {}
+    action: media_player.play_media
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ vol is not none }}&#x27;
+      sequence:
+      - target:
+          entity_id: media_player.YOUR_GOOGLE_GROUP_ENTITY
+        data:
+          volume_level: &#x27;{{ vol }}&#x27;
+        action: media_player.volume_set
+  mode: single
 - id: &#x27;1721393948523&#x27;
   alias: Initialize Previous Odometer and Fuel Quantity
   trigger:
