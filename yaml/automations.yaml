@@ -1923,7 +1923,7 @@
         action: input_boolean.turn_off
   mode: restart
 - id: '1720953328203'
-  alias: Redirect Cast to Group (only if replayable URL)
+  alias: Redirect Spotify to MA Group (using working script)
   triggers:
   - entity_id:
     - media_player.master_bedroom_display_g
@@ -1933,41 +1933,20 @@
     trigger: state
   conditions:
   - condition: template
-    value_template: "{% set singles = [\n  'media_player.master_bedroom_display_g',\n
+    value_template: "{% set trio = [\n  'media_player.master_bedroom_display_g',\n
       \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
-      %} {{ (singles | select('is_state','playing') | list) | length == 1 }}\n"
+      %} {{ (trio | select('is_state','playing') | list) | length == 1\n   and state_attr(trigger.entity_id,
+      'app_name') == 'Spotify' }}\n"
   actions:
   - variables:
-      single_player: "{% set singles = [\n  'media_player.master_bedroom_display_g',\n
-        \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
-        %} {{ singles | select('is_state','playing') | list | first }}\n"
-      media_id: '{{ state_attr(single_player, ''media_content_id'') }}'
-      media_type: '{{ state_attr(single_player, ''media_content_type'') }}'
-      vol: '{{ state_attr(single_player, ''volume_level'') }}'
+      spotify_entity: media_player.spotify_XXXX
+      media_id: '{{ state_attr(spotify_entity, ''media_content_id'') }}'
   - condition: template
-    value_template: '{{ media_id is string and (media_id.startswith(''http://'') or
-      media_id.startswith(''https://'')) }}
-
-      '
-  - target:
-      entity_id: media_player.hugh_speaker_group
+    value_template: '{{ media_id not in [none, '''', ''unknown'', ''unavailable'']
+      }}'
+  - action: script.recast_to_stereo_with_media
     data:
-      media:
-        media_content_id: '{{ media_id }}'
-        media_content_type: '{{ media_type if media_type is not none else ''music''
-          }}'
-        metadata: {}
-    action: media_player.play_media
-  - choose:
-    - conditions:
-      - condition: template
-        value_template: '{{ vol is not none }}'
-      sequence:
-      - target:
-          entity_id: media_player.hugh_speaker_group
-        data:
-          volume_level: '{{ vol }}'
-        action: media_player.volume_set
+      media_id: '{{ media_id }}'
   mode: restart
 - id: '1721393948523'
   alias: Initialize Previous Odometer and Fuel Quantity
