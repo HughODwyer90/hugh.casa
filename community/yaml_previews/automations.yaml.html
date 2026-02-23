@@ -1953,15 +1953,14 @@
       %} {{ (trio | select(&#x27;is_state&#x27;,&#x27;playing&#x27;) | list) | length == 1\n   and state_attr(trigger.entity_id,
       &#x27;app_name&#x27;) == &#x27;Spotify&#x27; }}\n&quot;
   actions:
-  - variables:
-      spotify_entity: media_player.spotify_XXXX
-      media_id: &#x27;{{ state_attr(spotify_entity, &#x27;&#x27;media_content_id&#x27;&#x27;) }}&#x27;
-  - condition: template
-    value_template: &#x27;{{ media_id not in [none, &#x27;&#x27;&#x27;&#x27;, &#x27;&#x27;unknown&#x27;&#x27;, &#x27;&#x27;unavailable&#x27;&#x27;]
-      }}&#x27;
+  - wait_template: &quot;{{ state_attr(&#x27;media_player.spotify_hugh&#x27;, &#x27;media_content_id&#x27;)\n
+      \  not in [none, &#x27;&#x27;, &#x27;unknown&#x27;, &#x27;unavailable&#x27;] }}\n&quot;
+    timeout: 00:00:05
+    continue_on_timeout: false
   - action: script.recast_to_stereo_with_media
     data:
-      media_id: &#x27;{{ media_id }}&#x27;
+      media_id: &#x27;{{ state_attr(&#x27;&#x27;media_player.spotify_hugh&#x27;&#x27;, &#x27;&#x27;media_content_id&#x27;&#x27;)
+        }}&#x27;
   mode: restart
 - id: &#x27;1721393948523&#x27;
   alias: Initialize Previous Odometer and Fuel Quantity
@@ -3815,50 +3814,96 @@
           level: medium
   mode: restart
 - id: &#x27;1763117444440&#x27;
-  alias: IR Typhoon Rear Up → Previous Track (Universal)
+  alias: IR Typhoon Rear Up → Previous Track
   triggers:
-  - trigger: state
-    entity_id: binary_sensor.typhoon_rear_up
+  - entity_id: binary_sensor.typhoon_rear_up
     to: &#x27;on&#x27;
+    trigger: state
   actions:
   - choose:
     - conditions:
-      - condition: template
-        value_template: &quot;{% set players = [\n&#x27;media_player.master_bedroom_display_g&#x27;,\n
-          \ &#x27;media_player.hugh_room_speaker_g&#x27;,\n  &#x27;media_player.hugh_room_speaker_2_g&#x27;\n]
-          %} {{ players | select(&#x27;is_state&#x27;,&#x27;playing&#x27;) | list | count &gt; 0 }}\n&quot;
+      - condition: state
+        entity_id: media_player.hugh_speaker_group_2
+        state: playing
       sequence:
-      - data: {}
-        action: media_player.media_previous_track
+      - action: media_player.media_previous_track
+        target:
+          entity_id: media_player.hugh_speaker_group_2
+        data: {}
+    - conditions:
+      - condition: state
+        entity_id: media_player.hugh_speaker_group_2
+        state: playing
+      sequence:
+      - action: media_player.media_previous_track
+        target:
+          device_id: b8abe9e19c1fa21d3de27b89f6dddc4c
+        data: {}
+    - conditions:
+      - condition: state
+        entity_id: media_player.hugh_speaker_group
+        state: playing
+      sequence:
+      - action: media_player.media_previous_track
+        target:
+          entity_id: media_player.hugh_speaker_group
+        data: {}
+    - conditions:
+      - condition: template
+        value_template: &quot;{{ [\n  states(&#x27;media_player.master_bedroom_display_g&#x27;),\n
+          \ states(&#x27;media_player.hugh_room_speaker_g&#x27;),\n  states(&#x27;media_player.hugh_room_speaker_2_g&#x27;)\n]
+          | select(&#x27;eq&#x27;,&#x27;playing&#x27;) | list | length &gt; 0 }}\n&quot;
+      sequence:
+      - action: media_player.media_previous_track
         target:
           entity_id: &quot;{% set players = [\n  &#x27;media_player.master_bedroom_display_g&#x27;,\n
             \ &#x27;media_player.hugh_room_speaker_g&#x27;,\n  &#x27;media_player.hugh_room_speaker_2_g&#x27;\n]
             %} {{ players | select(&#x27;is_state&#x27;,&#x27;playing&#x27;) | list | first }}\n&quot;
+        data: {}
   mode: single
 - id: &#x27;1763117470810&#x27;
-  alias: IR Typhoon Front Up → Next Track (Universal)
+  alias: IR Typhoon Front Up → Next Track
   triggers:
-  - trigger: state
-    entity_id: binary_sensor.typhoon_front_up
+  - entity_id: binary_sensor.typhoon_front_up
     to: &#x27;on&#x27;
+    trigger: state
   actions:
   - choose:
     - conditions:
-      - condition: template
-        value_template: &quot;{% set players = [\n  &#x27;media_player.master_bedroom_display_g&#x27;,\n
-          \ &#x27;media_player.hugh_room_speaker_g&#x27;,\n  &#x27;media_player.hugh_room_speaker_2_g&#x27;\n]
-          %} {{ players | select(&#x27;is_state&#x27;,&#x27;playing&#x27;) | list | count &gt; 0 }}\n&quot;
+      - condition: state
+        entity_id: media_player.hugh_speaker_group_2
+        state:
+        - playing
       sequence:
-      - data:
+      - target:
+          entity_id:
+          - media_player.hugh_speaker_group_2
+        action: media_player.media_next_track
+        data: {}
+    - conditions:
+      - condition: state
+        entity_id: media_player.hugh_speaker_group_2
+        state:
+        - playing
+      sequence:
+      - target:
+          device_id: b8abe9e19c1fa21d3de27b89f6dddc4c
+        action: media_player.media_next_track
+        data: {}
+    - conditions:
+      - condition: template
+        value_template: &quot;{{ [\n  states(&#x27;media_player.master_bedroom_display_g&#x27;),\n
+          \ states(&#x27;media_player.hugh_room_speaker_g&#x27;),\n  states(&#x27;media_player.hugh_room_speaker_2_g&#x27;)\n]
+          | select(&#x27;eq&#x27;,&#x27;playing&#x27;) | list | length &gt; 0 }}\n&quot;
+      sequence:
+      - target:
           entity_id: &quot;{% set players = [\n  &#x27;media_player.master_bedroom_display_g&#x27;,\n
             \ &#x27;media_player.hugh_room_speaker_g&#x27;,\n  &#x27;media_player.hugh_room_speaker_2_g&#x27;\n]
             %} {{ players | select(&#x27;is_state&#x27;,&#x27;playing&#x27;) | list | first }}\n&quot;
-        action: &quot;{% set players = [\n  &#x27;media_player.master_bedroom_display_g&#x27;,\n
-          \ &#x27;media_player.hugh_room_speaker_g&#x27;,\n  &#x27;media_player.hugh_room_speaker_2_g&#x27;\n]
-          %} media_player.media_next_track\n&quot;
+        action: media_player.media_next_track
   mode: single
 - id: &#x27;1763117507620&#x27;
-  alias: IR Typhoon Center Up – Play / Pause / Move to Stereo
+  alias: IR Typhoon Center Up – Play / Pause / Start Spotify
   triggers:
   - entity_id: binary_sensor.typhoon_center_up
     to: &#x27;on&#x27;
@@ -3866,86 +3911,120 @@
   actions:
   - choose:
     - conditions:
+      - condition: state
+        entity_id: media_player.hugh_speaker_group
+        state: playing
+      sequence:
+      - target:
+          entity_id: media_player.hugh_speaker_group
+        action: media_player.media_pause
+    - conditions:
+      - condition: state
+        entity_id: media_player.hugh_speaker_group
+        state: paused
+      sequence:
+      - target:
+          entity_id: media_player.hugh_speaker_group
+        action: media_player.media_play
+    - conditions:
+      - condition: state
+        entity_id: media_player.hugh_speaker_group_2
+        state: playing
+      sequence:
+      - target:
+          entity_id: media_player.hugh_speaker_group_2
+        action: media_player.media_pause
+    - conditions:
+      - condition: state
+        entity_id: media_player.hugh_speaker_group_2
+        state: paused
+      sequence:
+      - target:
+          entity_id: media_player.hugh_speaker_group_2
+        action: media_player.media_play
+    - conditions:
       - condition: template
         value_template: &quot;{% set singles = [\n  &#x27;media_player.master_bedroom_display_g&#x27;,\n
           \ &#x27;media_player.hugh_room_speaker_g&#x27;,\n  &#x27;media_player.hugh_room_speaker_2_g&#x27;\n]
-          %} {% set active = singles | select(&#x27;is_state&#x27;,&#x27;playing&#x27;) | list %}\n{%
-          if active | count == 0 %}\n  false\n{% else %}\n  {% set p = active | first
-          %}\n  {{ state_attr(p, &#x27;media_content_id&#x27;) not in [none, &#x27;&#x27;, &#x27;unknown&#x27;,
-          &#x27;unavailable&#x27;]\n     and not is_state(&#x27;media_player.hugh_room_speaker_g&#x27;,&#x27;playing&#x27;)
-          }}\n{% endif %}\n&quot;
+          %} {{ (singles | select(&#x27;is_state&#x27;,&#x27;playing&#x27;) | list\n    + singles | select(&#x27;is_state&#x27;,&#x27;buffering&#x27;)
+          | list) | length &gt; 0 }}\n&quot;
       sequence:
-      - variables:
-          single_player: &quot;{% set singles = [\n  &#x27;media_player.master_bedroom_display_g&#x27;,\n
+      - target:
+          entity_id: &quot;{% set singles = [\n  &#x27;media_player.master_bedroom_display_g&#x27;,\n
             \ &#x27;media_player.hugh_room_speaker_g&#x27;,\n  &#x27;media_player.hugh_room_speaker_2_g&#x27;\n]
-            %} {{ singles | select(&#x27;is_state&#x27;,&#x27;playing&#x27;) | list | first }}\n&quot;
-          media_id: &#x27;{{ state_attr(single_player, &#x27;&#x27;media_content_id&#x27;&#x27;) }}&#x27;
-      - action: script.recast_to_stereo_with_media
-        data:
-          media_id: &#x27;{{ media_id }}&#x27;
-      - stop: Recast handled by script
-    - conditions:
-      - condition: state
-        entity_id: media_player.hugh_room_speaker_g
-        state:
-        - playing
-      sequence:
-      - action: media_player.media_pause
-        target:
-          entity_id:
-          - media_player.hugh_room_speaker_g
+            %} {% set active = (singles | select(&#x27;is_state&#x27;,&#x27;playing&#x27;) | list\n                 +
+            singles | select(&#x27;is_state&#x27;,&#x27;buffering&#x27;) | list) %}\n{{ active | first
+            }}\n&quot;
+        action: media_player.media_pause
         data: {}
-      - stop: Paused stereo
-    - conditions:
-      - condition: state
-        entity_id: media_player.hugh_room_speaker_g
-        state:
-        - paused
-      sequence:
-      - action: media_player.media_play
-        target:
-          entity_id:
-          - media_player.hugh_room_speaker_g
-        data: {}
-      - stop: Resumed stereo
     - conditions:
       - condition: template
-        value_template: &quot;{{ is_state(&#x27;media_player.master_bedroom_display_g&#x27;,&#x27;playing&#x27;)\n
-          \  and not is_state(&#x27;media_player.hugh_room_speaker_g&#x27;,&#x27;playing&#x27;)\n   and
-          not is_state(&#x27;media_player.hugh_room_speaker_2_g&#x27;,&#x27;playing&#x27;) }}\n&quot;
+        value_template: &quot;{% set singles = [\n  &#x27;media_player.master_bedroom_display_g&#x27;,\n
+          \ &#x27;media_player.hugh_room_speaker_g&#x27;,\n  &#x27;media_player.hugh_room_speaker_2_g&#x27;\n]
+          %} {% set any_active = (singles | select(&#x27;is_state&#x27;,&#x27;playing&#x27;) | list\n
+          \                   + singles | select(&#x27;is_state&#x27;,&#x27;buffering&#x27;) | list\n
+          \                   + singles | select(&#x27;is_state&#x27;,&#x27;paused&#x27;) | list) | length
+          &gt; 0 %}\n{{ states(&#x27;media_player.hugh_speaker_group&#x27;) in [&#x27;off&#x27;,&#x27;idle&#x27;,&#x27;unknown&#x27;,&#x27;unavailable&#x27;]\n
+          \  and states(&#x27;media_player.hugh_speaker_group_2&#x27;) in [&#x27;off&#x27;,&#x27;idle&#x27;,&#x27;unknown&#x27;,&#x27;unavailable&#x27;]\n
+          \  and not any_active }}\n&quot;
       sequence:
       - action: script.play_spotify_playlist_2
+        data: {}
   mode: restart
 - id: &#x27;1763119440312&#x27;
   alias: IR Typhoon Center Down - Like Track (With Pink Flash)
-  description: &#x27;&#x27;
   triggers:
-  - trigger: state
-    entity_id: binary_sensor.typhoon_center_down
+  - entity_id: binary_sensor.typhoon_center_down
     to: &#x27;on&#x27;
+    trigger: state
   actions:
-  - action: button.press
-    target:
-      entity_id:
-      - button.master_bedroom_display_favourite_current_song_2
-    data: {}
+  - variables:
+      meta_entity: &quot;{% set ns = namespace(p=&#x27;&#x27;) %}\n{# 1) Prefer MA group metadata
+        #} {% if states(&#x27;media_player.hugh_speaker_group_2&#x27;) in [&#x27;playing&#x27;,&#x27;paused&#x27;,&#x27;buffering&#x27;]\n
+        \     and state_attr(&#x27;media_player.hugh_speaker_group_2&#x27;,&#x27;media_title&#x27;) not
+        in [none,&#x27;&#x27;,&#x27;unknown&#x27;,&#x27;unavailable&#x27;]\n      and state_attr(&#x27;media_player.hugh_speaker_group_2&#x27;,&#x27;media_title&#x27;)
+        != &#x27;Music Assistant&#x27; %}\n  {% set ns.p = &#x27;media_player.hugh_speaker_group_2&#x27;
+        %}\n{% endif %}\n{# 2) Else try Cast group (sometimes only shows \&quot;Music Assistant\&quot;)
+        #} {% if ns.p == &#x27;&#x27; and states(&#x27;media_player.hugh_speaker_group&#x27;) in [&#x27;playing&#x27;,&#x27;paused&#x27;,&#x27;buffering&#x27;]\n
+        \     and state_attr(&#x27;media_player.hugh_speaker_group&#x27;,&#x27;media_title&#x27;) not
+        in [none,&#x27;&#x27;,&#x27;unknown&#x27;,&#x27;unavailable&#x27;]\n      and state_attr(&#x27;media_player.hugh_speaker_group&#x27;,&#x27;media_title&#x27;)
+        != &#x27;Music Assistant&#x27; %}\n  {% set ns.p = &#x27;media_player.hugh_speaker_group&#x27;
+        %}\n{% endif %}\n{# 3) Else fall back to any single device with a real title
+        #} {% if ns.p == &#x27;&#x27; %}\n  {% set singles = [\n    &#x27;media_player.master_bedroom_display_g&#x27;,\n
+        \   &#x27;media_player.hugh_room_speaker_g&#x27;,\n    &#x27;media_player.hugh_room_speaker_2_g&#x27;\n
+        \ ] %}\n  {% for e in singles %}\n    {% if states(e) in [&#x27;playing&#x27;,&#x27;paused&#x27;,&#x27;buffering&#x27;]\n
+        \         and state_attr(e,&#x27;media_title&#x27;) not in [none,&#x27;&#x27;,&#x27;unknown&#x27;,&#x27;unavailable&#x27;]\n
+        \         and state_attr(e,&#x27;media_title&#x27;) != &#x27;Music Assistant&#x27; %}\n      {%
+        set ns.p = e %}\n      {% break %}\n    {% endif %}\n  {% endfor %}\n{% endif
+        %}\n{{ ns.p }}\n&quot;
+      song_title: &#x27;{{ state_attr(meta_entity,&#x27;&#x27;media_title&#x27;&#x27;) if meta_entity else
+        &#x27;&#x27;&#x27;&#x27; }}&#x27;
+      song_artist: &#x27;{{ state_attr(meta_entity,&#x27;&#x27;media_artist&#x27;&#x27;) if meta_entity else
+        &#x27;&#x27;&#x27;&#x27; }}&#x27;
   - choose:
-    - conditions: []
+    - conditions:
+      - condition: state
+        entity_id: media_player.hugh_speaker_group_2
+        state: playing
       sequence:
-      - action: notify.notifications
-        data:
-          title: Liked Song
-          message: ❤️ {{ state_attr(&#x27;media_player.hugh_room_speaker&#x27;,&#x27;media_title&#x27;)
-            }} {% set a = state_attr(&#x27;media_player.hugh_room_speaker&#x27;,&#x27;media_artist&#x27;)
-            %} {% if a %} – {{ a }}{% endif %}
-  - action: script.set_diffuser_color_flash
-    data:
+      - target:
+          entity_id: button.hugh_speaker_group_favourite_current_song
+        action: button.press
+  - data:
+      title: Liked Song
+      message: &quot;{% if song_title not in [none,&#x27;&#x27;,&#x27;unknown&#x27;,&#x27;unavailable&#x27;] %}\n  ❤️
+        {{ song_title }}{% if song_artist not in [none,&#x27;&#x27;,&#x27;unknown&#x27;,&#x27;unavailable&#x27;]
+        %} – {{ song_artist }}{% endif %}\n{% else %}\n  ❤️ Liked song (no metadata
+        found)\n{% endif %}\n&quot;
+    action: notify.notifications
+  - data:
       color:
       - 255
       - 105
       - 180
       brightness: 100
       duration: 2
+    action: script.set_diffuser_color_flash
   mode: single
 - id: &#x27;1764055498061&#x27;
   alias: Enable Bed Pressure Toggle
