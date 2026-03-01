@@ -4214,9 +4214,9 @@
 - id: &#x27;1770554582964&#x27;
   alias: Living Room Curtains – Unified Control
   description: &quot;Priority:\n 1) Manual button toggle (sets override for 2h)\n 2) TV
-    on -&gt; close (unless override)\n 3) TV off + bright -&gt; open (unless override)\n
-    4) Bright threshold crossing -&gt; open (TV off, unless override)\n 5) Dark threshold
-    crossing -&gt; close (unless override)\n&quot;
+    on -&gt; daytime = partial close, night = full close (unless override)\n 3) TV off
+    + bright -&gt; open (unless override)\n 4) Daytime starts -&gt; partial close if TV
+    on, else open\n 5) Dark threshold crossing -&gt; close (unless override)\n&quot;
   triggers:
   - domain: mqtt
     device_id: 9f98b882a412e95e16f1addf1f9e8e27
@@ -4293,6 +4293,25 @@
       - condition: state
         entity_id: binary_sensor.living_room_tv_state
         state: &#x27;on&#x27;
+      - condition: numeric_state
+        entity_id: sensor.sun_elevation
+        above: 0
+      sequence:
+      - action: scene.turn_on
+        target:
+          entity_id: scene.curtains_close_partial
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.living_room_curtains_manual_override
+        state: &#x27;off&#x27;
+      - condition: trigger
+        id: tv
+      - condition: state
+        entity_id: binary_sensor.living_room_tv_state
+        state: &#x27;on&#x27;
+      - condition: numeric_state
+        entity_id: sensor.sun_elevation
+        below: 0
       sequence:
       - action: scene.turn_on
         target:
@@ -4319,13 +4338,20 @@
         state: &#x27;off&#x27;
       - condition: trigger
         id: bright
-      - condition: state
-        entity_id: binary_sensor.living_room_tv_state
-        state: &#x27;off&#x27;
       sequence:
-      - action: scene.turn_on
-        target:
-          entity_id: scene.curtains_open
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: binary_sensor.living_room_tv_state
+            state: &#x27;on&#x27;
+          sequence:
+          - action: scene.turn_on
+            target:
+              entity_id: scene.curtains_close_partial
+        default:
+        - action: scene.turn_on
+          target:
+            entity_id: scene.curtains_open
     - conditions:
       - condition: state
         entity_id: input_boolean.living_room_curtains_manual_override
