@@ -204,6 +204,20 @@
         {% else %}
           mdi:alert
         {% endif %}
+
+    - name: &quot;VWCE Value&quot;
+      unique_id: vwce_value
+      unit_of_measurement: &quot;EUR&quot;
+      state: &gt;
+        {{ states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0) *
+            states(&#x27;sensor.yahoofinance_vwce_de&#x27;) | float(0) }}
+
+    - name: &quot;VWCE Profit&quot;
+      unique_id: vwce_profit
+      unit_of_measurement: &quot;EUR&quot;
+      state: &gt;
+        {{ states(&#x27;sensor.vwce_value&#x27;) | float(0) -
+            states(&#x27;input_number.ibkr_vwce_cost_basis&#x27;) | float(0) }}
 </pre>
             </div>
             <script>
