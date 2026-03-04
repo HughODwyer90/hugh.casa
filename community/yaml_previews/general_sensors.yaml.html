@@ -208,6 +208,7 @@
     - name: &quot;VWCE Value&quot;
       unique_id: vwce_value
       unit_of_measurement: &quot;EUR&quot;
+      state_class: measurement
       state: &gt;
         {{ states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0) *
             states(&#x27;sensor.yahoofinance_vwce_de&#x27;) | float(0) }}
@@ -215,9 +216,24 @@
     - name: &quot;VWCE Profit&quot;
       unique_id: vwce_profit
       unit_of_measurement: &quot;EUR&quot;
+      state_class: measurement
       state: &gt;
         {{ states(&#x27;sensor.vwce_value&#x27;) | float(0) -
             states(&#x27;input_number.ibkr_vwce_cost_basis&#x27;) | float(0) }}
+
+    - name: &quot;VWCE Quantity&quot;
+      unique_id: vwce_quantity
+      unit_of_measurement: &quot;shares&quot;
+      state_class: measurement
+      state: &gt;
+        {{ states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0) }}
+
+    - name: &quot;VWCE Cost Basis&quot;
+      unique_id: vwce_cost_basis
+      unit_of_measurement: &quot;EUR&quot;
+      state_class: measurement
+      state: &gt;
+        {{ states(&#x27;input_number.ibkr_vwce_cost_basis&#x27;) | float(0) }}
 </pre>
             </div>
             <script>
