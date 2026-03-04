@@ -315,6 +315,7 @@
     data:
       value: '350'
   - action: shell_command.patch_tuya_diffuser
+    data: {}
   - delay: 00:00:05
   - action: script.reload_tuya_local_integration
   - action: input_boolean.turn_on
@@ -350,6 +351,15 @@
           - action: script.set_purifier_speed
             data:
               level: low
+        - conditions:
+          - condition: state
+            entity_id: binary_sensor.bed_sensor
+            state:
+            - 'on'
+          sequence:
+          - action: script.set_purifier_speed
+            data:
+              level: 'off'
         - conditions: []
           sequence:
           - action: script.set_purifier_speed
