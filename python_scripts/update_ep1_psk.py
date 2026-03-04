@@ -14,7 +14,7 @@ DEVICES = [
     },
     {
         "yaml_path": Path("/config/esphome/everything-presence-pro-cfbaf0.yaml"),
-        "title": "Everything Presence Pro",
+        "title": "Living Room EPPro",
     },
 ]
 
