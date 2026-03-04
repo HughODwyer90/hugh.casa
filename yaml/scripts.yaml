@@ -420,7 +420,7 @@ update_esphome_devices:
   - condition: or
     conditions:
     - condition: state
-      entity_id: update.living_room_eppro_firmware_2
+      entity_id: update.living_room_eppro_firmware
       state:
       - 'on'
     - condition: state
@@ -435,19 +435,23 @@ update_esphome_devices:
       state: 'on'
   - action: hassio.addon_stop
     data:
+      addon: d5369777_music_assistant
+  - delay: 00:00:30
+  - action: hassio.addon_stop
+    data:
       addon: a0d7b954_vscode
   - delay: 00:00:30
   - choose:
     - conditions:
       - condition: state
-        entity_id: update.living_room_eppro_firmware_2
+        entity_id: update.living_room_eppro_firmware
         state:
         - 'on'
       sequence:
       - action: update.install
         target:
           entity_id:
-          - update.living_room_eppro_firmware_2
+          - update.living_room_eppro_firmware
         continue_on_error: true
         data: {}
       - wait_template: '{{ is_state(''update.living_room_eppro_firmware'', ''off'')
@@ -498,6 +502,9 @@ update_esphome_devices:
   - action: hassio.addon_start
     data:
       addon: a0d7b954_vscode
+  - action: hassio.addon_start
+    data:
+      addon: d5369777_music_assistant
   - delay:
       hours: 0
       minutes: 1
