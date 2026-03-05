@@ -4765,3 +4765,14 @@
           option: vacuum_and_mop
       - delay: 00:00:02
   mode: single
+- id: '1772716682550'
+  alias: Call IBKR
+  description: ''
+  triggers:
+  - trigger: time
+    at: 00:00:00
+  conditions: []
+  actions:
+  - action: shell_command.ibkr_flex
+    data: {}
+  mode: single
