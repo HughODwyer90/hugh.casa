@@ -211,7 +211,7 @@
       unit_of_measurement: "shares"
       state_class: measurement
       state: >
-        {{ states('input_number.ibkr_vwce_quantity') | float(0) }}
+        {{ states('input_number.ibkr_vwce_quantity') | float(0) | round(4) }}
 
     - name: "VWCE Cost Basis"
       unique_id: vwce_cost_basis
