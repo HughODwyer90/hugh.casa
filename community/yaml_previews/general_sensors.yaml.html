@@ -205,22 +205,6 @@
           mdi:alert
         {% endif %}
 
-    - name: &quot;VWCE Value&quot;
-      unique_id: vwce_value
-      unit_of_measurement: &quot;EUR&quot;
-      state_class: measurement
-      state: &gt;
-        {{ states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0) *
-            states(&#x27;sensor.yahoofinance_vwce_de&#x27;) | float(0) }}
-
-    - name: &quot;VWCE Profit&quot;
-      unique_id: vwce_profit
-      unit_of_measurement: &quot;EUR&quot;
-      state_class: measurement
-      state: &gt;
-        {{ states(&#x27;sensor.vwce_value&#x27;) | float(0) -
-            states(&#x27;input_number.ibkr_vwce_cost_basis&#x27;) | float(0) }}
-
     - name: &quot;VWCE Quantity&quot;
       unique_id: vwce_quantity
       unit_of_measurement: &quot;shares&quot;
@@ -233,7 +217,35 @@
       unit_of_measurement: &quot;EUR&quot;
       state_class: measurement
       state: &gt;
-        {{ states(&#x27;input_number.ibkr_vwce_cost_basis&#x27;) | float(0) }}
+        {{ states(&#x27;input_number.ibkr_vwce_cost_basis&#x27;) | float(0) | round(2) }}
+
+    - name: &quot;VWCE Value&quot;
+      unique_id: vwce_value
+      unit_of_measurement: &quot;EUR&quot;
+      state_class: measurement
+      availability: &gt;
+        {% set p = states(&#x27;sensor.yahoofinance_vwce_de&#x27;) %}
+        {{ p not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;] and (p | float(0)) &gt; 0 }}
+      state: &gt;
+        {{ (states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0) *
+            states(&#x27;sensor.yahoofinance_vwce_de&#x27;) | float(0)) | round(2) }}
+
+    - name: &quot;VWCE Profit&quot;
+      unique_id: vwce_profit
+      unit_of_measurement: &quot;EUR&quot;
+      state_class: measurement
+      availability: &gt;
+        {% set p = states(&#x27;sensor.yahoofinance_vwce_de&#x27;) %}
+        {% set q = states(&#x27;input_number.ibkr_vwce_quantity&#x27;) %}
+        {% set c = states(&#x27;input_number.ibkr_vwce_cost_basis&#x27;) %}
+        {{ p not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;] and (p|float(0)) &gt; 0
+          and q not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;]
+          and c not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;] }}
+      state: &gt;
+        {% set price = states(&#x27;sensor.yahoofinance_vwce_de&#x27;) | float(0) %}
+        {% set qty   = states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0) %}
+        {% set cost  = states(&#x27;input_number.ibkr_vwce_cost_basis&#x27;) | float(0) %}
+        {{ ((qty * price) - cost) | round(2) }}
 </pre>
             </div>
             <script>
