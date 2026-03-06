@@ -195,14 +195,14 @@
       unit_of_measurement: "shares"
       state_class: measurement
       state: >
-        {{ states('input_number.ibkr_vwce_quantity') | float(0) | round(4) }}
+        {{ '%.4f' | format(states('input_number.ibkr_vwce_quantity') | float(0)) }}
 
     - name: "VWCE Cost Basis"
       unique_id: vwce_cost_basis
       unit_of_measurement: "EUR"
       state_class: measurement
       state: >
-        {{ states('input_number.ibkr_vwce_cost_basis') | float(0) | round(2) }}
+        {{ '%.2f' | format(states('input_number.ibkr_vwce_cost_basis') | float(0)) }}
 
     - name: "VWCE Value"
       unique_id: vwce_value
@@ -210,10 +210,12 @@
       state_class: measurement
       availability: >
         {% set p = states('sensor.yahoofinance_vwce_de') %}
-        {{ p not in ['unknown','unavailable','none',''] and (p | float(0)) > 0 }}
+        {{ p not in ['unknown', 'unavailable', 'none', ''] and (p | float(0)) > 0 }}
       state: >
-        {{ (states('input_number.ibkr_vwce_quantity') | float(0) *
-            states('sensor.yahoofinance_vwce_de') | float(0)) | round(2) }}
+        {{ '%.2f' | format(
+            (states('input_number.ibkr_vwce_quantity') | float(0)) *
+            (states('sensor.yahoofinance_vwce_de') | float(0))
+        ) }}
 
     - name: "VWCE Profit"
       unique_id: vwce_profit
@@ -223,11 +225,12 @@
         {% set p = states('sensor.yahoofinance_vwce_de') %}
         {% set q = states('input_number.ibkr_vwce_quantity') %}
         {% set c = states('input_number.ibkr_vwce_cost_basis') %}
-        {{ p not in ['unknown','unavailable','none',''] and (p|float(0)) > 0
-          and q not in ['unknown','unavailable','none','']
-          and c not in ['unknown','unavailable','none',''] }}
+        {{ p not in ['unknown', 'unavailable', 'none', ''] and (p | float(0)) > 0
+            and q not in ['unknown', 'unavailable', 'none', '']
+            and c not in ['unknown', 'unavailable', 'none', ''] }}
       state: >
-        {% set price = states('sensor.yahoofinance_vwce_de') | float(0) %}
-        {% set qty   = states('input_number.ibkr_vwce_quantity') | float(0) %}
-        {% set cost  = states('input_number.ibkr_vwce_cost_basis') | float(0) %}
-        {{ ((qty * price) - cost) | round(2) }}
+        {{ '%.2f' | format(
+            ((states('input_number.ibkr_vwce_quantity') | float(0)) *
+              (states('sensor.yahoofinance_vwce_de') | float(0))) -
+            (states('input_number.ibkr_vwce_cost_basis') | float(0))
+        ) }}
