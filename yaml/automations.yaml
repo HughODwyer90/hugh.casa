@@ -2587,10 +2587,11 @@
     trigger: state
     to: Scores unavailable
   actions:
-  - data:
+  - action: homeassistant.hide_entity
+    metadata: {}
+    data:
       entity_id:
       - sensor.liverpool_score
-    action: homeassistant.hide_entity
   - action: automation.turn_on
     metadata: {}
     data: {}
@@ -2612,19 +2613,21 @@
         entity_id: sensor.windscreen_freeze_risk
         state: Likely Frozen
       sequence:
-      - target:
-          entity_id: sensor.windscreen_freeze_risk
-        action: homeassistant.unhide_entity
-        data: {}
+      - action: homeassistant.unhide_entity
+        metadata: {}
+        data:
+          entity_id:
+          - sensor.windscreen_freeze_risk
     - conditions:
       - condition: template
         value_template: '{{ states(''sensor.windscreen_freeze_risk'') != ''Likely
           Frozen'' }}'
       sequence:
-      - target:
-          entity_id: sensor.windscreen_freeze_risk
-        action: homeassistant.hide_entity
-        data: {}
+      - action: homeassistant.hide_entity
+        metadata: {}
+        data:
+          entity_id:
+          - sensor.windscreen_freeze_risk
   mode: single
 - id: '1734951741728'
   alias: Git Backup
