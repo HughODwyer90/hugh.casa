@@ -200,11 +200,15 @@ def update_vwce_from_flex():
 
         return
 
-    qty = float(pos.attrib.get("position", 0))
-    mark_price = float(pos.attrib.get("markPrice", 0))
-    position_value = float(pos.attrib.get("positionValue", 0))
-    cost_basis_money = float(pos.attrib.get("costBasisMoney", 0))
-    unrealized = float(pos.attrib.get("fifoPnlUnrealized", 0))
+    # ======================
+    # PARSE FLEX VALUES
+    # ======================
+
+    qty = round(float(pos.attrib.get("position", 0)), 4)
+    mark_price = round(float(pos.attrib.get("markPrice", 0)), 2)
+    position_value = round(float(pos.attrib.get("positionValue", 0)), 2)
+    cost_basis_money = round(float(pos.attrib.get("costBasisMoney", 0)), 2)
+    unrealized = round(float(pos.attrib.get("fifoPnlUnrealized", 0)), 2)
 
     # ======================
     # HA STATE BEFORE
@@ -221,8 +225,7 @@ def update_vwce_from_flex():
     # ======================
 
     post_state(ENTITY_QTY, qty)
-
-    post_state(ENTITY_COST, round(cost_basis_money, 2))
+    post_state(ENTITY_COST, cost_basis_money)
 
     if when_generated:
 
@@ -278,14 +281,14 @@ def update_vwce_from_flex():
 
     if yahoo_price > 0:
 
-        live_value = qty * yahoo_price
-        live_profit = live_value - cost_basis_money
+        live_value = round(qty * yahoo_price, 2)
+        live_profit = round(live_value - cost_basis_money, 2)
 
         print("LIVE VALUE (via Yahoo Finance)")
         print("----------------------------")
         print("Yahoo Price: €", yahoo_price)
-        print("Value (qty * price): €", round(live_value, 2))
-        print("Profit (value - cost): €", round(live_profit, 2))
+        print("Value (qty * price): €", live_value)
+        print("Profit (value - cost): €", live_profit)
         print("----------------------------")
         print("")
 
