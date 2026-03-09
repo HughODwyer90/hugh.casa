@@ -4778,21 +4778,11 @@
   triggers:
   - trigger: time
     at: 00:00:00
+  - trigger: state
+    entity_id:
+    - input_button.ibkr_update
   conditions: []
   actions:
   - action: shell_command.ibkr_flex
-    data: {}
-  mode: single
-- id: '1773071004253'
-  alias: IBKR Flex
-  description: ''
-  triggers:
-  - entity_id:
-    - input_button.update_z2m_devices
-    trigger: state
-  conditions: []
-  actions:
-  - action: shell_command.ibkr_flex
-    metadata: {}
     data: {}
   mode: single
