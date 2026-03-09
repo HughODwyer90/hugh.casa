@@ -4783,3 +4783,16 @@
   - action: shell_command.ibkr_flex
     data: {}
   mode: single
+- id: '1773071004253'
+  alias: IBKR Flex
+  description: ''
+  triggers:
+  - entity_id:
+    - input_button.update_z2m_devices
+    trigger: state
+  conditions: []
+  actions:
+  - action: shell_command.ibkr_flex
+    metadata: {}
+    data: {}
+  mode: single
