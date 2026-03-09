@@ -4629,8 +4629,10 @@
   - trigger: state
     entity_id: person.hughod90
     from: home
-    to: not_home
   conditions:
+  - condition: template
+    value_template: &quot;{{ trigger.to_state is not none and\n   trigger.to_state.state
+      not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] }}\n&quot;
   - condition: state
     entity_id: input_boolean.vacuum_ran_today
     state: &#x27;off&#x27;
@@ -4642,9 +4644,11 @@
     state: docked
   actions:
   - delay: 00:10:00
-  - condition: state
-    entity_id: person.hughod90
-    state: not_home
+  - condition: template
+    value_template: &#x27;{{ states(&#x27;&#x27;person.hughod90&#x27;&#x27;) not in [&#x27;&#x27;home&#x27;&#x27;, &#x27;&#x27;unknown&#x27;&#x27;,
+      &#x27;&#x27;unavailable&#x27;&#x27;] }}
+
+      &#x27;
   - if:
     - condition: template
       value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleangenius&#x27;&#x27;) != &#x27;&#x27;routine_cleaning&#x27;&#x27;
