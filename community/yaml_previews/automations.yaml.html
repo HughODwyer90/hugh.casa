@@ -4642,6 +4642,10 @@
   - condition: state
     entity_id: vacuum.vacuum
     state: docked
+  - condition: time
+    weekday:
+    - sun
+    - sat
   actions:
   - delay: 00:10:00
   - condition: template
