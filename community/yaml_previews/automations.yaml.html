@@ -393,9 +393,10 @@
 - id: &#x27;1702818164083&#x27;
   alias: Living Room Lights – Occupancy + TV
   description: &#x27;Lights only. If occupancy clears, we only turn lights off when the
-    TV is OFF. TV on while occupied -&gt; dimmers. TV off while occupied -&gt; if dark (lux)
-    dimmers; if bright do nothing. Christmas switch is controlled ONLY by occupancy
-    (if available).
+    TV is OFF. TV on while occupied -&gt; dimmers only when the TV turns on. If occupancy
+    turns on while TV is already on, leave lights as-is. TV off while occupied -&gt;
+    if dark (lux) lights on; if bright do nothing. Christmas switch is controlled
+    ONLY by occupancy (if available).
 
     &#x27;
   triggers:
@@ -447,7 +448,6 @@
       - action: scene.turn_on
         target:
           entity_id: scene.living_room_lights_off
-        data: {}
     - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_eppro_occupancy
@@ -464,11 +464,13 @@
       - condition: state
         entity_id: binary_sensor.living_room_tv_state
         state: &#x27;on&#x27;
+      - condition: template
+        value_template: &quot;{{ trigger.id == &#x27;tv&#x27;\n   and trigger.to_state is not none\n
+          \  and trigger.to_state.state == &#x27;on&#x27; }}\n&quot;
       sequence:
       - action: scene.turn_on
         target:
           entity_id: scene.living_room_lights_dimmers
-        data: {}
     - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_eppro_occupancy
@@ -494,7 +496,6 @@
       - action: scene.turn_on
         target:
           entity_id: scene.living_room_lights_on
-        data: {}
     default: []
   mode: restart
 - id: &#x27;1702941352805&#x27;
