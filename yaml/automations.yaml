@@ -4456,6 +4456,11 @@
     weekday:
     - fri
     - tue
+    id: scheduled
+  - trigger: state
+    entity_id: binary_sensor.living_room_tv_state
+    to: 'off'
+    id: tv_off
   conditions:
   - condition: state
     entity_id: person.hughod90
@@ -4464,6 +4469,30 @@
     entity_id: vacuum.vacuum
     state: docked
   actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: scheduled
+      sequence:
+      - action: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.vacuum_kitchen_living_pending
+      - if:
+        - condition: state
+          entity_id: binary_sensor.living_room_tv_state
+          state: 'on'
+        then:
+        - stop: TV is on. Leave pending and wait for TV to turn off.
+    - conditions:
+      - condition: trigger
+        id: tv_off
+      - condition: state
+        entity_id: input_boolean.vacuum_kitchen_living_pending
+        state: 'on'
+      sequence: []
+    - conditions: []
+      sequence:
+      - stop: No valid run condition met.
   - if:
     - condition: template
       value_template: '{{ states(''select.vacuum_cleangenius'') != ''off'' }}'
@@ -4517,6 +4546,9 @@
       segments:
       - 4
       - 2
+  - action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.vacuum_kitchen_living_pending
   mode: single
 - id: '1771519203894'
   alias: Vacuum Apartment (Wednesday - Full Apartment)
@@ -4790,4 +4822,19 @@
   actions:
   - action: shell_command.ibkr_flex
     data: {}
+  mode: single
+- id: '1773360386929'
+  alias: Clear Pending Kitchen Living Vacuum
+  description: ''
+  triggers:
+  - trigger: time
+    at: 02:00:00
+  conditions:
+  - condition: state
+    entity_id: input_boolean.vacuum_kitchen_living_pending
+    state: 'on'
+  actions:
+  - action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.vacuum_kitchen_living_pending
   mode: single
