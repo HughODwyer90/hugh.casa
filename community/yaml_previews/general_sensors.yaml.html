@@ -222,14 +222,14 @@
     - name: &quot;VWCE Cost Basis&quot;
       unique_id: vwce_cost_basis
       unit_of_measurement: &quot;EUR&quot;
-      state_class: measurement
+      state_class: total
       state: &gt;
         {{ &#x27;%.2f&#x27; | format(states(&#x27;input_number.ibkr_vwce_cost_basis&#x27;) | float(0)) }}
 
     - name: &quot;VWCE Value&quot;
       unique_id: vwce_value
       unit_of_measurement: &quot;EUR&quot;
-      state_class: measurement
+      state_class: total
       availability: &gt;
         {% set p = states(&#x27;sensor.yahoofinance_vwce_de&#x27;) %}
         {{ p not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;, &#x27;none&#x27;, &#x27;&#x27;] and (p | float(0)) &gt; 0 }}
