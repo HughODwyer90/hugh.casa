@@ -15,6 +15,17 @@
             <div class="scrollable-content">
                 <pre class="yaml-content">- sensor:
 
+    - name: &quot;Missing Entities Mirror&quot;
+      unique_id: missing_entities_mirror
+      icon: mdi:alert-circle-outline
+      state: &gt;
+        {{ states(&#x27;sensor.missing_entities&#x27;) }}
+      attributes:
+        entities: &gt;
+          {{ state_attr(&#x27;sensor.missing_entities&#x27;, &#x27;entities&#x27;) }}
+        report: &gt;
+          {{ state_attr(&#x27;sensor.missing_entities&#x27;, &#x27;report&#x27;) }}
+
     - name: &quot;Network Scanner Devices List&quot;
       unique_id: network_scanner_devices_list_sensor
       unit_of_measurement: &quot;devices&quot;
