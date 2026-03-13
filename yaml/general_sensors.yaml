@@ -1,5 +1,16 @@
 - sensor:
 
+    - name: "Missing Entities Mirror"
+      unique_id: missing_entities_mirror
+      icon: mdi:alert-circle-outline
+      state: >
+        {{ states('sensor.missing_entities') }}
+      attributes:
+        entities: >
+          {{ state_attr('sensor.missing_entities', 'entities') }}
+        report: >
+          {{ state_attr('sensor.missing_entities', 'report') }}
+
     - name: "Network Scanner Devices List"
       unique_id: network_scanner_devices_list_sensor
       unit_of_measurement: "devices"
