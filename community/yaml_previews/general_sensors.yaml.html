@@ -14,8 +14,9 @@
             </div>
             <div class="scrollable-content">
                 <pre class="yaml-content">- sensor:
+
     - name: &quot;Network Scanner Devices List&quot;
-      unique_id: &quot;network_scanner_devices_list_sensor&quot;
+      unique_id: network_scanner_devices_list_sensor
       unit_of_measurement: &quot;devices&quot;
       state_class: measurement
       state: &gt;
@@ -36,21 +37,21 @@
       icon: &quot;mdi:lan-connect&quot;
 
     - name: &quot;Air Purifier Filter Life&quot;
-      unique_id: &quot;air_purifier_filter_life_sensor&quot;
+      unique_id: air_purifier_filter_life_sensor
       unit_of_measurement: &quot;%&quot;
       state_class: measurement
-      device_class: battery
-      state: &quot;{{ states(&#x27;sensor.air_purifier_filter_lifetime&#x27;) }}&quot;
+      state: &gt;
+        {{ states(&#x27;sensor.air_purifier_filter_lifetime&#x27;) | int(0) }}
       icon: &quot;mdi:air-filter&quot;
 
     - name: &quot;Air Purifier Fan Speed&quot;
-      unique_id: &quot;air_purifier_fan_speed_sensor&quot;
+      unique_id: air_purifier_fan_speed_sensor
       state: &gt;
         {% set fan_state = states(&#x27;fan.air_purifier&#x27;) %}
         {% set speed = state_attr(&#x27;fan.air_purifier&#x27;, &#x27;percentage&#x27;) | int(0) %}
-        {% set low = states(&#x27;input_number.fan_speed_low&#x27;) | int %}
-        {% set med = states(&#x27;input_number.fan_speed_medium&#x27;) | int %}
-        {% set high = states(&#x27;input_number.fan_speed_high&#x27;) | int %}
+        {% set low = states(&#x27;input_number.fan_speed_low&#x27;) | int(0) %}
+        {% set med = states(&#x27;input_number.fan_speed_medium&#x27;) | int(0) %}
+        {% set high = states(&#x27;input_number.fan_speed_high&#x27;) | int(0) %}
 
         {% if fan_state in [&#x27;unavailable&#x27;, &#x27;unknown&#x27;] %}
           Offline
@@ -67,18 +68,13 @@
         {% endif %}
       attributes:
         raw_percentage: &gt;
-          {% set speed = state_attr(&#x27;fan.air_purifier&#x27;, &#x27;percentage&#x27;) %}
-          {% if speed in [&#x27;unavailable&#x27;, &#x27;unknown&#x27;, None] %}
-            0
-          {% else %}
-            {{ speed | int }}
-          {% endif %}
+          {{ state_attr(&#x27;fan.air_purifier&#x27;, &#x27;percentage&#x27;) | int(0) }}
       icon: &gt;
         {% set fan_state = states(&#x27;fan.air_purifier&#x27;) %}
         {% set speed = state_attr(&#x27;fan.air_purifier&#x27;, &#x27;percentage&#x27;) | int(0) %}
-        {% set low = states(&#x27;input_number.fan_speed_low&#x27;) | int %}
-        {% set med = states(&#x27;input_number.fan_speed_medium&#x27;) | int %}
-        {% set high = states(&#x27;input_number.fan_speed_high&#x27;) | int %}
+        {% set low = states(&#x27;input_number.fan_speed_low&#x27;) | int(0) %}
+        {% set med = states(&#x27;input_number.fan_speed_medium&#x27;) | int(0) %}
+        {% set high = states(&#x27;input_number.fan_speed_high&#x27;) | int(0) %}
 
         {% if fan_state == &#x27;off&#x27; %}
           mdi:fan-off
@@ -93,21 +89,18 @@
         {% endif %}
 
     - name: &quot;Previous Bathroom Humidity&quot;
-      unique_id: &quot;previous_bathroom_humidity_sensor&quot;
+      unique_id: previous_bathroom_humidity_sensor
       unit_of_measurement: &quot;%&quot;
       state_class: measurement
       device_class: humidity
+      availability: &gt;
+        {{ states(&#x27;input_number.previous_bathroom_humidity&#x27;) not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;, &#x27;none&#x27;, &#x27;&#x27;] }}
       state: &gt;
-        {% set previous_humidity = states(&#x27;input_number.previous_bathroom_humidity&#x27;) %}
-        {% if previous_humidity not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
-          {{ &quot;{:.2f}&quot;.format(previous_humidity | float) }}%
-        {% else %}
-          Unknown
-        {% endif %}
+        {{ states(&#x27;input_number.previous_bathroom_humidity&#x27;) | float(0) }}
       icon: &quot;mdi:water-percent&quot;
 
     - name: &quot;Next Bin Collection&quot;
-      unique_id: &quot;next_bin_collection_sensor&quot;
+      unique_id: next_bin_collection_sensor
       state: &gt;
         {% set bin = states(&#x27;input_text.bin_collection_type&#x27;) %}
         {% if bin not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
@@ -118,7 +111,7 @@
       icon: &quot;mdi:trash-can&quot;
 
     - name: &quot;Active Window (Lucifer)&quot;
-      unique_id: &quot;lucifer_activewindow_filtered_sensor&quot;
+      unique_id: lucifer_activewindow_filtered_sensor
       state: &gt;
         {% set value = states(&#x27;sensor.lucifer_activewindow&#x27;) %}
         {% if &#x27;Brave&#x27; in value %}
@@ -137,7 +130,7 @@
       icon: &quot;mdi:monitor-eye&quot;
 
     - name: &quot;Active Window (Datamars)&quot;
-      unique_id: &quot;datamars_activewindow_filtered_sensor&quot;
+      unique_id: datamars_activewindow_filtered_sensor
       state: &gt;
         {% set value = states(&#x27;sensor.datamars_activewindow&#x27;) %}
         {% if value in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}
@@ -148,7 +141,7 @@
       icon: &quot;mdi:monitor-eye&quot;
 
     - name: &quot;Active Window&quot;
-      unique_id: &quot;activewindow_filtered_sensor&quot;
+      unique_id: activewindow_filtered_sensor
       state: &gt;
         {% set lucifer_value = states(&#x27;sensor.lucifer_activewindow&#x27;) %}
         {% set datamars_value = states(&#x27;sensor.datamars_activewindow&#x27;) %}
@@ -187,19 +180,20 @@
       icon: &quot;mdi:monitor-eye&quot;
 
     - name: &quot;Total Sensors&quot;
-      unique_id: &quot;total_sensors_count_sensor&quot;
+      unique_id: total_sensors_count_sensor
       unit_of_measurement: &quot;sensors&quot;
-      state_class: measurement
-      state: &quot;{{ states | length }}&quot;
+      state: &gt;
+        {{ states | length }}
       icon: &quot;mdi:counter&quot;
 
     - name: &quot;Work Plug State&quot;
-      unique_id: &quot;work_plug_state_sensor&quot;
-      state: &quot;{{ states(&#x27;input_text.work_plug_state&#x27;) }}&quot;
+      unique_id: work_plug_state_sensor
+      state: &gt;
+        {{ states(&#x27;input_text.work_plug_state&#x27;) }}
       icon: &gt;
-        {% if states(&#x27;input_text.work_plug_state&#x27;) == &quot;On&quot; %}
+        {% if states(&#x27;input_text.work_plug_state&#x27;) == &#x27;On&#x27; %}
           mdi:power-plug
-        {% elif states(&#x27;input_text.work_plug_state&#x27;) == &quot;Off&quot; %}
+        {% elif states(&#x27;input_text.work_plug_state&#x27;) == &#x27;Off&#x27; %}
           mdi:power-plug-off
         {% else %}
           mdi:alert
@@ -208,21 +202,18 @@
     - name: &quot;VWCE Quantity&quot;
       unique_id: vwce_quantity
       unit_of_measurement: &quot;shares&quot;
-      state_class: measurement
       state: &gt;
         {{ &#x27;%.4f&#x27; | format(states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0)) }}
 
     - name: &quot;VWCE Cost Basis&quot;
       unique_id: vwce_cost_basis
       unit_of_measurement: &quot;EUR&quot;
-      state_class: measurement
       state: &gt;
         {{ &#x27;%.2f&#x27; | format(states(&#x27;input_number.ibkr_vwce_cost_basis&#x27;) | float(0)) }}
 
     - name: &quot;VWCE Value&quot;
       unique_id: vwce_value
       unit_of_measurement: &quot;EUR&quot;
-      state_class: measurement
       availability: &gt;
         {% set p = states(&#x27;sensor.yahoofinance_vwce_de&#x27;) %}
         {{ p not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;, &#x27;none&#x27;, &#x27;&#x27;] and (p | float(0)) &gt; 0 }}
@@ -235,7 +226,6 @@
     - name: &quot;VWCE Profit&quot;
       unique_id: vwce_profit
       unit_of_measurement: &quot;EUR&quot;
-      state_class: measurement
       availability: &gt;
         {% set p = states(&#x27;sensor.yahoofinance_vwce_de&#x27;) %}
         {% set q = states(&#x27;input_number.ibkr_vwce_quantity&#x27;) %}
@@ -246,10 +236,9 @@
       state: &gt;
         {{ &#x27;%.2f&#x27; | format(
             ((states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0)) *
-              (states(&#x27;sensor.yahoofinance_vwce_de&#x27;) | float(0))) -
+             (states(&#x27;sensor.yahoofinance_vwce_de&#x27;) | float(0))) -
             (states(&#x27;input_number.ibkr_vwce_cost_basis&#x27;) | float(0))
-        ) }}
-</pre>
+        ) }}</pre>
             </div>
             <script>
                 (function fixPaths() {
