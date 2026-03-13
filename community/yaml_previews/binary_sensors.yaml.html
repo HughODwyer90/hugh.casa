@@ -14,26 +14,23 @@
             </div>
             <div class="scrollable-content">
                 <pre class="yaml-content">- binary_sensor:
+
     - name: &quot;Living Room Occupancy Scene Saved&quot;
       unique_id: living_room_occupancy_scene_saved_sensor
       device_class: occupancy
-      state: &quot;{{ is_state(&#x27;input_boolean.living_room_occupancy_scene_saved&#x27;, &#x27;on&#x27;) }}&quot;
+      state: &gt;
+        {{ is_state(&#x27;input_boolean.living_room_occupancy_scene_saved&#x27;, &#x27;on&#x27;) }}
       icon: &gt;
-        {% if is_state(&#x27;input_boolean.living_room_occupancy_scene_saved&#x27;, &#x27;on&#x27;) %}
-          mdi:check-circle
-        {% else %}
-          mdi:close-circle
-        {% endif %}
+        {{ &#x27;mdi:check-circle&#x27;
+          if is_state(&#x27;input_boolean.living_room_occupancy_scene_saved&#x27;, &#x27;on&#x27;)
+          else &#x27;mdi:close-circle&#x27; }}
 
     - name: &quot;Snake Plant Growing Season&quot;
       unique_id: snake_plant_growing_season_sensor
-      state: &quot;{{ now().month &gt;= 3 and now().month &lt;= 9 }}&quot;
+      state: &gt;
+        {{ 3 &lt;= now().month &lt;= 9 }}
       icon: &gt;
-        {% if now().month &gt;= 3 and now().month &lt;= 9 %}
-          mdi:leaf
-        {% else %}
-          mdi:snowflake
-        {% endif %}
+        {{ &#x27;mdi:leaf&#x27; if 3 &lt;= now().month &lt;= 9 else &#x27;mdi:snowflake&#x27; }}
 
     - name: &quot;PC Status&quot;
       unique_id: pc_status_sensor
@@ -43,36 +40,33 @@
         {% set active_window = states(&#x27;sensor.activewindow_filtered&#x27;) %}
         {{ pc_on and active_window != &#x27;Off&#x27; }}
       icon: &gt;
-        {% if is_state(&#x27;binary_sensor.pc_status&#x27;, &#x27;on&#x27;) %}
-          mdi:television-ambient-light
-        {% else %}
-          mdi:television
-        {% endif %}
+        {{ &#x27;mdi:television-ambient-light&#x27;
+          if is_state(&#x27;input_boolean.pc_on&#x27;, &#x27;on&#x27;)
+          else &#x27;mdi:television&#x27; }}
 
     - name: &quot;Toothbrush&quot;
       unique_id: philips_sonicare_toothbrush_sensor
       device_class: power
-      state: &quot;{{ is_state(&#x27;binary_sensor.pressure_toothbrush&#x27;, &#x27;on&#x27;) }}&quot;
+      state: &gt;
+        {{ is_state(&#x27;binary_sensor.pressure_toothbrush&#x27;, &#x27;on&#x27;) }}
       icon: &gt;
-        {% if is_state(&#x27;binary_sensor.pressure_toothbrush&#x27;, &#x27;on&#x27;) %}
-          mdi:tooth
-        {% else %}
-          mdi:tooth-outline
-        {% endif %}
+        {{ &#x27;mdi:tooth&#x27;
+          if is_state(&#x27;binary_sensor.pressure_toothbrush&#x27;, &#x27;on&#x27;)
+          else &#x27;mdi:tooth-outline&#x27; }}
 
     - name: &quot;Monitor State&quot;
       unique_id: monitor_state_sensor
       device_class: power
       state: &gt;
         {{ is_state(&#x27;remote.monitor&#x27;, &#x27;on&#x27;)
-            or is_state(&#x27;media_player.monitor&#x27;, &#x27;on&#x27;)
-            or is_state(&#x27;media_player.monitor&#x27;, &#x27;playing&#x27;)
-            or is_state(&#x27;media_player.monitor_google&#x27;, &#x27;on&#x27;)
-            or is_state(&#x27;media_player.monitor_google&#x27;, &#x27;playing&#x27;) }}
+          or is_state(&#x27;media_player.monitor&#x27;, &#x27;on&#x27;)
+          or is_state(&#x27;media_player.monitor&#x27;, &#x27;playing&#x27;)
+          or is_state(&#x27;media_player.monitor_google&#x27;, &#x27;on&#x27;)
+          or is_state(&#x27;media_player.monitor_google&#x27;, &#x27;playing&#x27;) }}
       icon: &gt;
-        {% if is_state(&#x27;binary_sensor.monitor_state&#x27;, &#x27;on&#x27;) %}
+        {% if this.state == &#x27;on&#x27; %}
           mdi:monitor
-        {% elif is_state(&#x27;binary_sensor.monitor_state&#x27;, &#x27;off&#x27;) %}
+        {% elif this.state == &#x27;off&#x27; %}
           mdi:monitor-off
         {% else %}
           mdi:alert
@@ -83,12 +77,12 @@
       device_class: power
       state: &gt;
         {{ is_state(&#x27;remote.living_room_tv&#x27;, &#x27;on&#x27;)
-            or is_state(&#x27;media_player.living_room_chromecast&#x27;, &#x27;on&#x27;)
-            or is_state(&#x27;media_player.living_room_chromecast&#x27;, &#x27;playing&#x27;) }}
+          or is_state(&#x27;media_player.living_room_chromecast&#x27;, &#x27;on&#x27;)
+          or is_state(&#x27;media_player.living_room_chromecast&#x27;, &#x27;playing&#x27;) }}
       icon: &gt;
-        {% if is_state(&#x27;binary_sensor.living_room_tv_state&#x27;, &#x27;on&#x27;) %}
+        {% if this.state == &#x27;on&#x27; %}
           mdi:television
-        {% elif is_state(&#x27;binary_sensor.living_room_tv_state&#x27;, &#x27;off&#x27;) %}
+        {% elif this.state == &#x27;off&#x27; %}
           mdi:television-off
         {% else %}
           mdi:alert
@@ -101,35 +95,25 @@
         {{ is_state(&#x27;binary_sensor.pressure_bed_sensor_left&#x27;, &#x27;on&#x27;)
           or is_state(&#x27;binary_sensor.pressure_bed_sensor_right&#x27;, &#x27;on&#x27;) }}
       icon: &gt;
-        {% if is_state(&#x27;binary_sensor.bed_sensor&#x27;, &#x27;on&#x27;) %}
-          mdi:bed
-        {% else %}
-          mdi:bed-empty
-        {% endif %}
+        {{ &#x27;mdi:bed&#x27; if this.state == &#x27;on&#x27; else &#x27;mdi:bed-empty&#x27; }}
 
     - name: &quot;PC Webcam Active&quot;
-      unique_id: &quot;pc_webcam_active&quot;
+      unique_id: pc_webcam_active
       device_class: occupancy
       state: &gt;
-        {% set lucifer = states(&#x27;binary_sensor.lucifer_webcamactive&#x27;) %}
-        {% set datamars = states(&#x27;binary_sensor.datamars_webcamactive&#x27;) %}
-        {{ lucifer == &#x27;on&#x27; or datamars == &#x27;on&#x27; }}
-      availability: &gt;
-        {% set lucifer = states(&#x27;binary_sensor.lucifer_webcamactive&#x27;) %}
-        {% set datamars = states(&#x27;binary_sensor.datamars_webcamactive&#x27;) %}
-        {{ lucifer not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;] or datamars not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;] }}
+        {{ is_state(&#x27;binary_sensor.lucifer_webcamactive&#x27;, &#x27;on&#x27;)
+          or is_state(&#x27;binary_sensor.datamars_webcamactive&#x27;, &#x27;on&#x27;) }}
+      icon: &gt;
+        {{ &#x27;mdi:webcam&#x27; if this.state == &#x27;on&#x27; else &#x27;mdi:webcam-off&#x27; }}
       attributes:
         source: &gt;
-          {% if states(&#x27;binary_sensor.lucifer_webcamactive&#x27;) == &#x27;on&#x27; %}
+          {% if is_state(&#x27;binary_sensor.lucifer_webcamactive&#x27;, &#x27;on&#x27;) %}
             lucifer
-          {% elif states(&#x27;binary_sensor.datamars_webcamactive&#x27;) == &#x27;on&#x27; %}
+          {% elif is_state(&#x27;binary_sensor.datamars_webcamactive&#x27;, &#x27;on&#x27;) %}
             datamars
           {% else %}
             none
-          {% endif %}
-
-
-</pre>
+          {% endif %}</pre>
             </div>
             <script>
                 (function fixPaths() {
