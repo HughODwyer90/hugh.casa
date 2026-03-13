@@ -12,7 +12,6 @@
       lr_lights:
       - light.living_room_floor_lamp
       - light.living_room_bookshelf
-      - light.living_room_ceiling
       lr_any_on: '{{ lr_lights | select(''is_state'',''on'') | list | length > 0 }}'
   - choose:
     - conditions:
@@ -83,7 +82,6 @@
       lr_lights:
       - light.living_room_floor_lamp
       - light.living_room_bookshelf
-      - light.living_room_ceiling
       lr_on_lights: '{{ lr_lights | select(''is_state'',''on'') | list }}'
       lr_all_dimmable_on_maxed: "{% set ns = namespace(dimmable_on=0, maxed_on=0)
         %} {% for e in lr_on_lights %}\n  {% set b = state_attr(e, 'brightness') %}\n
@@ -396,7 +394,6 @@
       lr_lights:
       - light.living_room_bookshelf
       - light.living_room_floor_lamp
-      - light.living_room_ceiling
       lr_any_on: '{{ lr_lights | select(''is_state'',''on'') | list | length > 0 }}'
   - choose:
     - conditions:
