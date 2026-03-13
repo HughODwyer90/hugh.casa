@@ -1,20 +1,16 @@
 - sensor:
     - name: "Liverpool (TV)"
-      unique_id: "liverpool_tv_channel_sensor"
+      unique_id: liverpool_tv_channel_sensor
       state: >
         {% set channel = states('input_text.liverpool_tv_channel') %}
-        {% if channel %}
-          {{ channel }}
-        {% else %}
-          No TV channel information
-        {% endif %}
+        {{ channel if channel not in ['unknown', 'unavailable', 'none', ''] else 'No TV channel information' }}
       icon: mdi:television-classic
 
     - name: "Player Stats (EPL)"
-      unique_id: "epl_player_stats_sensor"
+      unique_id: epl_player_stats_sensor
       state: >
         {% set s = states('input_text.epl_player_stats') %}
-        {{ s if s and s not in ['unknown','unavailable','None'] else 'unavailable' }}
+        {{ s if s not in ['unknown', 'unavailable', 'none', 'None', ''] else 'unavailable' }}
       attributes:
         GOALS: "{{ state_attr('input_text.epl_player_stats', 'GOALS') }}"
         g1: "{{ state_attr('input_text.epl_player_stats', 'g1') }}"
@@ -22,14 +18,12 @@
         g3: "{{ state_attr('input_text.epl_player_stats', 'g3') }}"
         g4: "{{ state_attr('input_text.epl_player_stats', 'g4') }}"
         g5: "{{ state_attr('input_text.epl_player_stats', 'g5') }}"
-
         ASSISTS: "{{ state_attr('input_text.epl_player_stats', 'ASSISTS') }}"
         a1: "{{ state_attr('input_text.epl_player_stats', 'a1') }}"
         a2: "{{ state_attr('input_text.epl_player_stats', 'a2') }}"
         a3: "{{ state_attr('input_text.epl_player_stats', 'a3') }}"
         a4: "{{ state_attr('input_text.epl_player_stats', 'a4') }}"
         a5: "{{ state_attr('input_text.epl_player_stats', 'a5') }}"
-
         CLEAN SHEETS: "{{ state_attr('input_text.epl_player_stats', 'CLEAN SHEETS') }}"
         c1: "{{ state_attr('input_text.epl_player_stats', 'c1') }}"
         c2: "{{ state_attr('input_text.epl_player_stats', 'c2') }}"
@@ -39,10 +33,10 @@
       icon: mdi:trophy
 
     - name: "Player Stats (UCL)"
-      unique_id: "ucl_player_stats_sensor"
+      unique_id: ucl_player_stats_sensor
       state: >
         {% set s = states('input_text.ucl_player_stats') %}
-        {{ s if s and s not in ['unknown','unavailable','None'] else 'unavailable' }}
+        {{ s if s not in ['unknown', 'unavailable', 'none', 'None', ''] else 'unavailable' }}
       attributes:
         GOALS: "{{ state_attr('input_text.ucl_player_stats', 'GOALS') }}"
         g1: "{{ state_attr('input_text.ucl_player_stats', 'g1') }}"
@@ -50,14 +44,12 @@
         g3: "{{ state_attr('input_text.ucl_player_stats', 'g3') }}"
         g4: "{{ state_attr('input_text.ucl_player_stats', 'g4') }}"
         g5: "{{ state_attr('input_text.ucl_player_stats', 'g5') }}"
-
         ASSISTS: "{{ state_attr('input_text.ucl_player_stats', 'ASSISTS') }}"
         a1: "{{ state_attr('input_text.ucl_player_stats', 'a1') }}"
         a2: "{{ state_attr('input_text.ucl_player_stats', 'a2') }}"
         a3: "{{ state_attr('input_text.ucl_player_stats', 'a3') }}"
         a4: "{{ state_attr('input_text.ucl_player_stats', 'a4') }}"
         a5: "{{ state_attr('input_text.ucl_player_stats', 'a5') }}"
-
         CLEAN SHEETS: "{{ state_attr('input_text.ucl_player_stats', 'CLEAN SHEETS') }}"
         c1: "{{ state_attr('input_text.ucl_player_stats', 'c1') }}"
         c2: "{{ state_attr('input_text.ucl_player_stats', 'c2') }}"
@@ -67,15 +59,19 @@
       icon: mdi:trophy
 
     - name: "Liverpool Score"
-      unique_id: "liverpool_score_sensor"
+      unique_id: liverpool_score_sensor
       state: >
-        {% set home = states('sensor.home_team_score') | float | int if states('sensor.home_team_score') not in ['unknown', 'unavailable', 'N/A'] else 'N/A' %}
-        {% set away = states('sensor.away_team_score') | float | int if states('sensor.away_team_score') not in ['unknown', 'unavailable', 'N/A'] else 'N/A' %}
-        {% set minutes = states('sensor.minutes_played') if states('sensor.minutes_played') not in ['unknown', 'unavailable', 'N/A'] else 'N/A' %}
+        {% set home_raw = states('sensor.home_team_score') %}
+        {% set away_raw = states('sensor.away_team_score') %}
+        {% set minutes = states('sensor.minutes_played') %}
 
-        {% if home != 'N/A' and away != 'N/A' and minutes != 'N/A' %}
-          {{ home }} - {{ away }} ({{ minutes }})
-        {% elif home != 'N/A' and away != 'N/A' %}
+        {% set home = home_raw | int(0) if home_raw not in ['unknown', 'unavailable', 'N/A', 'none', ''] else none %}
+        {% set away = away_raw | int(0) if away_raw not in ['unknown', 'unavailable', 'N/A', 'none', ''] else none %}
+        {% set mins = minutes if minutes not in ['unknown', 'unavailable', 'N/A', 'none', ''] else none %}
+
+        {% if home is not none and away is not none and mins is not none %}
+          {{ home }} - {{ away }} ({{ mins }})
+        {% elif home is not none and away is not none %}
           {{ home }} - {{ away }}
         {% else %}
           Scores unavailable
@@ -83,23 +79,27 @@
       icon: mdi:soccer
 
     - name: "Liverpool (time)"
-      unique_id: "liverpool_time_sensor"
+      unique_id: liverpool_time_sensor
       state: >
         {% set game_time = states('sensor.liverpool_utc') %}
-        {% if game_time not in ['API unavailable', 'No valid date for next game', 'No upcoming games found'] %}
+        {% if game_time not in ['unknown', 'unavailable', 'none', '', 'API unavailable', 'No valid date for next game', 'No upcoming games found'] %}
           {% set game_timestamp = as_timestamp(game_time) %}
+          {% if game_timestamp is not none %}
+            {% set now_ts = as_timestamp(now()) %}
+            {% set today_start = as_timestamp(now().replace(hour=0, minute=0, second=0, microsecond=0)) %}
+            {% set tomorrow_start = today_start + 86400 %}
 
-          {% set today_start = as_timestamp(utcnow().replace(hour=0, minute=0, second=0, microsecond=0)) %}
-          {% set tomorrow_start = today_start + 86400 %}
-
-          {% if game_timestamp >= today_start and game_timestamp < tomorrow_start %}
-            Today at {{ game_timestamp | timestamp_custom('%H:%M', true) }}
-          {% elif game_timestamp >= tomorrow_start and game_timestamp < (tomorrow_start + 86400) %}
-            Tomorrow at {{ game_timestamp | timestamp_custom('%H:%M', true) }}
-          {% elif (game_timestamp - as_timestamp(now())) <= 604800 %}
-            {{ game_timestamp | timestamp_custom('%A', true) }} at {{ game_timestamp | timestamp_custom('%H:%M', true) }}
+            {% if game_timestamp >= today_start and game_timestamp < tomorrow_start %}
+              Today at {{ game_timestamp | timestamp_custom('%H:%M') }}
+            {% elif game_timestamp >= tomorrow_start and game_timestamp < (tomorrow_start + 86400) %}
+              Tomorrow at {{ game_timestamp | timestamp_custom('%H:%M') }}
+            {% elif (game_timestamp - now_ts) <= 604800 %}
+              {{ game_timestamp | timestamp_custom('%A') }} at {{ game_timestamp | timestamp_custom('%H:%M') }}
+            {% else %}
+              {{ game_timestamp | timestamp_custom('%a, %-d/%-m') }} at {{ game_timestamp | timestamp_custom('%H:%M') }}
+            {% endif %}
           {% else %}
-            {{ game_timestamp | timestamp_custom('%a, %-d/%-m', true) }} at {{ game_timestamp | timestamp_custom('%H:%M', true) }}
+            No valid date for next game
           {% endif %}
         {% else %}
           {{ game_time }}
