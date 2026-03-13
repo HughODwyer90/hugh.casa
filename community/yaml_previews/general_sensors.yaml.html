@@ -18,6 +18,7 @@
     - name: &quot;Missing Entities Mirror&quot;
       unique_id: missing_entities_mirror
       icon: mdi:alert-circle-outline
+      state_class: measurement
       state: &gt;
         {{ states(&#x27;sensor.missing_entities&#x27;) }}
       attributes:
@@ -193,6 +194,7 @@
     - name: &quot;Total Sensors&quot;
       unique_id: total_sensors_count_sensor
       unit_of_measurement: &quot;sensors&quot;
+      state_class: measurement
       state: &gt;
         {{ states | length }}
       icon: &quot;mdi:counter&quot;
@@ -213,18 +215,21 @@
     - name: &quot;VWCE Quantity&quot;
       unique_id: vwce_quantity
       unit_of_measurement: &quot;shares&quot;
+      state_class: measurement
       state: &gt;
         {{ &#x27;%.4f&#x27; | format(states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0)) }}
 
     - name: &quot;VWCE Cost Basis&quot;
       unique_id: vwce_cost_basis
       unit_of_measurement: &quot;EUR&quot;
+      state_class: measurement
       state: &gt;
         {{ &#x27;%.2f&#x27; | format(states(&#x27;input_number.ibkr_vwce_cost_basis&#x27;) | float(0)) }}
 
     - name: &quot;VWCE Value&quot;
       unique_id: vwce_value
       unit_of_measurement: &quot;EUR&quot;
+      state_class: measurement
       availability: &gt;
         {% set p = states(&#x27;sensor.yahoofinance_vwce_de&#x27;) %}
         {{ p not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;, &#x27;none&#x27;, &#x27;&#x27;] and (p | float(0)) &gt; 0 }}
@@ -237,6 +242,7 @@
     - name: &quot;VWCE Profit&quot;
       unique_id: vwce_profit
       unit_of_measurement: &quot;EUR&quot;
+      state_class: measurement
       availability: &gt;
         {% set p = states(&#x27;sensor.yahoofinance_vwce_de&#x27;) %}
         {% set q = states(&#x27;input_number.ibkr_vwce_quantity&#x27;) %}
