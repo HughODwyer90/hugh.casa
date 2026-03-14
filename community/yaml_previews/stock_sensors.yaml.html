@@ -22,28 +22,18 @@
       state: &gt;
         {{ &#x27;%.2f&#x27; | format(states(&#x27;input_number.ibkr_vwce_cost_basis&#x27;) | float(0)) }}
 
-    - name: &quot;VWCE Cost Per Share&quot;
-      unique_id: vwce_cost_per_share
+    - name: &quot;VWCE Value&quot;
+      unique_id: vwce_value
       unit_of_measurement: &quot;EUR&quot;
-      state_class: measurement
-      availability: &gt;
-        {{ states(&#x27;input_number.ibkr_vwce_quantity&#x27;) not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;&#x27;] and
-           (states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0)) &gt; 0 }}
-      state: &gt;
-        {{ &#x27;%.2f&#x27; | format(
-            (states(&#x27;input_number.ibkr_vwce_cost_basis&#x27;) | float(0)) /
-            (states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0))
-        ) }}
-
-    - name: &quot;VWCE Price&quot;
-      unique_id: vwce_price
-      unit_of_measurement: &quot;EUR&quot;
-      state_class: measurement
+      state_class: total
       availability: &gt;
         {% set p = states(&#x27;sensor.yahoofinance_vwce_de&#x27;) %}
-        {{ p not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;] and (p | float(0)) &gt; 0 }}
+        {{ p not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;, &#x27;none&#x27;, &#x27;&#x27;] and (p | float(0)) &gt; 0 }}
       state: &gt;
-        {{ &#x27;%.2f&#x27; | format(states(&#x27;sensor.yahoofinance_vwce_de&#x27;) | float(0)) }}
+        {{ &#x27;%.2f&#x27; | format(
+            (states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0)) *
+            (states(&#x27;sensor.yahoofinance_vwce_de&#x27;) | float(0))
+        ) }}
 
     - name: &quot;VWCE Profit&quot;
       unique_id: vwce_profit
@@ -63,25 +53,25 @@
             (states(&#x27;input_number.ibkr_vwce_cost_basis&#x27;) | float(0))
         ) }}
 
+    - name: &quot;VWCE Cost Per Share&quot;
+      unique_id: vwce_cost_per_share
+      unit_of_measurement: &quot;EUR&quot;
+      state_class: measurement
+      availability: &gt;
+        {{ states(&#x27;input_number.ibkr_vwce_quantity&#x27;) not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;&#x27;] and
+           (states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0)) &gt; 0 }}
+      state: &gt;
+        {{ &#x27;%.2f&#x27; | format(
+            (states(&#x27;input_number.ibkr_vwce_cost_basis&#x27;) | float(0)) /
+            (states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0))
+        ) }}
+
     - name: &quot;VWCE Quantity&quot;
       unique_id: vwce_quantity
       unit_of_measurement: &quot;shares&quot;
       state_class: measurement
       state: &gt;
-        {{ &#x27;%.4f&#x27; | format(states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0)) }}
-
-    - name: &quot;VWCE Value&quot;
-      unique_id: vwce_value
-      unit_of_measurement: &quot;EUR&quot;
-      state_class: total
-      availability: &gt;
-        {% set p = states(&#x27;sensor.yahoofinance_vwce_de&#x27;) %}
-        {{ p not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;, &#x27;none&#x27;, &#x27;&#x27;] and (p | float(0)) &gt; 0 }}
-      state: &gt;
-        {{ &#x27;%.2f&#x27; | format(
-            (states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0)) *
-            (states(&#x27;sensor.yahoofinance_vwce_de&#x27;) | float(0))
-        ) }}</pre>
+        {{ &#x27;%.4f&#x27; | format(states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0)) }}</pre>
             </div>
             <script>
                 (function fixPaths() {
