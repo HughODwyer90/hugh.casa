@@ -477,7 +477,7 @@
         state: &#x27;off&#x27;
       - condition: numeric_state
         entity_id: sensor.living_room_eppro_illuminance
-        above: 100
+        above: 50
       - condition: template
         value_template: &#x27;{{ lr_any_on }}&#x27;
       sequence:
@@ -1180,12 +1180,15 @@
       sequence:
       - if:
         - condition: state
-          entity_id: media_player.universal_player
-          state: playing
+          entity_id: media_player.master_bedroom_display_g
+          state:
+          - playing
         then:
         - action: media_player.media_stop
           target:
-            entity_id: media_player.universal_player
+            entity_id:
+            - media_player.master_bedroom_display_g
+          data: {}
       - action: script.set_purifier_speed
         data:
           level: low
