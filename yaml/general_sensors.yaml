@@ -223,6 +223,19 @@
             (states('input_number.ibkr_vwce_quantity') | float(0)) *
             (states('sensor.yahoofinance_vwce_de') | float(0))
         ) }}
+        
+    - name: "VWCE Cost Per Share"
+      unique_id: vwce_cost_per_share
+      unit_of_measurement: "EUR"
+      state_class: measurement
+      availability: >
+        {{ states('input_number.ibkr_vwce_quantity') not in ['unknown','unavailable',''] and
+           (states('input_number.ibkr_vwce_quantity') | float(0)) > 0 }}
+      state: >
+        {{ '%.2f' | format(
+            (states('input_number.ibkr_vwce_cost_basis') | float(0)) /
+            (states('input_number.ibkr_vwce_quantity') | float(0))
+        ) }}
 
     - name: "VWCE Profit"
       unique_id: vwce_profit
