@@ -1,0 +1,101 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>stock_sensors.yaml</title>
+            <link rel="stylesheet" id="dynamic-styles">
+            <link rel="icon" id="dynamic-favicon">
+        </head>
+        <body>
+            <div class="fixed-header">
+                <h1>Viewing: stock_sensors.yaml</h1>
+            </div>
+            <div class="scrollable-content">
+                <pre class="yaml-content">- sensors:
+    - name: &quot;VWCE Cost Basis&quot;
+      unique_id: vwce_cost_basis
+      unit_of_measurement: &quot;EUR&quot;
+      state_class: total
+      state: &gt;
+        {{ &#x27;%.2f&#x27; | format(states(&#x27;input_number.ibkr_vwce_cost_basis&#x27;) | float(0)) }}
+
+    - name: &quot;VWCE Cost Per Share&quot;
+      unique_id: vwce_cost_per_share
+      unit_of_measurement: &quot;EUR&quot;
+      state_class: measurement
+      availability: &gt;
+        {{ states(&#x27;input_number.ibkr_vwce_quantity&#x27;) not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;&#x27;] and
+           (states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0)) &gt; 0 }}
+      state: &gt;
+        {{ &#x27;%.2f&#x27; | format(
+            (states(&#x27;input_number.ibkr_vwce_cost_basis&#x27;) | float(0)) /
+            (states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0))
+        ) }}
+
+    - name: &quot;VWCE Price&quot;
+      unique_id: vwce_price
+      unit_of_measurement: &quot;EUR&quot;
+      state_class: measurement
+      availability: &gt;
+        {% set p = states(&#x27;sensor.yahoofinance_vwce_de&#x27;) %}
+        {{ p not in [&#x27;unknown&#x27;,&#x27;unavailable&#x27;,&#x27;none&#x27;,&#x27;&#x27;] and (p | float(0)) &gt; 0 }}
+      state: &gt;
+        {{ &#x27;%.2f&#x27; | format(states(&#x27;sensor.yahoofinance_vwce_de&#x27;) | float(0)) }}
+
+    - name: &quot;VWCE Profit&quot;
+      unique_id: vwce_profit
+      unit_of_measurement: &quot;EUR&quot;
+      state_class: measurement
+      availability: &gt;
+        {% set p = states(&#x27;sensor.yahoofinance_vwce_de&#x27;) %}
+        {% set q = states(&#x27;input_number.ibkr_vwce_quantity&#x27;) %}
+        {% set c = states(&#x27;input_number.ibkr_vwce_cost_basis&#x27;) %}
+        {{ p not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;, &#x27;none&#x27;, &#x27;&#x27;] and (p | float(0)) &gt; 0
+            and q not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;, &#x27;none&#x27;, &#x27;&#x27;]
+            and c not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;, &#x27;none&#x27;, &#x27;&#x27;] }}
+      state: &gt;
+        {{ &#x27;%.2f&#x27; | format(
+            ((states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0)) *
+             (states(&#x27;sensor.yahoofinance_vwce_de&#x27;) | float(0))) -
+            (states(&#x27;input_number.ibkr_vwce_cost_basis&#x27;) | float(0))
+        ) }}
+
+    - name: &quot;VWCE Quantity&quot;
+      unique_id: vwce_quantity
+      unit_of_measurement: &quot;shares&quot;
+      state_class: measurement
+      state: &gt;
+        {{ &#x27;%.4f&#x27; | format(states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0)) }}
+
+    - name: &quot;VWCE Value&quot;
+      unique_id: vwce_value
+      unit_of_measurement: &quot;EUR&quot;
+      state_class: total
+      availability: &gt;
+        {% set p = states(&#x27;sensor.yahoofinance_vwce_de&#x27;) %}
+        {{ p not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;, &#x27;none&#x27;, &#x27;&#x27;] and (p | float(0)) &gt; 0 }}
+      state: &gt;
+        {{ &#x27;%.2f&#x27; | format(
+            (states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0)) *
+            (states(&#x27;sensor.yahoofinance_vwce_de&#x27;) | float(0))
+        ) }}</pre>
+            </div>
+            <script>
+                (function fixPaths() {
+                    // ✅ If inside yaml_previews, use "../assets/", otherwise use "assets/"
+                    var basePath = window.location.pathname.includes("/yaml_previews/") ? "../assets/" : "assets/";
+
+                    // ✅ Apply correct asset paths
+                    document.getElementById("dynamic-styles").href = basePath + "table-styles.css";
+                    document.getElementById("dynamic-favicon").href = basePath + "favicon.ico";
+
+                    var script = document.createElement("script");
+                    script.src = basePath + "table-functions.js";
+                    document.body.appendChild(script);
+                })();
+            </script>
+        </body>
+        </html>
+        
