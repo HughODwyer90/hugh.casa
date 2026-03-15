@@ -3722,9 +3722,10 @@
 - id: '1762130255049'
   alias: Hugh Room Purifier Unified Logic
   description: 'Adjusts purifier speed based on occupancy, PC, monitor, and music
-    activity. If it''s night time and you''re in bed, purifier is turned off. If the
-    purifier is turned on by anything else while you''re in bed at night, it is immediately
-    turned off again. When you get out of bed, it resumes the appropriate speed.
+    activity. If it''s night time and you''re in bed, purifier is always turned off.
+    If the purifier is turned on by anything else while you''re in bed at night, it
+    is immediately turned off again. When you get out of bed, it resumes the appropriate
+    speed.
 
     '
   triggers:
@@ -3742,14 +3743,18 @@
     for:
       seconds: 2
   - trigger: state
-    entity_id: media_player.universal_player
-    from: playing
+    entity_id:
+    - media_player.master_bedroom_display_g
+    from:
+    - playing
     id: music_stopped
     for:
       seconds: 5
   - trigger: state
-    entity_id: media_player.universal_player
-    to: playing
+    entity_id:
+    - media_player.master_bedroom_display_g
+    to:
+    - playing
     id: music_started
   - trigger: state
     entity_id: binary_sensor.bed_sensor
@@ -3774,7 +3779,7 @@
       - action: script.set_purifier_speed
         data:
           level: 'off'
-      - stop: In bed at night -> keep purifier off
+      - stop: In bed at night -> purifier always off
   - choose:
     - conditions:
       - condition: trigger
@@ -3783,7 +3788,7 @@
         entity_id: binary_sensor.bed_sensor
         state: 'on'
       sequence:
-      - stop: Bed occupied -> ignore music/TV start
+      - stop: Bed occupied -> ignore music start
   - choose:
     - conditions:
       - condition: state
@@ -3800,7 +3805,7 @@
       - condition: or
         conditions:
         - condition: state
-          entity_id: media_player.universal_player
+          entity_id: media_player.master_bedroom_display_g
           state: playing
         - condition: state
           entity_id: binary_sensor.pc_status
