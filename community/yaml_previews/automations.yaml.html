@@ -3737,9 +3737,10 @@
 - id: &#x27;1762130255049&#x27;
   alias: Hugh Room Purifier Unified Logic
   description: &#x27;Adjusts purifier speed based on occupancy, PC, monitor, and music
-    activity. If it&#x27;&#x27;s night time and you&#x27;&#x27;re in bed, purifier is turned off. If the
-    purifier is turned on by anything else while you&#x27;&#x27;re in bed at night, it is immediately
-    turned off again. When you get out of bed, it resumes the appropriate speed.
+    activity. If it&#x27;&#x27;s night time and you&#x27;&#x27;re in bed, purifier is always turned off.
+    If the purifier is turned on by anything else while you&#x27;&#x27;re in bed at night, it
+    is immediately turned off again. When you get out of bed, it resumes the appropriate
+    speed.
 
     &#x27;
   triggers:
@@ -3757,14 +3758,18 @@
     for:
       seconds: 2
   - trigger: state
-    entity_id: media_player.universal_player
-    from: playing
+    entity_id:
+    - media_player.master_bedroom_display_g
+    from:
+    - playing
     id: music_stopped
     for:
       seconds: 5
   - trigger: state
-    entity_id: media_player.universal_player
-    to: playing
+    entity_id:
+    - media_player.master_bedroom_display_g
+    to:
+    - playing
     id: music_started
   - trigger: state
     entity_id: binary_sensor.bed_sensor
@@ -3789,7 +3794,7 @@
       - action: script.set_purifier_speed
         data:
           level: &#x27;off&#x27;
-      - stop: In bed at night -&gt; keep purifier off
+      - stop: In bed at night -&gt; purifier always off
   - choose:
     - conditions:
       - condition: trigger
@@ -3798,7 +3803,7 @@
         entity_id: binary_sensor.bed_sensor
         state: &#x27;on&#x27;
       sequence:
-      - stop: Bed occupied -&gt; ignore music/TV start
+      - stop: Bed occupied -&gt; ignore music start
   - choose:
     - conditions:
       - condition: state
@@ -3815,7 +3820,7 @@
       - condition: or
         conditions:
         - condition: state
-          entity_id: media_player.universal_player
+          entity_id: media_player.master_bedroom_display_g
           state: playing
         - condition: state
           entity_id: binary_sensor.pc_status
