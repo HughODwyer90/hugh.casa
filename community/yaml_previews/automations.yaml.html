@@ -467,7 +467,9 @@
       sequence:
       - action: scene.turn_on
         target:
-          entity_id: scene.living_room_lights_dimmers
+          entity_id:
+          - scene.living_room_lights_on
+        data: {}
     - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_eppro_occupancy
@@ -493,6 +495,7 @@
       - action: scene.turn_on
         target:
           entity_id: scene.living_room_lights_on
+        data: {}
     default: []
   mode: restart
 - id: &#x27;1702941352805&#x27;
