@@ -329,19 +329,19 @@
         {% else %}
           {% set n = now() %}
           {% set wfh_tom = is_state(&#x27;input_boolean.wfh_tomorrow&#x27;,&#x27;on&#x27;) %}
-
+    
           {% set wd  = states(&#x27;input_datetime.weekday_wake_up_alarm&#x27;) %}
           {% set we  = states(&#x27;input_datetime.weekend_wake_up_alarm&#x27;) %}
           {% set wfh = states(&#x27;input_datetime.weekday_wfh_wake_up_alarm&#x27;) %}
-
+    
           {% if wfh_tom %}
-            {% set target = today_at(wfh) + timedelta(days=1) %}
+            {% set target = today_at(wfh) if n &lt; today_at(wfh) else today_at(wfh) + timedelta(days=1) %}
           {% else %}
             {% set dow = n.weekday() %}
             {% set is_weekend = dow in [5,6] %}
             {% set todays_time = we if is_weekend else wd %}
             {% set todays = today_at(todays_time) %}
-
+    
             {% if n &lt; todays %}
               {% set target = todays %}
             {% else %}
@@ -351,7 +351,7 @@
               {% set target = today_at(next_time) + timedelta(days=1) %}
             {% endif %}
           {% endif %}
-
+    
           {% set secs = (as_timestamp(target) - as_timestamp(n)) | int %}
           {% if secs &lt;= 0 %}
             0m
@@ -376,9 +376,9 @@
             {% set wd  = states(&#x27;input_datetime.weekday_wake_up_alarm&#x27;) %}
             {% set we  = states(&#x27;input_datetime.weekend_wake_up_alarm&#x27;) %}
             {% set wfh = states(&#x27;input_datetime.weekday_wfh_wake_up_alarm&#x27;) %}
-
+    
             {% if wfh_tom %}
-              {% set target = today_at(wfh) + timedelta(days=1) %}
+              {% set target = today_at(wfh) if n &lt; today_at(wfh) else today_at(wfh) + timedelta(days=1) %}
             {% else %}
               {% set dow = n.weekday() %}
               {% set is_weekend = dow in [5,6] %}
