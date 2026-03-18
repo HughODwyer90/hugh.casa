@@ -8,37 +8,11 @@
     subtype: on_press
     trigger: device
   actions:
-  - variables:
-      lr_lights:
-      - light.living_room_floor_lamp
-      - light.living_room_bookshelf
-      lr_any_on: '{{ lr_lights | select(''is_state'',''on'') | list | length > 0 }}'
-  - choose:
-    - conditions:
-      - condition: template
-        value_template: '{{ lr_any_on }}'
-      sequence:
-      - action: scene.create
-        data:
-          scene_id: living_room_lights_last_state
-          snapshot_entities: '{{ lr_lights }}'
-      - action: input_boolean.turn_on
-        target:
-          entity_id: input_boolean.living_room_occupancy_scene_saved
-      - action: scene.turn_on
-        target:
-          entity_id:
-          - scene.living_room_lights_off
-        data: {}
-    default:
-    - action: input_boolean.turn_off
-      target:
-        entity_id: input_boolean.living_room_occupancy_scene_saved
-    - action: scene.turn_on
-      target:
-        entity_id:
-        - scene.living_room_lights_on
-      data: {}
+  - action: light.toggle
+    metadata: {}
+    target:
+      entity_id: light.living_room_ceiling
+    data: {}
   mode: single
 - id: '1700841493454'
   alias: Living Room Dim
@@ -63,7 +37,7 @@
         target:
           entity_id: '{{ lr_on_lights }}'
         data:
-          brightness_step_pct: -10
+          brightness_step_pct: -20
           transition: 0.5
     default: []
   mode: single
@@ -106,6 +80,7 @@
       - action: scene.turn_on
         target:
           entity_id: scene.living_room_brighten_snapshot
+        data: {}
     - conditions:
       - condition: template
         value_template: '{{ lr_on_lights | length > 0 }}'
@@ -114,7 +89,7 @@
         target:
           entity_id: '{{ lr_on_lights }}'
         data:
-          brightness_step_pct: 10
+          brightness_step_pct: 20
           transition: 0.5
     - conditions:
       - condition: template
@@ -429,7 +404,9 @@
       sequence:
       - action: scene.turn_on
         target:
-          entity_id: scene.living_room_lights_off
+          entity_id:
+          - scene.living_room_lights_0_off
+        data: {}
     - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_eppro_occupancy
@@ -453,7 +430,7 @@
       - action: scene.turn_on
         target:
           entity_id:
-          - scene.living_room_lights_on
+          - scene.living_room_lights_1_on
         data: {}
     - conditions:
       - condition: state
@@ -479,7 +456,8 @@
       sequence:
       - action: scene.turn_on
         target:
-          entity_id: scene.living_room_lights_on
+          entity_id:
+          - scene.living_room_lights_1_on
         data: {}
     default: []
   mode: restart
@@ -4865,7 +4843,8 @@
       - action: scene.turn_on
         metadata: {}
         target:
-          entity_id: scene.living_room_lights_on
+          entity_id:
+          - scene.living_room_lights_1_on
         data: {}
     - conditions:
       - condition: state
@@ -4876,6 +4855,7 @@
       - action: scene.turn_on
         metadata: {}
         target:
-          entity_id: scene.living_room_lights_dimmers
+          entity_id:
+          - scene.living_room_lights_2_dimmers
         data: {}
   mode: single
