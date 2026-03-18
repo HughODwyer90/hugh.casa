@@ -4846,3 +4846,20 @@
     target:
       entity_id: input_boolean.vacuum_kitchen_living_pending
   mode: single
+- id: '1773869262911'
+  alias: Coffee table open
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.coffee_table_contact
+    to:
+    - 'on'
+  conditions: []
+  actions:
+  - action: light.turn_on
+    metadata: {}
+    target:
+      entity_id: light.living_room_ceiling
+    data: {}
+  mode: single
