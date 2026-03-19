@@ -295,7 +295,7 @@
     target:
       entity_id:
       - input_boolean.living_room_occupancy_scene_saved
-      - input_boolean.shower_in_progress
+    data: {}
   - action: number.set_value
     target:
       entity_id:
@@ -1176,9 +1176,8 @@
   mode: single
 - id: &#x27;1710514549478&#x27;
   alias: Bathroom Light Control
-  description: &#x27;Controls the bathroom lighting based on motion and the helper status
-    set by humidity levels. Turns on the lights with motion if light levels are low,
-    and turns them off based on the helper and motion status.
+  description: &#x27;Controls the bathroom lighting based on motion. Turns lights on with
+    motion and off when motion clears.
 
     &#x27;
   triggers:
@@ -1188,59 +1187,35 @@
   - trigger: state
     entity_id: binary_sensor.bathroom_motion_occupancy
     to: &#x27;off&#x27;
-  - trigger: state
-    entity_id:
-    - input_boolean.shower_in_progress
-    enabled: true
   conditions: []
   actions:
   - choose:
     - conditions:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: binary_sensor.bathroom_motion_occupancy
-          state: &#x27;on&#x27;
-        - condition: state
-          state: &#x27;on&#x27;
-          entity_id: input_boolean.shower_in_progress
+      - condition: state
+        entity_id: binary_sensor.bathroom_motion_occupancy
+        state: &#x27;on&#x27;
       sequence:
       - action: light.turn_on
         target:
-          entity_id:
-          - light.bathroom_ceiling
-        data: {}
+          entity_id: light.bathroom_ceiling
       - action: scene.turn_on
-        data: {}
         target:
           entity_id: scene.bathroom_color_strip_1_red
     - conditions:
       - condition: state
         entity_id: binary_sensor.bathroom_motion_occupancy
         state: &#x27;off&#x27;
-      - condition: state
-        entity_id: input_boolean.shower_in_progress
-        state: &#x27;off&#x27;
       sequence:
       - action: light.turn_off
         target:
-          entity_id:
-          - light.bathroom_ceiling
-        data: {}
+          entity_id: light.bathroom_ceiling
       - action: scene.turn_on
-        data: {}
         target:
-          entity_id:
-          - scene.bathroom_color_strip_2_off
+          entity_id: scene.bathroom_color_strip_2_off
       - action: homeassistant.update_entity
         target:
-          entity_id: sensor.bathroom_aqara_humidity
-        data: {}
-      - action: homeassistant.update_entity
-        target:
-          entity_id: sensor.bathroom_aqara_humidity
-        data:
           entity_id:
+          - sensor.bathroom_aqara_humidity
           - sensor.bathroom_aqara_temperature
   mode: single
 - id: &#x27;1711199503084&#x27;
@@ -4750,6 +4725,45 @@
           - scene.living_room_lights_2_dimmers
         data: {}
   mode: single
+- id: &#x27;1773959263569&#x27;
+  alias: Kitchen Lights State Reconciliation
+  description: &#x27;&#x27;
+  triggers:
+  - trigger: state
+    entity_id:
+    - light.kitchen_ceiling_1
+    - light.kitchen_ceiling_2
+    - light.kitchen_ceiling_3
+    - light.kitchen_ceiling_4
+  actions:
+  - delay: 00:00:05
+  - variables:
+      lights:
+      - light.kitchen_ceiling_1
+      - light.kitchen_ceiling_2
+      - light.kitchen_ceiling_3
+      - light.kitchen_ceiling_4
+      total: &#x27;{{ lights | count }}&#x27;
+      on_lights: &#x27;{{ lights | select(&#x27;&#x27;is_state&#x27;&#x27;,&#x27;&#x27;on&#x27;&#x27;) | list }}&#x27;
+      off_lights: &#x27;{{ lights | select(&#x27;&#x27;is_state&#x27;&#x27;,&#x27;&#x27;off&#x27;&#x27;) | list }}&#x27;
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ on_lights | count == 1 and off_lights | count == (total
+          | int - 1) }}&#x27;
+      sequence:
+      - action: light.turn_off
+        target:
+          entity_id: &#x27;{{ on_lights }}&#x27;
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ off_lights | count == 1 and on_lights | count == (total
+          | int - 1) }}&#x27;
+      sequence:
+      - action: light.turn_on
+        target:
+          entity_id: &#x27;{{ off_lights }}&#x27;
+  mode: restart
 </pre>
             </div>
             <script>
