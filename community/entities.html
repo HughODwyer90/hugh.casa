@@ -11,13 +11,13 @@
         <body>
             <div class="fixed-header">
                 <h1>Home Assistant Entities</h1>
-                <p>Total Entities: 963 (Redacted: 16)</p>
-                <p>Version: 2026-03-19-001132</p>
+                <p>Total Entities: 964 (Redacted: 16)</p>
+                <p>Version: 2026-03-19-001413</p>
                 <div class="search-container">
                     <input type="text" id="entitySearch" class="search-box" placeholder="🔍 Search entities...">
                 </div>
                 <div>
-                    <p id="table-count">Search total: 963</p>
+                    <p id="table-count">Search total: 964</p>
                 </div>
                 <div class="filters">
                     <div id="filter-All" class="filter entity-filter active">All</div>
@@ -1240,7 +1240,7 @@
                 <td>binary_sensor.living_room_eppro_zone_1_presence</td>
                 <td>Living Room EPPro Zone 1 Presence</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -2837,6 +2837,14 @@
             </tr>
         
             <tr>
+                <td>light.kitchen_ceiling_1</td>
+                <td>Kitchen Ceiling 1</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>light.kitchen_ceiling_2</td>
                 <td>Kitchen Ceiling 2</td>
                 <td>N/A</td>
@@ -3557,22 +3565,6 @@
             </tr>
         
             <tr>
-                <td>scene.kitchen_lights_off</td>
-                <td>Kitchen Lights Off</td>
-                <td>N/A</td>
-                <td>2026-03-19 00:10:40</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>scene.kitchen_lights_on</td>
-                <td>Kitchen Lights On</td>
-                <td>N/A</td>
-                <td>2026-03-19 00:05:40</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>scene.lamp</td>
                 <td>Hugh Room Lamp</td>
                 <td>N/A</td>
@@ -3889,6 +3881,14 @@
                 <td>Hugh Room Plug Fan Desk Power outage memory</td>
                 <td>N/A</td>
                 <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.kitchen_ceiling_1_power_on_behavior</td>
+                <td>Kitchen Ceiling 1 Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
                 <td>Yes</td>
             </tr>
         
@@ -4672,7 +4672,7 @@
                 <td>sensor.date_time_iso</td>
                 <td>Date & Time (ISO)</td>
                 <td>N/A</td>
-                <td>2026-03-19 00:11:00</td>
+                <td>2026-03-19 00:14:00</td>
                 <td>Yes</td>
             </tr>
         
@@ -4984,7 +4984,7 @@
                 <td>sensor.hugh_room_aqara_humidity</td>
                 <td>Aqara Humidity</td>
                 <td>%</td>
-                <td>58.86</td>
+                <td>58.93</td>
                 <td>Yes</td>
             </tr>
         
@@ -4992,7 +4992,7 @@
                 <td>sensor.hugh_room_aqara_pressure</td>
                 <td>Hugh Room Aqara Atmospheric pressure</td>
                 <td>hPa</td>
-                <td>1022.2</td>
+                <td>1022.5</td>
                 <td>Yes</td>
             </tr>
         
@@ -5000,7 +5000,7 @@
                 <td>sensor.hugh_room_aqara_temperature</td>
                 <td>Aqara Temperature</td>
                 <td>°C</td>
-                <td>20.53</td>
+                <td>20.56</td>
                 <td>Yes</td>
             </tr>
         
@@ -5096,7 +5096,7 @@
                 <td>sensor.hugh_room_plug_blanket_current</td>
                 <td>Hugh Room Plug Blanket Current</td>
                 <td>A</td>
-                <td>0</td>
+                <td>0.01</td>
                 <td>Yes</td>
             </tr>
         
@@ -5120,7 +5120,7 @@
                 <td>sensor.hugh_room_plug_blanket_voltage</td>
                 <td>Hugh Room Plug Blanket Voltage</td>
                 <td>V</td>
-                <td>237</td>
+                <td>236</td>
                 <td>Yes</td>
             </tr>
         
@@ -5288,7 +5288,7 @@
                 <td>sensor.kitchen_epone_humidity</td>
                 <td>Humidity</td>
                 <td>%</td>
-                <td>34.425048828125</td>
+                <td>34.2877197265625</td>
                 <td>Yes</td>
             </tr>
         
@@ -5296,7 +5296,7 @@
                 <td>sensor.kitchen_epone_illuminance</td>
                 <td>Kitchen EPOne Illuminance</td>
                 <td>lx</td>
-                <td>3.67437958717346</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5312,7 +5312,7 @@
                 <td>sensor.kitchen_epone_temperature</td>
                 <td>Temperature</td>
                 <td>°C</td>
-                <td>27.8282165527344</td>
+                <td>27.8602600097656</td>
                 <td>Yes</td>
             </tr>
         
@@ -5552,7 +5552,7 @@
                 <td>sensor.living_room_eppro_humidity</td>
                 <td>Humidity</td>
                 <td>%</td>
-                <td>26.1795043945312</td>
+                <td>26.1627197265625</td>
                 <td>Yes</td>
             </tr>
         
@@ -5560,7 +5560,7 @@
                 <td>sensor.living_room_eppro_illuminance</td>
                 <td>Illuminance</td>
                 <td>lx</td>
-                <td>4.64074754714966</td>
+                <td>4.75393676757812</td>
                 <td>Yes</td>
             </tr>
         
@@ -5568,7 +5568,7 @@
                 <td>sensor.living_room_eppro_target_1_angle</td>
                 <td>Living Room EPPro Target 1 Angle</td>
                 <td>°</td>
-                <td>-20.4908714294434</td>
+                <td>-4.47518444061279</td>
                 <td>Yes</td>
             </tr>
         
@@ -5576,7 +5576,7 @@
                 <td>sensor.living_room_eppro_target_1_distance</td>
                 <td>Living Room EPPro Target 1 Distance</td>
                 <td>mm</td>
-                <td>5659.06005859375</td>
+                <td>3447.5107421875</td>
                 <td>Yes</td>
             </tr>
         
@@ -5600,7 +5600,7 @@
                 <td>sensor.living_room_eppro_target_1_x</td>
                 <td>Living Room EPPro Target 1 X</td>
                 <td>mm</td>
-                <td>147.0</td>
+                <td>-864.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5608,7 +5608,7 @@
                 <td>sensor.living_room_eppro_target_1_y</td>
                 <td>Living Room EPPro Target 1 Y</td>
                 <td>mm</td>
-                <td>5657.0</td>
+                <td>3337.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5712,7 +5712,7 @@
                 <td>sensor.living_room_eppro_temperature</td>
                 <td>Temperature</td>
                 <td>°C</td>
-                <td>21.8369293212891</td>
+                <td>21.8342590332031</td>
                 <td>Yes</td>
             </tr>
         
@@ -5720,7 +5720,7 @@
                 <td>sensor.living_room_eppro_zone_1_target_count</td>
                 <td>Living Room EPPro Zone 1 Target Count</td>
                 <td> </td>
-                <td>0.0</td>
+                <td>1.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5864,7 +5864,7 @@
                 <td>sensor.network_scanner</td>
                 <td>Network Scanner</td>
                 <td>Devices</td>
-                <td>18</td>
+                <td>20</td>
                 <td>Yes</td>
             </tr>
         
@@ -5872,7 +5872,7 @@
                 <td>sensor.network_scanner_devices_list</td>
                 <td>Network Scanner Devices List</td>
                 <td>devices</td>
-                <td>18</td>
+                <td>20</td>
                 <td>Yes</td>
             </tr>
         
@@ -5880,7 +5880,7 @@
                 <td>sensor.next_alarm_in</td>
                 <td>Next Alarm In</td>
                 <td>N/A</td>
-                <td>7h 19m</td>
+                <td>7h 16m</td>
                 <td>Yes</td>
             </tr>
         
@@ -6104,7 +6104,7 @@
                 <td>sensor.snake_plant_illuminance</td>
                 <td>Snake Plant Illuminance</td>
                 <td>lx</td>
-                <td>341</td>
+                <td>344</td>
                 <td>Yes</td>
             </tr>
         
@@ -6120,7 +6120,7 @@
                 <td>sensor.snake_plant_signal_strength</td>
                 <td>Snake Plant Signal Strength</td>
                 <td>dBm</td>
-                <td>-73</td>
+                <td>-72</td>
                 <td>Yes</td>
             </tr>
         
@@ -6144,7 +6144,7 @@
                 <td>sensor.sun_azimuth</td>
                 <td>Sun Azimuth</td>
                 <td>°</td>
-                <td>349.22</td>
+                <td>350.81</td>
                 <td>Yes</td>
             </tr>
         
@@ -6152,7 +6152,7 @@
                 <td>sensor.sun_elevation</td>
                 <td>Sun Elevation</td>
                 <td>°</td>
-                <td>-38.82</td>
+                <td>-38.96</td>
                 <td>Yes</td>
             </tr>
         
@@ -6272,7 +6272,7 @@
                 <td>sensor.total_sensors_count</td>
                 <td>Total Entities</td>
                 <td>sensors</td>
-                <td>963</td>
+                <td>964</td>
                 <td>Yes</td>
             </tr>
         
@@ -7064,7 +7064,7 @@
                 <td>switch.zigbee2mqtt_bridge_permit_join</td>
                 <td>Zigbee Permit Join</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -7423,6 +7423,14 @@
             <tr>
                 <td>update.ir_receiver_firmware</td>
                 <td>IR Receiver Firmware</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.kitchen_ceiling_1</td>
+                <td>Kitchen Ceiling 1</td>
                 <td>N/A</td>
                 <td>off</td>
                 <td>Yes</td>
