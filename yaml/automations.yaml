@@ -3603,7 +3603,7 @@
     - conditions:
       - condition: time
         after: '22:00:00'
-        before: 08:00:00
+        before: 09:00:00
       - condition: state
         entity_id: binary_sensor.bed_sensor
         state: 'on'
@@ -4796,7 +4796,7 @@
   conditions:
   - condition: time
     after: '22:00:00'
-    before: 08:00:00
+    before: 09:00:00
   - condition: state
     entity_id: binary_sensor.bed_sensor
     state: 'on'
@@ -4807,4 +4807,54 @@
   - action: script.set_purifier_speed
     data:
       level: 'off'
+  mode: single
+- id: '1774083918015'
+  alias: Hugh Room Purifier Low Speed Watchdog
+  description: Correct purifier to low when room is occupied and media/PC/monitor
+    activity is active
+  triggers:
+  - trigger: state
+    entity_id: input_boolean.hugh_room_occupied
+    to: 'on'
+    for:
+      seconds: 10
+  - trigger: state
+    entity_id: media_player.master_bedroom_display_g
+    to: playing
+    for:
+      seconds: 5
+  - trigger: state
+    entity_id: binary_sensor.pc_status
+    to: 'on'
+    for:
+      seconds: 5
+  - trigger: state
+    entity_id: binary_sensor.monitor_state
+    to: 'on'
+    for:
+      seconds: 5
+  - trigger: time_pattern
+    minutes: /2
+  conditions:
+  - condition: state
+    entity_id: input_boolean.hugh_room_occupied
+    state: 'on'
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: media_player.master_bedroom_display_g
+      state: playing
+    - condition: state
+      entity_id: binary_sensor.pc_status
+      state: 'on'
+    - condition: state
+      entity_id: binary_sensor.monitor_state
+      state: 'on'
+  - condition: time
+    after: 09:00:00
+    before: '22:00:00'
+  actions:
+  - action: script.set_purifier_speed
+    data:
+      level: low
   mode: single
