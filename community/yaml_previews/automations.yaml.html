@@ -4764,6 +4764,39 @@
         target:
           entity_id: &#x27;{{ off_lights }}&#x27;
   mode: restart
+- id: &#x27;1774058190777&#x27;
+  alias: Kitchen Occupancy Watchdog
+  description: Turns kitchen lights off if occupancy is clear and lights remain on
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.kitchen_epone_occupancy
+    to: &#x27;off&#x27;
+    for:
+      minutes: 5
+  - trigger: state
+    entity_id: light.kitchen_lights
+    to: &#x27;on&#x27;
+    for:
+      minutes: 5
+  conditions:
+  - condition: state
+    entity_id: binary_sensor.kitchen_epone_occupancy
+    state: &#x27;off&#x27;
+  - condition: state
+    entity_id: light.kitchen_lights
+    state: &#x27;on&#x27;
+  actions:
+  - action: light.turn_off
+    target:
+      entity_id: light.kitchen_lights
+    data:
+      transition: 1
+  - delay:
+      seconds: 1.2
+  - action: scene.turn_on
+    target:
+      entity_id: scene.kitchen_lights_off
+  mode: single
 </pre>
             </div>
             <script>
