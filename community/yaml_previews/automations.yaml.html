@@ -4786,16 +4786,42 @@
     entity_id: light.kitchen_lights
     state: &#x27;on&#x27;
   actions:
-  - action: light.turn_off
-    target:
-      entity_id: light.kitchen_lights
-    data:
-      transition: 1
-  - delay:
-      seconds: 1.2
   - action: scene.turn_on
     target:
-      entity_id: scene.kitchen_lights_off
+      entity_id:
+      - scene.kitchen_lights_0_off
+    data: {}
+  mode: single
+- id: &#x27;1774082499649&#x27;
+  alias: Hugh Room Purifier Watchdog
+  description: Turns purifier off if it remains on while bed is occupied at night
+  triggers:
+  - trigger: state
+    entity_id: fan.air_purifier
+    to: &#x27;on&#x27;
+    for:
+      seconds: 10
+  - trigger: state
+    entity_id: binary_sensor.bed_sensor
+    to: &#x27;on&#x27;
+    for:
+      seconds: 10
+  - trigger: time_pattern
+    minutes: /2
+  conditions:
+  - condition: time
+    after: &#x27;22:00:00&#x27;
+    before: 08:00:00
+  - condition: state
+    entity_id: binary_sensor.bed_sensor
+    state: &#x27;on&#x27;
+  - condition: state
+    entity_id: fan.air_purifier
+    state: &#x27;on&#x27;
+  actions:
+  - action: script.set_purifier_speed
+    data:
+      level: &#x27;off&#x27;
   mode: single
 </pre>
             </div>
