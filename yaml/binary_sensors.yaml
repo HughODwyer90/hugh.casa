@@ -62,6 +62,7 @@
       device_class: power
       state: >
         {{ is_state('remote.living_room_tv', 'on')
+          or is_state('media_player.living_room_tv_samsung', 'on')
           or is_state('media_player.living_room_chromecast', 'on')
           or is_state('media_player.living_room_chromecast', 'playing') }}
       icon: >
