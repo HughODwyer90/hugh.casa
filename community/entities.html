@@ -11,13 +11,13 @@
         <body>
             <div class="fixed-header">
                 <h1>Home Assistant Entities</h1>
-                <p>Total Entities: 967 (Redacted: 16)</p>
-                <p>Version: 2026-03-21-090523</p>
+                <p>Total Entities: 992 (Redacted: 16)</p>
+                <p>Version: 2026-03-22-132212</p>
                 <div class="search-container">
                     <input type="text" id="entitySearch" class="search-box" placeholder="🔍 Search entities...">
                 </div>
                 <div>
-                    <p id="table-count">Search total: 967</p>
+                    <p id="table-count">Search total: 992</p>
                 </div>
                 <div class="filters">
                     <div id="filter-All" class="filter entity-filter active">All</div>
@@ -1037,10 +1037,50 @@
             </tr>
         
             <tr>
+                <td>binary_sensor.bed_presence_ba9bdc_bed_occupied_both</td>
+                <td>Bed Presence ba9bdc Bed Occupied Both</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>binary_sensor.bed_presence_ba9bdc_bed_occupied_either</td>
+                <td>Bed Presence ba9bdc Bed Occupied Either</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>binary_sensor.bed_presence_ba9bdc_bed_occupied_left</td>
+                <td>Bed Presence ba9bdc Bed Occupied Left</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>binary_sensor.bed_presence_ba9bdc_bed_occupied_right</td>
+                <td>Bed Presence ba9bdc Bed Occupied Right</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>binary_sensor.bed_presence_ba9bdc_status</td>
+                <td>Bed Presence ba9bdc Status</td>
+                <td>N/A</td>
+                <td>on</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>binary_sensor.bed_sensor</td>
                 <td>Bed Sensor</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -1312,7 +1352,7 @@
                 <td>binary_sensor.monitor_state</td>
                 <td>Monitor State</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -1320,7 +1360,7 @@
                 <td>binary_sensor.pc_status</td>
                 <td>PC Status</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -1344,24 +1384,24 @@
                 <td>binary_sensor.pressure_bed_sensor_left</td>
                 <td>Pressure Bed Sensor Left</td>
                 <td>N/A</td>
-                <td>on</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
                 <td>binary_sensor.pressure_bed_sensor_right</td>
                 <td>Pressure Bed Sensor Right</td>
                 <td>N/A</td>
-                <td>off</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
                 <td>binary_sensor.pressure_toothbrush</td>
                 <td>Pressure Toothbrush</td>
                 <td>N/A</td>
-                <td>off</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -1527,6 +1567,46 @@
             <tr>
                 <td>button.bathroom_vibration_sensor_battery_replaced</td>
                 <td>Bathroom Vibration Sensor Battery replaced</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>button.bed_presence_ba9bdc_calibrate_left_occupied</td>
+                <td>Bed Presence ba9bdc Calibrate Left Occupied</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>button.bed_presence_ba9bdc_calibrate_left_unoccupied</td>
+                <td>Bed Presence ba9bdc Calibrate Left Unoccupied</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>button.bed_presence_ba9bdc_calibrate_right_occupied</td>
+                <td>Bed Presence ba9bdc Calibrate Right Occupied</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>button.bed_presence_ba9bdc_calibrate_right_unoccupied</td>
+                <td>Bed Presence ba9bdc Calibrate Right Unoccupied</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>button.bed_presence_ba9bdc_restart</td>
+                <td>Bed Presence ba9bdc Restart</td>
                 <td>N/A</td>
                 <td>unknown</td>
                 <td>Yes</td>
@@ -1904,7 +1984,7 @@
                 <td>button.zigbee2mqtt_bridge_restart</td>
                 <td>Zigbee Restart</td>
                 <td>N/A</td>
-                <td>2026-03-21 03:37:19</td>
+                <td>2026-03-22 03:37:19</td>
                 <td>Yes</td>
             </tr>
         
@@ -2024,7 +2104,7 @@
                 <td>event.backup_automatic_backup</td>
                 <td>Backup Automatic backup</td>
                 <td>N/A</td>
-                <td>2026-03-21 03:30:00</td>
+                <td>2026-03-22 03:30:00</td>
                 <td>Yes</td>
             </tr>
         
@@ -2032,7 +2112,7 @@
                 <td>event.bathroom_vibration_sensor_action</td>
                 <td>Bathroom Vibration Sensor Action</td>
                 <td>N/A</td>
-                <td>2026-03-19 22:33:37</td>
+                <td>2026-03-22 13:14:22</td>
                 <td>Yes</td>
             </tr>
         
@@ -2096,7 +2176,7 @@
                 <td>event.repair</td>
                 <td>Repairs</td>
                 <td>N/A</td>
-                <td>2026-03-19 18:16:28</td>
+                <td>2026-03-21 22:18:29</td>
                 <td>Yes</td>
             </tr>
         
@@ -2240,7 +2320,7 @@
                 <td>input_boolean.vacuum_ran_this_weekend</td>
                 <td>Vacuum ran this weekend</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -2256,7 +2336,7 @@
                 <td>input_boolean.wake_up_alarm_running</td>
                 <td>Alarm Running</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -2264,7 +2344,7 @@
                 <td>input_boolean.wfh_tomorrow</td>
                 <td>WFH tomorrow</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -2320,7 +2400,7 @@
                 <td>input_button.update_esphome_devices</td>
                 <td>Update ESPHome Devices</td>
                 <td>N/A</td>
-                <td>2026-03-20 23:49:05</td>
+                <td>2026-03-21 22:23:10</td>
                 <td>Yes</td>
             </tr>
         
@@ -2352,7 +2432,7 @@
                 <td>input_datetime.driving_start_time</td>
                 <td>Driving Start Time</td>
                 <td>N/A</td>
-                <td>2026-03-19 22:07:52</td>
+                <td>2026-03-21 17:35:52</td>
                 <td>Yes</td>
             </tr>
         
@@ -2368,7 +2448,7 @@
                 <td>input_datetime.ibkr_last_update</td>
                 <td>IBKR Last Update</td>
                 <td>N/A</td>
-                <td>2026-03-21 00:00:03</td>
+                <td>2026-03-22 00:00:06</td>
                 <td>Yes</td>
             </tr>
         
@@ -2408,7 +2488,7 @@
                 <td>input_datetime.previous_sunrise</td>
                 <td>Previous Sunrise</td>
                 <td>N/A</td>
-                <td>2026-03-21 06:33:11</td>
+                <td>2026-03-22 06:30:52</td>
                 <td>Yes</td>
             </tr>
         
@@ -2416,7 +2496,7 @@
                 <td>input_datetime.previous_sunset</td>
                 <td>Previous Sunset</td>
                 <td>N/A</td>
-                <td>2026-03-20 18:47:49</td>
+                <td>2026-03-21 18:49:32</td>
                 <td>Yes</td>
             </tr>
         
@@ -2424,7 +2504,7 @@
                 <td>input_datetime.today_sunrise</td>
                 <td>Today Sunrise</td>
                 <td>N/A</td>
-                <td>2026-03-21 06:33:11</td>
+                <td>2026-03-22 06:30:52</td>
                 <td>Yes</td>
             </tr>
         
@@ -2432,7 +2512,7 @@
                 <td>input_datetime.today_sunset</td>
                 <td>Today Sunset</td>
                 <td>N/A</td>
-                <td>2026-03-21 18:49:32</td>
+                <td>2026-03-22 18:51:16</td>
                 <td>Yes</td>
             </tr>
         
@@ -2616,7 +2696,7 @@
                 <td>input_number.previous_bathroom_humidity</td>
                 <td>Previous Bathroom Humidity</td>
                 <td>%</td>
-                <td>54.1</td>
+                <td>88.5</td>
                 <td>Yes</td>
             </tr>
         
@@ -2624,7 +2704,7 @@
                 <td>input_number.previous_bathroom_temperature</td>
                 <td>Previous Bathroom Temperature</td>
                 <td>°C</td>
-                <td>21.7</td>
+                <td>22.2</td>
                 <td>Yes</td>
             </tr>
         
@@ -2632,7 +2712,7 @@
                 <td>input_number.previous_fuel_quantity</td>
                 <td>Previous Fuel Quantity</td>
                 <td>L</td>
-                <td>16.0</td>
+                <td>15.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -2640,7 +2720,7 @@
                 <td>input_number.previous_odometer_reading</td>
                 <td>Previous Odometer Reading</td>
                 <td>km</td>
-                <td>83035.0</td>
+                <td>83076.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -2680,7 +2760,7 @@
                 <td>input_number.yearly_driving_seconds</td>
                 <td>Yearly Driving Seconds</td>
                 <td>N/A</td>
-                <td>129647.312671897</td>
+                <td>135133.170065877</td>
                 <td>Yes</td>
             </tr>
         
@@ -2688,7 +2768,7 @@
                 <td>input_number.yearly_fuel_used</td>
                 <td>Yearly Fuel Used</td>
                 <td>N/A</td>
-                <td>132.0</td>
+                <td>136.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -2744,7 +2824,7 @@
                 <td>input_text.liverpool_tv_channel</td>
                 <td>N/A</td>
                 <td>N/A</td>
-                <td>TNT Sports 1, FOX One</td>
+                <td>No TV channel information available</td>
                 <td>Yes</td>
             </tr>
         
@@ -2776,7 +2856,7 @@
                 <td>light.aroma_diffuser</td>
                 <td>Aroma diffuser</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -2840,7 +2920,7 @@
                 <td>light.hugh_room_ceiling</td>
                 <td>Light Ceiling</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -3016,7 +3096,7 @@
                 <td>media_player.hugh_room_speaker</td>
                 <td>Hugh Room Speaker</td>
                 <td>N/A</td>
-                <td>idle</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3024,7 +3104,7 @@
                 <td>media_player.hugh_room_speaker_2</td>
                 <td>Hugh Room Speaker 2</td>
                 <td>N/A</td>
-                <td>idle</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3032,7 +3112,7 @@
                 <td>media_player.hugh_room_speaker_2_g</td>
                 <td>Hugh Room Speaker 2</td>
                 <td>N/A</td>
-                <td>idle</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3040,7 +3120,7 @@
                 <td>media_player.hugh_room_speaker_g</td>
                 <td>Hugh Room Speaker</td>
                 <td>N/A</td>
-                <td>idle</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3048,7 +3128,7 @@
                 <td>media_player.hugh_room_stereo_g_cast</td>
                 <td>Hugh Room Stereo</td>
                 <td>N/A</td>
-                <td>idle</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3056,7 +3136,7 @@
                 <td>media_player.hugh_speaker_group</td>
                 <td>Hugh Speaker Group</td>
                 <td>N/A</td>
-                <td>playing</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3064,7 +3144,7 @@
                 <td>media_player.hugh_speaker_group_2</td>
                 <td>Hugh Speaker Group</td>
                 <td>N/A</td>
-                <td>playing</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3112,7 +3192,7 @@
                 <td>media_player.master_bedroom_display</td>
                 <td>Master bedroom display</td>
                 <td>N/A</td>
-                <td>playing</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3120,7 +3200,7 @@
                 <td>media_player.master_bedroom_display_g</td>
                 <td>Master bedroom display</td>
                 <td>N/A</td>
-                <td>playing</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3128,7 +3208,7 @@
                 <td>media_player.monitor</td>
                 <td>Monitor</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -3136,7 +3216,7 @@
                 <td>media_player.monitor_google</td>
                 <td>Monitor</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>playing</td>
                 <td>Yes</td>
             </tr>
         
@@ -3144,8 +3224,8 @@
                 <td>media_player.smart_tv_pro</td>
                 <td>Master bedroom TV</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -3160,7 +3240,7 @@
                 <td>media_player.universal_player</td>
                 <td>universal_player</td>
                 <td>N/A</td>
-                <td>playing</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3185,6 +3265,54 @@
                 <td>Bathroom Vibration Sensor Sensitivity</td>
                 <td>N/A</td>
                 <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.bed_presence_ba9bdc_left_occupied_pressure</td>
+                <td>Bed Presence ba9bdc Left Occupied Pressure</td>
+                <td>%</td>
+                <td>100.0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.bed_presence_ba9bdc_left_trigger_pressure</td>
+                <td>Bed Presence ba9bdc Left Trigger Pressure</td>
+                <td>%</td>
+                <td>50.0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.bed_presence_ba9bdc_left_unoccupied_pressure</td>
+                <td>Bed Presence ba9bdc Left Unoccupied Pressure</td>
+                <td>%</td>
+                <td>0.0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.bed_presence_ba9bdc_right_occupied_pressure</td>
+                <td>Bed Presence ba9bdc Right Occupied Pressure</td>
+                <td>%</td>
+                <td>100.0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.bed_presence_ba9bdc_right_trigger_pressure</td>
+                <td>Bed Presence ba9bdc Right Trigger Pressure</td>
+                <td>%</td>
+                <td>50.0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.bed_presence_ba9bdc_right_unoccupied_pressure</td>
+                <td>Bed Presence ba9bdc Right Unoccupied Pressure</td>
+                <td>%</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -3488,7 +3616,7 @@
                 <td>remote.monitor</td>
                 <td>Google TV</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -3504,7 +3632,7 @@
                 <td>scene.bathroom_color_strip_1_red</td>
                 <td>Bathroom Color Strip Red</td>
                 <td>N/A</td>
-                <td>2026-03-21 01:39:46</td>
+                <td>2026-03-22 12:16:50</td>
                 <td>Yes</td>
             </tr>
         
@@ -3512,7 +3640,7 @@
                 <td>scene.bathroom_color_strip_2_off</td>
                 <td>Bathroom Color Strip Off</td>
                 <td>N/A</td>
-                <td>2026-03-21 03:38:30</td>
+                <td>2026-03-22 12:19:11</td>
                 <td>Yes</td>
             </tr>
         
@@ -3528,7 +3656,7 @@
                 <td>scene.curtains_close</td>
                 <td>Curtains Close</td>
                 <td>N/A</td>
-                <td>2026-03-20 23:21:08</td>
+                <td>2026-03-21 20:24:39</td>
                 <td>Yes</td>
             </tr>
         
@@ -3544,7 +3672,7 @@
                 <td>scene.curtains_open</td>
                 <td>Curtains Open</td>
                 <td>N/A</td>
-                <td>2026-03-21 06:44:45</td>
+                <td>2026-03-22 06:44:56</td>
                 <td>Yes</td>
             </tr>
         
@@ -3552,7 +3680,7 @@
                 <td>scene.hallway_off</td>
                 <td>Hallway Off</td>
                 <td>N/A</td>
-                <td>2026-03-21 03:38:31</td>
+                <td>2026-03-22 13:16:40</td>
                 <td>Yes</td>
             </tr>
         
@@ -3560,7 +3688,7 @@
                 <td>scene.hallway_on</td>
                 <td>Hallway On</td>
                 <td>N/A</td>
-                <td>2026-03-21 01:45:27</td>
+                <td>2026-03-22 13:14:18</td>
                 <td>Yes</td>
             </tr>
         
@@ -3568,7 +3696,7 @@
                 <td>scene.hugh_room_all_lights_off</td>
                 <td>Hugh Room All Lights Off</td>
                 <td>N/A</td>
-                <td>2026-03-21 01:46:20</td>
+                <td>2026-03-22 05:36:23</td>
                 <td>Yes</td>
             </tr>
         
@@ -3576,7 +3704,7 @@
                 <td>scene.hugh_room_all_lights_on</td>
                 <td>Hugh Room All Lights On</td>
                 <td>N/A</td>
-                <td>2026-03-21 01:39:33</td>
+                <td>2026-03-22 13:19:44</td>
                 <td>Yes</td>
             </tr>
         
@@ -3600,7 +3728,7 @@
                 <td>scene.lamp</td>
                 <td>Hugh Room Lamp</td>
                 <td>N/A</td>
-                <td>2026-03-21 01:46:18</td>
+                <td>2026-03-22 05:34:19</td>
                 <td>Yes</td>
             </tr>
         
@@ -3608,7 +3736,7 @@
                 <td>scene.living_room_lights_0_off</td>
                 <td>Living Room Lights Off</td>
                 <td>N/A</td>
-                <td>2026-03-21 06:46:11</td>
+                <td>2026-03-22 06:46:20</td>
                 <td>Yes</td>
             </tr>
         
@@ -3616,7 +3744,7 @@
                 <td>scene.living_room_lights_1_on</td>
                 <td>Living Room Lights On</td>
                 <td>N/A</td>
-                <td>2026-03-21 06:44:49</td>
+                <td>2026-03-22 06:45:00</td>
                 <td>Yes</td>
             </tr>
         
@@ -3624,7 +3752,7 @@
                 <td>scene.living_room_lights_2_dimmers</td>
                 <td>Living Room Lights Dimmers</td>
                 <td>N/A</td>
-                <td>2026-03-21 03:38:30</td>
+                <td>2026-03-22 03:37:28</td>
                 <td>Yes</td>
             </tr>
         
@@ -3809,6 +3937,22 @@
                 <td>Bathroom Motion Motion sensitivity</td>
                 <td>N/A</td>
                 <td>high</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.bed_presence_ba9bdc_bluetooth_scanner_mode</td>
+                <td>Bed Presence ba9bdc Bluetooth Scanner Mode</td>
+                <td>N/A</td>
+                <td>Passive</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.bed_presence_ba9bdc_response_speed</td>
+                <td>Bed Presence ba9bdc Response Speed</td>
+                <td>N/A</td>
+                <td>Normal</td>
                 <td>Yes</td>
             </tr>
         
@@ -4144,7 +4288,7 @@
                 <td>sensor.activewindow_filtered</td>
                 <td>Active Window</td>
                 <td>N/A</td>
-                <td>Off</td>
+                <td>Brave (Lucifer)</td>
                 <td>Yes</td>
             </tr>
         
@@ -4192,7 +4336,7 @@
                 <td>sensor.air_purifier_speed</td>
                 <td>Air Purifier Fan Speed</td>
                 <td>N/A</td>
-                <td>Medium</td>
+                <td>Low</td>
                 <td>Yes</td>
             </tr>
         
@@ -4232,7 +4376,7 @@
                 <td>sensor.automations</td>
                 <td>Home Assistant Automations</td>
                 <td>N/A</td>
-                <td>118</td>
+                <td>119</td>
                 <td>Yes</td>
             </tr>
         
@@ -4256,7 +4400,7 @@
                 <td>sensor.backup_last_attempted_automatic_backup</td>
                 <td>Backup Last attempted automatic backup</td>
                 <td>N/A</td>
-                <td>2026-03-21 03:30:00</td>
+                <td>2026-03-22 03:30:00</td>
                 <td>Yes</td>
             </tr>
         
@@ -4272,7 +4416,7 @@
                 <td>sensor.backup_next_scheduled_automatic_backup</td>
                 <td>Backup Next scheduled automatic backup</td>
                 <td>N/A</td>
-                <td>2026-03-22 03:30:00</td>
+                <td>2026-03-23 03:30:00</td>
                 <td>Yes</td>
             </tr>
         
@@ -4312,7 +4456,7 @@
                 <td>sensor.bathroom_aqara_humidity</td>
                 <td>Aqara Humidity</td>
                 <td>%</td>
-                <td>54.1</td>
+                <td>86.4</td>
                 <td>Yes</td>
             </tr>
         
@@ -4320,7 +4464,7 @@
                 <td>sensor.bathroom_aqara_pressure</td>
                 <td>Bathroom Aqara Atmospheric pressure</td>
                 <td>hPa</td>
-                <td>1019.5</td>
+                <td>1017.4</td>
                 <td>Yes</td>
             </tr>
         
@@ -4328,7 +4472,7 @@
                 <td>sensor.bathroom_aqara_temperature</td>
                 <td>Aqara Temperature</td>
                 <td>°C</td>
-                <td>21.7</td>
+                <td>22.1</td>
                 <td>Yes</td>
             </tr>
         
@@ -4368,7 +4512,7 @@
                 <td>sensor.bathroom_motion_temperature</td>
                 <td>Hue Temperature</td>
                 <td>°C</td>
-                <td>21.83</td>
+                <td>21.64</td>
                 <td>Yes</td>
             </tr>
         
@@ -4448,7 +4592,7 @@
                 <td>sensor.bathroom_vibration_sensor_strength</td>
                 <td>Bathroom Vibration Sensor Strength</td>
                 <td>N/A</td>
-                <td>6</td>
+                <td>20</td>
                 <td>Yes</td>
             </tr>
         
@@ -4473,6 +4617,46 @@
                 <td>Bathroom Vibration Sensor Z axis</td>
                 <td>N/A</td>
                 <td>1299</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.bed_presence_ba9bdc_left_pressure</td>
+                <td>Bed Presence ba9bdc Left Pressure</td>
+                <td>%</td>
+                <td>0.0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.bed_presence_ba9bdc_right_pressure</td>
+                <td>Bed Presence ba9bdc Right Pressure</td>
+                <td>%</td>
+                <td>0.0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.bed_presence_ba9bdc_uptime</td>
+                <td>Bed Presence ba9bdc Uptime</td>
+                <td>s</td>
+                <td>26.6840000152588</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.bed_presence_ba9bdc_wifi_signal_db</td>
+                <td>Bed Presence ba9bdc WiFi Signal dB</td>
+                <td>dBm</td>
+                <td>0.0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.bed_presence_ba9bdc_wifi_signal_percent</td>
+                <td>Bed Presence ba9bdc WiFi Signal Percent</td>
+                <td>%</td>
+                <td>100.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -4536,7 +4720,7 @@
                 <td>sensor.car_fuel_autonomy</td>
                 <td>Fuel Range</td>
                 <td>km</td>
-                <td>209</td>
+                <td>250</td>
                 <td>Yes</td>
             </tr>
         
@@ -4544,7 +4728,7 @@
                 <td>sensor.car_fuel_quantity</td>
                 <td>Fuel Remaining</td>
                 <td>L</td>
-                <td>16</td>
+                <td>15</td>
                 <td>Yes</td>
             </tr>
         
@@ -4552,7 +4736,7 @@
                 <td>sensor.car_fuel_tank_remaining</td>
                 <td>Fuel Remaining</td>
                 <td>L</td>
-                <td>16</td>
+                <td>15</td>
                 <td>Yes</td>
             </tr>
         
@@ -4584,7 +4768,7 @@
                 <td>sensor.car_mileage</td>
                 <td>Odometer</td>
                 <td>km</td>
-                <td>83035</td>
+                <td>83076</td>
                 <td>Yes</td>
             </tr>
         
@@ -4592,7 +4776,7 @@
                 <td>sensor.car_new_engine_distance</td>
                 <td>Car Engine Distance</td>
                 <td>km</td>
-                <td>14136.0</td>
+                <td>14177.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -4600,7 +4784,7 @@
                 <td>sensor.car_yearly_distance_traveled</td>
                 <td>YTD Distance</td>
                 <td>km</td>
-                <td>1756.0</td>
+                <td>1797.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -4608,7 +4792,7 @@
                 <td>sensor.car_yearly_driving_time</td>
                 <td>YTD Driving Time</td>
                 <td>h</td>
-                <td>36.0</td>
+                <td>37.32</td>
                 <td>Yes</td>
             </tr>
         
@@ -4656,7 +4840,7 @@
                 <td>sensor.coffee_table_device_temperature</td>
                 <td>Coffee Table Temperature</td>
                 <td>°C</td>
-                <td>21</td>
+                <td>22</td>
                 <td>Yes</td>
             </tr>
         
@@ -4664,7 +4848,7 @@
                 <td>sensor.coffee_table_voltage</td>
                 <td>Coffee Table Voltage</td>
                 <td>mV</td>
-                <td>3215</td>
+                <td>3205</td>
                 <td>Yes</td>
             </tr>
         
@@ -4704,7 +4888,7 @@
                 <td>sensor.date_time_iso</td>
                 <td>Date & Time (ISO)</td>
                 <td>N/A</td>
-                <td>2026-03-21 09:05:00</td>
+                <td>2026-03-22 13:22:00</td>
                 <td>Yes</td>
             </tr>
         
@@ -4728,7 +4912,7 @@
                 <td>sensor.daylight_duration</td>
                 <td>Daylight Duration</td>
                 <td>h</td>
-                <td>12.16</td>
+                <td>12.2</td>
                 <td>Yes</td>
             </tr>
         
@@ -4736,7 +4920,7 @@
                 <td>sensor.days_until_retirement</td>
                 <td>Days Until Retirement</td>
                 <td>days</td>
-                <td>11066</td>
+                <td>11065</td>
                 <td>Yes</td>
             </tr>
         
@@ -4760,7 +4944,7 @@
                 <td>sensor.entities</td>
                 <td>Home Assistant Entities</td>
                 <td>N/A</td>
-                <td>966</td>
+                <td>967</td>
                 <td>Yes</td>
             </tr>
         
@@ -4808,7 +4992,7 @@
                 <td>sensor.hall_motion_illuminance</td>
                 <td>Hall Motion Illuminance</td>
                 <td>lx</td>
-                <td>29</td>
+                <td>7</td>
                 <td>Yes</td>
             </tr>
         
@@ -4816,7 +5000,7 @@
                 <td>sensor.hall_motion_temperature</td>
                 <td>Hue Temperature</td>
                 <td>°C</td>
-                <td>21.82</td>
+                <td>22.28</td>
                 <td>Yes</td>
             </tr>
         
@@ -4832,7 +5016,7 @@
                 <td>sensor.hugh_phone_battery_level</td>
                 <td>Hugh Phone Battery level</td>
                 <td>%</td>
-                <td>100</td>
+                <td>27</td>
                 <td>Yes</td>
             </tr>
         
@@ -4840,7 +5024,7 @@
                 <td>sensor.hugh_phone_battery_state</td>
                 <td>Hugh Phone Battery state</td>
                 <td>N/A</td>
-                <td>full</td>
+                <td>discharging</td>
                 <td>Yes</td>
             </tr>
         
@@ -4872,7 +5056,7 @@
                 <td>sensor.hugh_phone_charger_type</td>
                 <td>Hugh Phone Charger type</td>
                 <td>N/A</td>
-                <td>ac</td>
+                <td>none</td>
                 <td>Yes</td>
             </tr>
         
@@ -4880,7 +5064,7 @@
                 <td>sensor.hugh_phone_wifi_signal_strength</td>
                 <td>SM-S9060 Wi-Fi signal strength</td>
                 <td>dBm</td>
-                <td>-1</td>
+                <td>-53</td>
                 <td>Yes</td>
             </tr>
         
@@ -5016,7 +5200,7 @@
                 <td>sensor.hugh_room_aqara_humidity</td>
                 <td>Aqara Humidity</td>
                 <td>%</td>
-                <td>54.03</td>
+                <td>54.64</td>
                 <td>Yes</td>
             </tr>
         
@@ -5024,7 +5208,7 @@
                 <td>sensor.hugh_room_aqara_pressure</td>
                 <td>Hugh Room Aqara Atmospheric pressure</td>
                 <td>hPa</td>
-                <td>1019.5</td>
+                <td>1017.2</td>
                 <td>Yes</td>
             </tr>
         
@@ -5032,7 +5216,7 @@
                 <td>sensor.hugh_room_aqara_temperature</td>
                 <td>Aqara Temperature</td>
                 <td>°C</td>
-                <td>19.88</td>
+                <td>20.38</td>
                 <td>Yes</td>
             </tr>
         
@@ -5128,7 +5312,7 @@
                 <td>sensor.hugh_room_plug_blanket_current</td>
                 <td>Hugh Room Plug Blanket Current</td>
                 <td>A</td>
-                <td>0.01</td>
+                <td>0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5152,7 +5336,7 @@
                 <td>sensor.hugh_room_plug_blanket_voltage</td>
                 <td>Hugh Room Plug Blanket Voltage</td>
                 <td>V</td>
-                <td>235</td>
+                <td>233</td>
                 <td>Yes</td>
             </tr>
         
@@ -5248,7 +5432,7 @@
                 <td>sensor.imap_hughodwyer90_gmail_com_messages</td>
                 <td>IMAP (hughodwyer90@gmail.com) Messages</td>
                 <td>messages</td>
-                <td>281</td>
+                <td>284</td>
                 <td>Yes</td>
             </tr>
         
@@ -5320,7 +5504,7 @@
                 <td>sensor.kitchen_epone_humidity</td>
                 <td>Humidity</td>
                 <td>%</td>
-                <td>30.2395629882812</td>
+                <td>32.6473999023438</td>
                 <td>Yes</td>
             </tr>
         
@@ -5328,7 +5512,7 @@
                 <td>sensor.kitchen_epone_illuminance</td>
                 <td>Kitchen EPOne Illuminance</td>
                 <td>lx</td>
-                <td>35.5888481140137</td>
+                <td>6.84932994842529</td>
                 <td>Yes</td>
             </tr>
         
@@ -5344,7 +5528,7 @@
                 <td>sensor.kitchen_epone_temperature</td>
                 <td>Temperature</td>
                 <td>°C</td>
-                <td>21.9202060699463</td>
+                <td>22.0964450836182</td>
                 <td>Yes</td>
             </tr>
         
@@ -5352,7 +5536,7 @@
                 <td>sensor.last_updated</td>
                 <td>Last Updated</td>
                 <td>N/A</td>
-                <td>2026-03-21 09:00:09</td>
+                <td>2026-03-22 13:15:15</td>
                 <td>Yes</td>
             </tr>
         
@@ -5360,7 +5544,7 @@
                 <td>sensor.left_window_battery</td>
                 <td>Left Window Battery</td>
                 <td>%</td>
-                <td>86</td>
+                <td>87</td>
                 <td>Yes</td>
             </tr>
         
@@ -5376,7 +5560,7 @@
                 <td>sensor.left_window_battery_plus</td>
                 <td>Left Window Battery+</td>
                 <td>%</td>
-                <td>86.0</td>
+                <td>87.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5392,7 +5576,7 @@
                 <td>sensor.left_window_light_level</td>
                 <td>Left Window Light level</td>
                 <td>N/A</td>
-                <td>4</td>
+                <td>3</td>
                 <td>Yes</td>
             </tr>
         
@@ -5424,7 +5608,7 @@
                 <td>sensor.liverpool_comp</td>
                 <td>Competition</td>
                 <td>N/A</td>
-                <td>Premier League</td>
+                <td>FA Cup</td>
                 <td>Yes</td>
             </tr>
         
@@ -5448,7 +5632,7 @@
                 <td>sensor.liverpool_generic_stage</td>
                 <td>Competition Stage</td>
                 <td>N/A</td>
-                <td>2025-26 English Premier League</td>
+                <td>Quarterfinals</td>
                 <td>Yes</td>
             </tr>
         
@@ -5464,7 +5648,7 @@
                 <td>sensor.liverpool_premier_league_record</td>
                 <td>Record</td>
                 <td>N/A</td>
-                <td>14-7-9 (49 pts)</td>
+                <td>-</td>
                 <td>Yes</td>
             </tr>
         
@@ -5472,7 +5656,7 @@
                 <td>sensor.liverpool_premier_league_stage</td>
                 <td>Competition Stage</td>
                 <td>N/A</td>
-                <td>Game 31 of 38</td>
+                <td>Game 32 of 38</td>
                 <td>Yes</td>
             </tr>
         
@@ -5488,7 +5672,7 @@
                 <td>sensor.liverpool_time</td>
                 <td>Kick off</td>
                 <td>N/A</td>
-                <td>Today at 12:30</td>
+                <td>Sat, 4/4 at 12:45</td>
                 <td>Yes</td>
             </tr>
         
@@ -5496,7 +5680,7 @@
                 <td>sensor.liverpool_tv_channel</td>
                 <td>TV</td>
                 <td>N/A</td>
-                <td>TNT Sports 1, FOX One</td>
+                <td>No TV channel information available</td>
                 <td>Yes</td>
             </tr>
         
@@ -5512,7 +5696,7 @@
                 <td>sensor.liverpool_utc</td>
                 <td>Liverpool (UTC)</td>
                 <td>N/A</td>
-                <td>2026-03-21 12:30:00</td>
+                <td>2026-04-04 11:45:00</td>
                 <td>Yes</td>
             </tr>
         
@@ -5520,7 +5704,7 @@
                 <td>sensor.liverpool_venue</td>
                 <td>Location</td>
                 <td>N/A</td>
-                <td>Away - American Express Stadium</td>
+                <td>Away - Etihad Stadium</td>
                 <td>Yes</td>
             </tr>
         
@@ -5528,7 +5712,7 @@
                 <td>sensor.liverpool_vs</td>
                 <td>Game vs</td>
                 <td>N/A</td>
-                <td>Brighton & Hove Albion</td>
+                <td>Manchester City</td>
                 <td>Yes</td>
             </tr>
         
@@ -5584,7 +5768,7 @@
                 <td>sensor.living_room_eppro_humidity</td>
                 <td>Humidity</td>
                 <td>%</td>
-                <td>21.4691162109375</td>
+                <td>22.2518920898438</td>
                 <td>Yes</td>
             </tr>
         
@@ -5592,7 +5776,7 @@
                 <td>sensor.living_room_eppro_illuminance</td>
                 <td>Illuminance</td>
                 <td>lx</td>
-                <td>68.2529449462891</td>
+                <td>13.2431087493896</td>
                 <td>Yes</td>
             </tr>
         
@@ -5744,7 +5928,7 @@
                 <td>sensor.living_room_eppro_temperature</td>
                 <td>Temperature</td>
                 <td>°C</td>
-                <td>21.9357299804688</td>
+                <td>21.6526794433594</td>
                 <td>Yes</td>
             </tr>
         
@@ -5768,7 +5952,7 @@
                 <td>sensor.living_room_phillips_switch_battery</td>
                 <td>Living Room Phillips Switch Battery</td>
                 <td>%</td>
-                <td>97.5</td>
+                <td>98.5</td>
                 <td>Yes</td>
             </tr>
         
@@ -5784,7 +5968,7 @@
                 <td>sensor.living_room_phillips_switch_battery_plus</td>
                 <td>Living Room Phillips Switch Battery+</td>
                 <td>%</td>
-                <td>97.5</td>
+                <td>98.5</td>
                 <td>Yes</td>
             </tr>
         
@@ -5808,15 +5992,15 @@
                 <td>sensor.lucifer_activewindow</td>
                 <td>Screen</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>Settings – Home Assistant - Brave</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.lucifer_activewindow_filtered</td>
                 <td>Active Window (Lucifer)</td>
                 <td>N/A</td>
-                <td>Off</td>
+                <td>Brave</td>
                 <td>Yes</td>
             </tr>
         
@@ -5832,7 +6016,7 @@
                 <td>sensor.middle_window_battery</td>
                 <td>Middle Window Battery</td>
                 <td>%</td>
-                <td>87</td>
+                <td>88</td>
                 <td>Yes</td>
             </tr>
         
@@ -5848,7 +6032,7 @@
                 <td>sensor.middle_window_battery_plus</td>
                 <td>Middle Window Battery+</td>
                 <td>%</td>
-                <td>87.0</td>
+                <td>88.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5864,7 +6048,7 @@
                 <td>sensor.middle_window_light_level</td>
                 <td>Middle Window Light level</td>
                 <td>N/A</td>
-                <td>6</td>
+                <td>3</td>
                 <td>Yes</td>
             </tr>
         
@@ -5872,7 +6056,7 @@
                 <td>sensor.minutes_played</td>
                 <td>Minutes Played</td>
                 <td>N/A</td>
-                <td>3/21 - 8:30 AM EDT</td>
+                <td>4/4 - 7:45 AM EDT</td>
                 <td>Yes</td>
             </tr>
         
@@ -5880,7 +6064,7 @@
                 <td>sensor.missing_entities</td>
                 <td>Missing Entities</td>
                 <td>items</td>
-                <td>6</td>
+                <td>10</td>
                 <td>Yes</td>
             </tr>
         
@@ -5888,7 +6072,7 @@
                 <td>sensor.missing_entities_mirror</td>
                 <td>Missing Entities</td>
                 <td>N/A</td>
-                <td>6</td>
+                <td>10</td>
                 <td>Yes</td>
             </tr>
         
@@ -5896,7 +6080,7 @@
                 <td>sensor.network_scanner</td>
                 <td>Network Scanner</td>
                 <td>Devices</td>
-                <td>19</td>
+                <td>21</td>
                 <td>Yes</td>
             </tr>
         
@@ -5904,7 +6088,7 @@
                 <td>sensor.network_scanner_devices_list</td>
                 <td>Network Scanner Devices List</td>
                 <td>devices</td>
-                <td>19</td>
+                <td>21</td>
                 <td>Yes</td>
             </tr>
         
@@ -5912,7 +6096,7 @@
                 <td>sensor.next_alarm_in</td>
                 <td>Next Alarm In</td>
                 <td>N/A</td>
-                <td>23h 55m</td>
+                <td>18h 28m</td>
                 <td>Yes</td>
             </tr>
         
@@ -5952,7 +6136,7 @@
                 <td>sensor.pc_plug_energy</td>
                 <td>PC Plug Energy</td>
                 <td>kWh</td>
-                <td>118.14</td>
+                <td>118.26</td>
                 <td>Yes</td>
             </tr>
         
@@ -5960,7 +6144,7 @@
                 <td>sensor.pc_plug_power</td>
                 <td>PC Plug Power</td>
                 <td>W</td>
-                <td>0</td>
+                <td>100</td>
                 <td>Yes</td>
             </tr>
         
@@ -5992,15 +6176,15 @@
                 <td>sensor.pressure_toothbrush_rssi</td>
                 <td>Pressure Toothbrush RSSI</td>
                 <td>dBm</td>
-                <td>unknown</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
                 <td>sensor.previous_bathroom_humidity</td>
                 <td>Aqara Humidity (previous)</td>
                 <td>%</td>
-                <td>54.1</td>
+                <td>88.5</td>
                 <td>Yes</td>
             </tr>
         
@@ -6048,7 +6232,7 @@
                 <td>sensor.right_window_light_level</td>
                 <td>Right Window Light level</td>
                 <td>N/A</td>
-                <td>6</td>
+                <td>4</td>
                 <td>Yes</td>
             </tr>
         
@@ -6136,7 +6320,7 @@
                 <td>sensor.snake_plant_illuminance</td>
                 <td>Snake Plant Illuminance</td>
                 <td>lx</td>
-                <td>341</td>
+                <td>350</td>
                 <td>Yes</td>
             </tr>
         
@@ -6152,7 +6336,7 @@
                 <td>sensor.snake_plant_signal_strength</td>
                 <td>Snake Plant Signal Strength</td>
                 <td>dBm</td>
-                <td>-88</td>
+                <td>-95</td>
                 <td>Yes</td>
             </tr>
         
@@ -6160,7 +6344,7 @@
                 <td>sensor.snake_plant_temperature</td>
                 <td>Snake Plant Temperature</td>
                 <td>°C</td>
-                <td>22.7</td>
+                <td>22.4</td>
                 <td>Yes</td>
             </tr>
         
@@ -6176,7 +6360,7 @@
                 <td>sensor.sun_azimuth</td>
                 <td>Sun Azimuth</td>
                 <td>°</td>
-                <td>119.8</td>
+                <td>192.21</td>
                 <td>Yes</td>
             </tr>
         
@@ -6184,7 +6368,7 @@
                 <td>sensor.sun_elevation</td>
                 <td>Sun Elevation</td>
                 <td>°</td>
-                <td>20.81</td>
+                <td>37.46</td>
                 <td>Yes</td>
             </tr>
         
@@ -6192,7 +6376,7 @@
                 <td>sensor.sun_next_dawn</td>
                 <td>Sun Next dawn</td>
                 <td>N/A</td>
-                <td>2026-03-22 05:56:48</td>
+                <td>2026-03-23 05:54:27</td>
                 <td>Yes</td>
             </tr>
         
@@ -6200,7 +6384,7 @@
                 <td>sensor.sun_next_dusk</td>
                 <td>Sun Next dusk</td>
                 <td>N/A</td>
-                <td>2026-03-21 19:23:42</td>
+                <td>2026-03-22 19:25:28</td>
                 <td>Yes</td>
             </tr>
         
@@ -6208,7 +6392,7 @@
                 <td>sensor.sun_next_midnight</td>
                 <td>Sun Next midnight</td>
                 <td>N/A</td>
-                <td>2026-03-22 00:40:33</td>
+                <td>2026-03-23 00:40:15</td>
                 <td>Yes</td>
             </tr>
         
@@ -6216,7 +6400,7 @@
                 <td>sensor.sun_next_noon</td>
                 <td>Sun Next noon</td>
                 <td>N/A</td>
-                <td>2026-03-21 12:41:01</td>
+                <td>2026-03-23 12:40:25</td>
                 <td>Yes</td>
             </tr>
         
@@ -6224,7 +6408,7 @@
                 <td>sensor.sun_next_rising</td>
                 <td>Sun Next rising</td>
                 <td>N/A</td>
-                <td>2026-03-22 06:30:52</td>
+                <td>2026-03-23 06:28:33</td>
                 <td>Yes</td>
             </tr>
         
@@ -6232,7 +6416,7 @@
                 <td>sensor.sun_next_setting</td>
                 <td>Sun Next setting</td>
                 <td>N/A</td>
-                <td>2026-03-21 18:49:32</td>
+                <td>2026-03-22 18:51:16</td>
                 <td>Yes</td>
             </tr>
         
@@ -6240,7 +6424,7 @@
                 <td>sensor.sun_wall_intensity_back</td>
                 <td>Sun Wall Intensity Back</td>
                 <td>%</td>
-                <td>33.12</td>
+                <td>86.43</td>
                 <td>Yes</td>
             </tr>
         
@@ -6256,7 +6440,7 @@
                 <td>sensor.sun_wall_intensity_left</td>
                 <td>Sun Wall Intensity Left</td>
                 <td>%</td>
-                <td>0</td>
+                <td>13.57</td>
                 <td>Yes</td>
             </tr>
         
@@ -6264,7 +6448,7 @@
                 <td>sensor.sun_wall_intensity_right</td>
                 <td>Sun Wall Intensity Right</td>
                 <td>%</td>
-                <td>66.88</td>
+                <td>0</td>
                 <td>Yes</td>
             </tr>
         
@@ -6304,7 +6488,7 @@
                 <td>sensor.total_sensors_count</td>
                 <td>Total Entities</td>
                 <td>sensors</td>
-                <td>967</td>
+                <td>992</td>
                 <td>Yes</td>
             </tr>
         
@@ -6368,7 +6552,7 @@
                 <td>sensor.vacuum_cleaning_count</td>
                 <td>Vacuum Cleaning Count</td>
                 <td>x</td>
-                <td>27</td>
+                <td>28</td>
                 <td>Yes</td>
             </tr>
         
@@ -6376,7 +6560,7 @@
                 <td>sensor.vacuum_cleaning_history</td>
                 <td>Vacuum Cleaning History</td>
                 <td>N/A</td>
-                <td>2026-03-15 11:51:34</td>
+                <td>2026-03-21 11:14:24</td>
                 <td>Yes</td>
             </tr>
         
@@ -6384,7 +6568,7 @@
                 <td>sensor.vacuum_current_room</td>
                 <td>Vacuum Current Room</td>
                 <td>N/A</td>
-                <td>Dining Hall</td>
+                <td>Utility</td>
                 <td>Yes</td>
             </tr>
         
@@ -6456,8 +6640,8 @@
                 <td>sensor.vacuum_low_water_warning</td>
                 <td>Vacuum Low Water Warning</td>
                 <td>N/A</td>
-                <td>no_warning</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -6480,7 +6664,7 @@
                 <td>sensor.vacuum_scale_inhibitor_left</td>
                 <td>Vacuum Scale Inhibitor Left</td>
                 <td>%</td>
-                <td>95</td>
+                <td>94</td>
                 <td>Yes</td>
             </tr>
         
@@ -6488,7 +6672,7 @@
                 <td>sensor.vacuum_scale_inhibitor_time_left</td>
                 <td>Vacuum Scale Inhibitor Time Left</td>
                 <td>dy</td>
-                <td>1046</td>
+                <td>1040</td>
                 <td>Yes</td>
             </tr>
         
@@ -6496,7 +6680,7 @@
                 <td>sensor.vacuum_sensor_dirty_left</td>
                 <td>Vacuum Sensor Dirty Left</td>
                 <td>%</td>
-                <td>49</td>
+                <td>48</td>
                 <td>Yes</td>
             </tr>
         
@@ -6544,7 +6728,7 @@
                 <td>sensor.vacuum_total_cleaned_area</td>
                 <td>Vacuum Total Cleaned Area</td>
                 <td>m²</td>
-                <td>671</td>
+                <td>694</td>
                 <td>Yes</td>
             </tr>
         
@@ -6552,7 +6736,7 @@
                 <td>sensor.vacuum_total_cleaning_time</td>
                 <td>Vacuum Total Cleaning Time</td>
                 <td>min</td>
-                <td>904</td>
+                <td>935</td>
                 <td>Yes</td>
             </tr>
         
@@ -6560,7 +6744,7 @@
                 <td>sensor.vacuum_wheel_dirty_left</td>
                 <td>Vacuum Wheel Dirty Left</td>
                 <td>%</td>
-                <td>49</td>
+                <td>48</td>
                 <td>Yes</td>
             </tr>
         
@@ -6632,7 +6816,7 @@
                 <td>sensor.watchman_last_parse</td>
                 <td>Watchman Last Parse</td>
                 <td>N/A</td>
-                <td>2026-03-21 08:43:03</td>
+                <td>2026-03-22 03:36:23</td>
                 <td>Yes</td>
             </tr>
         
@@ -6648,7 +6832,7 @@
                 <td>sensor.watchman_parse_duration</td>
                 <td>Watchman Parse Duration</td>
                 <td>s</td>
-                <td>3.92195262797759</td>
+                <td>2.79855418601073</td>
                 <td>Yes</td>
             </tr>
         
@@ -6664,7 +6848,7 @@
                 <td>sensor.watchman_status</td>
                 <td>Watchman Status</td>
                 <td>N/A</td>
-                <td>pending</td>
+                <td>idle</td>
                 <td>Yes</td>
             </tr>
         
@@ -6688,7 +6872,7 @@
                 <td>sensor.weather_cloud_coverage</td>
                 <td>weather Cloud coverage</td>
                 <td>%</td>
-                <td>20</td>
+                <td>75</td>
                 <td>Yes</td>
             </tr>
         
@@ -6696,7 +6880,7 @@
                 <td>sensor.weather_condition</td>
                 <td>weather Condition</td>
                 <td>N/A</td>
-                <td>partlycloudy</td>
+                <td>cloudy</td>
                 <td>Yes</td>
             </tr>
         
@@ -6704,7 +6888,7 @@
                 <td>sensor.weather_dew_point</td>
                 <td>weather Dew point temperature</td>
                 <td>°C</td>
-                <td>3.71</td>
+                <td>8.77</td>
                 <td>Yes</td>
             </tr>
         
@@ -6712,7 +6896,7 @@
                 <td>sensor.weather_feels_like_temperature</td>
                 <td>weather Apparent temperature</td>
                 <td>°C</td>
-                <td>5.34</td>
+                <td>11.11</td>
                 <td>Yes</td>
             </tr>
         
@@ -6720,7 +6904,7 @@
                 <td>sensor.weather_humidity</td>
                 <td>weather Humidity</td>
                 <td>%</td>
-                <td>81</td>
+                <td>82</td>
                 <td>Yes</td>
             </tr>
         
@@ -6736,7 +6920,7 @@
                 <td>sensor.weather_pressure</td>
                 <td>weather Pressure</td>
                 <td>hPa</td>
-                <td>1022</td>
+                <td>1018</td>
                 <td>Yes</td>
             </tr>
         
@@ -6760,7 +6944,7 @@
                 <td>sensor.weather_temperature</td>
                 <td>weather Temperature</td>
                 <td>°C</td>
-                <td>6.74</td>
+                <td>11.74</td>
                 <td>Yes</td>
             </tr>
         
@@ -6768,7 +6952,7 @@
                 <td>sensor.weather_uv_index</td>
                 <td>weather UV index</td>
                 <td>UV index</td>
-                <td>0.91</td>
+                <td>2</td>
                 <td>Yes</td>
             </tr>
         
@@ -6776,7 +6960,7 @@
                 <td>sensor.weather_visibility</td>
                 <td>weather Visibility</td>
                 <td>km</td>
-                <td>9.0</td>
+                <td>10.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -6784,7 +6968,7 @@
                 <td>sensor.weather_weather</td>
                 <td>weather Weather</td>
                 <td>N/A</td>
-                <td>few clouds</td>
+                <td>broken clouds</td>
                 <td>Yes</td>
             </tr>
         
@@ -6792,7 +6976,7 @@
                 <td>sensor.weather_weather_code</td>
                 <td>weather Weather code</td>
                 <td>N/A</td>
-                <td>801</td>
+                <td>803</td>
                 <td>Yes</td>
             </tr>
         
@@ -6800,7 +6984,7 @@
                 <td>sensor.weather_wind_bearing</td>
                 <td>weather Wind direction</td>
                 <td>°</td>
-                <td>320</td>
+                <td>310</td>
                 <td>Yes</td>
             </tr>
         
@@ -6816,7 +7000,7 @@
                 <td>sensor.weather_wind_speed</td>
                 <td>weather Wind speed</td>
                 <td>km/h</td>
-                <td>7.416</td>
+                <td>11.124</td>
                 <td>Yes</td>
             </tr>
         
@@ -6943,6 +7127,14 @@
             <tr>
                 <td>switch.bathroom_motion_led_indication</td>
                 <td>Bathroom Motion Led indication</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>switch.bed_presence_ba9bdc_full_range</td>
+                <td>Bed Presence ba9bdc Full Range</td>
                 <td>N/A</td>
                 <td>off</td>
                 <td>Yes</td>
@@ -7293,6 +7485,14 @@
             </tr>
         
             <tr>
+                <td>update.bed_presence_ba9bdc_firmware</td>
+                <td>Bed Presence ba9bdc Firmware</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>update.cloudflared_update</td>
                 <td>Cloudflared Update</td>
                 <td>N/A</td>
@@ -7600,8 +7800,8 @@
                 <td>update.pressure_firmware</td>
                 <td>Pressure Firmware</td>
                 <td>N/A</td>
-                <td>off</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -7712,7 +7912,7 @@
                 <td>weather.weather</td>
                 <td>weather</td>
                 <td>N/A</td>
-                <td>partlycloudy</td>
+                <td>cloudy</td>
                 <td>Yes</td>
             </tr>
         
