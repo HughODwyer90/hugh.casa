@@ -92,7 +92,8 @@
       unique_id: bed_sensor
       device_class: occupancy
       state: &gt;
-        {{ is_state(&#x27;binary_sensor.pressure_bed_sensor_left&#x27;, &#x27;on&#x27;)
+        {{ is_state(&#x27;binary_sensor.pressure_bed_sensor_left&#x27;, &#x27;on&#x27;) 
+          or is_state(&#x27;binary_sensor.bed_presence_bed_occupied_either&#x27;, &#x27;on&#x27;)
           or is_state(&#x27;binary_sensor.pressure_bed_sensor_right&#x27;, &#x27;on&#x27;) }}
       icon: &gt;
         {{ &#x27;mdi:bed&#x27; if this.state == &#x27;on&#x27; else &#x27;mdi:bed-empty&#x27; }}
