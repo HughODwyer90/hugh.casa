@@ -215,66 +215,80 @@
   mode: single
 - id: &#x27;1701870398205&#x27;
   alias: Hall Light Control
-  description: Control the landing light based on motion detection.
+  description: Control hall lights based on motion, lux, and sun elevation.
   triggers:
-  - entity_id: binary_sensor.hall_motion_occupancy
+  - trigger: state
+    entity_id: binary_sensor.hall_motion_occupancy
     to: &#x27;on&#x27;
-    trigger: state
-  - entity_id: binary_sensor.hall_motion_occupancy
+  - trigger: state
+    entity_id: binary_sensor.hall_motion_occupancy
     to: &#x27;off&#x27;
-    trigger: state
   actions:
   - choose:
     - conditions:
       - condition: state
         entity_id: binary_sensor.hall_motion_occupancy
         state: &#x27;on&#x27;
-      - condition: or
-        conditions:
-        - condition: sun
-          before: sunrise
-          before_offset: 01:30:00
-        - condition: sun
-          after: sunset
-          after_offset: -01:30:00
-        - condition: numeric_state
-          entity_id: sensor.hall_motion_illuminance
-          below: 130
+      - condition: numeric_state
+        entity_id: sensor.hall_motion_illuminance
+        below: 130
+      - condition: numeric_state
+        entity_id: sensor.sun_elevation
+        above: -6
       sequence:
-      - target:
+      - action: script.occupancy_lights_with_scene_fallback
+        data:
+          occupancy_sensor: binary_sensor.hall_motion_occupancy
+          target_light: light.hallway
+          on_scene: scene.hallway_1_on
+          off_scene: scene.hallway_0_off
+          brightness_pct: 100
+          transition: 1
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.hall_motion_occupancy
+        state: &#x27;on&#x27;
+      - condition: numeric_state
+        entity_id: sensor.hall_motion_illuminance
+        below: 130
+      - condition: numeric_state
+        entity_id: sensor.sun_elevation
+        below: -6
+      sequence:
+      - action: light.turn_on
+        target:
           entity_id: light.utility
         data:
           color_temp_kelvin: 2000
           brightness_pct: 100
           transition: 1
-        action: light.turn_on
-      - data:
+      - action: script.occupancy_lights_with_scene_fallback
+        data:
           occupancy_sensor: binary_sensor.hall_motion_occupancy
-          target_light: light.hall_lights
-          on_scene: scene.hallway_on
-          off_scene: scene.hallway_off
+          target_light: light.hallway
+          on_scene: scene.hallway_2_on_walls
+          off_scene: scene.hallway_0_off
           brightness_pct: 100
           transition: 1
-        action: script.occupancy_lights_with_scene_fallback
     - conditions:
       - condition: state
         entity_id: binary_sensor.hall_motion_occupancy
         state: &#x27;off&#x27;
       sequence:
-      - data:
+      - action: script.occupancy_lights_with_scene_fallback
+        data:
           occupancy_sensor: binary_sensor.hall_motion_occupancy
-          target_light: light.hall_lights
-          on_scene: scene.hallway_on
-          off_scene: scene.hallway_off
+          target_light: light.hallway
+          on_scene: scene.hallway_1_on
+          off_scene: scene.hallway_0_off
           brightness_pct: 100
           transition: 1
-        action: script.occupancy_lights_with_scene_fallback
       - delay: 00:02:00
-      - target:
+      - action: light.turn_off
+        target:
           entity_id: light.utility
         data:
           transition: 1
-        action: light.turn_off
     default: []
   mode: restart
 - id: &#x27;1702207044468&#x27;
