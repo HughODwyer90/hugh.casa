@@ -693,32 +693,45 @@ recast_to_stereo_with_media:
       radio_mode: false
     action: music_assistant.play_media
 occupancy_lights_with_scene_fallback:
+  alias: Occupancy lights with scene fallback
+  description: ''
   sequence:
   - choose:
-    - conditions: '{{ is_state(occupancy_sensor, ''on'') }}'
+    - conditions:
+      - condition: template
+        value_template: '{{ is_state(occupancy_sensor, ''on'') and (direct_scene |
+          default(false)) }}'
       sequence:
-      - target:
+      - action: scene.turn_on
+        target:
+          entity_id: '{{ on_scene }}'
+    - conditions:
+      - condition: template
+        value_template: '{{ is_state(occupancy_sensor, ''on'') }}'
+      sequence:
+      - action: light.turn_on
+        target:
           entity_id: '{{ target_light }}'
         data:
           brightness_pct: '{{ brightness_pct | default(70) }}'
           transition: '{{ transition | default(2) }}'
-        action: light.turn_on
       - delay:
           seconds: '{{ (transition | default(2)) | float + 0.2 }}'
-      - target:
+      - action: scene.turn_on
+        target:
           entity_id: '{{ on_scene }}'
-        action: scene.turn_on
-    - conditions: '{{ is_state(occupancy_sensor, ''off'') }}'
+    - conditions:
+      - condition: template
+        value_template: '{{ is_state(occupancy_sensor, ''off'') }}'
       sequence:
-      - target:
+      - action: light.turn_off
+        target:
           entity_id: '{{ target_light }}'
         data:
           transition: '{{ transition | default(2) }}'
-        action: light.turn_off
       - delay:
           seconds: '{{ (transition | default(2)) | float + 0.2 }}'
-      - target:
+      - action: scene.turn_on
+        target:
           entity_id: '{{ off_scene }}'
-        action: scene.turn_on
-  alias: Occupancy lights with scene fallback
-  description: ''
+  mode: single
