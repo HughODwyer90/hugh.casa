@@ -60,11 +60,16 @@
     - name: "Living Room TV State"
       unique_id: living_room_tv_state_sensor
       device_class: power
+      delay_off:
+        seconds: 5
       state: >
         {{ is_state('remote.living_room_tv', 'on')
           or is_state('media_player.living_room_tv_samsung', 'on')
+          or is_state('media_player.living_room_tv_samsung', 'idle')
+          or is_state('media_player.living_room_tv_samsung', 'playing')
           or is_state('media_player.living_room_chromecast', 'on')
-          or is_state('media_player.living_room_chromecast', 'playing') }}
+          or is_state('media_player.living_room_chromecast', 'playing')
+          or is_state('media_player.living_room_chromecast', 'idle') }}
       icon: >
         {% if this.state == 'on' %}
           mdi:television
@@ -73,7 +78,7 @@
         {% else %}
           mdi:alert
         {% endif %}
-
+        
     - name: "Bed Sensor"
       unique_id: bed_sensor
       device_class: occupancy
