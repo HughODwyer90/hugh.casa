@@ -708,35 +708,48 @@ recast_to_stereo_with_media:
       radio_mode: false
     action: music_assistant.play_media
 occupancy_lights_with_scene_fallback:
+  alias: Occupancy lights with scene fallback
+  description: &#x27;&#x27;
   sequence:
   - choose:
-    - conditions: &#x27;{{ is_state(occupancy_sensor, &#x27;&#x27;on&#x27;&#x27;) }}&#x27;
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ is_state(occupancy_sensor, &#x27;&#x27;on&#x27;&#x27;) and (direct_scene |
+          default(false)) }}&#x27;
       sequence:
-      - target:
+      - action: scene.turn_on
+        target:
+          entity_id: &#x27;{{ on_scene }}&#x27;
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ is_state(occupancy_sensor, &#x27;&#x27;on&#x27;&#x27;) }}&#x27;
+      sequence:
+      - action: light.turn_on
+        target:
           entity_id: &#x27;{{ target_light }}&#x27;
         data:
           brightness_pct: &#x27;{{ brightness_pct | default(70) }}&#x27;
           transition: &#x27;{{ transition | default(2) }}&#x27;
-        action: light.turn_on
       - delay:
           seconds: &#x27;{{ (transition | default(2)) | float + 0.2 }}&#x27;
-      - target:
+      - action: scene.turn_on
+        target:
           entity_id: &#x27;{{ on_scene }}&#x27;
-        action: scene.turn_on
-    - conditions: &#x27;{{ is_state(occupancy_sensor, &#x27;&#x27;off&#x27;&#x27;) }}&#x27;
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ is_state(occupancy_sensor, &#x27;&#x27;off&#x27;&#x27;) }}&#x27;
       sequence:
-      - target:
+      - action: light.turn_off
+        target:
           entity_id: &#x27;{{ target_light }}&#x27;
         data:
           transition: &#x27;{{ transition | default(2) }}&#x27;
-        action: light.turn_off
       - delay:
           seconds: &#x27;{{ (transition | default(2)) | float + 0.2 }}&#x27;
-      - target:
+      - action: scene.turn_on
+        target:
           entity_id: &#x27;{{ off_scene }}&#x27;
-        action: scene.turn_on
-  alias: Occupancy lights with scene fallback
-  description: &#x27;&#x27;
+  mode: single
 </pre>
             </div>
             <script>
