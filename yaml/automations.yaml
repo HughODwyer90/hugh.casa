@@ -445,10 +445,9 @@
           \  and trigger.to_state.state == 'on' }}\n"
       sequence:
       - action: scene.turn_on
-        target:
-          entity_id:
-          - scene.living_room_lights_1_on
         data: {}
+        target:
+          entity_id: scene.living_room_lights_3_accents
     - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_eppro_occupancy
@@ -474,7 +473,7 @@
       - action: scene.turn_on
         target:
           entity_id:
-          - scene.living_room_lights_1_on
+          - scene.living_room_lights_3_accents
         data: {}
     default: []
   mode: restart
