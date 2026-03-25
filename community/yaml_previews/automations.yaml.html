@@ -4890,6 +4890,36 @@
     data:
       level: low
   mode: single
+- id: &#x27;1774466984654&#x27;
+  alias: Redirect Spotify to MA Group (using working script)
+  description: &#x27;&#x27;
+  triggers:
+  - entity_id:
+    - media_player.master_bedroom_display_g
+    - media_player.hugh_room_speaker_g
+    - media_player.hugh_room_speaker_2_g
+    to: playing
+    trigger: state
+  conditions:
+  - condition: template
+    value_template: &quot;{% set trio = [\n  &#x27;media_player.master_bedroom_display_g&#x27;,\n
+      \ &#x27;media_player.hugh_room_speaker_g&#x27;,\n  &#x27;media_player.hugh_room_speaker_2_g&#x27;\n]
+      %}\n{{ (trio | select(&#x27;is_state&#x27;,&#x27;playing&#x27;) | list) | length == 1\n   and state_attr(trigger.entity_id,
+      &#x27;app_name&#x27;) == &#x27;Spotify&#x27; }}\n&quot;
+  actions:
+  - wait_template: &quot;{{ state_attr(trigger.entity_id, &#x27;media_title&#x27;) not in [none,
+      &#x27;&#x27;, &#x27;unknown&#x27;, &#x27;unavailable&#x27;]\n   and state_attr(trigger.entity_id, &#x27;media_artist&#x27;)
+      not in [none, &#x27;&#x27;, &#x27;unknown&#x27;, &#x27;unavailable&#x27;] }}\n&quot;
+    timeout: 00:00:05
+    continue_on_timeout: false
+  - variables:
+      song_title: &#x27;{{ state_attr(trigger.entity_id, &#x27;&#x27;media_title&#x27;&#x27;) }}&#x27;
+      song_artist: &#x27;{{ state_attr(trigger.entity_id, &#x27;&#x27;media_artist&#x27;&#x27;) }}&#x27;
+      ma_search: &#x27;{{ song_artist ~ &#x27;&#x27; - &#x27;&#x27; ~ song_title }}&#x27;
+  - action: script.recast_to_stereo_with_media
+    data:
+      media_id: &#x27;{{ ma_search }}&#x27;
+  mode: restart
 </pre>
             </div>
             <script>
