@@ -4875,3 +4875,33 @@
     data:
       level: low
   mode: single
+- id: '1774466984654'
+  alias: Redirect Spotify to MA Group (using working script)
+  description: ''
+  triggers:
+  - entity_id:
+    - media_player.master_bedroom_display_g
+    - media_player.hugh_room_speaker_g
+    - media_player.hugh_room_speaker_2_g
+    to: playing
+    trigger: state
+  conditions:
+  - condition: template
+    value_template: "{% set trio = [\n  'media_player.master_bedroom_display_g',\n
+      \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
+      %}\n{{ (trio | select('is_state','playing') | list) | length == 1\n   and state_attr(trigger.entity_id,
+      'app_name') == 'Spotify' }}\n"
+  actions:
+  - wait_template: "{{ state_attr(trigger.entity_id, 'media_title') not in [none,
+      '', 'unknown', 'unavailable']\n   and state_attr(trigger.entity_id, 'media_artist')
+      not in [none, '', 'unknown', 'unavailable'] }}\n"
+    timeout: 00:00:05
+    continue_on_timeout: false
+  - variables:
+      song_title: '{{ state_attr(trigger.entity_id, ''media_title'') }}'
+      song_artist: '{{ state_attr(trigger.entity_id, ''media_artist'') }}'
+      ma_search: '{{ song_artist ~ '' - '' ~ song_title }}'
+  - action: script.recast_to_stereo_with_media
+    data:
+      media_id: '{{ ma_search }}'
+  mode: restart
