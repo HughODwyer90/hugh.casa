@@ -697,18 +697,14 @@ recast_to_stereo_with_media:
   mode: single
   fields:
     media_id:
-      description: Spotify URI/track id
+      description: Media id or search text
   sequence:
-  - variables:
-      normalized_media_id: &quot;{% if media_id is string and media_id.startswith(&#x27;spotify:&#x27;)
-        %}\n  {{ media_id | regex_replace(&#x27;^spotify:([^:]+):(.+)$&#x27;, &#x27;spotify://\\\\1/\\\\2&#x27;)
-        }}\n{% else %}\n  {{ media_id }}\n{% endif %}&quot;
   - action: music_assistant.play_media
     target:
       entity_id: media_player.hugh_speaker_group_2
     data:
+      media_id: &#x27;{{ media_id }}&#x27;
       media_type: track
-      media_id: &#x27;{{ normalized_media_id }}&#x27;
       enqueue: play
       radio_mode: false
 occupancy_lights_with_scene_fallback:
