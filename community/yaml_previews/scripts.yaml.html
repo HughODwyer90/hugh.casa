@@ -697,16 +697,16 @@ recast_to_stereo_with_media:
   mode: single
   fields:
     media_id:
-      description: Media id or search text
+      description: Spotify URI/track id
   sequence:
-  - action: music_assistant.play_media
-    target:
+  - target:
       entity_id: media_player.hugh_speaker_group_2
     data:
-      media_id: &#x27;{{ media_id }}&#x27;
       media_type: track
+      media_id: &#x27;{{ media_id }}&#x27;
       enqueue: play
       radio_mode: false
+    action: music_assistant.play_media
 occupancy_lights_with_scene_fallback:
   alias: Occupancy lights with scene fallback
   description: &#x27;&#x27;
