@@ -79,6 +79,7 @@
       - action: light.turn_off
         target:
           entity_id: '{{ lr_on_lights }}'
+        data: {}
       - delay: '00:00:00.15'
       - action: scene.turn_on
         target:
