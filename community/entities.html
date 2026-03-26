@@ -11,13 +11,13 @@
         <body>
             <div class="fixed-header">
                 <h1>Home Assistant Entities</h1>
-                <p>Total Entities: 1021 (Redacted: 16)</p>
-                <p>Version: 2026-03-26-172121</p>
+                <p>Total Entities: 1020 (Redacted: 16)</p>
+                <p>Version: 2026-03-26-172237</p>
                 <div class="search-container">
                     <input type="text" id="entitySearch" class="search-box" placeholder="🔍 Search entities...">
                 </div>
                 <div>
-                    <p id="table-count">Search total: 1021</p>
+                    <p id="table-count">Search total: 1020</p>
                 </div>
                 <div class="filters">
                     <div id="filter-All" class="filter entity-filter active">All</div>
@@ -1861,8 +1861,8 @@
             </tr>
         
             <tr>
-                <td>button.living_room_ceiling_identify</td>
-                <td>Living Room Ceiling Identify</td>
+                <td>button.living_room_bookshelf_identify</td>
+                <td>Living Room Bookshelf Identify</td>
                 <td>N/A</td>
                 <td>unknown</td>
                 <td>Yes</td>
@@ -2264,7 +2264,7 @@
                 <td>event.repair</td>
                 <td>Repairs</td>
                 <td>N/A</td>
-                <td>2026-03-26 17:20:06</td>
+                <td>2026-03-26 17:21:47</td>
                 <td>Yes</td>
             </tr>
         
@@ -3096,12 +3096,12 @@
                 <td>light.living_room_accent_lights</td>
                 <td>Living Room Accent Lights</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>on</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
-                <td>light.living_room_ceiling</td>
+                <td>light.living_room_bookshelf</td>
                 <td>Light Ceiling</td>
                 <td>N/A</td>
                 <td>on</td>
@@ -3112,6 +3112,14 @@
                 <td>light.living_room_ceiling_lights</td>
                 <td>Living Room Ceiling Lights</td>
                 <td>N/A</td>
+                <td>unavailable</td>
+                <td>No</td>
+            </tr>
+        
+            <tr>
+                <td>light.living_room_coffee_table</td>
+                <td>Bookshelf</td>
+                <td>N/A</td>
                 <td>on</td>
                 <td>Yes</td>
             </tr>
@@ -3120,7 +3128,7 @@
                 <td>light.living_room_dining_table</td>
                 <td>Living Room Floor Lamp</td>
                 <td>N/A</td>
-                <td>unknown</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -3144,7 +3152,7 @@
                 <td>light.living_room_floor_lamp_2</td>
                 <td>Living Room Floor lamp</td>
                 <td>N/A</td>
-                <td>unknown</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -3152,8 +3160,8 @@
                 <td>light.living_room_lights</td>
                 <td>Living Room Lights</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>on</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -3949,38 +3957,6 @@
             </tr>
         
             <tr>
-                <td>scene.living_room_lights_0_off</td>
-                <td>Living Room Lights Off</td>
-                <td>N/A</td>
-                <td>2026-03-26 16:50:31</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>scene.living_room_lights_1_on</td>
-                <td>Living Room Lights On</td>
-                <td>N/A</td>
-                <td>2026-03-23 17:53:28</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>scene.living_room_lights_2_dimmers</td>
-                <td>Living Room Lights Dimmers</td>
-                <td>N/A</td>
-                <td>2026-03-26 03:38:08</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
-                <td>scene.living_room_lights_3_accents</td>
-                <td>Living Room Lights Accents</td>
-                <td>N/A</td>
-                <td>2026-03-26 16:50:38</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>script.ai_plant_message_direct</td>
                 <td>AI Plant Message Direct</td>
                 <td>N/A</td>
@@ -4349,8 +4325,16 @@
             </tr>
         
             <tr>
-                <td>select.living_room_ceiling_power_on_behavior</td>
-                <td>Living Room Ceiling Power-on behavior</td>
+                <td>select.living_room_bookshelf_power_on_behavior</td>
+                <td>Living Room Bookshelf Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.living_room_coffee_table_power_on_behavior</td>
+                <td>Bookshelf Power-on behavior</td>
                 <td>N/A</td>
                 <td>unknown</td>
                 <td>Yes</td>
@@ -4864,7 +4848,7 @@
                 <td>sensor.bed_presence_uptime</td>
                 <td>Bed Presence Uptime</td>
                 <td>s</td>
-                <td>359978.25</td>
+                <td>360038.25</td>
                 <td>Yes</td>
             </tr>
         
@@ -4872,7 +4856,7 @@
                 <td>sensor.bed_presence_wifi_signal_db</td>
                 <td>Bed Presence WiFi Signal dB</td>
                 <td>dBm</td>
-                <td>-62.0</td>
+                <td>-63.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -4880,7 +4864,7 @@
                 <td>sensor.bed_presence_wifi_signal_percent</td>
                 <td>Bed Presence WiFi Signal Percent</td>
                 <td>%</td>
-                <td>76.0</td>
+                <td>74.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5112,7 +5096,7 @@
                 <td>sensor.date_time_iso</td>
                 <td>Date & Time (ISO)</td>
                 <td>N/A</td>
-                <td>2026-03-26 17:21:00</td>
+                <td>2026-03-26 17:22:00</td>
                 <td>Yes</td>
             </tr>
         
@@ -5560,7 +5544,7 @@
                 <td>sensor.hugh_room_plug_blanket_voltage</td>
                 <td>Hugh Room Plug Blanket Voltage</td>
                 <td>V</td>
-                <td>232</td>
+                <td>230</td>
                 <td>Yes</td>
             </tr>
         
@@ -5592,7 +5576,7 @@
                 <td>sensor.hugh_room_plug_fan_bed_voltage</td>
                 <td>Hugh Room Plug Fan Bed Voltage</td>
                 <td>V</td>
-                <td>232</td>
+                <td>230</td>
                 <td>Yes</td>
             </tr>
         
@@ -5728,7 +5712,7 @@
                 <td>sensor.kitchen_epone_humidity</td>
                 <td>Humidity</td>
                 <td>%</td>
-                <td>31.995849609375</td>
+                <td>32.0111083984375</td>
                 <td>Yes</td>
             </tr>
         
@@ -5736,7 +5720,7 @@
                 <td>sensor.kitchen_epone_illuminance</td>
                 <td>Kitchen EPOne Illuminance</td>
                 <td>lx</td>
-                <td>4.98171234130859</td>
+                <td>5.5419979095459</td>
                 <td>Yes</td>
             </tr>
         
@@ -5752,7 +5736,7 @@
                 <td>sensor.kitchen_epone_temperature</td>
                 <td>Temperature</td>
                 <td>°C</td>
-                <td>21.1084384918213</td>
+                <td>21.121789932251</td>
                 <td>Yes</td>
             </tr>
         
@@ -5760,7 +5744,7 @@
                 <td>sensor.last_updated</td>
                 <td>Last Updated</td>
                 <td>N/A</td>
-                <td>2026-03-26 17:20:08</td>
+                <td>2026-03-26 17:22:28</td>
                 <td>Yes</td>
             </tr>
         
@@ -5989,8 +5973,8 @@
             </tr>
         
             <tr>
-                <td>sensor.living_room_ceiling_color_options</td>
-                <td>Living Room Ceiling Color options</td>
+                <td>sensor.living_room_bookshelf_color_options</td>
+                <td>Living Room Bookshelf Color options</td>
                 <td>N/A</td>
                 <td></td>
                 <td>Yes</td>
@@ -6000,7 +5984,7 @@
                 <td>sensor.living_room_eppro_humidity</td>
                 <td>Humidity</td>
                 <td>%</td>
-                <td>22.9476928710938</td>
+                <td>22.9141235351562</td>
                 <td>Yes</td>
             </tr>
         
@@ -6016,7 +6000,7 @@
                 <td>sensor.living_room_eppro_target_1_angle</td>
                 <td>Living Room EPPro Target 1 Angle</td>
                 <td>°</td>
-                <td>-1.09977984428406</td>
+                <td>8.45925426483154</td>
                 <td>Yes</td>
             </tr>
         
@@ -6024,7 +6008,7 @@
                 <td>sensor.living_room_eppro_target_1_distance</td>
                 <td>Living Room EPPro Target 1 Distance</td>
                 <td>mm</td>
-                <td>5731.0556640625</td>
+                <td>5982.08056640625</td>
                 <td>Yes</td>
             </tr>
         
@@ -6048,7 +6032,7 @@
                 <td>sensor.living_room_eppro_target_1_x</td>
                 <td>Living Room EPPro Target 1 X</td>
                 <td>mm</td>
-                <td>-1761.0</td>
+                <td>-2758.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -6056,7 +6040,7 @@
                 <td>sensor.living_room_eppro_target_1_y</td>
                 <td>Living Room EPPro Target 1 Y</td>
                 <td>mm</td>
-                <td>5453.0</td>
+                <td>5308.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -6160,7 +6144,7 @@
                 <td>sensor.living_room_eppro_temperature</td>
                 <td>Temperature</td>
                 <td>°C</td>
-                <td>21.9010162353516</td>
+                <td>21.8609619140625</td>
                 <td>Yes</td>
             </tr>
         
@@ -6304,7 +6288,7 @@
                 <td>sensor.missing_entities</td>
                 <td>Missing Entities</td>
                 <td>items</td>
-                <td>13</td>
+                <td>14</td>
                 <td>Yes</td>
             </tr>
         
@@ -6312,7 +6296,7 @@
                 <td>sensor.missing_entities_mirror</td>
                 <td>Missing Entities</td>
                 <td>N/A</td>
-                <td>13</td>
+                <td>14</td>
                 <td>Yes</td>
             </tr>
         
@@ -6336,7 +6320,7 @@
                 <td>sensor.next_alarm_in</td>
                 <td>Next Alarm In</td>
                 <td>N/A</td>
-                <td>14h 29m</td>
+                <td>14h 28m</td>
                 <td>Yes</td>
             </tr>
         
@@ -6576,7 +6560,7 @@
                 <td>sensor.snake_plant_signal_strength</td>
                 <td>Snake Plant Signal Strength</td>
                 <td>dBm</td>
-                <td>-79</td>
+                <td>-81</td>
                 <td>Yes</td>
             </tr>
         
@@ -6728,7 +6712,7 @@
                 <td>sensor.total_sensors_count</td>
                 <td>Total Entities</td>
                 <td>sensors</td>
-                <td>1021</td>
+                <td>1020</td>
                 <td>Yes</td>
             </tr>
         
@@ -7949,8 +7933,16 @@
             </tr>
         
             <tr>
-                <td>update.living_room_ceiling</td>
-                <td>Living Room Ceiling</td>
+                <td>update.living_room_bookshelf</td>
+                <td>Living Room Bookshelf</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.living_room_coffee_table</td>
+                <td>Bookshelf</td>
                 <td>N/A</td>
                 <td>off</td>
                 <td>Yes</td>
@@ -7960,7 +7952,7 @@
                 <td>update.living_room_dining_table</td>
                 <td>Living Room Floor Lamp</td>
                 <td>N/A</td>
-                <td>unknown</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
