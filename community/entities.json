@@ -853,18 +853,18 @@
         "entity_id": "script.update_entities_html",
         "state": "on",
         "attributes": {
-            "last_triggered": "2026-03-26T16:57:02.497200+00:00",
+            "last_triggered": "2026-03-26T16:58:35.390595+00:00",
             "mode": "single",
             "current": 1,
             "icon": "mdi:git",
             "friendly_name": "Github Backup"
         },
-        "last_changed": "2026-03-26T16:57:02.497312+00:00",
-        "last_reported": "2026-03-26T16:57:02.497312+00:00",
-        "last_updated": "2026-03-26T16:57:02.497312+00:00",
+        "last_changed": "2026-03-26T16:58:35.390686+00:00",
+        "last_reported": "2026-03-26T16:58:35.390686+00:00",
+        "last_updated": "2026-03-26T16:58:35.390686+00:00",
         "context": {
-            "id": "01KMNH7Y8Y3RHVFJ49D74GFB5B",
-            "parent_id": "01KMNH7Y8DTDNP3WS5MZ925TWG",
+            "id": "01KMNHARZVCDPS9HRFTM22Q2NT",
+            "parent_id": "01KMNHARZ745N685XQY77ZH2QG",
             "user_id": null
         }
     },
@@ -2425,24 +2425,28 @@
     },
     {
         "entity_id": "light.living_room_ceiling_lights",
-        "state": "off",
+        "state": "unknown",
         "attributes": {
+            "min_color_temp_kelvin": 2202,
+            "max_color_temp_kelvin": 4000,
             "effect_list": [
                 "blink",
                 "breathe",
-                "candle",
                 "channel_change",
                 "finish_effect",
                 "okay",
-                "stop_effect",
-                "stop_hue_effect"
+                "stop_effect"
             ],
             "supported_color_modes": [
-                "brightness"
+                "color_temp"
             ],
             "effect": null,
             "color_mode": null,
             "brightness": null,
+            "color_temp_kelvin": null,
+            "hs_color": null,
+            "rgb_color": null,
+            "xy_color": null,
             "entity_id": [
                 "light.living_room_ceiling",
                 "light.dining_room_table"
@@ -2451,11 +2455,11 @@
             "friendly_name": "Living Room Ceiling Lights",
             "supported_features": 44
         },
-        "last_changed": "2026-03-26T03:38:08.498515+00:00",
-        "last_reported": "2026-03-26T03:38:08.498515+00:00",
-        "last_updated": "2026-03-26T03:38:08.498515+00:00",
+        "last_changed": "2026-03-26T16:58:35.380822+00:00",
+        "last_reported": "2026-03-26T16:58:35.380822+00:00",
+        "last_updated": "2026-03-26T16:58:35.380822+00:00",
         "context": {
-            "id": "01KMM3H3FHH16JBRVWCSD7R7T4",
+            "id": "01KMNHARZ745N685XQY77ZH2QG",
             "parent_id": null,
             "user_id": null
         }
@@ -3188,48 +3192,48 @@
             "configuration": {},
             "manual_control": [],
             "brightness_pct": 100,
-            "color_temp_kelvin": 3395,
+            "color_temp_kelvin": 3390,
             "color_temp_mired": 294,
             "rgb_color": [
                 255,
-                190,
+                189,
                 135
             ],
             "xy_color": [
-                0.461,
-                0.376
+                0.462,
+                0.375
             ],
             "hs_color": [
-                27.227,
+                26.723,
                 46.667
             ],
-            "sun_position": 0.5357035603312492,
+            "sun_position": 0.5302398554326249,
             "force_rgb_color": false,
             "autoreset_time_remaining": {},
             "icon": "mdi:theme-light-dark",
             "friendly_name": "Adaptive Lighting: Bathroom"
         },
         "last_changed": "2026-03-26T03:33:45.109460+00:00",
-        "last_reported": "2026-03-26T16:55:52.231442+00:00",
-        "last_updated": "2026-03-26T16:55:52.231442+00:00",
+        "last_reported": "2026-03-26T16:57:22.728729+00:00",
+        "last_updated": "2026-03-26T16:57:22.728729+00:00",
         "context": {
-            "id": "01KMNH5SN738KZ40P34QAM5ERV",
+            "id": "01KMNH8J18D8DGC1R4HVV31B8J",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.date_time_iso",
-        "state": "2026-03-26T16:57:00",
+        "state": "2026-03-26T16:58:00",
         "attributes": {
             "icon": "mdi:calendar-clock",
             "friendly_name": "Date & Time (ISO)"
         },
-        "last_changed": "2026-03-26T16:57:00.004719+00:00",
-        "last_reported": "2026-03-26T16:57:00.004719+00:00",
-        "last_updated": "2026-03-26T16:57:00.004719+00:00",
+        "last_changed": "2026-03-26T16:58:00.001627+00:00",
+        "last_reported": "2026-03-26T16:58:00.001627+00:00",
+        "last_updated": "2026-03-26T16:58:00.001627+00:00",
         "context": {
-            "id": "01KMNH7VV4BYYYR9HCV0SPTCW8",
+            "id": "01KMNH9PE1NTS7X7YTDB8BCD8P",
             "parent_id": null,
             "user_id": null
         }
@@ -3856,32 +3860,44 @@
     },
     {
         "entity_id": "sensor.next_alarm_in",
-        "state": "14h 53m",
+        "state": "14h 52m",
         "attributes": {
             "next_alarm_at": "2026-03-27 07:50:00+00:00",
             "icon": "mdi:alarm",
             "friendly_name": "Next Alarm In"
         },
-        "last_changed": "2026-03-26T16:57:00.256852+00:00",
-        "last_reported": "2026-03-26T16:57:00.256852+00:00",
-        "last_updated": "2026-03-26T16:57:00.256852+00:00",
+        "last_changed": "2026-03-26T16:58:00.254892+00:00",
+        "last_reported": "2026-03-26T16:58:00.254892+00:00",
+        "last_updated": "2026-03-26T16:58:00.254892+00:00",
         "context": {
-            "id": "01KMNH7W30HQ1F6SC80Y0K5DHJ",
+            "id": "01KMNH9PNY0KAZ2HAD6MDBQNAN",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.missing_entities_mirror",
-        "state": "10",
+        "state": "12",
         "attributes": {
             "state_class": "measurement",
             "entities": [
+                {
+                    "id": "light.living_room_ceiling",
+                    "state": "unknown",
+                    "friendly_name": "Light Ceiling",
+                    "occurrences": ".storage/core.config_entries:97\nautomations.yaml:15"
+                },
                 {
                     "id": "sensor.hugh_room_phillips_switch_action",
                     "state": "unknown",
                     "friendly_name": "Hugh Room Phillips Switch Action",
                     "occurrences": "automations.yaml:150"
+                },
+                {
+                    "id": "light.utility",
+                    "state": "missing",
+                    "friendly_name": "",
+                    "occurrences": "automations.yaml:245,275"
                 },
                 {
                     "id": "sensor.hugh_room_aqara_bed_button_action",
@@ -3942,11 +3958,11 @@
             "icon": "mdi:alert-circle-outline",
             "friendly_name": "Missing Entities"
         },
-        "last_changed": "2026-03-26T16:30:19.847856+00:00",
-        "last_reported": "2026-03-26T16:45:07.908102+00:00",
-        "last_updated": "2026-03-26T16:45:07.908102+00:00",
+        "last_changed": "2026-03-26T16:58:02.993673+00:00",
+        "last_reported": "2026-03-26T16:58:02.993673+00:00",
+        "last_updated": "2026-03-26T16:58:02.993673+00:00",
         "context": {
-            "id": "01KMNGJ4DT11FKPK9PMZKSX204",
+            "id": "01KMNH9SB9QT2CNM0HSQ59B0P4",
             "parent_id": null,
             "user_id": null
         }
@@ -4090,18 +4106,18 @@
     },
     {
         "entity_id": "sensor.total_sensors_count",
-        "state": "1019",
+        "state": "1016",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "sensors",
             "icon": "mdi:counter",
             "friendly_name": "Total Entities"
         },
-        "last_changed": "2026-03-26T16:57:02.834839+00:00",
-        "last_reported": "2026-03-26T16:57:02.834839+00:00",
-        "last_updated": "2026-03-26T16:57:02.834839+00:00",
+        "last_changed": "2026-03-26T16:58:35.528270+00:00",
+        "last_reported": "2026-03-26T16:58:35.528270+00:00",
+        "last_updated": "2026-03-26T16:58:35.528270+00:00",
         "context": {
-            "id": "01KMNH7YKJD61WK5FCV7E6Z0Q3",
+            "id": "01KMNHAS47G6ZZCE4XR1TWTN7D",
             "parent_id": null,
             "user_id": null
         }
@@ -9061,32 +9077,44 @@
     },
     {
         "entity_id": "sensor.last_updated",
-        "state": "2026-03-26T16:45:07+00:00",
+        "state": "2026-03-26T16:58:02+00:00",
         "attributes": {
             "device_class": "timestamp",
             "icon": "mdi:calendar-clock",
             "friendly_name": "Last Updated"
         },
-        "last_changed": "2026-03-26T16:45:07.896827+00:00",
-        "last_reported": "2026-03-26T16:45:07.896827+00:00",
-        "last_updated": "2026-03-26T16:45:07.896827+00:00",
+        "last_changed": "2026-03-26T16:58:02.984129+00:00",
+        "last_reported": "2026-03-26T16:58:02.984129+00:00",
+        "last_updated": "2026-03-26T16:58:02.984129+00:00",
         "context": {
-            "id": "01KMNGJ4DR3TH5ZJ462VBYQC89",
+            "id": "01KMNH9SB8DFTAHPFPD8MSK0BH",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.missing_entities",
-        "state": "10",
+        "state": "12",
         "attributes": {
             "state_class": "measurement",
             "entities": [
+                {
+                    "id": "light.living_room_ceiling",
+                    "state": "unknown",
+                    "friendly_name": "Light Ceiling",
+                    "occurrences": ".storage/core.config_entries:97\nautomations.yaml:15"
+                },
                 {
                     "id": "sensor.hugh_room_phillips_switch_action",
                     "state": "unknown",
                     "friendly_name": "Hugh Room Phillips Switch Action",
                     "occurrences": "automations.yaml:150"
+                },
+                {
+                    "id": "light.utility",
+                    "state": "missing",
+                    "friendly_name": "",
+                    "occurrences": "automations.yaml:245,275"
                 },
                 {
                     "id": "sensor.hugh_room_aqara_bed_button_action",
@@ -9147,11 +9175,11 @@
             "icon": "mdi:shield-half-full",
             "friendly_name": "Missing Entities"
         },
-        "last_changed": "2026-03-26T16:30:19.833055+00:00",
-        "last_reported": "2026-03-26T16:45:07.898057+00:00",
-        "last_updated": "2026-03-26T16:45:07.898057+00:00",
+        "last_changed": "2026-03-26T16:58:02.985079+00:00",
+        "last_reported": "2026-03-26T16:58:02.985079+00:00",
+        "last_updated": "2026-03-26T16:58:02.985079+00:00",
         "context": {
-            "id": "01KMNGJ4DT11FKPK9PMZKSX204",
+            "id": "01KMNH9SB9QT2CNM0HSQ59B0P4",
             "parent_id": null,
             "user_id": null
         }
@@ -10054,36 +10082,36 @@
     },
     {
         "entity_id": "sensor.kitchen_epone_temperature",
-        "state": "21.0470218658447",
+        "state": "21.036340713501",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
             "device_class": "temperature",
             "friendly_name": "Temperature"
         },
-        "last_changed": "2026-03-26T16:57:02.352250+00:00",
-        "last_reported": "2026-03-26T16:57:02.352250+00:00",
-        "last_updated": "2026-03-26T16:57:02.352250+00:00",
+        "last_changed": "2026-03-26T16:58:02.353982+00:00",
+        "last_reported": "2026-03-26T16:58:02.353982+00:00",
+        "last_updated": "2026-03-26T16:58:02.353982+00:00",
         "context": {
-            "id": "01KMNH7Y4G4E6QKDWHFK31X1YW",
+            "id": "01KMNH9RQHBMJGN7YEJ2HM5WHQ",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.kitchen_epone_illuminance",
-        "state": "7.82962036132812",
+        "state": "8.02621173858643",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "lx",
             "device_class": "illuminance",
             "friendly_name": "Kitchen EPOne Illuminance"
         },
-        "last_changed": "2026-03-26T16:56:57.929309+00:00",
-        "last_reported": "2026-03-26T16:56:57.929309+00:00",
-        "last_updated": "2026-03-26T16:56:57.929309+00:00",
+        "last_changed": "2026-03-26T16:58:36.022609+00:00",
+        "last_reported": "2026-03-26T16:58:36.022609+00:00",
+        "last_updated": "2026-03-26T16:58:36.022609+00:00",
         "context": {
-            "id": "01KMNH7ST92VFKZ6P9B2PR8CS6",
+            "id": "01KMNHASKPG3FFH0YWT2BNPGX4",
             "parent_id": null,
             "user_id": null
         }
@@ -10107,18 +10135,18 @@
     },
     {
         "entity_id": "sensor.kitchen_epone_humidity",
-        "state": "31.8997192382812",
+        "state": "31.8890380859375",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "%",
             "device_class": "humidity",
             "friendly_name": "Humidity"
         },
-        "last_changed": "2026-03-26T16:57:02.354257+00:00",
-        "last_reported": "2026-03-26T16:57:02.354257+00:00",
-        "last_updated": "2026-03-26T16:57:02.354257+00:00",
+        "last_changed": "2026-03-26T16:58:02.355324+00:00",
+        "last_reported": "2026-03-26T16:58:02.355324+00:00",
+        "last_updated": "2026-03-26T16:58:02.355324+00:00",
         "context": {
-            "id": "01KMNH7Y4J1MGQXHH2A532P9Z8",
+            "id": "01KMNH9RQKT9TX73WJZ6BSQEX3",
             "parent_id": null,
             "user_id": null
         }
@@ -10759,42 +10787,42 @@
     },
     {
         "entity_id": "sensor.bed_presence_wifi_signal_db",
-        "state": "-60.0",
+        "state": "-62.0",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "dBm",
             "device_class": "signal_strength",
             "friendly_name": "Bed Presence WiFi Signal dB"
         },
-        "last_changed": "2026-03-26T16:56:48.296932+00:00",
-        "last_reported": "2026-03-26T16:56:48.296932+00:00",
-        "last_updated": "2026-03-26T16:56:48.296932+00:00",
+        "last_changed": "2026-03-26T16:57:48.303221+00:00",
+        "last_reported": "2026-03-26T16:57:48.303221+00:00",
+        "last_updated": "2026-03-26T16:57:48.303221+00:00",
         "context": {
-            "id": "01KMNH7GD8JNBXSFTCFXA53AF9",
+            "id": "01KMNH9B0F30SPN2RV7C206CHG",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.bed_presence_wifi_signal_percent",
-        "state": "80.0",
+        "state": "76.0",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "%",
             "friendly_name": "Bed Presence WiFi Signal Percent"
         },
-        "last_changed": "2026-03-26T16:56:48.295821+00:00",
-        "last_reported": "2026-03-26T16:56:48.295821+00:00",
-        "last_updated": "2026-03-26T16:56:48.295821+00:00",
+        "last_changed": "2026-03-26T16:57:48.302051+00:00",
+        "last_reported": "2026-03-26T16:57:48.302051+00:00",
+        "last_updated": "2026-03-26T16:57:48.302051+00:00",
         "context": {
-            "id": "01KMNH7GD7AEG1R03BGBJGD9QH",
+            "id": "01KMNH9B0EP9AHPXVF9GJVCR78",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.bed_presence_uptime",
-        "state": "358538.1875",
+        "state": "358598.1875",
         "attributes": {
             "state_class": "total_increasing",
             "unit_of_measurement": "s",
@@ -10802,11 +10830,11 @@
             "icon": "mdi:timer-outline",
             "friendly_name": "Bed Presence Uptime"
         },
-        "last_changed": "2026-03-26T16:56:52.187717+00:00",
-        "last_reported": "2026-03-26T16:56:52.187717+00:00",
-        "last_updated": "2026-03-26T16:56:52.187717+00:00",
+        "last_changed": "2026-03-26T16:57:52.193317+00:00",
+        "last_reported": "2026-03-26T16:57:52.193317+00:00",
+        "last_updated": "2026-03-26T16:57:52.193317+00:00",
         "context": {
-            "id": "01KMNH7M6VW0SCYZQ6TGGNKX3N",
+            "id": "01KMNH9ET15KYPJ55R0AB51J7H",
             "parent_id": null,
             "user_id": null
         }
@@ -10960,36 +10988,36 @@
     },
     {
         "entity_id": "sensor.living_room_eppro_temperature",
-        "state": "21.7354583740234",
+        "state": "21.7594909667969",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
             "device_class": "temperature",
             "friendly_name": "Temperature"
         },
-        "last_changed": "2026-03-26T16:56:36.112174+00:00",
-        "last_reported": "2026-03-26T16:56:36.112174+00:00",
-        "last_updated": "2026-03-26T16:56:36.112174+00:00",
+        "last_changed": "2026-03-26T16:58:36.124444+00:00",
+        "last_reported": "2026-03-26T16:58:36.124444+00:00",
+        "last_updated": "2026-03-26T16:58:36.124444+00:00",
         "context": {
-            "id": "01KMNH74GG3QSBX59WQVQGP4E5",
+            "id": "01KMNHASPW177C7AQANE3XGSFP",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.living_room_eppro_illuminance",
-        "state": "19.694881439209",
+        "state": "22.185037612915",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "lx",
             "device_class": "illuminance",
             "friendly_name": "Illuminance"
         },
-        "last_changed": "2026-03-26T16:56:46.863917+00:00",
-        "last_reported": "2026-03-26T16:56:46.863917+00:00",
-        "last_updated": "2026-03-26T16:56:46.863917+00:00",
+        "last_changed": "2026-03-26T16:58:16.976678+00:00",
+        "last_reported": "2026-03-26T16:58:16.976678+00:00",
+        "last_updated": "2026-03-26T16:58:16.976678+00:00",
         "context": {
-            "id": "01KMNH7F0F4MDDNSJ6B8K3F78W",
+            "id": "01KMNHA70GB00F3K9XQR9HKKXS",
             "parent_id": null,
             "user_id": null
         }
@@ -11333,18 +11361,18 @@
     },
     {
         "entity_id": "sensor.living_room_eppro_humidity",
-        "state": "22.772216796875",
+        "state": "22.6943969726562",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "%",
             "device_class": "humidity",
             "friendly_name": "Humidity"
         },
-        "last_changed": "2026-03-26T16:56:36.115582+00:00",
-        "last_reported": "2026-03-26T16:56:36.115582+00:00",
-        "last_updated": "2026-03-26T16:56:36.115582+00:00",
+        "last_changed": "2026-03-26T16:58:36.126227+00:00",
+        "last_reported": "2026-03-26T16:58:36.126227+00:00",
+        "last_updated": "2026-03-26T16:58:36.126227+00:00",
         "context": {
-            "id": "01KMNH74GKJC2SZ55JA7M6V6TY",
+            "id": "01KMNHASPYN4JZQ0KFD0EJ1CK6",
             "parent_id": null,
             "user_id": null
         }
@@ -13009,22 +13037,6 @@
         }
     },
     {
-        "entity_id": "button.utility_identify",
-        "state": "unknown",
-        "attributes": {
-            "device_class": "identify",
-            "friendly_name": "Utility Identify"
-        },
-        "last_changed": "2026-03-26T03:38:08.415844+00:00",
-        "last_reported": "2026-03-26T03:38:08.415844+00:00",
-        "last_updated": "2026-03-26T03:38:08.415844+00:00",
-        "context": {
-            "id": "01KMM3H3MZTYW8519F1K06617N",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
         "entity_id": "cover.hugh_room_blinds",
         "state": "open",
         "attributes": {
@@ -13256,42 +13268,6 @@
         "context": {
             "id": "01KMM3H3JEX36E108HW3JG6RJW",
             "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "light.utility",
-        "state": "off",
-        "attributes": {
-            "min_color_temp_kelvin": 2202,
-            "max_color_temp_kelvin": 4000,
-            "effect_list": [
-                "blink",
-                "breathe",
-                "okay",
-                "channel_change",
-                "finish_effect",
-                "stop_effect"
-            ],
-            "supported_color_modes": [
-                "color_temp"
-            ],
-            "effect": null,
-            "color_mode": null,
-            "brightness": null,
-            "color_temp_kelvin": null,
-            "hs_color": null,
-            "rgb_color": null,
-            "xy_color": null,
-            "friendly_name": "Light Ceiling",
-            "supported_features": 44
-        },
-        "last_changed": "2026-03-26T16:55:56.633417+00:00",
-        "last_reported": "2026-03-26T16:55:56.633417+00:00",
-        "last_updated": "2026-03-26T16:55:56.633417+00:00",
-        "context": {
-            "id": "01KMNH27AZQZW7T932WDS22WTC",
-            "parent_id": "01KMNH27AYQ5EQC6JQY705Z9S3",
             "user_id": null
         }
     },
@@ -13791,7 +13767,7 @@
     },
     {
         "entity_id": "light.hallway",
-        "state": "off",
+        "state": "on",
         "attributes": {
             "min_color_temp_kelvin": 2202,
             "max_color_temp_kelvin": 4000,
@@ -13809,20 +13785,30 @@
                 "color_temp"
             ],
             "effect": null,
-            "color_mode": null,
-            "brightness": null,
-            "color_temp_kelvin": null,
-            "hs_color": null,
-            "rgb_color": null,
-            "xy_color": null,
+            "color_mode": "color_temp",
+            "brightness": 255,
+            "color_temp_kelvin": 2000,
+            "hs_color": [
+                30.601,
+                94.547
+            ],
+            "rgb_color": [
+                255,
+                137,
+                14
+            ],
+            "xy_color": [
+                0.598,
+                0.383
+            ],
             "friendly_name": "Hallway",
             "supported_features": 44
         },
-        "last_changed": "2026-03-26T16:55:56.628503+00:00",
-        "last_reported": "2026-03-26T16:55:56.628503+00:00",
-        "last_updated": "2026-03-26T16:55:56.628503+00:00",
+        "last_changed": "2026-03-26T16:57:31.081226+00:00",
+        "last_reported": "2026-03-26T16:57:31.081226+00:00",
+        "last_updated": "2026-03-26T16:57:31.081226+00:00",
         "context": {
-            "id": "01KMNH5XYMX36FD4G3NGN3K95N",
+            "id": "01KMNH8T69598TPQYRX2S2C441",
             "parent_id": null,
             "user_id": null
         }
@@ -13860,38 +13846,6 @@
         "context": {
             "id": "01KMNG8ZAAC7D4CHH1Y75SAH51",
             "parent_id": "01KMNG8ZA9A3H8MZW78JFBGC7V",
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "light.dining_room_table",
-        "state": "off",
-        "attributes": {
-            "effect_list": [
-                "blink",
-                "breathe",
-                "okay",
-                "channel_change",
-                "candle",
-                "finish_effect",
-                "stop_effect",
-                "stop_hue_effect"
-            ],
-            "supported_color_modes": [
-                "brightness"
-            ],
-            "effect": null,
-            "color_mode": null,
-            "brightness": null,
-            "friendly_name": "Dining Room Table",
-            "supported_features": 44
-        },
-        "last_changed": "2026-03-26T03:38:08.241343+00:00",
-        "last_reported": "2026-03-26T03:38:08.241343+00:00",
-        "last_updated": "2026-03-26T03:38:08.241343+00:00",
-        "context": {
-            "id": "01KMM3H3FHH16JBRVWCSD7R7T4",
-            "parent_id": null,
             "user_id": null
         }
     },
@@ -14629,28 +14583,6 @@
         }
     },
     {
-        "entity_id": "select.utility_power_on_behavior",
-        "state": "unknown",
-        "attributes": {
-            "options": [
-                "off",
-                "on",
-                "toggle",
-                "previous"
-            ],
-            "icon": "mdi:power-settings",
-            "friendly_name": "Utility Power-on behavior"
-        },
-        "last_changed": "2026-03-26T03:38:08.180301+00:00",
-        "last_reported": "2026-03-26T03:38:08.180301+00:00",
-        "last_updated": "2026-03-26T03:38:08.180301+00:00",
-        "context": {
-            "id": "01KMM3H3DMHPHR9BFW42VYC7GQ",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
         "entity_id": "select.bathroom_ceiling_power_on_behavior",
         "state": "unknown",
         "attributes": {
@@ -14888,28 +14820,6 @@
         "last_updated": "2026-03-26T03:38:08.204286+00:00",
         "context": {
             "id": "01KMM3H3EC47V887N8TQCA1HS0",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "select.dining_room_table_power_on_behavior",
-        "state": "unknown",
-        "attributes": {
-            "options": [
-                "off",
-                "on",
-                "toggle",
-                "previous"
-            ],
-            "icon": "mdi:power-settings",
-            "friendly_name": "Dining Room Table Power-on behavior"
-        },
-        "last_changed": "2026-03-26T03:38:08.380432+00:00",
-        "last_reported": "2026-03-26T03:38:08.380432+00:00",
-        "last_updated": "2026-03-26T03:38:08.380432+00:00",
-        "context": {
-            "id": "01KMM3H3KW31JE178ZGJ6SNVBA",
             "parent_id": null,
             "user_id": null
         }
@@ -15630,36 +15540,36 @@
     },
     {
         "entity_id": "sensor.hugh_room_plug_blanket_current",
-        "state": "0.01",
+        "state": "0",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "A",
             "device_class": "current",
             "friendly_name": "Hugh Room Plug Blanket Current"
         },
-        "last_changed": "2026-03-26T16:52:21.278917+00:00",
-        "last_reported": "2026-03-26T16:52:21.278917+00:00",
-        "last_updated": "2026-03-26T16:52:21.278917+00:00",
+        "last_changed": "2026-03-26T16:57:22.128753+00:00",
+        "last_reported": "2026-03-26T16:57:22.128753+00:00",
+        "last_updated": "2026-03-26T16:57:22.128753+00:00",
         "context": {
-            "id": "01KMNGZBMY25H4GNE2WMNE1AVQ",
+            "id": "01KMNH8HEGZ5WNSCQ27J3KSZ5K",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.hugh_room_plug_blanket_voltage",
-        "state": "229",
+        "state": "232",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "V",
             "device_class": "voltage",
             "friendly_name": "Hugh Room Plug Blanket Voltage"
         },
-        "last_changed": "2026-03-26T16:56:21.947054+00:00",
-        "last_reported": "2026-03-26T16:56:21.947054+00:00",
-        "last_updated": "2026-03-26T16:56:21.947054+00:00",
+        "last_changed": "2026-03-26T16:58:22.323857+00:00",
+        "last_reported": "2026-03-26T16:58:22.323857+00:00",
+        "last_updated": "2026-03-26T16:58:22.323857+00:00",
         "context": {
-            "id": "01KMNH6PNV3N96D9RZYMQMWNQH",
+            "id": "01KMNHAC7KZ2FGA0GFDS68XR04",
             "parent_id": null,
             "user_id": null
         }
@@ -15720,18 +15630,18 @@
     },
     {
         "entity_id": "sensor.hugh_room_plug_fan_bed_voltage",
-        "state": "229",
+        "state": "232",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "V",
             "device_class": "voltage",
             "friendly_name": "Hugh Room Plug Fan Bed Voltage"
         },
-        "last_changed": "2026-03-26T16:56:21.800246+00:00",
-        "last_reported": "2026-03-26T16:56:21.800246+00:00",
-        "last_updated": "2026-03-26T16:56:21.800246+00:00",
+        "last_changed": "2026-03-26T16:58:22.123922+00:00",
+        "last_reported": "2026-03-26T16:58:22.123922+00:00",
+        "last_updated": "2026-03-26T16:58:22.123922+00:00",
         "context": {
-            "id": "01KMNH6PH82XHNJVPG9YNWVH6K",
+            "id": "01KMNHAC1BZQAS9DA12DKCYNFG",
             "parent_id": null,
             "user_id": null
         }
@@ -15899,22 +15809,6 @@
         }
     },
     {
-        "entity_id": "sensor.utility_color_options",
-        "state": "",
-        "attributes": {
-            "icon": "mdi:palette",
-            "friendly_name": "Utility Color options"
-        },
-        "last_changed": "2026-03-26T03:38:08.385460+00:00",
-        "last_reported": "2026-03-26T03:38:08.385460+00:00",
-        "last_updated": "2026-03-26T03:38:08.385460+00:00",
-        "context": {
-            "id": "01KMM3H3M1048NC64T9B44J57T",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
         "entity_id": "sensor.coffee_table_battery",
         "state": "100",
         "attributes": {
@@ -15975,11 +15869,11 @@
             "icon": "mdi:human-greeting-proximity",
             "friendly_name": "Zigbee Permit Join"
         },
-        "last_changed": "2026-03-26T16:55:56.267038+00:00",
-        "last_reported": "2026-03-26T16:55:56.267038+00:00",
-        "last_updated": "2026-03-26T16:55:56.267038+00:00",
+        "last_changed": "2026-03-26T16:57:12.879996+00:00",
+        "last_reported": "2026-03-26T16:57:12.879996+00:00",
+        "last_updated": "2026-03-26T16:57:12.879996+00:00",
         "context": {
-            "id": "01KMNH5XKB45RNYZGD2HQC09X0",
+            "id": "01KMNH88DFBDVFKPN2S91EC6S2",
             "parent_id": null,
             "user_id": null
         }
@@ -16397,34 +16291,6 @@
         }
     },
     {
-        "entity_id": "update.utility",
-        "state": "off",
-        "attributes": {
-            "auto_update": false,
-            "display_precision": 0,
-            "installed_version": "50331683",
-            "in_progress": false,
-            "latest_version": "50331683",
-            "release_summary": null,
-            "release_url": null,
-            "skipped_version": null,
-            "title": null,
-            "update_percentage": null,
-            "device_class": "firmware",
-            "entity_picture": "https://github.com/Koenkk/zigbee2mqtt/raw/master/images/logo.png",
-            "friendly_name": "Utility",
-            "supported_features": 5
-        },
-        "last_changed": "2026-03-26T03:38:08.262278+00:00",
-        "last_reported": "2026-03-26T03:38:08.262278+00:00",
-        "last_updated": "2026-03-26T03:38:08.262278+00:00",
-        "context": {
-            "id": "01KMM3H3G6SNHYD4CGRG5S9GVB",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
         "entity_id": "update.bathroom_ceiling",
         "state": "off",
         "attributes": {
@@ -16733,34 +16599,6 @@
         }
     },
     {
-        "entity_id": "update.dining_room_table",
-        "state": "off",
-        "attributes": {
-            "auto_update": false,
-            "display_precision": 0,
-            "installed_version": "16787202",
-            "in_progress": false,
-            "latest_version": "16787202",
-            "release_summary": null,
-            "release_url": null,
-            "skipped_version": null,
-            "title": null,
-            "update_percentage": null,
-            "device_class": "firmware",
-            "entity_picture": "https://github.com/Koenkk/zigbee2mqtt/raw/master/images/logo.png",
-            "friendly_name": "Dining Room Table",
-            "supported_features": 5
-        },
-        "last_changed": "2026-03-26T03:38:08.228855+00:00",
-        "last_reported": "2026-03-26T03:38:08.228855+00:00",
-        "last_updated": "2026-03-26T03:38:08.228855+00:00",
-        "context": {
-            "id": "01KMM3H3F4VRACKHADXT532M2C",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
         "entity_id": "update.hall_ceiling_1",
         "state": "off",
         "attributes": {
@@ -16882,7 +16720,7 @@
     },
     {
         "entity_id": "event.repair",
-        "state": "2026-03-22T19:39:36.253+00:00",
+        "state": "2026-03-26T16:58:01.613+00:00",
         "attributes": {
             "event_types": [
                 "create",
@@ -16891,14 +16729,14 @@
             ],
             "event_type": "remove",
             "domain": "spook",
-            "issue_id": "automation_unknown_service_references_automation.air_purifier_filter_warning",
+            "issue_id": "group_unknown_members_light.living_room_ceiling_lights",
             "friendly_name": "Repairs"
         },
-        "last_changed": "2026-03-26T03:35:07.342628+00:00",
-        "last_reported": "2026-03-26T03:36:07.344146+00:00",
-        "last_updated": "2026-03-26T03:35:07.342628+00:00",
+        "last_changed": "2026-03-26T16:58:01.613579+00:00",
+        "last_reported": "2026-03-26T16:58:01.613579+00:00",
+        "last_updated": "2026-03-26T16:58:01.613579+00:00",
         "context": {
-            "id": "01KMM3BJTEDE4PB95Z2YRSYF2N",
+            "id": "01KMNH9R0DWGYZS87BFEA5X3YZ",
             "parent_id": null,
             "user_id": null
         }
@@ -17109,17 +16947,17 @@
     },
     {
         "entity_id": "sensor.devices",
-        "state": "142",
+        "state": "141",
         "attributes": {
             "state_class": "total",
             "icon": "mdi:cellphone",
             "friendly_name": "Home Assistant Devices"
         },
-        "last_changed": "2026-03-26T03:47:57.476168+00:00",
-        "last_reported": "2026-03-26T03:47:57.476168+00:00",
-        "last_updated": "2026-03-26T03:47:57.476168+00:00",
+        "last_changed": "2026-03-26T16:57:07.873064+00:00",
+        "last_reported": "2026-03-26T16:57:07.873064+00:00",
+        "last_updated": "2026-03-26T16:57:07.873064+00:00",
         "context": {
-            "id": "01KMM432X4FNJZ4YPHW0M350X9",
+            "id": "01KMNH83H1T6NWTJQ02ACGJT7H",
             "parent_id": null,
             "user_id": null
         }
@@ -17143,17 +16981,17 @@
     },
     {
         "entity_id": "sensor.entities",
-        "state": "1022",
+        "state": "1019",
         "attributes": {
             "state_class": "total",
             "icon": "mdi:counter",
             "friendly_name": "Home Assistant Entities"
         },
-        "last_changed": "2026-03-26T16:52:38.822898+00:00",
-        "last_reported": "2026-03-26T16:52:38.822898+00:00",
-        "last_updated": "2026-03-26T16:52:38.822898+00:00",
+        "last_changed": "2026-03-26T16:57:07.852850+00:00",
+        "last_reported": "2026-03-26T16:57:07.852850+00:00",
+        "last_updated": "2026-03-26T16:57:07.852850+00:00",
         "context": {
-            "id": "01KMNGZWS6ADTTWYDYPBD5J714",
+            "id": "01KMNH83GC7TW855BDGWWAG7BJ",
             "parent_id": null,
             "user_id": null
         }
@@ -17347,17 +17185,17 @@
     },
     {
         "entity_id": "sensor.lights",
-        "state": "30",
+        "state": "29",
         "attributes": {
             "state_class": "total",
             "icon": "mdi:lightbulb",
             "friendly_name": "Home Assistant Lights"
         },
-        "last_changed": "2026-03-26T03:35:07.443395+00:00",
-        "last_reported": "2026-03-26T03:36:37.486864+00:00",
-        "last_updated": "2026-03-26T03:35:07.443395+00:00",
+        "last_changed": "2026-03-26T16:57:07.857121+00:00",
+        "last_reported": "2026-03-26T16:57:07.857121+00:00",
+        "last_updated": "2026-03-26T16:57:07.857121+00:00",
         "context": {
-            "id": "01KMM3BJXKGZ534T12F33BTPD2",
+            "id": "01KMNH83GHHHV05E2YHRH38T2D",
             "parent_id": null,
             "user_id": null
         }
@@ -17500,17 +17338,17 @@
     },
     {
         "entity_id": "sensor.selects",
-        "state": "48",
+        "state": "47",
         "attributes": {
             "state_class": "total",
             "icon": "mdi:format-list-bulleted",
             "friendly_name": "Home Assistant Selects"
         },
-        "last_changed": "2026-03-26T03:35:07.454462+00:00",
-        "last_reported": "2026-03-26T03:36:37.488434+00:00",
-        "last_updated": "2026-03-26T03:35:07.454462+00:00",
+        "last_changed": "2026-03-26T16:57:07.867564+00:00",
+        "last_reported": "2026-03-26T16:57:07.867564+00:00",
+        "last_updated": "2026-03-26T16:57:07.867564+00:00",
         "context": {
-            "id": "01KMM3BJXY0BRP0H0VTZBAPQED",
+            "id": "01KMNH83GV9PNX50T6GZ00HVWH",
             "parent_id": null,
             "user_id": null
         }
@@ -17670,17 +17508,17 @@
     },
     {
         "entity_id": "sensor.update",
-        "state": "59",
+        "state": "58",
         "attributes": {
             "state_class": "total",
             "icon": "mdi:cellphone-arrow-down",
             "friendly_name": "Home Assistant Update"
         },
-        "last_changed": "2026-03-26T03:35:07.463704+00:00",
-        "last_reported": "2026-03-26T03:36:37.490414+00:00",
-        "last_updated": "2026-03-26T03:35:07.463704+00:00",
+        "last_changed": "2026-03-26T16:57:07.870594+00:00",
+        "last_reported": "2026-03-26T16:57:07.870594+00:00",
+        "last_updated": "2026-03-26T16:57:07.870594+00:00",
         "context": {
-            "id": "01KMM3BJY7WDP0PEFKA6G0DD8S",
+            "id": "01KMNH83GYS8KNQ7YTXQMHHYTF",
             "parent_id": null,
             "user_id": null
         }
@@ -17738,36 +17576,36 @@
     },
     {
         "entity_id": "sensor.issues",
-        "state": "0",
+        "state": "1",
         "attributes": {
             "state_class": "total",
             "unit_of_measurement": "issues",
             "icon": "mdi:wrench",
             "friendly_name": "Repairs Total"
         },
-        "last_changed": "2026-03-26T03:35:07.467059+00:00",
-        "last_reported": "2026-03-26T03:36:37.499839+00:00",
-        "last_updated": "2026-03-26T03:35:07.467059+00:00",
+        "last_changed": "2026-03-26T16:58:01.614415+00:00",
+        "last_reported": "2026-03-26T16:58:01.614415+00:00",
+        "last_updated": "2026-03-26T16:58:01.614415+00:00",
         "context": {
-            "id": "01KMM3BJYBY9S94KKYBNF0ES15",
+            "id": "01KMNH9R0EEYSCCN5BK227EHBN",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.active_issues",
-        "state": "0",
+        "state": "1",
         "attributes": {
             "state_class": "total",
             "unit_of_measurement": "issues",
             "icon": "mdi:wrench-check",
             "friendly_name": "Repairs Active"
         },
-        "last_changed": "2026-03-26T03:35:07.468342+00:00",
-        "last_reported": "2026-03-26T03:36:37.500120+00:00",
-        "last_updated": "2026-03-26T03:35:07.468342+00:00",
+        "last_changed": "2026-03-26T16:58:01.614961+00:00",
+        "last_reported": "2026-03-26T16:58:01.614961+00:00",
+        "last_updated": "2026-03-26T16:58:01.614961+00:00",
         "context": {
-            "id": "01KMM3BJYC20VF17C3CPNAN7KE",
+            "id": "01KMNH9R0EJ0MPTG0A33TQ942R",
             "parent_id": null,
             "user_id": null
         }
@@ -17810,18 +17648,18 @@
     },
     {
         "entity_id": "sensor.snake_plant_signal_strength",
-        "state": "-79",
+        "state": "-81",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "dBm",
             "device_class": "signal_strength",
             "friendly_name": "Snake Plant Signal Strength"
         },
-        "last_changed": "2026-03-26T16:56:12.046848+00:00",
-        "last_reported": "2026-03-26T16:56:12.046848+00:00",
-        "last_updated": "2026-03-26T16:56:12.046848+00:00",
+        "last_changed": "2026-03-26T16:57:48.098642+00:00",
+        "last_reported": "2026-03-26T16:57:48.098642+00:00",
+        "last_updated": "2026-03-26T16:57:48.098642+00:00",
         "context": {
-            "id": "01KMNH6D0E0158JB60PAGVXHS5",
+            "id": "01KMNH9AT21W9QZRM99PKMPVXR",
             "parent_id": null,
             "user_id": null
         }
@@ -19429,17 +19267,17 @@
         "state": "on",
         "attributes": {
             "id": "1734951741728",
-            "last_triggered": "2026-03-26T16:57:02.494828+00:00",
+            "last_triggered": "2026-03-26T16:58:35.388436+00:00",
             "mode": "single",
             "current": 1,
             "friendly_name": "Git Backup"
         },
         "last_changed": "2026-03-26T03:35:09.175974+00:00",
-        "last_reported": "2026-03-26T16:57:02.494916+00:00",
-        "last_updated": "2026-03-26T16:57:02.494916+00:00",
+        "last_reported": "2026-03-26T16:58:35.388533+00:00",
+        "last_updated": "2026-03-26T16:58:35.388533+00:00",
         "context": {
-            "id": "01KMNH7Y8Y3RHVFJ49D74GFB5B",
-            "parent_id": "01KMNH7Y8DTDNP3WS5MZ925TWG",
+            "id": "01KMNHARZVCDPS9HRFTM22Q2NT",
+            "parent_id": "01KMNHARZ745N685XQY77ZH2QG",
             "user_id": null
         }
     },
@@ -20940,6 +20778,124 @@
         "last_updated": "2026-03-26T16:52:13.158260+00:00",
         "context": {
             "id": "01KMNGZ3H51VNV1SY8ZRXQTM1K",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "light.living_room_ceiling",
+        "state": "unknown",
+        "attributes": {
+            "min_color_temp_kelvin": 2202,
+            "max_color_temp_kelvin": 4000,
+            "effect_list": [
+                "blink",
+                "breathe",
+                "okay",
+                "channel_change",
+                "finish_effect",
+                "stop_effect"
+            ],
+            "supported_color_modes": [
+                "color_temp"
+            ],
+            "effect": null,
+            "color_mode": null,
+            "brightness": null,
+            "color_temp_kelvin": null,
+            "hs_color": null,
+            "rgb_color": null,
+            "xy_color": null,
+            "friendly_name": "Light Ceiling",
+            "supported_features": 44
+        },
+        "last_changed": "2026-03-26T16:57:58.422636+00:00",
+        "last_reported": "2026-03-26T16:57:58.422636+00:00",
+        "last_updated": "2026-03-26T16:57:58.422636+00:00",
+        "context": {
+            "id": "01KMNH9MWP6FZB3AVPWR3QS8C1",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "select.living_room_ceiling_power_on_behavior",
+        "state": "unknown",
+        "attributes": {
+            "options": [
+                "off",
+                "on",
+                "toggle",
+                "previous"
+            ],
+            "icon": "mdi:power-settings",
+            "friendly_name": "Living Room Ceiling Power-on behavior"
+        },
+        "last_changed": "2026-03-26T16:57:58.427464+00:00",
+        "last_reported": "2026-03-26T16:57:58.427464+00:00",
+        "last_updated": "2026-03-26T16:57:58.427464+00:00",
+        "context": {
+            "id": "01KMNH9MWVZ4PBFF429KRWX32F",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.living_room_ceiling_color_options",
+        "state": "unknown",
+        "attributes": {
+            "icon": "mdi:palette",
+            "friendly_name": "Living Room Ceiling Color options"
+        },
+        "last_changed": "2026-03-26T16:57:58.424150+00:00",
+        "last_reported": "2026-03-26T16:57:58.424150+00:00",
+        "last_updated": "2026-03-26T16:57:58.424150+00:00",
+        "context": {
+            "id": "01KMNH9MWRD4D5SG8BC313BAHG",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "button.living_room_ceiling_identify",
+        "state": "unknown",
+        "attributes": {
+            "device_class": "identify",
+            "friendly_name": "Living Room Ceiling Identify"
+        },
+        "last_changed": "2026-03-26T16:57:58.424800+00:00",
+        "last_reported": "2026-03-26T16:57:58.424800+00:00",
+        "last_updated": "2026-03-26T16:57:58.424800+00:00",
+        "context": {
+            "id": "01KMNH9MWR3AR6W3D4EK5KHP1F",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "update.living_room_ceiling",
+        "state": "unknown",
+        "attributes": {
+            "auto_update": false,
+            "display_precision": 0,
+            "installed_version": null,
+            "in_progress": false,
+            "latest_version": null,
+            "release_summary": null,
+            "release_url": null,
+            "skipped_version": null,
+            "title": null,
+            "update_percentage": null,
+            "device_class": "firmware",
+            "entity_picture": "https://github.com/Koenkk/zigbee2mqtt/raw/master/images/logo.png",
+            "friendly_name": "Living Room Ceiling",
+            "supported_features": 5
+        },
+        "last_changed": "2026-03-26T16:57:58.426576+00:00",
+        "last_reported": "2026-03-26T16:57:58.426576+00:00",
+        "last_updated": "2026-03-26T16:57:58.426576+00:00",
+        "context": {
+            "id": "01KMNH9MWT3YD6WXH61XDKTQWR",
             "parent_id": null,
             "user_id": null
         }
