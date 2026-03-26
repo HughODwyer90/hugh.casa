@@ -59,39 +59,50 @@
       lr_lights:
       - light.living_room_floor_lamp
       - light.living_room_bookshelf
-      lr_on_lights: '{{ lr_lights | select(''is_state'',''on'') | list }}'
+      lr_on_lights: "{{\n  lr_lights\n  | select('is_state', 'on')\n  | list\n}}\n"
       lr_all_dimmable_on_maxed: "{% set ns = namespace(dimmable_on=0, maxed_on=0)
         %} {% for e in lr_on_lights %}\n  {% set b = state_attr(e, 'brightness') %}\n
         \ {% if b is not none %}\n    {% set ns.dimmable_on = ns.dimmable_on + 1 %}\n
         \   {% if (b | int) >= 254 %}\n      {% set ns.maxed_on = ns.maxed_on + 1
         %}\n    {% endif %}\n  {% endif %}\n{% endfor %} {{ ns.dimmable_on > 0 and
-        ns.maxed_on == ns.dimmable_on }}"
+        ns.maxed_on == ns.dimmable_on }}\n"
+      lr_brightness_snapshot: "{% set ns = namespace(items=[]) %} {% for e in lr_on_lights
+        %}\n  {% set b = state_attr(e, 'brightness') %}\n  {% if b is not none %}\n
+        \   {% set ns.items = ns.items + [{'entity_id': e, 'brightness': b | int}]
+        %}\n  {% endif %}\n{% endfor %} {{ ns.items }}\n"
   - choose:
     - conditions:
       - condition: template
         value_template: '{{ (lr_on_lights | length > 0) and lr_all_dimmable_on_maxed
           }}'
       sequence:
-      - action: scene.create
+      - action: light.turn_on
+        target:
+          entity_id: '{{ lr_on_lights }}
+
+            '
         data:
-          scene_id: living_room_brighten_snapshot
-          snapshot_entities: '{{ lr_on_lights }}'
-      - action: light.turn_off
-        target:
-          entity_id: '{{ lr_on_lights }}'
-        data: {}
-      - delay: '00:00:00.15'
-      - action: scene.turn_on
-        target:
-          entity_id: scene.living_room_brighten_snapshot
-        data: {}
+          brightness_pct: 10
+          transition: 0
+      - delay: '00:00:00.20'
+      - repeat:
+          for_each: '{{ lr_brightness_snapshot }}'
+          sequence:
+          - action: light.turn_on
+            target:
+              entity_id: '{{ repeat.item.entity_id }}'
+            data:
+              brightness: '{{ repeat.item.brightness }}'
+              transition: 0.2
     - conditions:
       - condition: template
         value_template: '{{ lr_on_lights | length > 0 }}'
       sequence:
       - action: light.turn_on
         target:
-          entity_id: '{{ lr_on_lights }}'
+          entity_id: '{{ lr_on_lights }}
+
+            '
         data:
           brightness_step_pct: 20
           transition: 0.5
@@ -101,7 +112,9 @@
       sequence:
       - action: light.turn_on
         target:
-          entity_id: '{{ lr_lights }}'
+          entity_id: '{{ lr_lights }}
+
+            '
         data:
           brightness_pct: 30
           transition: 0.5
