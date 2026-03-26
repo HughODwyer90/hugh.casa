@@ -257,7 +257,8 @@
       sequence:
       - action: light.turn_on
         target:
-          entity_id: light.utility
+          entity_id:
+          - light.utility_ceiling
         data:
           color_temp_kelvin: 2000
           brightness_pct: 100
@@ -286,10 +287,10 @@
           transition: 1
       - delay: 00:02:00
       - action: light.turn_off
-        target:
-          entity_id: light.utility
         data:
           transition: 1
+        target:
+          entity_id: light.utility_ceiling
     default: []
   mode: restart
 - id: &#x27;1702207044468&#x27;
