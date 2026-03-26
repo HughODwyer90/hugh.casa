@@ -244,6 +244,26 @@
       - condition: state
         entity_id: binary_sensor.hall_motion_occupancy
         state: &#x27;on&#x27;
+      - condition: time
+        after: 00:00:00
+        before: 06:00:00
+      - condition: numeric_state
+        entity_id: sensor.hall_motion_illuminance
+        below: 130
+      sequence:
+      - action: script.occupancy_lights_with_scene_fallback
+        data:
+          occupancy_sensor: binary_sensor.hall_motion_occupancy
+          target_light: light.hallway
+          on_scene: scene.hallway_3_late_night
+          off_scene: scene.hallway_0_off
+          brightness_pct: 100
+          transition: 1
+          direct_scene: true
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.hall_motion_occupancy
+        state: &#x27;on&#x27;
       - condition: numeric_state
         entity_id: sensor.hall_motion_illuminance
         below: 130
