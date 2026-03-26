@@ -44,8 +44,8 @@
     discovery_id: 0x0017880109a49868 action_down_press
   actions:
   - variables:
-      lr_on_lights: &quot;{{ expand(&#x27;light.living_room_lights&#x27;)\n   | selectattr(&#x27;state&#x27;,&#x27;eq&#x27;,&#x27;on&#x27;)\n
-        \  | map(attribute=&#x27;entity_id&#x27;)\n   | list }}\n&quot;
+      lr_on_lights: &quot;{{\n  [\n    &#x27;light.living_room_floor_lamp&#x27;,\n    &#x27;light.living_room_bookshelf&#x27;\n
+        \ ]\n  | select(&#x27;is_state&#x27;, &#x27;on&#x27;)\n  | list\n}}\n&quot;
   - choose:
     - conditions:
       - condition: template
