@@ -29,8 +29,8 @@
     discovery_id: 0x0017880109a49868 action_down_press
   actions:
   - variables:
-      lr_on_lights: "{{ expand('light.living_room_lights')\n   | selectattr('state','eq','on')\n
-        \  | map(attribute='entity_id')\n   | list }}\n"
+      lr_on_lights: "{{\n  [\n    'light.living_room_floor_lamp',\n    'light.living_room_bookshelf'\n
+        \ ]\n  | select('is_state', 'on')\n  | list\n}}\n"
   - choose:
     - conditions:
       - condition: template
