@@ -12,13 +12,13 @@
     metadata: {}
     data:
       brightness_pct: 100
-      color_temp_kelvin: 2495
+      color_temp_kelvin: 2000
       transition: 1
     target:
       entity_id: light.living_room_ceiling_lights
   mode: single
 - id: '1700841493454'
-  alias: Living Room Dim
+  alias: Living Room Accent Dim
   description: Dim down any on lights in the living room.
   triggers:
   - domain: mqtt
@@ -5027,32 +5027,48 @@
   mode: single
 - id: '1774903930148'
   alias: Living Room Ceiling Dim
-  description: Dim down ceiling lights in the living room.
+  description: Dim down any on ceiling lights in the living room.
   triggers:
-  - domain: mqtt
+  - trigger: device
+    domain: mqtt
     device_id: 9f98b882a412e95e16f1addf1f9e8e27
     type: action
     subtype: down_hold
-    trigger: device
+    discovery_id: 0x0017880109a49868 action_down_hold
   actions:
+  - variables:
+      ceiling_on_lights: "{{\n  [\n    'light.dining_table',\n    'light.living_room_coffee_table'\n
+        \ ]\n  | select('is_state', 'on')\n  | list\n}}\n"
   - choose:
     - conditions:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: light.living_room_dining_table
-          state: 'on'
-        - condition: state
-          entity_id: light.living_room_coffee_table
-          state: 'on'
+      - condition: template
+        value_template: '{{ ceiling_on_lights | length > 0 }}'
       sequence:
       - action: light.turn_on
         target:
-          entity_id:
-          - light.living_room_dining_table
-          - light.living_room_coffee_table
+          entity_id: '{{ ceiling_on_lights }}'
         data:
           brightness_step_pct: -30
           transition: 0.5
     default: []
+  mode: single
+- id: '1774904416593'
+  alias: Living Room Ceiling Toggle Bright
+  description: Toggle living room lights on or off.
+  triggers:
+  - domain: mqtt
+    device_id: 9f98b882a412e95e16f1addf1f9e8e27
+    type: action
+    subtype: on_hold
+    trigger: device
+  conditions: []
+  actions:
+  - action: light.toggle
+    metadata: {}
+    data:
+      brightness_pct: 100
+      color_temp_kelvin: 2708
+      transition: 1
+    target:
+      entity_id: light.living_room_ceiling_lights
   mode: single
