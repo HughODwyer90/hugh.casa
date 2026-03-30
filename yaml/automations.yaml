@@ -217,12 +217,12 @@
   alias: Hall Light Control
   description: Control hall lights based on motion, lux, and sun elevation.
   triggers:
-  - trigger: state
-    entity_id: binary_sensor.hall_motion_occupancy
+  - entity_id: binary_sensor.hall_motion_occupancy
     to: 'on'
-  - trigger: state
-    entity_id: binary_sensor.hall_motion_occupancy
+    trigger: state
+  - entity_id: binary_sensor.hall_motion_occupancy
     to: 'off'
+    trigger: state
   actions:
   - choose:
     - conditions:
@@ -230,14 +230,13 @@
         entity_id: binary_sensor.hall_motion_occupancy
         state: 'on'
       - condition: time
-        after: 00:00:00
-        before: 06:00:00
+        after: 01:00:00
+        before: 05:00:00
       - condition: numeric_state
         entity_id: sensor.hall_motion_illuminance
         below: 130
       sequence:
-      - action: script.occupancy_lights_with_scene_fallback
-        data:
+      - data:
           occupancy_sensor: binary_sensor.hall_motion_occupancy
           target_light: light.hallway
           on_scene: scene.hallway_3_late_night
@@ -245,6 +244,14 @@
           brightness_pct: 100
           transition: 1
           direct_scene: true
+        action: script.occupancy_lights_with_scene_fallback
+      - target:
+          entity_id: light.utility_ceiling
+        data:
+          color_temp_kelvin: 2000
+          brightness_pct: 100
+          transition: 1
+        action: light.turn_on
     - conditions:
       - condition: state
         entity_id: binary_sensor.hall_motion_occupancy
@@ -256,14 +263,22 @@
         entity_id: sensor.sun_elevation
         above: -6
       sequence:
-      - action: script.occupancy_lights_with_scene_fallback
-        data:
+      - data:
           occupancy_sensor: binary_sensor.hall_motion_occupancy
           target_light: light.hallway
           on_scene: scene.hallway_1_on
           off_scene: scene.hallway_0_off
           brightness_pct: 100
           transition: 1
+          direct_scene: true
+        action: script.occupancy_lights_with_scene_fallback
+      - target:
+          entity_id: light.utility_ceiling
+        data:
+          color_temp_kelvin: 2000
+          brightness_pct: 100
+          transition: 1
+        action: light.turn_on
     - conditions:
       - condition: state
         entity_id: binary_sensor.hall_motion_occupancy
@@ -275,16 +290,7 @@
         entity_id: sensor.sun_elevation
         below: -6
       sequence:
-      - action: light.turn_on
-        target:
-          entity_id:
-          - light.utility_ceiling
-        data:
-          color_temp_kelvin: 2000
-          brightness_pct: 100
-          transition: 1
-      - action: script.occupancy_lights_with_scene_fallback
-        data:
+      - data:
           occupancy_sensor: binary_sensor.hall_motion_occupancy
           target_light: light.hallway
           on_scene: scene.hallway_2_on_walls
@@ -292,25 +298,33 @@
           brightness_pct: 100
           transition: 1
           direct_scene: true
+        action: script.occupancy_lights_with_scene_fallback
+      - target:
+          entity_id: light.utility_ceiling
+        data:
+          color_temp_kelvin: 2000
+          brightness_pct: 100
+          transition: 1
+        action: light.turn_on
     - conditions:
       - condition: state
         entity_id: binary_sensor.hall_motion_occupancy
         state: 'off'
       sequence:
-      - action: script.occupancy_lights_with_scene_fallback
-        data:
+      - data:
           occupancy_sensor: binary_sensor.hall_motion_occupancy
           target_light: light.hallway
           on_scene: scene.hallway_1_on
           off_scene: scene.hallway_0_off
           brightness_pct: 100
           transition: 1
+        action: script.occupancy_lights_with_scene_fallback
       - delay: 00:02:00
-      - action: light.turn_off
+      - target:
+          entity_id: light.utility_ceiling
         data:
           transition: 1
-        target:
-          entity_id: light.utility_ceiling
+        action: light.turn_off
     default: []
   mode: restart
 - id: '1702207044468'
@@ -421,7 +435,7 @@
     for:
       hours: 0
       minutes: 0
-      seconds: 5
+      seconds: 2
   actions:
   - variables:
       lr_lights:
@@ -488,7 +502,8 @@
       - action: scene.turn_on
         data: {}
         target:
-          entity_id: scene.living_room_lights_3_accents
+          entity_id:
+          - scene.living_room_lights_2_dimmers
     - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_eppro_occupancy
@@ -4539,12 +4554,22 @@
   description: Full apartment – Vac & Mop (single pass)
   triggers:
   - trigger: state
+    id: leave_home
     entity_id: person.hughod90
     from: home
+  - trigger: time
+    id: weekend_fallback
+    at: '12:00:00'
   conditions:
+  - condition: time
+    weekday:
+    - sat
+    - sun
   - condition: template
-    value_template: "{{ trigger.to_state is not none and\n   trigger.to_state.state
-      not in ['unknown', 'unavailable'] }}\n"
+    value_template: "{% if trigger.id == 'leave_home' %}\n  {{ trigger.to_state is
+      not none and\n     trigger.to_state.state not in ['unknown', 'unavailable']
+      }}\n{% else %}\n  {{ states('person.hughod90') not in ['home', 'unknown', 'unavailable']
+      }}\n{% endif %}\n"
   - condition: state
     entity_id: input_boolean.vacuum_ran_today
     state: 'off'
@@ -4554,12 +4579,13 @@
   - condition: state
     entity_id: vacuum.vacuum
     state: docked
-  - condition: time
-    weekday:
-    - sun
-    - sat
   actions:
-  - delay: 00:10:00
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: leave_home
+      sequence:
+      - delay: 00:10:00
   - condition: template
     value_template: '{{ states(''person.hughod90'') not in [''home'', ''unknown'',
       ''unavailable''] }}
