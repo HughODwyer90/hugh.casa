@@ -4956,6 +4956,22 @@
     data:
       level: low
   mode: single
+- id: &#x27;1774892857781&#x27;
+  alias: Find vibration sensor
+  description: &#x27;&#x27;
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.bathroom_vibration
+    to:
+    - &#x27;on&#x27;
+  conditions: []
+  actions:
+  - action: notify.mobile_app_sm_s9060
+    metadata: {}
+    data:
+      message: Vibration sensor moved
+  mode: single
 </pre>
             </div>
             <script>
