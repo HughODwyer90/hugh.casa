@@ -21,12 +21,11 @@
   alias: Living Room Dim
   description: Dim down any on lights in the living room.
   triggers:
-  - trigger: device
-    domain: mqtt
+  - domain: mqtt
     device_id: 9f98b882a412e95e16f1addf1f9e8e27
     type: action
-    subtype: down_press
-    discovery_id: 0x0017880109a49868 action_down_press
+    subtype: down_press_release
+    trigger: device
   actions:
   - variables:
       lr_on_lights: "{{\n  [\n    'light.living_room_floor_lamp',\n    'light.living_room_bookshelf'\n
@@ -48,12 +47,11 @@
   alias: Living Room Accent Brighten
   description: Brighten on lights; if all off, turn all on; if already max, blink.
   triggers:
-  - trigger: device
-    domain: mqtt
+  - domain: mqtt
     device_id: 9f98b882a412e95e16f1addf1f9e8e27
     type: action
-    subtype: up_press
-    discovery_id: 0x0017880109a49868 action_up_press
+    subtype: up_press_release
+    trigger: device
   actions:
   - variables:
       lr_lights:
@@ -4962,16 +4960,15 @@
   description: Brighten ceiling lights; if all off, turn both on; if already max,
     blink.
   triggers:
-  - trigger: device
-    domain: mqtt
+  - domain: mqtt
     device_id: 9f98b882a412e95e16f1addf1f9e8e27
     type: action
     subtype: up_hold
-    discovery_id: 0x0017880109a49868 action_up_hold
+    trigger: device
   actions:
   - variables:
       ceiling_lights:
-      - light.living_room_dining_table
+      - light.dining_table
       - light.living_room_coffee_table
       ceiling_on_lights: "{{\n  ceiling_lights\n  | select('is_state', 'on')\n  |
         list\n}}\n"
@@ -5027,4 +5024,35 @@
         data:
           brightness_pct: 40
           transition: 0.5
+  mode: single
+- id: '1774903930148'
+  alias: Living Room Ceiling Dim
+  description: Dim down ceiling lights in the living room.
+  triggers:
+  - domain: mqtt
+    device_id: 9f98b882a412e95e16f1addf1f9e8e27
+    type: action
+    subtype: down_hold
+    trigger: device
+  actions:
+  - choose:
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: light.living_room_dining_table
+          state: 'on'
+        - condition: state
+          entity_id: light.living_room_coffee_table
+          state: 'on'
+      sequence:
+      - action: light.turn_on
+        target:
+          entity_id:
+          - light.living_room_dining_table
+          - light.living_room_coffee_table
+        data:
+          brightness_step_pct: -30
+          transition: 0.5
+    default: []
   mode: single
