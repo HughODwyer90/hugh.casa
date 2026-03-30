@@ -60,7 +60,7 @@
     default: []
   mode: single
 - id: &#x27;1700841548515&#x27;
-  alias: Living Room Brighten
+  alias: Living Room Accent Brighten
   description: Brighten on lights; if all off, turn all on; if already max, blink.
   triggers:
   - trigger: device
@@ -4971,6 +4971,77 @@
     metadata: {}
     data:
       message: Vibration sensor moved
+  mode: single
+- id: &#x27;1774903515502&#x27;
+  alias: Living Room Ceiling Brighten
+  description: Brighten ceiling lights; if all off, turn both on; if already max,
+    blink.
+  triggers:
+  - trigger: device
+    domain: mqtt
+    device_id: 9f98b882a412e95e16f1addf1f9e8e27
+    type: action
+    subtype: up_hold
+    discovery_id: 0x0017880109a49868 action_up_hold
+  actions:
+  - variables:
+      ceiling_lights:
+      - light.living_room_dining_table
+      - light.living_room_coffee_table
+      ceiling_on_lights: &quot;{{\n  ceiling_lights\n  | select(&#x27;is_state&#x27;, &#x27;on&#x27;)\n  |
+        list\n}}\n&quot;
+      ceiling_all_dimmable_on_maxed: &quot;{% set ns = namespace(dimmable_on=0, maxed_on=0)
+        %} {% for e in ceiling_on_lights %}\n  {% set b = state_attr(e, &#x27;brightness&#x27;)
+        %}\n  {% if b is not none %}\n    {% set ns.dimmable_on = ns.dimmable_on +
+        1 %}\n    {% if (b | int) &gt;= 254 %}\n      {% set ns.maxed_on = ns.maxed_on
+        + 1 %}\n    {% endif %}\n  {% endif %}\n{% endfor %} {{ ns.dimmable_on &gt; 0
+        and ns.maxed_on == ns.dimmable_on }}\n&quot;
+      ceiling_brightness_snapshot: &quot;{% set ns = namespace(items=[]) %}\n{% for e in
+        ceiling_on_lights %}\n  {% set b = state_attr(e, &#x27;brightness&#x27;) %}\n  {% if
+        b is not none %}\n    {% set ns.items = ns.items + [{&#x27;entity_id&#x27;: e, &#x27;brightness&#x27;:
+        b | int}] %}\n  {% endif %}\n{% endfor %}\n{{ ns.items }}\n&quot;
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ (ceiling_on_lights | length &gt; 0) and ceiling_all_dimmable_on_maxed
+          }}&#x27;
+      sequence:
+      - action: light.turn_on
+        target:
+          entity_id: &#x27;{{ ceiling_on_lights }}&#x27;
+        data:
+          brightness_pct: 10
+          transition: 0
+      - delay: &#x27;00:00:00.20&#x27;
+      - repeat:
+          for_each: &#x27;{{ ceiling_brightness_snapshot }}&#x27;
+          sequence:
+          - action: light.turn_on
+            target:
+              entity_id: &#x27;{{ repeat.item.entity_id }}&#x27;
+            data:
+              brightness: &#x27;{{ repeat.item.brightness }}&#x27;
+              transition: 0.2
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ ceiling_on_lights | length &gt; 0 }}&#x27;
+      sequence:
+      - action: light.turn_on
+        target:
+          entity_id: &#x27;{{ ceiling_on_lights }}&#x27;
+        data:
+          brightness_step_pct: 30
+          transition: 0.5
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ ceiling_on_lights | length == 0 }}&#x27;
+      sequence:
+      - action: light.turn_on
+        target:
+          entity_id: &#x27;{{ ceiling_lights }}&#x27;
+        data:
+          brightness_pct: 40
+          transition: 0.5
   mode: single
 </pre>
             </div>
