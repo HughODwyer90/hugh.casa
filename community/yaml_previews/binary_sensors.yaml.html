@@ -58,6 +58,8 @@
       device_class: power
       state: &gt;
         {{ is_state(&#x27;remote.master_bedroom_tv&#x27;, &#x27;on&#x27;)
+          or is_state(&#x27;remote.master_bedroom_tv&#x27;, &#x27;on&#x27;)
+          or is_state(&#x27;remote.master_bedroom_tv&#x27;, &#x27;playing&#x27;)
           or is_state(&#x27;media_player.master_bedroom_tv_media_player&#x27;, &#x27;on&#x27;)
           or is_state(&#x27;media_player.master_bedroom_tv_media_player&#x27;, &#x27;playing&#x27;)
           or is_state(&#x27;media_player.master_bedroom_tv_ma&#x27;, &#x27;on&#x27;)
@@ -81,9 +83,9 @@
           or is_state(&#x27;media_player.living_room_tv_samsung&#x27;, &#x27;on&#x27;)
           or is_state(&#x27;media_player.living_room_tv_samsung&#x27;, &#x27;idle&#x27;)
           or is_state(&#x27;media_player.living_room_tv_samsung&#x27;, &#x27;playing&#x27;)
-          or is_state(&#x27;media_player.living_room_chromecast&#x27;, &#x27;on&#x27;)
-          or is_state(&#x27;media_player.living_room_chromecast&#x27;, &#x27;playing&#x27;)
-          or is_state(&#x27;media_player.living_room_chromecast&#x27;, &#x27;idle&#x27;) }}
+          or is_state(&#x27;remote.living_room_tv_g&#x27;, &#x27;on&#x27;)
+          or is_state(&#x27;remote.living_room_tv_g&#x27;, &#x27;playing&#x27;)
+          or is_state(&#x27;remote.living_room_tv_g&#x27;, &#x27;idle&#x27;) }}
       icon: &gt;
         {% if this.state == &#x27;on&#x27; %}
           mdi:television
