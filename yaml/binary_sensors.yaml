@@ -45,8 +45,8 @@
         {{ is_state('remote.master_bedroom_tv', 'on')
           or is_state('media_player.master_bedroom_tv_media_player', 'on')
           or is_state('media_player.master_bedroom_tv_media_player', 'playing')
-          or is_state('media_player.monitor_google', 'on')
-          or is_state('media_player.monitor_google', 'playing') }}
+          or is_state('media_player.master_bedroom_tv_ma', 'on')
+          or is_state('media_player.master_bedroom_tv_ma', 'playing') }}
       icon: >
         {% if this.state == 'on' %}
           mdi:monitor
