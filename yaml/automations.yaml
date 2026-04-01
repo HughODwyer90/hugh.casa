@@ -383,7 +383,7 @@
               entity_id: binary_sensor.pc_status
               state: 'on'
             - condition: state
-              entity_id: binary_sensor.monitor_state
+              entity_id: binary_sensor.master_bedroom_tv_state
               state: 'on'
           sequence:
           - action: script.set_purifier_speed
@@ -1114,10 +1114,10 @@
     conditions:
     - condition: state
       state: 'off'
-      entity_id: binary_sensor.monitor_state
+      entity_id: binary_sensor.master_bedroom_tv_state
     - condition: state
       state: unavailable
-      entity_id: binary_sensor.monitor_state
+      entity_id: binary_sensor.master_bedroom_tv_state
   actions:
   - choose:
     - conditions:
@@ -1164,7 +1164,7 @@
     to: 'on'
   - trigger: state
     id: monitor
-    entity_id: binary_sensor.monitor_state
+    entity_id: binary_sensor.master_bedroom_tv_state
     to: 'on'
   - trigger: state
     id: manual_off
@@ -1502,7 +1502,7 @@
     entity_id: input_boolean.alarm_enabled
     state: 'on'
   - condition: state
-    entity_id: binary_sensor.monitor_state
+    entity_id: binary_sensor.master_bedroom_tv_state
     state: 'off'
   actions:
   - choose:
@@ -3343,7 +3343,7 @@
   - trigger: state
     entity_id:
     - binary_sensor.pc_status
-    - binary_sensor.monitor_state
+    - binary_sensor.master_bedroom_tv_state
     - binary_sensor.bed_sensor
     - sensor.phone_ble_rssi
     enabled: false
@@ -3357,7 +3357,7 @@
     entity_id: input_boolean.wake_up_alarm_running
     state: 'off'
   - condition: template
-    value_template: "{% set ents = expand([\n  'binary_sensor.pc_status',\n  'binary_sensor.monitor_state',\n
+    value_template: "{% set ents = expand([\n  'binary_sensor.pc_status',\n  'binary_sensor.master_bedroom_tv_state',\n
       \ 'binary_sensor.bed_sensor'\n])  | rejectattr('state','in',['unknown','unavailable','None'])
       \ | list %}\n{% set all_off = (ents | selectattr('state','eq','off') | list
       | count)\n                 == (ents | count) %}\n\n{# battery + charging #}
@@ -3451,10 +3451,10 @@
           - condition: or
             conditions:
             - condition: state
-              entity_id: binary_sensor.monitor_state
+              entity_id: binary_sensor.master_bedroom_tv_state
               state: 'off'
             - condition: state
-              entity_id: binary_sensor.monitor_state
+              entity_id: binary_sensor.master_bedroom_tv_state
               state: unavailable
         - condition: and
           conditions:
@@ -3469,10 +3469,10 @@
           - condition: or
             conditions:
             - condition: state
-              entity_id: binary_sensor.monitor_state
+              entity_id: binary_sensor.master_bedroom_tv_state
               state: 'off'
             - condition: state
-              entity_id: binary_sensor.monitor_state
+              entity_id: binary_sensor.master_bedroom_tv_state
               state: unavailable
       sequence:
       - action: input_boolean.turn_off
@@ -3640,7 +3640,7 @@
     for:
       seconds: 2
   - trigger: state
-    entity_id: binary_sensor.monitor_state
+    entity_id: binary_sensor.master_bedroom_tv_state
     id: monitor_change
     for:
       seconds: 2
@@ -3713,7 +3713,7 @@
           entity_id: binary_sensor.pc_status
           state: 'on'
         - condition: state
-          entity_id: binary_sensor.monitor_state
+          entity_id: binary_sensor.master_bedroom_tv_state
           state: 'on'
       sequence:
       - action: script.set_purifier_speed
@@ -3964,7 +3964,7 @@
   triggers:
   - trigger: state
     entity_id:
-    - binary_sensor.monitor_state
+    - binary_sensor.master_bedroom_tv_state
     to:
     - 'on'
     for:
@@ -4910,7 +4910,7 @@
     for:
       seconds: 5
   - trigger: state
-    entity_id: binary_sensor.monitor_state
+    entity_id: binary_sensor.master_bedroom_tv_state
     to: 'on'
     for:
       seconds: 5
@@ -4929,7 +4929,7 @@
       entity_id: binary_sensor.pc_status
       state: 'on'
     - condition: state
-      entity_id: binary_sensor.monitor_state
+      entity_id: binary_sensor.master_bedroom_tv_state
       state: 'on'
   - condition: time
     after: 09:00:00
