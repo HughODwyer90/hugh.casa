@@ -43,6 +43,8 @@
       device_class: power
       state: >
         {{ is_state('remote.master_bedroom_tv', 'on')
+          or is_state('remote.master_bedroom_tv', 'on')
+          or is_state('remote.master_bedroom_tv', 'playing')
           or is_state('media_player.master_bedroom_tv_media_player', 'on')
           or is_state('media_player.master_bedroom_tv_media_player', 'playing')
           or is_state('media_player.master_bedroom_tv_ma', 'on')
@@ -66,9 +68,9 @@
           or is_state('media_player.living_room_tv_samsung', 'on')
           or is_state('media_player.living_room_tv_samsung', 'idle')
           or is_state('media_player.living_room_tv_samsung', 'playing')
-          or is_state('media_player.living_room_chromecast', 'on')
-          or is_state('media_player.living_room_chromecast', 'playing')
-          or is_state('media_player.living_room_chromecast', 'idle') }}
+          or is_state('remote.living_room_tv_g', 'on')
+          or is_state('remote.living_room_tv_g', 'playing')
+          or is_state('remote.living_room_tv_g', 'idle') }}
       icon: >
         {% if this.state == 'on' %}
           mdi:television
