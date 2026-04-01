@@ -43,8 +43,8 @@
       device_class: power
       state: >
         {{ is_state('remote.master_bedroom_tv', 'on')
-          or is_state('media_player.master_bedroom_tv_2', 'on')
-          or is_state('media_player.master_bedroom_tv_2', 'playing')
+          or is_state('media_player.master_bedroom_tv_media_player', 'on')
+          or is_state('media_player.master_bedroom_tv_media_player', 'playing')
           or is_state('media_player.monitor_google', 'on')
           or is_state('media_player.monitor_google', 'playing') }}
       icon: >
