@@ -14,7 +14,6 @@
             </div>
             <div class="scrollable-content">
                 <pre class="yaml-content">- binary_sensor:
-
     - name: &quot;Living Room Occupancy Scene Saved&quot;
       unique_id: living_room_occupancy_scene_saved_sensor
       device_class: occupancy
@@ -53,9 +52,9 @@
         {{ &#x27;mdi:tooth&#x27;
           if is_state(&#x27;binary_sensor.pressure_toothbrush&#x27;, &#x27;on&#x27;)
           else &#x27;mdi:tooth-outline&#x27; }}
-        
-    - name: &quot;Master Bedroom Display State&quot;
-      unique_id: master_bedroom_display_state_sensor
+
+    - name: &quot;Master Bedroom TV State&quot;
+      unique_id: master_bedroom_display_tv_sensor
       device_class: power
       state: &gt;
         {{ is_state(&#x27;remote.master_bedroom_tv&#x27;, &#x27;on&#x27;)
@@ -93,7 +92,7 @@
         {% else %}
           mdi:alert
         {% endif %}
-        
+
     - name: &quot;Bed Sensor&quot;
       unique_id: bed_sensor
       device_class: occupancy
@@ -120,7 +119,8 @@
             datamars
           {% else %}
             none
-          {% endif %}</pre>
+          {% endif %}
+</pre>
             </div>
             <script>
                 (function fixPaths() {
