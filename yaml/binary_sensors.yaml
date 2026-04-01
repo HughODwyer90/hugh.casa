@@ -38,14 +38,14 @@
         {{ 'mdi:tooth'
           if is_state('binary_sensor.pressure_toothbrush', 'on')
           else 'mdi:tooth-outline' }}
-
-    - name: "Monitor State"
-      unique_id: monitor_state_sensor
+        
+    - name: "Master Bedroom Display State"
+      unique_id: master_bedroom_display_state_sensor
       device_class: power
       state: >
-        {{ is_state('remote.monitor', 'on')
-          or is_state('media_player.monitor', 'on')
-          or is_state('media_player.monitor', 'playing')
+        {{ is_state('remote.master_bedroom_tv', 'on')
+          or is_state('media_player.master_bedroom_tv_2', 'on')
+          or is_state('media_player.master_bedroom_tv_2', 'playing')
           or is_state('media_player.monitor_google', 'on')
           or is_state('media_player.monitor_google', 'playing') }}
       icon: >
