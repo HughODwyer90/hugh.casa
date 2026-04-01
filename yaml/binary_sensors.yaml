@@ -1,5 +1,4 @@
 - binary_sensor:
-
     - name: "Living Room Occupancy Scene Saved"
       unique_id: living_room_occupancy_scene_saved_sensor
       device_class: occupancy
@@ -38,9 +37,9 @@
         {{ 'mdi:tooth'
           if is_state('binary_sensor.pressure_toothbrush', 'on')
           else 'mdi:tooth-outline' }}
-        
-    - name: "Master Bedroom Display State"
-      unique_id: master_bedroom_display_state_sensor
+
+    - name: "Master Bedroom TV State"
+      unique_id: master_bedroom_display_tv_sensor
       device_class: power
       state: >
         {{ is_state('remote.master_bedroom_tv', 'on')
@@ -78,7 +77,7 @@
         {% else %}
           mdi:alert
         {% endif %}
-        
+
     - name: "Bed Sensor"
       unique_id: bed_sensor
       device_class: occupancy
