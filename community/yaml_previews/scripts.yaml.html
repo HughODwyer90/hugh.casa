@@ -41,30 +41,58 @@ execute_alarm_actions:
   - action: input_boolean.turn_on
     target:
       entity_id: input_boolean.wake_up_alarm_running
-    data: {}
   - condition: template
     value_template: &#x27;{{ now() &lt;= state_attr(&#x27;&#x27;sun.sun&#x27;&#x27;, &#x27;&#x27;next_rising&#x27;&#x27;) | as_datetime
       }}&#x27;
   - action: light.turn_on
-    data:
-      transition: 300
     target:
       entity_id: light.hugh_room_lamp
+    data:
+      transition: 300
   - delay:
       minutes: 5
+  - variables:
+      alarm_player: media_player.hugh_speaker_group_2
+      fallback_used: false
   - action: music_assistant.play_media
     target:
-      entity_id: media_player.hugh_speaker_group_2
+      entity_id: &#x27;{{ alarm_player }}&#x27;
     data:
       media_type: radio
       media_id: Today FM
       enqueue: play
       radio_mode: false
+    continue_on_error: true
+  - wait_template: &quot;{{\n  states(alarm_player) in [&#x27;playing&#x27;, &#x27;buffering&#x27;]\n  or\n
+      \ (\n    state_attr(alarm_player, &#x27;media_title&#x27;) is not none\n    and &#x27;today
+      fm&#x27; in (state_attr(alarm_player, &#x27;media_title&#x27;) | lower)\n  )\n}}\n&quot;
+    timeout: 00:00:12
+    continue_on_timeout: true
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ not wait.completed }}&#x27;
+      sequence:
+      - variables:
+          fallback_used: true
+      - action: media_player.play_media
+        target:
+          entity_id: &#x27;{{ alarm_player }}&#x27;
+        data:
+          media_content_id: media-source://radio_browser/6ee57601-3752-4031-8155-28f67ca9db43
+          media_content_type: audio/aac
+      - action: notify.notifications
+        data:
+          title: Wake Up Alarm
+          message: Music Assistant playback failed. Fallback to Radio Browser was
+            used.
+          data:
+            notification_icon: mdi:radio
   - action: media_player.volume_set
+    target:
+      entity_id: &#x27;{{ alarm_player }}&#x27;
     data:
       volume_level: 0.2
-    target:
-      entity_id: media_player.hugh_speaker_group_2
   - choose:
     - conditions:
       - condition: state
@@ -110,14 +138,14 @@ execute_alarm_actions:
         state: Likely Frozen
       sequence:
       - action: light.turn_on
+        target:
+          entity_id: light.hugh_room_ceiling
         data:
           rgb_color:
           - 173
           - 216
           - 230
           brightness_pct: 10
-        target:
-          entity_id: light.hugh_room_ceiling
   mode: single
   icon: mdi:alarm-bell
   description: &#x27;&#x27;
