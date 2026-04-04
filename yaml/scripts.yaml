@@ -26,30 +26,58 @@ execute_alarm_actions:
   - action: input_boolean.turn_on
     target:
       entity_id: input_boolean.wake_up_alarm_running
-    data: {}
   - condition: template
     value_template: '{{ now() <= state_attr(''sun.sun'', ''next_rising'') | as_datetime
       }}'
   - action: light.turn_on
-    data:
-      transition: 300
     target:
       entity_id: light.hugh_room_lamp
+    data:
+      transition: 300
   - delay:
       minutes: 5
+  - variables:
+      alarm_player: media_player.hugh_speaker_group_2
+      fallback_used: false
   - action: music_assistant.play_media
     target:
-      entity_id: media_player.hugh_speaker_group_2
+      entity_id: '{{ alarm_player }}'
     data:
       media_type: radio
       media_id: Today FM
       enqueue: play
       radio_mode: false
+    continue_on_error: true
+  - wait_template: "{{\n  states(alarm_player) in ['playing', 'buffering']\n  or\n
+      \ (\n    state_attr(alarm_player, 'media_title') is not none\n    and 'today
+      fm' in (state_attr(alarm_player, 'media_title') | lower)\n  )\n}}\n"
+    timeout: 00:00:12
+    continue_on_timeout: true
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ not wait.completed }}'
+      sequence:
+      - variables:
+          fallback_used: true
+      - action: media_player.play_media
+        target:
+          entity_id: '{{ alarm_player }}'
+        data:
+          media_content_id: media-source://radio_browser/6ee57601-3752-4031-8155-28f67ca9db43
+          media_content_type: audio/aac
+      - action: notify.notifications
+        data:
+          title: Wake Up Alarm
+          message: Music Assistant playback failed. Fallback to Radio Browser was
+            used.
+          data:
+            notification_icon: mdi:radio
   - action: media_player.volume_set
+    target:
+      entity_id: '{{ alarm_player }}'
     data:
       volume_level: 0.2
-    target:
-      entity_id: media_player.hugh_speaker_group_2
   - choose:
     - conditions:
       - condition: state
@@ -95,14 +123,14 @@ execute_alarm_actions:
         state: Likely Frozen
       sequence:
       - action: light.turn_on
+        target:
+          entity_id: light.hugh_room_ceiling
         data:
           rgb_color:
           - 173
           - 216
           - 230
           brightness_pct: 10
-        target:
-          entity_id: light.hugh_room_ceiling
   mode: single
   icon: mdi:alarm-bell
   description: ''
