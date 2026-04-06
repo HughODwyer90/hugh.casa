@@ -320,6 +320,9 @@
             —
           {% endif %}
           
+            {{ target | as_local }}
+          {% endif %}
+          
     - name: &quot;Next Alarm In&quot;
       unique_id: next_alarm_in
       icon: mdi:alarm
@@ -329,33 +332,54 @@
         {% else %}
           {% set n = now() %}
           {% set wfh_tom = is_state(&#x27;input_boolean.wfh_tomorrow&#x27;,&#x27;on&#x27;) %}
-    
+          {% set holiday = states(&#x27;sensor.next_public_holiday&#x27;) %}
           {% set wd  = states(&#x27;input_datetime.weekday_wake_up_alarm&#x27;) %}
           {% set we  = states(&#x27;input_datetime.weekend_wake_up_alarm&#x27;) %}
           {% set wfh = states(&#x27;input_datetime.weekday_wfh_wake_up_alarm&#x27;) %}
+          {% set ns = namespace(target=None) %}
     
-          {% if wfh_tom %}
-            {% set target = today_at(wfh) if n &lt; today_at(wfh) else today_at(wfh) + timedelta(days=1) %}
-          {% else %}
-            {% set dow = n.weekday() %}
-            {% set is_weekend = dow in [5,6] %}
-            {% set todays_time = we if is_weekend else wd %}
-            {% set todays = today_at(todays_time) %}
+          {% for i in range(0, 8) %}
+            {% set day = n + timedelta(days=i) %}
+            {% set dow = day.weekday() %}
+            {% set is_weekend = dow in [5, 6] %}
     
-            {% if n &lt; todays %}
-              {% set target = todays %}
+            {% if i == 0 %}
+              {% set is_holiday = holiday == &#x27;Today&#x27; %}
+            {% elif i == 1 %}
+              {% set is_holiday = holiday == &#x27;Tomorrow&#x27; %}
             {% else %}
-              {% set tomorrow = n + timedelta(days=1) %}
-              {% set t_dow = tomorrow.weekday() %}
-              {% set next_time = we if t_dow in [5,6] else wd %}
-              {% set target = today_at(next_time) + timedelta(days=1) %}
+              {% set is_holiday = false %}
             {% endif %}
-          {% endif %}
     
-          {% set secs = (as_timestamp(target) - as_timestamp(n)) | int %}
-          {% if secs &lt;= 0 %}
-            0m
+            {% if not is_weekend and not is_holiday %}
+              {% if i == 0 %}
+                {% if wfh_tom %}
+                  {% set candidate = today_at(wfh) %}
+                {% else %}
+                  {% set candidate = today_at(wd) %}
+                {% endif %}
+              {% else %}
+                {% if i == 1 and wfh_tom %}
+                  {% set candidate = today_at(wfh) + timedelta(days=1) %}
+                {% else %}
+                  {% set candidate = today_at(wd) + timedelta(days=i) %}
+                {% endif %}
+              {% endif %}
+            {% elif is_weekend %}
+              {% set candidate = today_at(we) + timedelta(days=i) %}
+            {% else %}
+              {% set candidate = none %}
+            {% endif %}
+    
+            {% if candidate and candidate &gt; n and ns.target is none %}
+              {% set ns.target = candidate %}
+            {% endif %}
+          {% endfor %}
+    
+          {% if ns.target is none %}
+            Unknown
           {% else %}
+            {% set secs = (as_timestamp(ns.target) - as_timestamp(n)) | int %}
             {% set total_mins = (secs + 59) // 60 %}
             {% set h = total_mins // 60 %}
             {% set m = total_mins % 60 %}
@@ -373,27 +397,55 @@
           {% else %}
             {% set n = now() %}
             {% set wfh_tom = is_state(&#x27;input_boolean.wfh_tomorrow&#x27;,&#x27;on&#x27;) %}
+            {% set holiday = states(&#x27;sensor.next_public_holiday&#x27;) %}
             {% set wd  = states(&#x27;input_datetime.weekday_wake_up_alarm&#x27;) %}
             {% set we  = states(&#x27;input_datetime.weekend_wake_up_alarm&#x27;) %}
             {% set wfh = states(&#x27;input_datetime.weekday_wfh_wake_up_alarm&#x27;) %}
+            {% set ns = namespace(target=None) %}
     
-            {% if wfh_tom %}
-              {% set target = today_at(wfh) if n &lt; today_at(wfh) else today_at(wfh) + timedelta(days=1) %}
-            {% else %}
-              {% set dow = n.weekday() %}
-              {% set is_weekend = dow in [5,6] %}
-              {% set todays_time = we if is_weekend else wd %}
-              {% set todays = today_at(todays_time) %}
-              {% if n &lt; todays %}
-                {% set target = todays %}
+            {% for i in range(0, 8) %}
+              {% set day = n + timedelta(days=i) %}
+              {% set dow = day.weekday() %}
+              {% set is_weekend = dow in [5, 6] %}
+    
+              {% if i == 0 %}
+                {% set is_holiday = holiday == &#x27;Today&#x27; %}
+              {% elif i == 1 %}
+                {% set is_holiday = holiday == &#x27;Tomorrow&#x27; %}
               {% else %}
-                {% set tomorrow = n + timedelta(days=1) %}
-                {% set t_dow = tomorrow.weekday() %}
-                {% set next_time = we if t_dow in [5,6] else wd %}
-                {% set target = today_at(next_time) + timedelta(days=1) %}
+                {% set is_holiday = false %}
               {% endif %}
+    
+              {% if not is_weekend and not is_holiday %}
+                {% if i == 0 %}
+                  {% if wfh_tom %}
+                    {% set candidate = today_at(wfh) %}
+                  {% else %}
+                    {% set candidate = today_at(wd) %}
+                  {% endif %}
+                {% else %}
+                  {% if i == 1 and wfh_tom %}
+                    {% set candidate = today_at(wfh) + timedelta(days=1) %}
+                  {% else %}
+                    {% set candidate = today_at(wd) + timedelta(days=i) %}
+                  {% endif %}
+                {% endif %}
+              {% elif is_weekend %}
+                {% set candidate = today_at(we) + timedelta(days=i) %}
+              {% else %}
+                {% set candidate = none %}
+              {% endif %}
+    
+              {% if candidate and candidate &gt; n and ns.target is none %}
+                {% set ns.target = candidate %}
+              {% endif %}
+            {% endfor %}
+    
+            {% if ns.target is none %}
+              none
+            {% else %}
+              {{ ns.target | as_local }}
             {% endif %}
-            {{ target | as_local }}
           {% endif %}</pre>
             </div>
             <script>
