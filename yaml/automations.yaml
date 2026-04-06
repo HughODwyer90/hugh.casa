@@ -1508,8 +1508,9 @@
   - choose:
     - conditions:
       - condition: trigger
-        id:
-        - weekday_wfh_alarm
+        id: weekday_wfh_alarm
+      - condition: template
+        value_template: '{{ states(''sensor.next_public_holiday'') != ''Today'' }}'
       - condition: and
         conditions:
         - condition: state
@@ -1524,11 +1525,12 @@
         entity_id: input_boolean.wfh_tomorrow
         state: 'on'
       sequence:
-      - data: {}
-        action: script.execute_alarm_actions
+      - action: script.execute_alarm_actions
     - conditions:
       - condition: trigger
         id: weekday_alarm
+      - condition: template
+        value_template: '{{ states(''sensor.next_public_holiday'') != ''Today'' }}'
       - condition: and
         conditions:
         - condition: state
@@ -1543,8 +1545,7 @@
           entity_id: input_boolean.wfh_tomorrow
           state: 'off'
       sequence:
-      - data: {}
-        action: script.execute_alarm_actions
+      - action: script.execute_alarm_actions
     - conditions:
       - condition: trigger
         id: weekend_alarm
@@ -1553,8 +1554,7 @@
         - sat
         - sun
       sequence:
-      - data: {}
-        action: script.execute_alarm_actions
+      - action: script.execute_alarm_actions
     default: []
   mode: single
 - id: '1715936038206'
