@@ -319,10 +319,7 @@
           {% else %}
             —
           {% endif %}
-          
-            {{ target | as_local }}
-          {% endif %}
-          
+
     - name: &quot;Next Alarm In&quot;
       unique_id: next_alarm_in
       icon: mdi:alarm
@@ -337,12 +334,12 @@
           {% set we  = states(&#x27;input_datetime.weekend_wake_up_alarm&#x27;) %}
           {% set wfh = states(&#x27;input_datetime.weekday_wfh_wake_up_alarm&#x27;) %}
           {% set ns = namespace(target=None) %}
-    
+
           {% for i in range(0, 8) %}
             {% set day = n + timedelta(days=i) %}
             {% set dow = day.weekday() %}
             {% set is_weekend = dow in [5, 6] %}
-    
+
             {% if i == 0 %}
               {% set is_holiday = holiday == &#x27;Today&#x27; %}
             {% elif i == 1 %}
@@ -350,7 +347,7 @@
             {% else %}
               {% set is_holiday = false %}
             {% endif %}
-    
+
             {% if not is_weekend and not is_holiday %}
               {% if i == 0 %}
                 {% if wfh_tom %}
@@ -370,12 +367,12 @@
             {% else %}
               {% set candidate = none %}
             {% endif %}
-    
+
             {% if candidate and candidate &gt; n and ns.target is none %}
               {% set ns.target = candidate %}
             {% endif %}
           {% endfor %}
-    
+
           {% if ns.target is none %}
             Unknown
           {% else %}
@@ -402,12 +399,12 @@
             {% set we  = states(&#x27;input_datetime.weekend_wake_up_alarm&#x27;) %}
             {% set wfh = states(&#x27;input_datetime.weekday_wfh_wake_up_alarm&#x27;) %}
             {% set ns = namespace(target=None) %}
-    
+
             {% for i in range(0, 8) %}
               {% set day = n + timedelta(days=i) %}
               {% set dow = day.weekday() %}
               {% set is_weekend = dow in [5, 6] %}
-    
+
               {% if i == 0 %}
                 {% set is_holiday = holiday == &#x27;Today&#x27; %}
               {% elif i == 1 %}
@@ -415,7 +412,7 @@
               {% else %}
                 {% set is_holiday = false %}
               {% endif %}
-    
+
               {% if not is_weekend and not is_holiday %}
                 {% if i == 0 %}
                   {% if wfh_tom %}
@@ -435,12 +432,12 @@
               {% else %}
                 {% set candidate = none %}
               {% endif %}
-    
+
               {% if candidate and candidate &gt; n and ns.target is none %}
                 {% set ns.target = candidate %}
               {% endif %}
             {% endfor %}
-    
+
             {% if ns.target is none %}
               none
             {% else %}
