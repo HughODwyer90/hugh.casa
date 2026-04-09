@@ -197,21 +197,29 @@
           mdi:alert
         {% endif %}
         
-    - name: "Vacuum Room ID From Name"
-      unique_id: vacuum_room_id_from_name
+    - name: "Vacuum Room Mapping"
+      unique_id: vacuum_room_mapping
       state: >
-        {% set target = states('input_text.vacuum_room_name') | lower %}
         {% set map_name = state_attr('vacuum.vacuum', 'selected_map') %}
-        {% set rooms = state_attr('vacuum.vacuum', 'rooms')[map_name] if map_name else [] %}
-        {% if rooms %}
-          {% for room in rooms %}
-            {% if room.name | lower == target %}
-              {{ room.id }}
-              {% break %}
-            {% endif %}
-          {% else %}
-            Unknown
-          {% endfor %}
-        {% else %}
-          Unknown
-        {% endif %}
+        {{ map_name if map_name else 'Unknown' }}
+      attributes:
+        room_mapping: >
+          {% set map_name = state_attr('vacuum.vacuum', 'selected_map') %}
+          {% set rooms_dict = state_attr('vacuum.vacuum', 'rooms') %}
+          {% set ns = namespace(result = {}) %}
+          {% if map_name and rooms_dict and map_name in rooms_dict %}
+            {% for room in rooms_dict[map_name] %}
+              {% set ns.result = dict(ns.result, **{room.name: room.id}) %}
+            {% endfor %}
+          {% endif %}
+          {{ ns.result }}
+        room_mapping_by_id: >
+          {% set map_name = state_attr('vacuum.vacuum', 'selected_map') %}
+          {% set rooms_dict = state_attr('vacuum.vacuum', 'rooms') %}
+          {% set ns = namespace(result = {}) %}
+          {% if map_name and rooms_dict and map_name in rooms_dict %}
+            {% for room in rooms_dict[map_name] %}
+              {% set ns.result = dict(ns.result, **{(room.id | string): room.name}) %}
+            {% endfor %}
+          {% endif %}
+          {{ ns.result }}
