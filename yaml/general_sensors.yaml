@@ -204,16 +204,14 @@
         {% set map_name = state_attr('vacuum.vacuum', 'selected_map') %}
         {% set rooms = state_attr('vacuum.vacuum', 'rooms')[map_name] if map_name else [] %}
         {% if rooms %}
-          {% set match = rooms
-            | selectattr('name', 'defined')
-            | selectattr('name', 'lower')
-            | selectattr('name', 'search', target)
-            | list %}
-          {% if match | count > 0 %}
-            {{ match[0].id }}
+          {% for room in rooms %}
+            {% if room.name | lower == target %}
+              {{ room.id }}
+              {% break %}
+            {% endif %}
           {% else %}
             Unknown
-          {% endif %}
+          {% endfor %}
         {% else %}
           Unknown
         {% endif %}
