@@ -216,7 +216,8 @@
       unique_id: vacuum_room_id_from_name
       state: &gt;
         {% set target = states(&#x27;input_text.vacuum_room_name&#x27;) | lower %}
-        {% set rooms = state_attr(&#x27;vacuum.vacuum&#x27;, &#x27;rooms&#x27;) %}
+        {% set map_name = state_attr(&#x27;vacuum.vacuum&#x27;, &#x27;selected_map&#x27;) %}
+        {% set rooms = state_attr(&#x27;vacuum.vacuum&#x27;, &#x27;rooms&#x27;)[map_name] if map_name else [] %}
         {% if rooms %}
           {% set match = rooms
             | selectattr(&#x27;name&#x27;, &#x27;defined&#x27;)
@@ -230,9 +231,7 @@
           {% endif %}
         {% else %}
           Unknown
-        {% endif %}
-
-</pre>
+        {% endif %}</pre>
             </div>
             <script>
                 (function fixPaths() {
