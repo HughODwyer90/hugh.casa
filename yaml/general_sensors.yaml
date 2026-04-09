@@ -196,4 +196,24 @@
         {% else %}
           mdi:alert
         {% endif %}
+        
+    - name: "Vacuum Room ID From Name"
+      unique_id: vacuum_room_id_from_name
+      state: >
+        {% set target = states('input_text.vacuum_room_name') | lower %}
+        {% set rooms = state_attr('vacuum.vacuum', 'rooms') %}
+        {% if rooms %}
+          {% set match = rooms
+            | selectattr('name', 'defined')
+            | selectattr('name', 'lower')
+            | selectattr('name', 'search', target)
+            | list %}
+          {% if match | count > 0 %}
+            {{ match[0].id }}
+          {% else %}
+            Unknown
+          {% endif %}
+        {% else %}
+          Unknown
+        {% endif %}
 
