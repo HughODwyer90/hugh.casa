@@ -212,24 +212,32 @@
           mdi:alert
         {% endif %}
         
-    - name: &quot;Vacuum Room ID From Name&quot;
-      unique_id: vacuum_room_id_from_name
+    - name: &quot;Vacuum Room Mapping&quot;
+      unique_id: vacuum_room_mapping
       state: &gt;
-        {% set target = states(&#x27;input_text.vacuum_room_name&#x27;) | lower %}
         {% set map_name = state_attr(&#x27;vacuum.vacuum&#x27;, &#x27;selected_map&#x27;) %}
-        {% set rooms = state_attr(&#x27;vacuum.vacuum&#x27;, &#x27;rooms&#x27;)[map_name] if map_name else [] %}
-        {% if rooms %}
-          {% for room in rooms %}
-            {% if room.name | lower == target %}
-              {{ room.id }}
-              {% break %}
-            {% endif %}
-          {% else %}
-            Unknown
-          {% endfor %}
-        {% else %}
-          Unknown
-        {% endif %}</pre>
+        {{ map_name if map_name else &#x27;Unknown&#x27; }}
+      attributes:
+        room_mapping: &gt;
+          {% set map_name = state_attr(&#x27;vacuum.vacuum&#x27;, &#x27;selected_map&#x27;) %}
+          {% set rooms_dict = state_attr(&#x27;vacuum.vacuum&#x27;, &#x27;rooms&#x27;) %}
+          {% set ns = namespace(result = {}) %}
+          {% if map_name and rooms_dict and map_name in rooms_dict %}
+            {% for room in rooms_dict[map_name] %}
+              {% set ns.result = dict(ns.result, **{room.name: room.id}) %}
+            {% endfor %}
+          {% endif %}
+          {{ ns.result }}
+        room_mapping_by_id: &gt;
+          {% set map_name = state_attr(&#x27;vacuum.vacuum&#x27;, &#x27;selected_map&#x27;) %}
+          {% set rooms_dict = state_attr(&#x27;vacuum.vacuum&#x27;, &#x27;rooms&#x27;) %}
+          {% set ns = namespace(result = {}) %}
+          {% if map_name and rooms_dict and map_name in rooms_dict %}
+            {% for room in rooms_dict[map_name] %}
+              {% set ns.result = dict(ns.result, **{(room.id | string): room.name}) %}
+            {% endfor %}
+          {% endif %}
+          {{ ns.result }}</pre>
             </div>
             <script>
                 (function fixPaths() {
