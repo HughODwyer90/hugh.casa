@@ -4453,6 +4453,7 @@
       segments:
       - 4
       - 2
+      - 1
   - action: input_boolean.turn_off
     target:
       entity_id: input_boolean.vacuum_kitchen_living_pending
@@ -5078,4 +5079,155 @@
       transition: 1
     target:
       entity_id: light.living_room_ceiling_lights
+  mode: single
+- id: '1775768667574'
+  alias: Hugh Phone Diffuser Control Watchdog
+  description: Re-evaluates diffuser light state based on current phone, charger,
+    occupancy, blanket, and PC states.
+  triggers:
+  - trigger: homeassistant
+    event: start
+  - trigger: time_pattern
+    minutes: /5
+  - trigger: state
+    entity_id:
+    - input_boolean.hugh_room_occupied
+    - switch.hugh_room_plug_blanket
+    - binary_sensor.pc_status
+    - sensor.hugh_phone_battery_state
+    - sensor.hugh_phone_battery_level
+    - sensor.hugh_phone_charger_type
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.hugh_room_occupied
+        state: 'on'
+      - condition: template
+        value_template: '{{ states(''sensor.hugh_phone_battery_state'') not in [''unknown'',
+          ''unavailable''] }}'
+      - condition: template
+        value_template: '{{ states(''sensor.hugh_phone_charger_type'') not in [''unknown'',
+          ''unavailable''] }}'
+      - condition: state
+        entity_id: sensor.hugh_phone_battery_state
+        state: charging
+      - condition: state
+        entity_id: sensor.hugh_phone_charger_type
+        state: ac
+      - condition: time
+        after: 08:00:00
+        before: '22:00:00'
+      sequence:
+      - action: script.set_diffuser_color
+        data:
+          color:
+          - 0
+          - 17
+          - 255
+          brightness: 100
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.hugh_room_occupied
+        state: 'on'
+      - condition: template
+        value_template: '{{ states(''sensor.hugh_phone_battery_state'') not in [''unknown'',
+          ''unavailable''] }}'
+      - condition: template
+        value_template: '{{ states(''sensor.hugh_phone_charger_type'') not in [''unknown'',
+          ''unavailable''] }}'
+      - condition: state
+        entity_id: sensor.hugh_phone_charger_type
+        state: ac
+      - condition: numeric_state
+        entity_id: sensor.hugh_phone_battery_level
+        above: 90
+      - condition: time
+        after: 08:00:00
+        before: '23:00:00'
+      sequence:
+      - action: script.set_diffuser_color
+        data:
+          color:
+          - 0
+          - 255
+          - 0
+          brightness: 100
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.hugh_room_occupied
+        state: 'on'
+      - condition: template
+        value_template: '{{ states(''sensor.hugh_phone_battery_state'') not in [''unknown'',
+          ''unavailable''] }}'
+      - condition: template
+        value_template: '{{ states(''sensor.hugh_phone_charger_type'') not in [''unknown'',
+          ''unavailable''] }}'
+      - condition: state
+        entity_id: sensor.hugh_phone_battery_state
+        state: not_charging
+      - condition: state
+        entity_id: sensor.hugh_phone_charger_type
+        state: ac
+      - condition: time
+        after: 08:00:00
+        before: '23:00:00'
+      sequence:
+      - action: script.set_diffuser_color
+        data:
+          color:
+          - 0
+          - 255
+          - 0
+          brightness: 100
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.hugh_room_occupied
+        state: 'on'
+      - condition: template
+        value_template: '{{ states(''sensor.hugh_phone_battery_state'') not in [''unknown'',
+          ''unavailable''] }}'
+      - condition: template
+        value_template: '{{ states(''sensor.hugh_phone_charger_type'') not in [''unknown'',
+          ''unavailable''] }}'
+      - condition: state
+        entity_id: switch.hugh_room_plug_blanket
+        state: 'on'
+      sequence:
+      - action: script.set_diffuser_color
+        data:
+          color:
+          - 255
+          - 0
+          - 0
+          brightness: 100
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.hugh_room_occupied
+        state: 'on'
+      - condition: template
+        value_template: '{{ states(''sensor.hugh_phone_battery_state'') not in [''unknown'',
+          ''unavailable''] }}'
+      - condition: template
+        value_template: '{{ states(''sensor.hugh_phone_charger_type'') not in [''unknown'',
+          ''unavailable''] }}'
+      - condition: state
+        entity_id: switch.hugh_room_plug_blanket
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.pc_status
+        state: 'on'
+      sequence:
+      - action: script.set_diffuser_color
+        data:
+          color:
+          - 255
+          - 138
+          - 13
+          brightness: 100
+    default:
+    - action: light.turn_off
+      target:
+        entity_id: light.aroma_diffuser
   mode: single
