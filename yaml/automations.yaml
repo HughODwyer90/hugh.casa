@@ -1016,14 +1016,10 @@
   alias: Snake Plant – Needs Attention
   triggers:
   - trigger: numeric_state
-    entity_id:
-    - sensor.snake_plant_moisture
+    entity_id: sensor.snake_plant_moisture
     below: 5
     for:
-      hours: 0
       minutes: 30
-      seconds: 0
-      milliseconds: 0
   conditions:
   - condition: state
     entity_id: input_boolean.patrick_needs_water
@@ -1034,22 +1030,24 @@
       - condition: state
         entity_id: binary_sensor.snake_plant_growing_season
         state: 'on'
+      - condition: numeric_state
+        entity_id: sensor.snake_plant_conductivity
+        below: 80
       sequence:
-      - data:
+      - action: script.ai_plant_message_direct
+        data:
           plant_name: Patrick
           notify_target: notify.notifications
           need_type: food
-        action: script.ai_plant_message_direct
-    - conditions: []
-      sequence:
-      - data:
-          plant_name: Patrick
-          notify_target: notify.notifications
-          need_type: water
-        action: script.ai_plant_message_direct
-  - target:
+    default:
+    - action: script.ai_plant_message_direct
+      data:
+        plant_name: Patrick
+        notify_target: notify.notifications
+        need_type: water
+  - action: input_boolean.turn_on
+    target:
       entity_id: input_boolean.patrick_needs_water
-    action: input_boolean.turn_on
   mode: single
 - id: '1708774732316'
   alias: Hugh Room Door Button Double
