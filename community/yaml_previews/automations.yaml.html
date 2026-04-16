@@ -4860,7 +4860,7 @@
   mode: single
 - id: &#x27;1773959263569&#x27;
   alias: Kitchen Lights State Reconciliation
-  description: &#x27;&#x27;
+  description: Keep kitchen ceiling lights in sync when acting as one fixture
   triggers:
   - trigger: state
     entity_id:
@@ -4870,6 +4870,12 @@
     - light.kitchen_ceiling_4
   actions:
   - delay: 00:00:05
+  - condition: state
+    entity_id: binary_sensor.kitchen_epone_occupancy
+    state: &#x27;on&#x27;
+  - condition: state
+    entity_id: light.kitchen_lights
+    state: &#x27;on&#x27;
   - variables:
       lights:
       - light.kitchen_ceiling_1
@@ -4877,21 +4883,25 @@
       - light.kitchen_ceiling_3
       - light.kitchen_ceiling_4
       total: &#x27;{{ lights | count }}&#x27;
-      on_lights: &#x27;{{ lights | select(&#x27;&#x27;is_state&#x27;&#x27;,&#x27;&#x27;on&#x27;&#x27;) | list }}&#x27;
-      off_lights: &#x27;{{ lights | select(&#x27;&#x27;is_state&#x27;&#x27;,&#x27;&#x27;off&#x27;&#x27;) | list }}&#x27;
+      on_lights: &#x27;{{ lights | select(&#x27;&#x27;is_state&#x27;&#x27;, &#x27;&#x27;on&#x27;&#x27;) | list }}&#x27;
+      off_lights: &#x27;{{ lights | select(&#x27;&#x27;is_state&#x27;&#x27;, &#x27;&#x27;off&#x27;&#x27;) | list }}&#x27;
   - choose:
     - conditions:
       - condition: template
-        value_template: &#x27;{{ on_lights | count == 1 and off_lights | count == (total
-          | int - 1) }}&#x27;
+        value_template: &#x27;{{ on_lights | count == 1 and off_lights | count == total
+          - 1 }}
+
+          &#x27;
       sequence:
       - action: light.turn_off
         target:
           entity_id: &#x27;{{ on_lights }}&#x27;
     - conditions:
       - condition: template
-        value_template: &#x27;{{ off_lights | count == 1 and on_lights | count == (total
-          | int - 1) }}&#x27;
+        value_template: &#x27;{{ off_lights | count == 1 and on_lights | count == total
+          - 1 }}
+
+          &#x27;
       sequence:
       - action: light.turn_on
         target:
@@ -4899,32 +4909,35 @@
   mode: restart
 - id: &#x27;1774058190777&#x27;
   alias: Kitchen Occupancy Watchdog
-  description: Turns kitchen lights off if occupancy is clear and lights remain on
+  description: Force kitchen lights off if occupancy stays clear and lights remain
+    on
   triggers:
   - trigger: state
     entity_id: binary_sensor.kitchen_epone_occupancy
     to: &#x27;off&#x27;
-    for:
-      minutes: 5
-  - trigger: state
-    entity_id: light.kitchen_lights
-    to: &#x27;on&#x27;
-    for:
-      minutes: 5
-  conditions:
-  - condition: state
-    entity_id: binary_sensor.kitchen_epone_occupancy
-    state: &#x27;off&#x27;
-  - condition: state
-    entity_id: light.kitchen_lights
-    state: &#x27;on&#x27;
   actions:
-  - action: scene.turn_on
-    target:
-      entity_id:
-      - scene.kitchen_lights_0_off
-    data: {}
-  mode: single
+  - if:
+    - condition: state
+      entity_id: binary_sensor.kitchen_epone_occupancy
+      state: &#x27;off&#x27;
+    - condition: state
+      entity_id: light.kitchen_lights
+      state: &#x27;on&#x27;
+    then:
+    - delay:
+        minutes: 5
+    - condition: state
+      entity_id: binary_sensor.kitchen_epone_occupancy
+      state: &#x27;off&#x27;
+    - condition: state
+      entity_id: light.kitchen_lights
+      state: &#x27;on&#x27;
+    - action: scene.turn_on
+      target:
+        entity_id:
+        - scene.kitchen_lights_0_off
+      data: {}
+  mode: restart
 - id: &#x27;1774082499649&#x27;
   alias: Hugh Room Purifier Watchdog
   description: Turns purifier off if it remains on while bed is occupied at night
