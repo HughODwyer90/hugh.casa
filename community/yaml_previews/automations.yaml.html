@@ -434,7 +434,10 @@
     TV is OFF. TV on while occupied -&gt; dimmers only when the TV turns on. If occupancy
     turns on while TV is already on, leave lights as-is. TV off while occupied -&gt;
     if dark (lux) lights on; if bright do nothing. Christmas switch is controlled
-    ONLY by occupancy (if available).
+    ONLY by occupancy (if available). If occupancy clears while ceiling lights are
+    on, keep relevant living / dining lights on and re-check after 30 minutes before
+    turning them off. If occupancy returns while ceiling lights are already on, leave
+    lights as-is and do not switch to accents.
 
     &#x27;
   triggers:
@@ -454,7 +457,12 @@
       lr_lights:
       - light.living_room_bookshelf
       - light.living_room_floor_lamp
+      delayed_off_lights:
+      - light.living_room_bookshelf
+      - light.living_room_floor_lamp
+      - light.living_room_ceiling_lights
       lr_any_on: &#x27;{{ lr_lights | select(&#x27;&#x27;is_state&#x27;&#x27;,&#x27;&#x27;on&#x27;&#x27;) | list | length &gt; 0 }}&#x27;
+      ceiling_any_on: &#x27;{{ is_state(&#x27;&#x27;light.living_room_ceiling_lights&#x27;&#x27;, &#x27;&#x27;on&#x27;&#x27;) }}&#x27;
   - choose:
     - conditions:
       - condition: template
@@ -479,6 +487,32 @@
         target:
           entity_id: switch.christmas
   - choose:
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.living_room_eppro_occupancy
+        state: &#x27;off&#x27;
+      - condition: state
+        entity_id: binary_sensor.living_room_tv_state
+        state: &#x27;off&#x27;
+      - condition: template
+        value_template: &quot;{{ trigger.id == &#x27;occupancy&#x27;\n   and trigger.to_state is
+          not none\n   and trigger.to_state.state == &#x27;off&#x27;\n   and ceiling_any_on
+          }}\n&quot;
+      sequence:
+      - delay:
+          minutes: 60
+      - condition: state
+        entity_id: binary_sensor.living_room_eppro_occupancy
+        state: &#x27;off&#x27;
+      - condition: state
+        entity_id: binary_sensor.living_room_tv_state
+        state: &#x27;off&#x27;
+      - action: light.turn_off
+        target:
+          entity_id:
+          - light.living_room_bookshelf
+          - light.living_room_floor_lamp
+          - light.living_room_ceiling_lights
     - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_eppro_occupancy
@@ -517,6 +551,18 @@
         target:
           entity_id:
           - scene.living_room_lights_2_dimmers
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.living_room_eppro_occupancy
+        state: &#x27;on&#x27;
+      - condition: state
+        entity_id: binary_sensor.living_room_tv_state
+        state: &#x27;off&#x27;
+      - condition: template
+        value_template: &quot;{{ trigger.id == &#x27;occupancy&#x27;\n   and trigger.to_state is
+          not none\n   and trigger.to_state.state == &#x27;on&#x27;\n   and ceiling_any_on }}\n&quot;
+      sequence:
+      - stop: Ceiling lights already on — leave lights as-is
     - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_eppro_occupancy
