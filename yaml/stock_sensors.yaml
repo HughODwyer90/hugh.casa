@@ -1,6 +1,6 @@
 - sensor:
 
-    - name: "Bought At (VWCE)"
+    - name: "Avg Price (VWCE)"
       unique_id: vwce_cost_per_share
       unit_of_measurement: "EUR"
       state_class: measurement
@@ -13,7 +13,7 @@
             (states('input_number.ibkr_vwce_quantity') | float(0))
         ) }}
 
-    - name: "Capital Invested (VWCE)"
+    - name: "Cost Basis (VWCE)"
       unique_id: vwce_cost_basis
       unit_of_measurement: "EUR"
       state_class: total
@@ -38,7 +38,7 @@
               (states('input_number.ibkr_vwce_cost_basis') | float(0))
           ) }}
 
-    - name: "Market Value (VWCE)"
+    - name: "Shares Value (VWCE)"
       unique_id: vwce_value
       unit_of_measurement: "EUR"
       state_class: total
