@@ -77,10 +77,12 @@ execute_alarm_actions:
           fallback_used: true
       - action: media_player.play_media
         target:
-          entity_id: &#x27;{{ alarm_player }}&#x27;
+          entity_id: media_player.hugh_speaker_group
         data:
-          media_content_id: media-source://radio_browser/6ee57601-3752-4031-8155-28f67ca9db43
-          media_content_type: audio/aac
+          media:
+            media_content_id: media-source://radio_browser/6ee57601-3752-4031-8155-28f67ca9db43
+            media_content_type: audio/aac
+            metadata: {}
       - action: notify.notifications
         data:
           title: Wake Up Alarm
@@ -461,41 +463,88 @@ update_esphome_devices:
   alias: Update ESPHome Devices
   mode: single
   sequence:
+  - variables:
+      cutoff_minutes: 60
+      weekday_alarm_dt: &#x27;{% set t = today_at(states(&#x27;&#x27;input_datetime.weekday_wake_up_alarm&#x27;&#x27;))
+        %} {{ t if t &gt; now() else t + timedelta(days=1) }}&#x27;
+      weekend_alarm_dt: &#x27;{% set t = today_at(states(&#x27;&#x27;input_datetime.weekend_wake_up_alarm&#x27;&#x27;))
+        %} {{ t if t &gt; now() else t + timedelta(days=1) }}&#x27;
+      weekday_wfh_alarm_dt: &#x27;{% set t = today_at(states(&#x27;&#x27;input_datetime.weekday_wfh_wake_up_alarm&#x27;&#x27;))
+        %} {{ t if t &gt; now() else t + timedelta(days=1) }}&#x27;
+      earliest_alarm_ts: &quot;{{\n  [\n    as_timestamp(weekday_alarm_dt),\n    as_timestamp(weekend_alarm_dt),\n
+        \   as_timestamp(weekday_wfh_alarm_dt)\n  ] | min\n}}&quot;
+      should_abort_for_alarm: &#x27;{{ as_timestamp(now()) &gt;= (earliest_alarm_ts - (cutoff_minutes
+        * 60)) }}&#x27;
   - condition: or
     conditions:
     - condition: state
       entity_id: update.living_room_eppro_firmware
-      state:
-      - &#x27;on&#x27;
+      state: &#x27;on&#x27;
     - condition: state
       entity_id: update.kitchen_epone_firmware
-      state:
-      - &#x27;on&#x27;
+      state: &#x27;on&#x27;
     - condition: state
       entity_id: update.pressure_firmware
       state: &#x27;on&#x27;
     - condition: state
       entity_id: update.ir_receiver_firmware
       state: &#x27;on&#x27;
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ should_abort_for_alarm }}&#x27;
+      sequence:
+      - stop: Aborted because earliest alarm is within 1 hour
   - action: hassio.addon_stop
     data:
       addon: d5369777_music_assistant
   - delay: 00:00:30
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: &#x27;{{ should_abort_for_alarm }}&#x27;
+      sequence:
+      - action: hassio.addon_start
+        data:
+          addon: d5369777_music_assistant
+      - stop: Aborted because earliest alarm is within 1 hour
   - action: hassio.addon_stop
     data:
       addon: a0d7b954_vscode
   - delay: 00:00:30
   - choose:
     - conditions:
+      - condition: template
+        value_template: &#x27;{{ should_abort_for_alarm }}&#x27;
+      sequence:
+      - action: hassio.addon_start
+        data:
+          addon: a0d7b954_vscode
+      - action: hassio.addon_start
+        data:
+          addon: d5369777_music_assistant
+      - stop: Aborted because earliest alarm is within 1 hour
+  - choose:
+    - conditions:
       - condition: state
         entity_id: update.living_room_eppro_firmware
-        state:
-        - &#x27;on&#x27;
+        state: &#x27;on&#x27;
       sequence:
+      - choose:
+        - conditions:
+          - condition: template
+            value_template: &#x27;{{ should_abort_for_alarm }}&#x27;
+          sequence:
+          - action: hassio.addon_start
+            data:
+              addon: a0d7b954_vscode
+          - action: hassio.addon_start
+            data:
+              addon: d5369777_music_assistant
+          - stop: Aborted because earliest alarm is within 1 hour
       - action: update.install
         target:
-          entity_id:
-          - update.living_room_eppro_firmware
+          entity_id: update.living_room_eppro_firmware
         continue_on_error: true
         data: {}
       - wait_template: &#x27;{{ is_state(&#x27;&#x27;update.living_room_eppro_firmware&#x27;&#x27;, &#x27;&#x27;off&#x27;&#x27;)
@@ -506,14 +555,25 @@ update_esphome_devices:
     - conditions:
       - condition: state
         entity_id: update.kitchen_epone_firmware
-        state:
-        - &#x27;on&#x27;
+        state: &#x27;on&#x27;
       sequence:
+      - choose:
+        - conditions:
+          - condition: template
+            value_template: &#x27;{{ should_abort_for_alarm }}&#x27;
+          sequence:
+          - action: hassio.addon_start
+            data:
+              addon: a0d7b954_vscode
+          - action: hassio.addon_start
+            data:
+              addon: d5369777_music_assistant
+          - stop: Aborted because earliest alarm is within 1 hour
       - action: update.install
-        continue_on_error: true
-        data: {}
         target:
           entity_id: update.kitchen_epone_firmware
+        continue_on_error: true
+        data: {}
       - wait_template: &#x27;{{ is_state(&#x27;&#x27;update.kitchen_epone_firmware&#x27;&#x27;, &#x27;&#x27;off&#x27;&#x27;) }}&#x27;
         timeout: 00:15:00
         continue_on_timeout: true
@@ -523,6 +583,18 @@ update_esphome_devices:
         entity_id: update.pressure_firmware
         state: &#x27;on&#x27;
       sequence:
+      - choose:
+        - conditions:
+          - condition: template
+            value_template: &#x27;{{ should_abort_for_alarm }}&#x27;
+          sequence:
+          - action: hassio.addon_start
+            data:
+              addon: a0d7b954_vscode
+          - action: hassio.addon_start
+            data:
+              addon: d5369777_music_assistant
+          - stop: Aborted because earliest alarm is within 1 hour
       - action: update.install
         target:
           entity_id: update.pressure_firmware
@@ -536,6 +608,18 @@ update_esphome_devices:
         entity_id: update.ir_receiver_firmware
         state: &#x27;on&#x27;
       sequence:
+      - choose:
+        - conditions:
+          - condition: template
+            value_template: &#x27;{{ should_abort_for_alarm }}&#x27;
+          sequence:
+          - action: hassio.addon_start
+            data:
+              addon: a0d7b954_vscode
+          - action: hassio.addon_start
+            data:
+              addon: d5369777_music_assistant
+          - stop: Aborted because earliest alarm is within 1 hour
       - action: update.install
         target:
           entity_id: update.ir_receiver_firmware
@@ -549,11 +633,7 @@ update_esphome_devices:
   - action: hassio.addon_start
     data:
       addon: d5369777_music_assistant
-  - delay:
-      hours: 0
-      minutes: 1
-      seconds: 0
-      milliseconds: 0
+  - delay: 00:01:00
   - action: shell_command.update_ep1_psk
     data: {}
 set_purifier_speed:
