@@ -3382,7 +3382,7 @@
     trigger: state
   conditions:
   - condition: template
-    value_template: &quot;{% set last = states(&#x27;input_datetime.last_toothbrush_increment&#x27;)
+    value_template: &quot;{% set last = states(&#x27;input_datetime.last_toothbrush_decrement&#x27;)
       %} {% if last in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;] %}\n  true\n{% else %}\n  {% set
       last_ts = as_timestamp(last) %}\n  {{ (as_timestamp(now()) - last_ts) &gt; 3600
       }}\n{% endif %}\n&quot;
@@ -3393,7 +3393,8 @@
       - counter.toothbrush_head
     data: {}
   - target:
-      entity_id: input_datetime.last_toothbrush_increment
+      entity_id:
+      - input_datetime.last_toothbrush_decrement
     data:
       datetime: &#x27;{{ now().strftime(&#x27;&#x27;%Y-%m-%d %H:%M:%S&#x27;&#x27;) }}&#x27;
     action: input_datetime.set_datetime
