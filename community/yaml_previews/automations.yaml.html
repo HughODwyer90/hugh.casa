@@ -4505,6 +4505,12 @@
     value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleangenius&#x27;&#x27;) == &#x27;&#x27;off&#x27;&#x27; }}&#x27;
   - condition: template
     value_template: &#x27;{{ states(&#x27;&#x27;select.vacuum_cleaning_mode&#x27;&#x27;) == &#x27;&#x27;sweeping&#x27;&#x27; }}&#x27;
+  - action: vacuum.set_fan_speed
+    metadata: {}
+    target:
+      device_id: 755139c516efc71273dd5e77ddcb40d5
+    data:
+      fan_speed: Silent
   - action: dreame_vacuum.vacuum_clean_segment
     target:
       entity_id: vacuum.vacuum
@@ -4793,6 +4799,12 @@
         data:
           option: vacuum_and_mop
       - delay: 00:00:02
+  - action: vacuum.set_fan_speed
+    metadata: {}
+    target:
+      device_id: 755139c516efc71273dd5e77ddcb40d5
+    data:
+      fan_speed: Standard
   mode: single
 - id: &#x27;1772716682550&#x27;
   alias: Call IBKR
