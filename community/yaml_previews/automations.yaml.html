@@ -3343,9 +3343,10 @@
   description: Notify when toothbrush head usage reaches 200 and reset counter if
     confirmed.
   triggers:
-  - entity_id: counter.toothbrush_head
-    above: 199
+  - entity_id:
+    - counter.toothbrush_head
     trigger: numeric_state
+    below: 1
   actions:
   - data:
       title: Toothbrush Head
@@ -3364,12 +3365,15 @@
       trigger: event
     timeout: &#x27;24:00:00&#x27;
     continue_on_timeout: false
-  - target:
-      entity_id: counter.toothbrush_head
-    action: counter.reset
+  - action: counter.set_value
+    target:
+      entity_id:
+      - counter.toothbrush_head
+    data:
+      value: 200
   mode: single
 - id: &#x27;1759093626027&#x27;
-  alias: Increment Toothbrush Head Counter
+  alias: Decrease Toothbrush Head Counter
   description: &#x27;&#x27;
   triggers:
   - entity_id: binary_sensor.philips_sonicare_toothbrush
@@ -3383,9 +3387,11 @@
       last_ts = as_timestamp(last) %}\n  {{ (as_timestamp(now()) - last_ts) &gt; 3600
       }}\n{% endif %}\n&quot;
   actions:
-  - target:
-      entity_id: counter.toothbrush_head
-    action: counter.increment
+  - action: counter.decrement
+    target:
+      entity_id:
+      - counter.toothbrush_head
+    data: {}
   - target:
       entity_id: input_datetime.last_toothbrush_increment
     data:
