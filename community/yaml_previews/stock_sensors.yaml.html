@@ -15,7 +15,7 @@
             <div class="scrollable-content">
                 <pre class="yaml-content">- sensor:
 
-    - name: &quot;Bought At (VWCE)&quot;
+    - name: &quot;Avg Price (VWCE)&quot;
       unique_id: vwce_cost_per_share
       unit_of_measurement: &quot;EUR&quot;
       state_class: measurement
@@ -28,7 +28,7 @@
             (states(&#x27;input_number.ibkr_vwce_quantity&#x27;) | float(0))
         ) }}
 
-    - name: &quot;Capital Invested (VWCE)&quot;
+    - name: &quot;Cost Basis (VWCE)&quot;
       unique_id: vwce_cost_basis
       unit_of_measurement: &quot;EUR&quot;
       state_class: total
@@ -53,7 +53,7 @@
               (states(&#x27;input_number.ibkr_vwce_cost_basis&#x27;) | float(0))
           ) }}
 
-    - name: &quot;Market Value (VWCE)&quot;
+    - name: &quot;Shares Value (VWCE)&quot;
       unique_id: vwce_value
       unit_of_measurement: &quot;EUR&quot;
       state_class: total
