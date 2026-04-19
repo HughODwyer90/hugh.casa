@@ -38,7 +38,7 @@
               (states('input_number.ibkr_vwce_cost_basis') | float(0))
           ) }}
 
-    - name: "Shares Value (VWCE)"
+    - name: "Portfolio (VWCE)"
       unique_id: vwce_value
       unit_of_measurement: "EUR"
       state_class: total
@@ -51,7 +51,7 @@
             (states('sensor.yahoofinance_vwce_de') | float(0))
         ) }}
 
-    - name: "Shares Quantity (VWCE)"
+    - name: "Quantity (VWCE)"
       unique_id: vwce_quantity
       unit_of_measurement: "shares"
       state_class: measurement
