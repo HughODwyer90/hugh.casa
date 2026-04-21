@@ -228,14 +228,14 @@
   mode: single
 - id: &#x27;1701870398205&#x27;
   alias: Hall Light Control
-  description: Control hall lights based on motion, lux, and sun elevation.
+  description: Control hall lights based on hall motion, lux, and sun elevation.
   triggers:
-  - entity_id: binary_sensor.hall_motion_occupancy
+  - trigger: state
+    entity_id: binary_sensor.hall_motion_occupancy
     to: &#x27;on&#x27;
-    trigger: state
-  - entity_id: binary_sensor.hall_motion_occupancy
+  - trigger: state
+    entity_id: binary_sensor.hall_motion_occupancy
     to: &#x27;off&#x27;
-    trigger: state
   actions:
   - choose:
     - conditions:
@@ -249,7 +249,8 @@
         entity_id: sensor.hall_motion_illuminance
         below: 130
       sequence:
-      - data:
+      - action: script.occupancy_lights_with_scene_fallback
+        data:
           occupancy_sensor: binary_sensor.hall_motion_occupancy
           target_light: light.hallway
           on_scene: scene.hallway_3_late_night
@@ -257,14 +258,6 @@
           brightness_pct: 100
           transition: 1
           direct_scene: true
-        action: script.occupancy_lights_with_scene_fallback
-      - target:
-          entity_id: light.utility_ceiling
-        data:
-          color_temp_kelvin: 2000
-          brightness_pct: 100
-          transition: 1
-        action: light.turn_on
     - conditions:
       - condition: state
         entity_id: binary_sensor.hall_motion_occupancy
@@ -276,7 +269,8 @@
         entity_id: sensor.sun_elevation
         above: -6
       sequence:
-      - data:
+      - action: script.occupancy_lights_with_scene_fallback
+        data:
           occupancy_sensor: binary_sensor.hall_motion_occupancy
           target_light: light.hallway
           on_scene: scene.hallway_1_on
@@ -284,14 +278,6 @@
           brightness_pct: 100
           transition: 1
           direct_scene: true
-        action: script.occupancy_lights_with_scene_fallback
-      - target:
-          entity_id: light.utility_ceiling
-        data:
-          color_temp_kelvin: 2000
-          brightness_pct: 100
-          transition: 1
-        action: light.turn_on
     - conditions:
       - condition: state
         entity_id: binary_sensor.hall_motion_occupancy
@@ -303,7 +289,8 @@
         entity_id: sensor.sun_elevation
         below: -6
       sequence:
-      - data:
+      - action: script.occupancy_lights_with_scene_fallback
+        data:
           occupancy_sensor: binary_sensor.hall_motion_occupancy
           target_light: light.hallway
           on_scene: scene.hallway_2_on_walls
@@ -311,33 +298,19 @@
           brightness_pct: 100
           transition: 1
           direct_scene: true
-        action: script.occupancy_lights_with_scene_fallback
-      - target:
-          entity_id: light.utility_ceiling
-        data:
-          color_temp_kelvin: 2000
-          brightness_pct: 100
-          transition: 1
-        action: light.turn_on
     - conditions:
       - condition: state
         entity_id: binary_sensor.hall_motion_occupancy
         state: &#x27;off&#x27;
       sequence:
-      - data:
+      - action: script.occupancy_lights_with_scene_fallback
+        data:
           occupancy_sensor: binary_sensor.hall_motion_occupancy
           target_light: light.hallway
           on_scene: scene.hallway_1_on
           off_scene: scene.hallway_0_off
           brightness_pct: 100
           transition: 1
-        action: script.occupancy_lights_with_scene_fallback
-      - delay: 00:02:00
-      - target:
-          entity_id: light.utility_ceiling
-        data:
-          transition: 1
-        action: light.turn_off
     default: []
   mode: restart
 - id: &#x27;1702207044468&#x27;
@@ -5322,6 +5295,46 @@
       target:
         entity_id: light.aroma_diffuser
   mode: single
+- id: &#x27;1776786649594&#x27;
+  alias: Utility Light Control
+  description: Control utility light based on utility motion presence.
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.utility_motion_presence
+    to: &#x27;on&#x27;
+  - trigger: state
+    entity_id: binary_sensor.utility_motion_presence
+    to: &#x27;off&#x27;
+  actions:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.utility_motion_presence
+        state: &#x27;on&#x27;
+      sequence:
+      - action: light.turn_on
+        target:
+          entity_id: light.utility_ceiling
+        data:
+          color_temp_kelvin: 2000
+          brightness_pct: 100
+          transition: 1
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.utility_motion_presence
+        state: &#x27;off&#x27;
+      sequence:
+      - delay: 00:02:00
+      - condition: state
+        entity_id: binary_sensor.utility_motion_presence
+        state: &#x27;off&#x27;
+      - action: light.turn_off
+        target:
+          entity_id: light.utility_ceiling
+        data:
+          transition: 1
+    default: []
+  mode: restart
 </pre>
             </div>
             <script>
