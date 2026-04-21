@@ -83,6 +83,11 @@ execute_alarm_actions:
             media_content_id: media-source://radio_browser/6ee57601-3752-4031-8155-28f67ca9db43
             media_content_type: audio/aac
             metadata: {}
+      - action: media_player.volume_set
+        target:
+          entity_id: media_player.hugh_speaker_group
+        data:
+          volume_level: 0.1
       - action: notify.notifications
         data:
           title: Wake Up Alarm
