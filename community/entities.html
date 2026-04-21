@@ -11,13 +11,13 @@
         <body>
             <div class="fixed-header">
                 <h1>Home Assistant Entities</h1>
-                <p>Total Entities: 1055 (Redacted: 16)</p>
-                <p>Version: 2026-04-21-154540</p>
+                <p>Total Entities: 1068 (Redacted: 16)</p>
+                <p>Version: 2026-04-21-155053</p>
                 <div class="search-container">
                     <input type="text" id="entitySearch" class="search-box" placeholder="🔍 Search entities...">
                 </div>
                 <div>
-                    <p id="table-count">Search total: 1055</p>
+                    <p id="table-count">Search total: 1068</p>
                 </div>
                 <div class="filters">
                     <div id="filter-All" class="filter entity-filter active">All</div>
@@ -989,6 +989,14 @@
             </tr>
         
             <tr>
+                <td>automation.utility_light_control</td>
+                <td>Utility Light Control</td>
+                <td>N/A</td>
+                <td>on</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>automation.vacuum_apartment_nightly_kitchen_living_room</td>
                 <td>Vacuum Kitchen and Living (Vacuum Only)</td>
                 <td>N/A</td>
@@ -1312,7 +1320,7 @@
                 <td>binary_sensor.living_room_eppro_mmwave_presence</td>
                 <td>Living Room EPPro mmWave Presence</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -1320,7 +1328,7 @@
                 <td>binary_sensor.living_room_eppro_motion</td>
                 <td>Living Room EPPro Motion</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -1328,7 +1336,7 @@
                 <td>binary_sensor.living_room_eppro_occupancy</td>
                 <td>Occupancy</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -1344,7 +1352,7 @@
                 <td>binary_sensor.living_room_eppro_tracking_presence</td>
                 <td>Living Room EPPro Tracking Presence</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -1583,6 +1591,14 @@
             <tr>
                 <td>binary_sensor.typhoon_woofer_up</td>
                 <td>IR Receiver Typhoon Woofer Up</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>binary_sensor.utility_motion_presence</td>
+                <td>Utility Motion Occupancy</td>
                 <td>N/A</td>
                 <td>off</td>
                 <td>Yes</td>
@@ -3184,7 +3200,7 @@
                 <td>light.living_room_accent_lights</td>
                 <td>Living Room Accent Lights</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3192,7 +3208,7 @@
                 <td>light.living_room_bookshelf</td>
                 <td>Bookshelf</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3232,7 +3248,7 @@
                 <td>light.living_room_floor_lamp</td>
                 <td>Living Room Floor lamp</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3240,7 +3256,7 @@
                 <td>light.living_room_lights</td>
                 <td>Living Room Lights</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3248,7 +3264,7 @@
                 <td>light.living_room_lights_2</td>
                 <td>Living Room Lights</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3885,6 +3901,46 @@
             </tr>
         
             <tr>
+                <td>number.utility_motion_fading_time</td>
+                <td>Utility Motion Fading time</td>
+                <td>s</td>
+                <td>30</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.utility_motion_humidity_calibration</td>
+                <td>Utility Motion Humidity calibration</td>
+                <td>%</td>
+                <td>0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.utility_motion_illuminance_interval</td>
+                <td>Utility Motion Illuminance interval</td>
+                <td>minutes</td>
+                <td>1</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.utility_motion_motion_detection_sensitivity</td>
+                <td>Utility Motion Motion detection sensitivity</td>
+                <td>N/A</td>
+                <td>12</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.utility_motion_temperature_calibration</td>
+                <td>Utility Motion Temperature calibration</td>
+                <td>°C</td>
+                <td>0.5</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>person.hughod90</td>
                 <td>REDACTED</td>
                 <td>N/A</td>
@@ -3984,7 +4040,7 @@
                 <td>scene.hallway_0_off</td>
                 <td>Hallway Off</td>
                 <td>N/A</td>
-                <td>2026-04-21 15:41:57</td>
+                <td>2026-04-21 15:47:09</td>
                 <td>Yes</td>
             </tr>
         
@@ -3992,7 +4048,7 @@
                 <td>scene.hallway_1_on</td>
                 <td>Hallway On</td>
                 <td>N/A</td>
-                <td>2026-04-21 15:38:58</td>
+                <td>2026-04-21 15:46:08</td>
                 <td>Yes</td>
             </tr>
         
@@ -4056,7 +4112,7 @@
                 <td>scene.living_room_lights_0_off</td>
                 <td>Living Room Lights Off</td>
                 <td>N/A</td>
-                <td>2026-04-21 15:44:54</td>
+                <td>2026-04-21 15:47:09</td>
                 <td>Yes</td>
             </tr>
         
@@ -4589,6 +4645,14 @@
             </tr>
         
             <tr>
+                <td>select.utility_motion_temperature_unit</td>
+                <td>Utility Motion Temperature unit</td>
+                <td>N/A</td>
+                <td>celsius</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>select.vacuum_cleangenius</td>
                 <td>Vacuum CleanGenius</td>
                 <td>N/A</td>
@@ -5072,7 +5136,7 @@
                 <td>sensor.bed_presence_uptime</td>
                 <td>Bed Presence Uptime</td>
                 <td>s</td>
-                <td>684639.9375</td>
+                <td>684999.9375</td>
                 <td>Yes</td>
             </tr>
         
@@ -5080,7 +5144,7 @@
                 <td>sensor.bed_presence_wifi_signal_db</td>
                 <td>Bed Presence WiFi Signal dB</td>
                 <td>dBm</td>
-                <td>-61.0</td>
+                <td>-64.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5088,7 +5152,7 @@
                 <td>sensor.bed_presence_wifi_signal_percent</td>
                 <td>Bed Presence WiFi Signal Percent</td>
                 <td>%</td>
-                <td>78.0</td>
+                <td>72.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5320,7 +5384,7 @@
                 <td>sensor.date_time_iso</td>
                 <td>Date & Time (ISO)</td>
                 <td>N/A</td>
-                <td>2026-04-21 16:45:00</td>
+                <td>2026-04-21 16:50:00</td>
                 <td>Yes</td>
             </tr>
         
@@ -5424,7 +5488,7 @@
                 <td>sensor.hall_motion_illuminance</td>
                 <td>Hall Motion Illuminance</td>
                 <td>lx</td>
-                <td>116</td>
+                <td>118</td>
                 <td>Yes</td>
             </tr>
         
@@ -5448,7 +5512,7 @@
                 <td>sensor.hugh_phone_battery_level</td>
                 <td>Hugh Phone Battery level</td>
                 <td>%</td>
-                <td>32</td>
+                <td>30</td>
                 <td>Yes</td>
             </tr>
         
@@ -5768,7 +5832,7 @@
                 <td>sensor.hugh_room_plug_blanket_voltage</td>
                 <td>Hugh Room Plug Blanket Voltage</td>
                 <td>V</td>
-                <td>237</td>
+                <td>229</td>
                 <td>Yes</td>
             </tr>
         
@@ -5776,7 +5840,7 @@
                 <td>sensor.hugh_room_plug_fan_bed_current</td>
                 <td>Hugh Room Plug Fan Bed Current</td>
                 <td>A</td>
-                <td>0.02</td>
+                <td>0.01</td>
                 <td>Yes</td>
             </tr>
         
@@ -5800,7 +5864,7 @@
                 <td>sensor.hugh_room_plug_fan_bed_voltage</td>
                 <td>Hugh Room Plug Fan Bed Voltage</td>
                 <td>V</td>
-                <td>237</td>
+                <td>231</td>
                 <td>Yes</td>
             </tr>
         
@@ -5936,7 +6000,7 @@
                 <td>sensor.kitchen_epone_humidity</td>
                 <td>Humidity</td>
                 <td>%</td>
-                <td>31.1032104492188</td>
+                <td>31.0650634765625</td>
                 <td>Yes</td>
             </tr>
         
@@ -5960,7 +6024,7 @@
                 <td>sensor.kitchen_epone_temperature</td>
                 <td>Temperature</td>
                 <td>°C</td>
-                <td>22.2059268951416</td>
+                <td>22.2700138092041</td>
                 <td>Yes</td>
             </tr>
         
@@ -5968,7 +6032,7 @@
                 <td>sensor.last_updated</td>
                 <td>Last Updated</td>
                 <td>N/A</td>
-                <td>2026-04-21 15:39:31</td>
+                <td>2026-04-21 15:50:21</td>
                 <td>Yes</td>
             </tr>
         
@@ -6008,7 +6072,7 @@
                 <td>sensor.left_window_light_level</td>
                 <td>Left Window Light level</td>
                 <td>N/A</td>
-                <td>3</td>
+                <td>1</td>
                 <td>Yes</td>
             </tr>
         
@@ -6208,7 +6272,7 @@
                 <td>sensor.living_room_eppro_humidity</td>
                 <td>Humidity</td>
                 <td>%</td>
-                <td>22.4655151367188</td>
+                <td>22.44873046875</td>
                 <td>Yes</td>
             </tr>
         
@@ -6216,7 +6280,7 @@
                 <td>sensor.living_room_eppro_illuminance</td>
                 <td>Illuminance</td>
                 <td>lx</td>
-                <td>54.4438934326172</td>
+                <td>58.9714546203613</td>
                 <td>Yes</td>
             </tr>
         
@@ -6224,7 +6288,7 @@
                 <td>sensor.living_room_eppro_target_1_angle</td>
                 <td>Living Room EPPro Target 1 Angle</td>
                 <td>°</td>
-                <td>-23.1819801330566</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -6232,7 +6296,7 @@
                 <td>sensor.living_room_eppro_target_1_distance</td>
                 <td>Living Room EPPro Target 1 Distance</td>
                 <td>mm</td>
-                <td>4077.1962890625</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -6240,7 +6304,7 @@
                 <td>sensor.living_room_eppro_target_1_resolution</td>
                 <td>Living Room EPPro Target 1 Resolution</td>
                 <td>mm</td>
-                <td>360.0</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -6256,7 +6320,7 @@
                 <td>sensor.living_room_eppro_target_1_x</td>
                 <td>Living Room EPPro Target 1 X</td>
                 <td>mm</td>
-                <td>2406.0</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -6264,7 +6328,7 @@
                 <td>sensor.living_room_eppro_target_1_y</td>
                 <td>Living Room EPPro Target 1 Y</td>
                 <td>mm</td>
-                <td>3290.0</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -6368,7 +6432,7 @@
                 <td>sensor.living_room_eppro_temperature</td>
                 <td>Temperature</td>
                 <td>°C</td>
-                <td>22.5952911376953</td>
+                <td>22.6113128662109</td>
                 <td>Yes</td>
             </tr>
         
@@ -6544,7 +6608,7 @@
                 <td>sensor.next_alarm_in</td>
                 <td>Next Alarm In</td>
                 <td>N/A</td>
-                <td>14h 35m</td>
+                <td>14h 30m</td>
                 <td>Yes</td>
             </tr>
         
@@ -6760,7 +6824,7 @@
                 <td>sensor.snake_plant_conductivity</td>
                 <td>Snake Plant Conductivity</td>
                 <td>μS/cm</td>
-                <td>7</td>
+                <td>10</td>
                 <td>Yes</td>
             </tr>
         
@@ -6768,7 +6832,7 @@
                 <td>sensor.snake_plant_illuminance</td>
                 <td>Snake Plant Illuminance</td>
                 <td>lx</td>
-                <td>311</td>
+                <td>278</td>
                 <td>Yes</td>
             </tr>
         
@@ -6784,7 +6848,7 @@
                 <td>sensor.snake_plant_signal_strength</td>
                 <td>Snake Plant Signal Strength</td>
                 <td>dBm</td>
-                <td>-73</td>
+                <td>-75</td>
                 <td>Yes</td>
             </tr>
         
@@ -6808,7 +6872,7 @@
                 <td>sensor.sun_azimuth</td>
                 <td>Sunlight Intensity Sun Azimuth</td>
                 <td>°</td>
-                <td>241.75</td>
+                <td>242.97</td>
                 <td>Yes</td>
             </tr>
         
@@ -6816,7 +6880,7 @@
                 <td>sensor.sun_elevation</td>
                 <td>Sunlight Intensity Sun Elevation</td>
                 <td>°</td>
-                <td>34.2</td>
+                <td>33.51</td>
                 <td>Yes</td>
             </tr>
         
@@ -6872,7 +6936,7 @@
                 <td>sensor.sun_wall_intensity_back</td>
                 <td>Sunlight Intensity Sun Wall Intensity Back</td>
                 <td>%</td>
-                <td>31.39</td>
+                <td>30.03</td>
                 <td>Yes</td>
             </tr>
         
@@ -6888,7 +6952,7 @@
                 <td>sensor.sun_wall_intensity_left</td>
                 <td>Sunlight Intensity Sun Wall Intensity Left</td>
                 <td>%</td>
-                <td>68.61</td>
+                <td>69.97</td>
                 <td>Yes</td>
             </tr>
         
@@ -6936,7 +7000,7 @@
                 <td>sensor.total_sensors_count</td>
                 <td>Total Entities</td>
                 <td>sensors</td>
-                <td>1055</td>
+                <td>1068</td>
                 <td>Yes</td>
             </tr>
         
@@ -6969,6 +7033,38 @@
                 <td>Home Assistant Update</td>
                 <td>N/A</td>
                 <td>62</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.utility_motion_battery</td>
+                <td>Utility Motion Battery</td>
+                <td>%</td>
+                <td>100</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.utility_motion_humidity</td>
+                <td>Utility Motion Humidity</td>
+                <td>%</td>
+                <td>59</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.utility_motion_illuminance</td>
+                <td>Utility Motion Illuminance</td>
+                <td>lx</td>
+                <td>76</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.utility_motion_temperature</td>
+                <td>Utility Motion Temperature</td>
+                <td>°C</td>
+                <td>22.7</td>
                 <td>Yes</td>
             </tr>
         
@@ -7264,7 +7360,7 @@
                 <td>sensor.watchman_last_parse</td>
                 <td>Watchman Last Parse</td>
                 <td>N/A</td>
-                <td>2026-04-21 06:25:07</td>
+                <td>2026-04-21 15:50:21</td>
                 <td>Yes</td>
             </tr>
         
@@ -7280,7 +7376,7 @@
                 <td>sensor.watchman_parse_duration</td>
                 <td>Watchman Parse Duration</td>
                 <td>s</td>
-                <td>0.314007002976723</td>
+                <td>2.50610825698823</td>
                 <td>Yes</td>
             </tr>
         
@@ -7296,7 +7392,7 @@
                 <td>sensor.watchman_status</td>
                 <td>Watchman Status</td>
                 <td>N/A</td>
-                <td>idle</td>
+                <td>pending</td>
                 <td>Yes</td>
             </tr>
         
@@ -7727,6 +7823,14 @@
             <tr>
                 <td>switch.pc_plug_child_lock</td>
                 <td>PC Plug Child lock</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>switch.utility_motion_indicator</td>
+                <td>Utility Motion Indicator</td>
                 <td>N/A</td>
                 <td>off</td>
                 <td>Yes</td>
