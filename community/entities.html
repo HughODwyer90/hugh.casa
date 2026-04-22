@@ -11,13 +11,13 @@
         <body>
             <div class="fixed-header">
                 <h1>Home Assistant Entities</h1>
-                <p>Total Entities: 1068 (Redacted: 16)</p>
-                <p>Version: 2026-04-22-023815</p>
+                <p>Total Entities: 1073 (Redacted: 16)</p>
+                <p>Version: 2026-04-22-132438</p>
                 <div class="search-container">
                     <input type="text" id="entitySearch" class="search-box" placeholder="🔍 Search entities...">
                 </div>
                 <div>
-                    <p id="table-count">Search total: 1068</p>
+                    <p id="table-count">Search total: 1073</p>
                 </div>
                 <div class="filters">
                     <div id="filter-All" class="filter entity-filter active">All</div>
@@ -1408,7 +1408,7 @@
                 <td>binary_sensor.middle_window_calibration</td>
                 <td>Middle Window Calibration</td>
                 <td>N/A</td>
-                <td>unknown</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -1591,6 +1591,14 @@
             <tr>
                 <td>binary_sensor.typhoon_woofer_up</td>
                 <td>IR Receiver Typhoon Woofer Up</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>binary_sensor.utility_motion_battery_plus_low</td>
+                <td>Utility Motion Battery low</td>
                 <td>N/A</td>
                 <td>off</td>
                 <td>Yes</td>
@@ -2085,6 +2093,14 @@
             </tr>
         
             <tr>
+                <td>button.utility_motion_battery_replaced</td>
+                <td>Utility Motion Battery replaced</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>button.vacuum_reset_filter</td>
                 <td>Vacuum Reset Filter</td>
                 <td>N/A</td>
@@ -2112,8 +2128,8 @@
                 <td>button.vacuum_reset_sensor</td>
                 <td>Vacuum Reset Sensor</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>unknown</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -2128,8 +2144,8 @@
                 <td>button.vacuum_reset_wheel</td>
                 <td>Vacuum Reset Wheel</td>
                 <td>N/A</td>
-                <td>unknown</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -2216,7 +2232,7 @@
                 <td>cover.left_window</td>
                 <td>Left Window</td>
                 <td>N/A</td>
-                <td>closed</td>
+                <td>open</td>
                 <td>Yes</td>
             </tr>
         
@@ -2224,7 +2240,7 @@
                 <td>cover.living_room_curtains</td>
                 <td>Living Room Curtains</td>
                 <td>N/A</td>
-                <td>closed</td>
+                <td>open</td>
                 <td>Yes</td>
             </tr>
         
@@ -2232,7 +2248,7 @@
                 <td>cover.middle_window</td>
                 <td>Middle Window</td>
                 <td>N/A</td>
-                <td>closed</td>
+                <td>open</td>
                 <td>Yes</td>
             </tr>
         
@@ -2240,7 +2256,7 @@
                 <td>cover.right_window</td>
                 <td>Right Window</td>
                 <td>N/A</td>
-                <td>closed</td>
+                <td>open</td>
                 <td>Yes</td>
             </tr>
         
@@ -2496,7 +2512,7 @@
                 <td>input_boolean.vacuum_ran_today</td>
                 <td>Vacuum ran today</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -2600,7 +2616,7 @@
                 <td>input_datetime.driving_start_time</td>
                 <td>Driving Start Time</td>
                 <td>N/A</td>
-                <td>2026-04-21 16:19:21</td>
+                <td>2026-04-22 07:54:19</td>
                 <td>Yes</td>
             </tr>
         
@@ -2656,7 +2672,7 @@
                 <td>input_datetime.previous_sunrise</td>
                 <td>Previous Sunrise</td>
                 <td>N/A</td>
-                <td>2026-04-21 06:23:28</td>
+                <td>2026-04-22 06:21:22</td>
                 <td>Yes</td>
             </tr>
         
@@ -2776,7 +2792,7 @@
                 <td>input_number.daily_driving_seconds</td>
                 <td>Daily Driving Seconds</td>
                 <td>N/A</td>
-                <td>0.0</td>
+                <td>638.148417949677</td>
                 <td>Yes</td>
             </tr>
         
@@ -2864,7 +2880,7 @@
                 <td>input_number.previous_bathroom_humidity</td>
                 <td>Previous Bathroom Humidity</td>
                 <td>%</td>
-                <td>58.7</td>
+                <td>55.9</td>
                 <td>Yes</td>
             </tr>
         
@@ -2872,7 +2888,7 @@
                 <td>input_number.previous_bathroom_temperature</td>
                 <td>Previous Bathroom Temperature</td>
                 <td>°C</td>
-                <td>20.3</td>
+                <td>20.1</td>
                 <td>Yes</td>
             </tr>
         
@@ -2928,7 +2944,7 @@
                 <td>input_number.yearly_driving_seconds</td>
                 <td>Yearly Driving Seconds</td>
                 <td>N/A</td>
-                <td>218317.564567326</td>
+                <td>218955.718381403</td>
                 <td>Yes</td>
             </tr>
         
@@ -3022,7 +3038,7 @@
         
             <tr>
                 <td>input_text.work_plug_state</td>
-                <td>Work Plug State</td>
+                <td>N/A</td>
                 <td>N/A</td>
                 <td>On</td>
                 <td>Yes</td>
@@ -3200,7 +3216,7 @@
                 <td>light.living_room_accent_lights</td>
                 <td>Living Room Accent Lights</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3208,7 +3224,7 @@
                 <td>light.living_room_bookshelf</td>
                 <td>Bookshelf</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3248,7 +3264,7 @@
                 <td>light.living_room_floor_lamp</td>
                 <td>Living Room Floor lamp</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3256,7 +3272,7 @@
                 <td>light.living_room_lights</td>
                 <td>Living Room Lights</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3264,7 +3280,7 @@
                 <td>light.living_room_lights_2</td>
                 <td>Living Room Lights</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3518,7 +3534,7 @@
         
             <tr>
                 <td>media_player.smart_tv_pro</td>
-                <td>N/A</td>
+                <td>Master bedroom TV</td>
                 <td>N/A</td>
                 <td>unavailable</td>
                 <td>No</td>
@@ -3992,7 +4008,7 @@
                 <td>scene.bathroom_color_strip_1_red</td>
                 <td>Bathroom Color Strip Red</td>
                 <td>N/A</td>
-                <td>2026-04-21 17:25:49</td>
+                <td>2026-04-22 06:50:28</td>
                 <td>Yes</td>
             </tr>
         
@@ -4000,7 +4016,7 @@
                 <td>scene.bathroom_color_strip_2_off</td>
                 <td>Bathroom Color Strip Off</td>
                 <td>N/A</td>
-                <td>2026-04-22 02:37:28</td>
+                <td>2026-04-22 06:54:35</td>
                 <td>Yes</td>
             </tr>
         
@@ -4032,7 +4048,7 @@
                 <td>scene.curtains_open</td>
                 <td>Curtains Open</td>
                 <td>N/A</td>
-                <td>2026-04-21 05:34:45</td>
+                <td>2026-04-22 05:34:44</td>
                 <td>Yes</td>
             </tr>
         
@@ -4040,7 +4056,7 @@
                 <td>scene.hallway_0_off</td>
                 <td>Hallway Off</td>
                 <td>N/A</td>
-                <td>2026-04-22 02:37:29</td>
+                <td>2026-04-22 08:18:39</td>
                 <td>Yes</td>
             </tr>
         
@@ -4048,7 +4064,7 @@
                 <td>scene.hallway_1_on</td>
                 <td>Hallway On</td>
                 <td>N/A</td>
-                <td>2026-04-21 17:32:49</td>
+                <td>2026-04-22 08:11:45</td>
                 <td>Yes</td>
             </tr>
         
@@ -4112,7 +4128,7 @@
                 <td>scene.living_room_lights_0_off</td>
                 <td>Living Room Lights Off</td>
                 <td>N/A</td>
-                <td>2026-04-21 17:33:51</td>
+                <td>2026-04-22 07:47:51</td>
                 <td>Yes</td>
             </tr>
         
@@ -4128,7 +4144,7 @@
                 <td>scene.living_room_lights_2_dimmers</td>
                 <td>Living Room Lights Dimmers</td>
                 <td>N/A</td>
-                <td>2026-04-22 02:37:27</td>
+                <td>2026-04-22 05:40:38</td>
                 <td>Yes</td>
             </tr>
         
@@ -4136,7 +4152,7 @@
                 <td>scene.living_room_lights_3_accents</td>
                 <td>Living Room Lights Accents</td>
                 <td>N/A</td>
-                <td>2026-04-21 17:32:44</td>
+                <td>2026-04-22 07:46:49</td>
                 <td>Yes</td>
             </tr>
         
@@ -4864,7 +4880,7 @@
                 <td>sensor.bathroom_aqara_humidity</td>
                 <td>Aqara Humidity</td>
                 <td>%</td>
-                <td>58.7</td>
+                <td>55.9</td>
                 <td>Yes</td>
             </tr>
         
@@ -4872,7 +4888,7 @@
                 <td>sensor.bathroom_aqara_pressure</td>
                 <td>Bathroom Aqara Atmospheric pressure</td>
                 <td>hPa</td>
-                <td>1018.8</td>
+                <td>1019.4</td>
                 <td>Yes</td>
             </tr>
         
@@ -4880,7 +4896,7 @@
                 <td>sensor.bathroom_aqara_temperature</td>
                 <td>Aqara Temperature</td>
                 <td>°C</td>
-                <td>20.3</td>
+                <td>20.1</td>
                 <td>Yes</td>
             </tr>
         
@@ -4928,7 +4944,7 @@
                 <td>sensor.bathroom_fan_vibration_device_temperature</td>
                 <td>Bathroom Fan Vibration Temperature</td>
                 <td>°C</td>
-                <td>29</td>
+                <td>28</td>
                 <td>Yes</td>
             </tr>
         
@@ -5008,7 +5024,7 @@
                 <td>sensor.bathroom_motion_temperature</td>
                 <td>Hue Temperature</td>
                 <td>°C</td>
-                <td>19.95</td>
+                <td>20.01</td>
                 <td>Yes</td>
             </tr>
         
@@ -5136,7 +5152,7 @@
                 <td>sensor.bed_presence_uptime</td>
                 <td>Bed Presence Uptime</td>
                 <td>s</td>
-                <td>723821.125</td>
+                <td>762582.1875</td>
                 <td>Yes</td>
             </tr>
         
@@ -5144,7 +5160,7 @@
                 <td>sensor.bed_presence_wifi_signal_db</td>
                 <td>Bed Presence WiFi Signal dB</td>
                 <td>dBm</td>
-                <td>-61.0</td>
+                <td>-62.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5152,7 +5168,7 @@
                 <td>sensor.bed_presence_wifi_signal_percent</td>
                 <td>Bed Presence WiFi Signal Percent</td>
                 <td>%</td>
-                <td>78.0</td>
+                <td>76.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5192,7 +5208,7 @@
                 <td>sensor.car_daily_distance_traveled</td>
                 <td>Today Distance</td>
                 <td>km</td>
-                <td>0.0</td>
+                <td>6.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5200,7 +5216,7 @@
                 <td>sensor.car_daily_driving_time</td>
                 <td>Today Driving Time</td>
                 <td>min</td>
-                <td>0.0</td>
+                <td>10.63</td>
                 <td>Yes</td>
             </tr>
         
@@ -5216,7 +5232,7 @@
                 <td>sensor.car_fuel_autonomy</td>
                 <td>Fuel Range</td>
                 <td>km</td>
-                <td>264</td>
+                <td>250</td>
                 <td>Yes</td>
             </tr>
         
@@ -5264,7 +5280,7 @@
                 <td>sensor.car_mileage</td>
                 <td>Odometer</td>
                 <td>km</td>
-                <td>84138</td>
+                <td>84144</td>
                 <td>Yes</td>
             </tr>
         
@@ -5272,7 +5288,7 @@
                 <td>sensor.car_new_engine_distance</td>
                 <td>Car Engine Distance</td>
                 <td>km</td>
-                <td>15239.0</td>
+                <td>15245.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5280,7 +5296,7 @@
                 <td>sensor.car_yearly_distance_traveled</td>
                 <td>YTD Distance</td>
                 <td>km</td>
-                <td>2859.0</td>
+                <td>2865.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5288,7 +5304,7 @@
                 <td>sensor.car_yearly_driving_time</td>
                 <td>YTD Driving Time</td>
                 <td>h</td>
-                <td>60.38</td>
+                <td>60.49</td>
                 <td>Yes</td>
             </tr>
         
@@ -5384,7 +5400,7 @@
                 <td>sensor.date_time_iso</td>
                 <td>Date & Time (ISO)</td>
                 <td>N/A</td>
-                <td>2026-04-22 03:38:00</td>
+                <td>2026-04-22 14:24:00</td>
                 <td>Yes</td>
             </tr>
         
@@ -5488,7 +5504,7 @@
                 <td>sensor.hall_motion_illuminance</td>
                 <td>Hall Motion Illuminance</td>
                 <td>lx</td>
-                <td>1</td>
+                <td>29</td>
                 <td>Yes</td>
             </tr>
         
@@ -5496,7 +5512,7 @@
                 <td>sensor.hall_motion_temperature</td>
                 <td>Hue Temperature</td>
                 <td>°C</td>
-                <td>21.06</td>
+                <td>21.36</td>
                 <td>Yes</td>
             </tr>
         
@@ -5512,7 +5528,7 @@
                 <td>sensor.hugh_phone_battery_level</td>
                 <td>Hugh Phone Battery level</td>
                 <td>%</td>
-                <td>33</td>
+                <td>70</td>
                 <td>Yes</td>
             </tr>
         
@@ -5520,7 +5536,7 @@
                 <td>sensor.hugh_phone_battery_state</td>
                 <td>Hugh Phone Battery state</td>
                 <td>N/A</td>
-                <td>charging</td>
+                <td>discharging</td>
                 <td>Yes</td>
             </tr>
         
@@ -5552,7 +5568,7 @@
                 <td>sensor.hugh_phone_charger_type</td>
                 <td>Hugh Phone Charger type</td>
                 <td>N/A</td>
-                <td>ac</td>
+                <td>none</td>
                 <td>Yes</td>
             </tr>
         
@@ -5560,7 +5576,7 @@
                 <td>sensor.hugh_phone_wifi_signal_strength</td>
                 <td>Hugh Phone SM-S9060 Wi-Fi signal strength</td>
                 <td>dBm</td>
-                <td>-75</td>
+                <td>-38</td>
                 <td>Yes</td>
             </tr>
         
@@ -5688,7 +5704,7 @@
                 <td>sensor.hugh_room_aqara_door_button_device_temperature</td>
                 <td>Hugh Room Aqara Door Button Temperature</td>
                 <td>°C</td>
-                <td>26</td>
+                <td>27</td>
                 <td>Yes</td>
             </tr>
         
@@ -5696,7 +5712,7 @@
                 <td>sensor.hugh_room_aqara_humidity</td>
                 <td>Aqara Humidity</td>
                 <td>%</td>
-                <td>55.75</td>
+                <td>56</td>
                 <td>Yes</td>
             </tr>
         
@@ -5704,7 +5720,7 @@
                 <td>sensor.hugh_room_aqara_pressure</td>
                 <td>Hugh Room Aqara Atmospheric pressure</td>
                 <td>hPa</td>
-                <td>1019</td>
+                <td>1019.5</td>
                 <td>Yes</td>
             </tr>
         
@@ -5712,7 +5728,7 @@
                 <td>sensor.hugh_room_aqara_temperature</td>
                 <td>Aqara Temperature</td>
                 <td>°C</td>
-                <td>17.96</td>
+                <td>18.38</td>
                 <td>Yes</td>
             </tr>
         
@@ -5832,7 +5848,7 @@
                 <td>sensor.hugh_room_plug_blanket_voltage</td>
                 <td>Hugh Room Plug Blanket Voltage</td>
                 <td>V</td>
-                <td>236</td>
+                <td>235</td>
                 <td>Yes</td>
             </tr>
         
@@ -5864,7 +5880,7 @@
                 <td>sensor.hugh_room_plug_fan_bed_voltage</td>
                 <td>Hugh Room Plug Fan Bed Voltage</td>
                 <td>V</td>
-                <td>237</td>
+                <td>239</td>
                 <td>Yes</td>
             </tr>
         
@@ -6000,7 +6016,7 @@
                 <td>sensor.kitchen_epone_humidity</td>
                 <td>Humidity</td>
                 <td>%</td>
-                <td>31.1383056640625</td>
+                <td>30.9429931640625</td>
                 <td>Yes</td>
             </tr>
         
@@ -6008,7 +6024,7 @@
                 <td>sensor.kitchen_epone_illuminance</td>
                 <td>Kitchen EPOne Illuminance</td>
                 <td>lx</td>
-                <td>0.0</td>
+                <td>7.04325485229492</td>
                 <td>Yes</td>
             </tr>
         
@@ -6024,7 +6040,7 @@
                 <td>sensor.kitchen_epone_temperature</td>
                 <td>Temperature</td>
                 <td>°C</td>
-                <td>21.292688369751</td>
+                <td>21.5517063140869</td>
                 <td>Yes</td>
             </tr>
         
@@ -6032,7 +6048,7 @@
                 <td>sensor.last_updated</td>
                 <td>Last Updated</td>
                 <td>N/A</td>
-                <td>2026-04-22 02:37:51</td>
+                <td>2026-04-22 08:28:38</td>
                 <td>Yes</td>
             </tr>
         
@@ -6072,7 +6088,7 @@
                 <td>sensor.left_window_light_level</td>
                 <td>Left Window Light level</td>
                 <td>N/A</td>
-                <td>1</td>
+                <td>3</td>
                 <td>Yes</td>
             </tr>
         
@@ -6256,7 +6272,7 @@
                 <td>sensor.living_room_aqara_button_device_temperature</td>
                 <td>Living Room Aqara Button Temperature</td>
                 <td>°C</td>
-                <td>22</td>
+                <td>23</td>
                 <td>Yes</td>
             </tr>
         
@@ -6272,7 +6288,7 @@
                 <td>sensor.living_room_eppro_humidity</td>
                 <td>Humidity</td>
                 <td>%</td>
-                <td>23.651123046875</td>
+                <td>22.088623046875</td>
                 <td>Yes</td>
             </tr>
         
@@ -6280,7 +6296,7 @@
                 <td>sensor.living_room_eppro_illuminance</td>
                 <td>Illuminance</td>
                 <td>lx</td>
-                <td>0.0</td>
+                <td>43.577751159668</td>
                 <td>Yes</td>
             </tr>
         
@@ -6432,7 +6448,7 @@
                 <td>sensor.living_room_eppro_temperature</td>
                 <td>Temperature</td>
                 <td>°C</td>
-                <td>21.0812377929688</td>
+                <td>22.2321319580078</td>
                 <td>Yes</td>
             </tr>
         
@@ -6560,7 +6576,7 @@
                 <td>sensor.middle_window_light_level</td>
                 <td>Middle Window Light level</td>
                 <td>N/A</td>
-                <td>1</td>
+                <td>4</td>
                 <td>Yes</td>
             </tr>
         
@@ -6608,7 +6624,7 @@
                 <td>sensor.next_alarm_in</td>
                 <td>Next Alarm In</td>
                 <td>N/A</td>
-                <td>3h 42m</td>
+                <td>16h 56m</td>
                 <td>Yes</td>
             </tr>
         
@@ -6648,7 +6664,7 @@
                 <td>sensor.pc_plug_energy</td>
                 <td>PC Plug Energy</td>
                 <td>kWh</td>
-                <td>118.73</td>
+                <td>118.74</td>
                 <td>Yes</td>
             </tr>
         
@@ -6696,7 +6712,7 @@
                 <td>sensor.previous_bathroom_humidity</td>
                 <td>Aqara Humidity (previous)</td>
                 <td>%</td>
-                <td>58.7</td>
+                <td>55.9</td>
                 <td>Yes</td>
             </tr>
         
@@ -6744,7 +6760,7 @@
                 <td>sensor.right_window_light_level</td>
                 <td>Right Window Light level</td>
                 <td>N/A</td>
-                <td>1</td>
+                <td>6</td>
                 <td>Yes</td>
             </tr>
         
@@ -6824,7 +6840,7 @@
                 <td>sensor.snake_plant_conductivity</td>
                 <td>Snake Plant Conductivity</td>
                 <td>μS/cm</td>
-                <td>8</td>
+                <td>7</td>
                 <td>Yes</td>
             </tr>
         
@@ -6832,7 +6848,7 @@
                 <td>sensor.snake_plant_illuminance</td>
                 <td>Snake Plant Illuminance</td>
                 <td>lx</td>
-                <td>63</td>
+                <td>248</td>
                 <td>Yes</td>
             </tr>
         
@@ -6856,7 +6872,7 @@
                 <td>sensor.snake_plant_temperature</td>
                 <td>Snake Plant Temperature</td>
                 <td>°C</td>
-                <td>21.2</td>
+                <td>22.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -6872,7 +6888,7 @@
                 <td>sensor.sun_azimuth</td>
                 <td>Sunlight Intensity Sun Azimuth</td>
                 <td>°</td>
-                <td>32.22</td>
+                <td>197.83</td>
                 <td>Yes</td>
             </tr>
         
@@ -6880,7 +6896,7 @@
                 <td>sensor.sun_elevation</td>
                 <td>Sunlight Intensity Sun Elevation</td>
                 <td>°</td>
-                <td>-20.91</td>
+                <td>48.89</td>
                 <td>Yes</td>
             </tr>
         
@@ -6888,7 +6904,7 @@
                 <td>sensor.sun_next_dawn</td>
                 <td>Sun Next dawn</td>
                 <td>N/A</td>
-                <td>2026-04-22 04:43:55</td>
+                <td>2026-04-23 04:41:39</td>
                 <td>Yes</td>
             </tr>
         
@@ -6912,7 +6928,7 @@
                 <td>sensor.sun_next_noon</td>
                 <td>Sun Next noon</td>
                 <td>N/A</td>
-                <td>2026-04-22 12:32:20</td>
+                <td>2026-04-23 12:32:08</td>
                 <td>Yes</td>
             </tr>
         
@@ -6920,7 +6936,7 @@
                 <td>sensor.sun_next_rising</td>
                 <td>Sun Next rising</td>
                 <td>N/A</td>
-                <td>2026-04-22 05:21:22</td>
+                <td>2026-04-23 05:19:18</td>
                 <td>Yes</td>
             </tr>
         
@@ -6936,7 +6952,7 @@
                 <td>sensor.sun_wall_intensity_back</td>
                 <td>Sunlight Intensity Sun Wall Intensity Back</td>
                 <td>%</td>
-                <td>0</td>
+                <td>80.18</td>
                 <td>Yes</td>
             </tr>
         
@@ -6952,7 +6968,7 @@
                 <td>sensor.sun_wall_intensity_left</td>
                 <td>Sunlight Intensity Sun Wall Intensity Left</td>
                 <td>%</td>
-                <td>0</td>
+                <td>19.82</td>
                 <td>Yes</td>
             </tr>
         
@@ -7000,7 +7016,7 @@
                 <td>sensor.total_sensors_count</td>
                 <td>Total Entities</td>
                 <td>sensors</td>
-                <td>1068</td>
+                <td>1073</td>
                 <td>Yes</td>
             </tr>
         
@@ -7045,10 +7061,34 @@
             </tr>
         
             <tr>
+                <td>sensor.utility_motion_battery_last_replaced</td>
+                <td>Utility Motion Battery last replaced</td>
+                <td>N/A</td>
+                <td>2026-04-21 15:40:57</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.utility_motion_battery_plus</td>
+                <td>Utility Motion Battery+</td>
+                <td>%</td>
+                <td>100.0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.utility_motion_battery_type</td>
+                <td>Utility Motion Battery type</td>
+                <td>N/A</td>
+                <td>2× AAA</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>sensor.utility_motion_humidity</td>
                 <td>Utility Motion Humidity</td>
                 <td>%</td>
-                <td>55</td>
+                <td>53</td>
                 <td>Yes</td>
             </tr>
         
@@ -7056,7 +7096,7 @@
                 <td>sensor.utility_motion_illuminance</td>
                 <td>Utility Motion Illuminance</td>
                 <td>lx</td>
-                <td>0</td>
+                <td>89</td>
                 <td>Yes</td>
             </tr>
         
@@ -7064,7 +7104,7 @@
                 <td>sensor.utility_motion_temperature</td>
                 <td>Utility Motion Temperature</td>
                 <td>°C</td>
-                <td>21.4</td>
+                <td>21.5</td>
                 <td>Yes</td>
             </tr>
         
@@ -7088,7 +7128,7 @@
                 <td>sensor.vacuum_cleaning_count</td>
                 <td>Vacuum Cleaning Count</td>
                 <td>x</td>
-                <td>49</td>
+                <td>50</td>
                 <td>Yes</td>
             </tr>
         
@@ -7096,7 +7136,7 @@
                 <td>sensor.vacuum_cleaning_history</td>
                 <td>Vacuum Cleaning History</td>
                 <td>N/A</td>
-                <td>2026-04-20 23:14:57</td>
+                <td>2026-04-22 07:14:19</td>
                 <td>Yes</td>
             </tr>
         
@@ -7144,7 +7184,7 @@
                 <td>sensor.vacuum_filter_left</td>
                 <td>Vacuum Filter Left</td>
                 <td>%</td>
-                <td>80</td>
+                <td>79</td>
                 <td>Yes</td>
             </tr>
         
@@ -7152,7 +7192,7 @@
                 <td>sensor.vacuum_filter_time_left</td>
                 <td>Vacuum Filter Time Left</td>
                 <td>hr</td>
-                <td>120</td>
+                <td>119</td>
                 <td>Yes</td>
             </tr>
         
@@ -7176,7 +7216,7 @@
                 <td>sensor.vacuum_main_brush_left</td>
                 <td>Vacuum Main Brush Left</td>
                 <td>%</td>
-                <td>90</td>
+                <td>89</td>
                 <td>Yes</td>
             </tr>
         
@@ -7184,7 +7224,7 @@
                 <td>sensor.vacuum_main_brush_time_left</td>
                 <td>Vacuum Main Brush  Time Left</td>
                 <td>hr</td>
-                <td>270</td>
+                <td>269</td>
                 <td>Yes</td>
             </tr>
         
@@ -7224,7 +7264,7 @@
                 <td>sensor.vacuum_sensor_dirty_left</td>
                 <td>Vacuum Sensor Dirty Left</td>
                 <td>%</td>
-                <td>100</td>
+                <td>96</td>
                 <td>Yes</td>
             </tr>
         
@@ -7232,7 +7272,7 @@
                 <td>sensor.vacuum_sensor_dirty_time_left</td>
                 <td>Vacuum Sensor Dirty Time Left</td>
                 <td>hr</td>
-                <td>30</td>
+                <td>29</td>
                 <td>Yes</td>
             </tr>
         
@@ -7240,7 +7280,7 @@
                 <td>sensor.vacuum_side_brush_left</td>
                 <td>Vacuum Side Brush Left</td>
                 <td>%</td>
-                <td>85</td>
+                <td>84</td>
                 <td>Yes</td>
             </tr>
         
@@ -7248,7 +7288,7 @@
                 <td>sensor.vacuum_side_brush_time_left</td>
                 <td>Vacuum Side Brush Time Left</td>
                 <td>hr</td>
-                <td>170</td>
+                <td>169</td>
                 <td>Yes</td>
             </tr>
         
@@ -7272,7 +7312,7 @@
                 <td>sensor.vacuum_total_cleaned_area</td>
                 <td>Vacuum Total Cleaned Area</td>
                 <td>m²</td>
-                <td>1331</td>
+                <td>1373</td>
                 <td>Yes</td>
             </tr>
         
@@ -7280,7 +7320,7 @@
                 <td>sensor.vacuum_total_cleaning_time</td>
                 <td>Vacuum Total Cleaning Time</td>
                 <td>min</td>
-                <td>1795</td>
+                <td>1855</td>
                 <td>Yes</td>
             </tr>
         
@@ -7288,7 +7328,7 @@
                 <td>sensor.vacuum_wheel_dirty_left</td>
                 <td>Vacuum Wheel Dirty Left</td>
                 <td>%</td>
-                <td>1</td>
+                <td>100</td>
                 <td>Yes</td>
             </tr>
         
@@ -7296,7 +7336,7 @@
                 <td>sensor.vacuum_wheel_dirty_time_left</td>
                 <td>Vacuum Wheel Dirty Time Left</td>
                 <td>dy</td>
-                <td>1</td>
+                <td>30</td>
                 <td>Yes</td>
             </tr>
         
@@ -7328,7 +7368,7 @@
                 <td>sensor.vwce_profit</td>
                 <td>Gain / Loss (VWCE)</td>
                 <td>EUR</td>
-                <td>29.64</td>
+                <td>32.17</td>
                 <td>Yes</td>
             </tr>
         
@@ -7344,7 +7384,7 @@
                 <td>sensor.vwce_value</td>
                 <td>Portfolio (VWCE)</td>
                 <td>EUR</td>
-                <td>840.9</td>
+                <td>843.43</td>
                 <td>Yes</td>
             </tr>
         
@@ -7432,7 +7472,7 @@
                 <td>sensor.weather_dew_point</td>
                 <td>weather Dew point temperature</td>
                 <td>°C</td>
-                <td>4.74</td>
+                <td>5.7</td>
                 <td>Yes</td>
             </tr>
         
@@ -7440,7 +7480,7 @@
                 <td>sensor.weather_feels_like_temperature</td>
                 <td>weather Apparent temperature</td>
                 <td>°C</td>
-                <td>5.7</td>
+                <td>9.72</td>
                 <td>Yes</td>
             </tr>
         
@@ -7464,7 +7504,7 @@
                 <td>sensor.weather_pressure</td>
                 <td>weather Pressure</td>
                 <td>hPa</td>
-                <td>1020</td>
+                <td>1021</td>
                 <td>Yes</td>
             </tr>
         
@@ -7488,7 +7528,7 @@
                 <td>sensor.weather_temperature</td>
                 <td>weather Temperature</td>
                 <td>°C</td>
-                <td>9.74</td>
+                <td>10.74</td>
                 <td>Yes</td>
             </tr>
         
@@ -7496,7 +7536,7 @@
                 <td>sensor.weather_uv_index</td>
                 <td>weather UV index</td>
                 <td>UV index</td>
-                <td>0</td>
+                <td>2.33</td>
                 <td>Yes</td>
             </tr>
         
@@ -7536,7 +7576,7 @@
                 <td>sensor.weather_wind_gust</td>
                 <td>weather Wind gust speed</td>
                 <td>km/h</td>
-                <td>unknown</td>
+                <td>64.836</td>
                 <td>Yes</td>
             </tr>
         
@@ -7544,7 +7584,7 @@
                 <td>sensor.weather_wind_speed</td>
                 <td>weather Wind speed</td>
                 <td>km/h</td>
-                <td>38.88</td>
+                <td>44.46</td>
                 <td>Yes</td>
             </tr>
         
@@ -7568,7 +7608,7 @@
                 <td>sensor.yahoofinance_vwce_de</td>
                 <td>Active Price (VWCE)</td>
                 <td>EUR</td>
-                <td>152.56</td>
+                <td>153.02</td>
                 <td>Yes</td>
             </tr>
         
@@ -7608,7 +7648,7 @@
                 <td>sun.sun</td>
                 <td>Sun</td>
                 <td>N/A</td>
-                <td>below_horizon</td>
+                <td>above_horizon</td>
                 <td>Yes</td>
             </tr>
         
@@ -8264,7 +8304,7 @@
                 <td>update.ir_receiver_firmware</td>
                 <td>IR Receiver Firmware</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -8312,7 +8352,7 @@
                 <td>update.kitchen_epone_firmware</td>
                 <td>Kitchen EPOne Firmware</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -8344,7 +8384,7 @@
                 <td>update.living_room_eppro_firmware</td>
                 <td>Living Room EPPro Firmware</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -8424,7 +8464,7 @@
                 <td>update.pressure_firmware</td>
                 <td>Pressure Firmware</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
