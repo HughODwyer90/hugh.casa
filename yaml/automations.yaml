@@ -5309,10 +5309,6 @@
         entity_id: binary_sensor.utility_motion_presence
         state: 'off'
       sequence:
-      - delay: 00:02:00
-      - condition: state
-        entity_id: binary_sensor.utility_motion_presence
-        state: 'off'
       - action: light.turn_off
         target:
           entity_id: light.utility_ceiling
