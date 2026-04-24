@@ -2805,7 +2805,7 @@
 - id: '1754809462445'
   alias: Set Hugh Room Blinds from Mode
   triggers:
-  - entity_id: input_select.hugh_room_blinds_mode
+  - entity_id: input_select.master_blind_mode
     trigger: state
   actions:
   - variables:
@@ -2813,10 +2813,10 @@
       OPEN: '{{ states(''input_number.blinds_open_pos'') | int }}'
       HALF_POS: '{{ states(''input_number.blinds_half_pos'') | int }}'
       TOL: '{{ states(''input_number.blinds_tol'') | int }}'
-      target_pos: "{% if is_state('input_select.hugh_room_blinds_mode', 'Open') %}\n
-        \ {{ OPEN }}\n{% elif is_state('input_select.hugh_room_blinds_mode', 'Half')
-        %}\n  {{ HALF_POS }}\n{% else %}\n  {{ CLOSED }}\n{% endif %}"
-      cur_pos: '{{ state_attr(''cover.hugh_room_blinds'',''current_position'') | int(0)
+      target_pos: "{% if is_state('input_select.master_blind_mode', 'Open') %}\n  {{
+        OPEN }}\n{% elif is_state('input_select.master_blind_mode', 'Half') %}\n  {{
+        HALF_POS }}\n{% else %}\n  {{ CLOSED }}\n{% endif %}"
+      cur_pos: '{{ state_attr(''cover.master_blind'',''current_position'') | int(0)
         }}'
       need_move: '{{ (cur_pos - target_pos) | abs > TOL }}'
   - choose:
@@ -2826,10 +2826,10 @@
       sequence:
       - action: cover.set_cover_position
         target:
-          entity_id: cover.hugh_room_blinds
+          entity_id: cover.master_blind
         data:
           position: '{{ target_pos }}'
-      - wait_template: '{{ states(''cover.hugh_room_blinds'') not in [''opening'',''closing'']
+      - wait_template: '{{ states(''cover.master_blind'') not in [''opening'',''closing'']
           }}
 
           '
@@ -2839,7 +2839,7 @@
 - id: '1754809515058'
   alias: Sync Hugh Room Blinds Mode
   triggers:
-  - entity_id: cover.hugh_room_blinds
+  - entity_id: cover.master_blind
     attribute: current_position
     trigger: state
     for: 00:00:02
@@ -2849,28 +2849,27 @@
       OPEN: '{{ states(''input_number.blinds_open_pos'') | int }}'
       HALF_POS: '{{ states(''input_number.blinds_half_pos'') | int }}'
       TOL: '{{ states(''input_number.blinds_tol'') | int }}'
-      pos: '{{ state_attr(''cover.hugh_room_blinds'',''current_position'') | int(0)
-        }}'
+      pos: '{{ state_attr(''cover.master_blind'',''current_position'') | int(0) }}'
       near_closed: '{{ CLOSED - TOL <= pos <= CLOSED + TOL }}'
       near_half: '{{ HALF_POS - TOL <= pos <= HALF_POS + TOL }}'
       near_open: '{{ OPEN - TOL <= pos <= OPEN + TOL }}'
       new_mode: '{% if near_closed %}Closed {% elif near_half %}Half {% elif near_open
-        %}Open {% else %}{{ states(''input_select.hugh_room_blinds_mode'') }} {% endif
+        %}Open {% else %}{{ states(''input_select.master_blind_mode'') }} {% endif
         %}'
   - choose:
     - conditions:
       - condition: template
-        value_template: '{{ states(''input_select.hugh_room_blinds_mode'') != new_mode
+        value_template: '{{ states(''input_select.master_blind_mode'') != new_mode
           }}'
       sequence:
       - action: input_select.select_option
         target:
-          entity_id: input_select.hugh_room_blinds_mode
+          entity_id: input_select.master_blind_mode
         data:
           option: '{{ new_mode }}'
   - action: input_number.set_value
     target:
-      entity_id: input_number.hugh_room_blinds_position
+      entity_id: input_number.master_blind_position
     data:
       value: '{{ pos }}'
   mode: restart
