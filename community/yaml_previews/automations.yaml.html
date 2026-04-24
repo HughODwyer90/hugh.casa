@@ -591,8 +591,8 @@
         data:
           transition: 3
       - condition: template
-        value_template: &#x27;{{ states(&#x27;&#x27;input_number.master_blind_position&#x27;&#x27;) | int &gt;
-          20 }}&#x27;
+        value_template: &#x27;{{ states(&#x27;&#x27;cover.master_blind&#x27;&#x27;, &#x27;&#x27;current_position&#x27;&#x27;) |
+          int &gt; 20 }}&#x27;
       - action: cover.set_cover_position
         metadata: {}
         target:
@@ -608,8 +608,8 @@
       - entity_id: light.hugh_room_lamp
         action: light.turn_off
       - condition: template
-        value_template: &#x27;{{ states(&#x27;&#x27;input_number.master_blind_position&#x27;&#x27;) | int &gt;
-          20 }}&#x27;
+        value_template: &#x27;{{ states(&#x27;&#x27;cover.master_blind&#x27;&#x27;, &#x27;&#x27;current_position&#x27;&#x27;) |
+          int &gt; 20 }}&#x27;
       - action: cover.set_cover_position
         metadata: {}
         target:
@@ -5263,6 +5263,116 @@
         data:
           transition: 1
     default: []
+  mode: restart
+- id: &#x27;1777042022647&#x27;
+  alias: Master Bedroom Blind – Basic Control
+  description: &quot;Logic:\n - If bed becomes occupied after dark threshold, close blind\n
+    - If TV turns on, close blind\n - If TV turns off → wait → open if bed unoccupied\n
+    - If sun elevation drops, close blind\n - Morning time → open if not in bed\n
+    - If bed unoccupied for 20 mins during day → open if closed\n&quot;
+  triggers:
+  - id: bed_occupied
+    trigger: state
+    entity_id: binary_sensor.bed_sensor
+    to: &#x27;on&#x27;
+  - id: bed_cleared_long
+    trigger: state
+    entity_id: binary_sensor.bed_sensor
+    to: &#x27;off&#x27;
+    for: 00:20:00
+  - id: tv_on
+    trigger: state
+    entity_id: media_player.master_bedroom_display
+    to: &#x27;on&#x27;
+  - id: tv_off
+    trigger: state
+    entity_id: media_player.master_bedroom_display
+    to: &#x27;off&#x27;
+  - id: dark
+    trigger: numeric_state
+    entity_id: sensor.sun_elevation
+    below: -6
+  - id: morning_open
+    trigger: time
+    at: 09:30:00
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: bed_occupied
+      - condition: numeric_state
+        entity_id: sensor.sun_elevation
+        below: -6
+      - condition: template
+        value_template: &#x27;{{ state_attr(&#x27;&#x27;cover.master_blind&#x27;&#x27;, &#x27;&#x27;current_position&#x27;&#x27;)
+          | int(0) &gt; 20 }}
+
+          &#x27;
+      sequence:
+      - action: cover.close_cover
+        target:
+          entity_id: cover.master_blind
+    - conditions:
+      - condition: trigger
+        id: tv_on
+      sequence:
+      - action: cover.close_cover
+        target:
+          entity_id: cover.master_blind
+    - conditions:
+      - condition: trigger
+        id: tv_off
+      sequence:
+      - delay: 00:00:20
+      - wait_for_trigger:
+        - trigger: state
+          entity_id: binary_sensor.bed_sensor
+          to: &#x27;off&#x27;
+          for: 00:00:15
+        timeout: 00:01:00
+        continue_on_timeout: true
+      - condition: state
+        entity_id: binary_sensor.bed_sensor
+        state: &#x27;off&#x27;
+        for: 00:00:15
+      - condition: numeric_state
+        entity_id: sensor.sun_elevation
+        above: -6
+      - action: cover.open_cover
+        target:
+          entity_id: cover.master_blind
+    - conditions:
+      - condition: trigger
+        id: bed_cleared_long
+      - condition: numeric_state
+        entity_id: sensor.sun_elevation
+        above: -6
+      - condition: template
+        value_template: &#x27;{{ state_attr(&#x27;&#x27;cover.master_blind&#x27;&#x27;, &#x27;&#x27;current_position&#x27;&#x27;)
+          | int(0) &lt; 90 }}
+
+          &#x27;
+      sequence:
+      - action: cover.open_cover
+        target:
+          entity_id: cover.master_blind
+    - conditions:
+      - condition: trigger
+        id: dark
+      sequence:
+      - action: cover.close_cover
+        target:
+          entity_id: cover.master_blind
+    - conditions:
+      - condition: trigger
+        id: morning_open
+      - condition: state
+        entity_id: binary_sensor.bed_sensor
+        state: &#x27;off&#x27;
+      sequence:
+      - action: cover.open_cover
+        target:
+          entity_id: cover.master_blind
   mode: restart
 </pre>
             </div>
