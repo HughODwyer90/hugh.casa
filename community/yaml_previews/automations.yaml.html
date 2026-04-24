@@ -591,11 +591,11 @@
         data:
           transition: 3
       - condition: template
-        value_template: &#x27;{{ states(&#x27;&#x27;input_number.hugh_room_blinds_position&#x27;&#x27;) | int
-          &gt; 20 }}&#x27;
+        value_template: &#x27;{{ states(&#x27;&#x27;input_number.master_blind_position&#x27;&#x27;) | int &gt;
+          20 }}&#x27;
       - action: input_select.select_option
         target:
-          entity_id: input_select.hugh_room_blinds_mode
+          entity_id: input_select.master_blind_mode
         data:
           option: Closed
     - conditions:
@@ -607,11 +607,11 @@
       - entity_id: light.hugh_room_lamp
         action: light.turn_off
       - condition: template
-        value_template: &#x27;{{ states(&#x27;&#x27;input_number.hugh_room_blinds_position&#x27;&#x27;) | int
-          &gt; 20 }}&#x27;
+        value_template: &#x27;{{ states(&#x27;&#x27;input_number.master_blind_position&#x27;&#x27;) | int &gt;
+          20 }}&#x27;
       - action: input_select.select_option
         target:
-          entity_id: input_select.hugh_room_blinds_mode
+          entity_id: input_select.master_blind_mode
         data:
           option: Closed
     - conditions:
