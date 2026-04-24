@@ -5390,6 +5390,45 @@
         target:
           entity_id: cover.master_blind
   mode: restart
+- id: &#x27;1777073053701&#x27;
+  alias: Living Room Lights Watchdog - Off
+  description: &#x27;Turns off living room lights if they remain on while the room is unoccupied
+    and the TV is off.
+
+    &#x27;
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.living_room_eppro_occupancy
+    to: &#x27;off&#x27;
+    for: 00:05:00
+  - trigger: state
+    entity_id: binary_sensor.living_room_tv_state
+    to: &#x27;off&#x27;
+    for: 00:05:00
+  - trigger: state
+    entity_id:
+    - light.living_room_bookshelf
+    - light.living_room_floor_lamp
+    - light.living_room_ceiling_lights
+    to: &#x27;on&#x27;
+    for: 00:10:00
+  conditions:
+  - condition: state
+    entity_id: binary_sensor.living_room_eppro_occupancy
+    state: &#x27;off&#x27;
+    for: 00:05:00
+  - condition: state
+    entity_id: binary_sensor.living_room_tv_state
+    state: &#x27;off&#x27;
+    for: 00:05:00
+  - condition: template
+    value_template: &quot;{{\n  is_state(&#x27;light.living_room_bookshelf&#x27;, &#x27;on&#x27;)\n  or is_state(&#x27;light.living_room_floor_lamp&#x27;,
+      &#x27;on&#x27;)\n  or is_state(&#x27;light.living_room_ceiling_lights&#x27;, &#x27;on&#x27;)\n}}\n&quot;
+  actions:
+  - action: scene.turn_on
+    target:
+      entity_id: scene.living_room_lights_0_off
+  mode: restart
 </pre>
             </div>
             <script>
