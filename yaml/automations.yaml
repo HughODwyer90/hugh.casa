@@ -1615,7 +1615,7 @@
     action: input_boolean.turn_off
   - action: input_select.select_option
     target:
-      entity_id: input_select.hugh_room_blinds_mode
+      entity_id: input_select.master_blind_mode
     data:
       option: Closed
   - delay:
@@ -2171,7 +2171,7 @@
         - close
       sequence:
       - target:
-          entity_id: input_select.hugh_room_blinds_mode
+          entity_id: input_select.master_blind_mode
         data:
           option: Closed
         action: input_select.select_option
@@ -2181,7 +2181,7 @@
         - open
       sequence:
       - target:
-          entity_id: input_select.hugh_room_blinds_mode
+          entity_id: input_select.master_blind_mode
         data:
           option: Open
         action: input_select.select_option
