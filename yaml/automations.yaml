@@ -578,11 +578,12 @@
       - condition: template
         value_template: '{{ states(''input_number.master_blind_position'') | int >
           20 }}'
-      - action: input_select.select_option
+      - action: cover.set_cover_position
+        metadata: {}
         target:
-          entity_id: input_select.master_blind_mode
+          entity_id: cover.master_blind
         data:
-          option: Closed
+          position: 0
     - conditions:
       - condition: state
         entity_id: light.hugh_room_lamp
@@ -594,11 +595,12 @@
       - condition: template
         value_template: '{{ states(''input_number.master_blind_position'') | int >
           20 }}'
-      - action: input_select.select_option
+      - action: cover.set_cover_position
+        metadata: {}
         target:
-          entity_id: input_select.master_blind_mode
+          entity_id: cover.master_blind
         data:
-          option: Closed
+          position: 0
     - conditions:
       - condition: state
         entity_id: light.hugh_room_lamp
@@ -1613,11 +1615,12 @@
       entity_id: input_boolean.wake_up_alarm_running
     data: {}
     action: input_boolean.turn_off
-  - action: input_select.select_option
+  - action: cover.set_cover_position
+    metadata: {}
     target:
-      entity_id: input_select.master_blind_mode
+      entity_id: cover.master_blind
     data:
-      option: Closed
+      position: 0
   - delay:
       minutes: 5
   - condition: state
@@ -2170,21 +2173,23 @@
         id:
         - close
       sequence:
-      - target:
-          entity_id: input_select.master_blind_mode
+      - action: cover.set_cover_position
+        metadata: {}
+        target:
+          entity_id: cover.master_blind
         data:
-          option: Closed
-        action: input_select.select_option
+          position: 0
     - conditions:
       - condition: trigger
         id:
         - open
       sequence:
-      - target:
-          entity_id: input_select.master_blind_mode
+      - action: cover.set_cover_position
+        metadata: {}
+        target:
+          entity_id: cover.master_blind
         data:
-          option: Open
-        action: input_select.select_option
+          position: 100
   mode: single
 - id: '1724800619943'
   alias: IR Typhoon Volume Control
