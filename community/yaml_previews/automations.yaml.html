@@ -4850,7 +4850,10 @@
       state: &#x27;on&#x27;
     then:
     - delay:
-        minutes: 5
+        hours: 0
+        minutes: 1
+        seconds: 0
+        milliseconds: 0
     - condition: state
       entity_id: binary_sensor.kitchen_epone_occupancy
       state: &#x27;off&#x27;
@@ -5235,12 +5238,22 @@
   - trigger: state
     entity_id: binary_sensor.utility_motion_presence
     to: &#x27;on&#x27;
+    id: presence_on
   - trigger: state
     entity_id: binary_sensor.utility_motion_presence
     to: &#x27;off&#x27;
+    id: presence_off
+  - trigger: state
+    entity_id: light.utility_ceiling
+    to: &#x27;off&#x27;
+    id: light_off_watchdog
   actions:
   - choose:
     - conditions:
+      - condition: trigger
+        id:
+        - presence_on
+        - light_off_watchdog
       - condition: state
         entity_id: binary_sensor.utility_motion_presence
         state: &#x27;on&#x27;
@@ -5253,10 +5266,13 @@
           brightness_pct: 100
           transition: 1
     - conditions:
+      - condition: trigger
+        id: presence_off
+      sequence:
+      - delay: 00:01:00
       - condition: state
         entity_id: binary_sensor.utility_motion_presence
         state: &#x27;off&#x27;
-      sequence:
       - action: light.turn_off
         target:
           entity_id: light.utility_ceiling
