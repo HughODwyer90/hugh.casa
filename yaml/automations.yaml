@@ -1272,9 +1272,6 @@
       - action: light.turn_on
         target:
           entity_id: light.bathroom_ceiling
-      - action: scene.turn_on
-        target:
-          entity_id: scene.bathroom_color_strip_1_red
     - conditions:
       - condition: state
         entity_id: binary_sensor.bathroom_motion_occupancy
@@ -1283,9 +1280,6 @@
       - action: light.turn_off
         target:
           entity_id: light.bathroom_ceiling
-      - action: scene.turn_on
-        target:
-          entity_id: scene.bathroom_color_strip_2_off
       - action: homeassistant.update_entity
         target:
           entity_id:
@@ -5377,8 +5371,9 @@
   mode: restart
 - id: '1777073053701'
   alias: Living Room Lights Watchdog - Off
-  description: 'Turns off living room lights if they remain on while the room is unoccupied
-    and the TV is off.
+  description: 'Turns off living room accent lights if they remain on while the room
+    is unoccupied and the TV is off. Does not interfere with the ceiling-light grace-period
+    logic.
 
     '
   triggers:
@@ -5394,9 +5389,10 @@
     entity_id:
     - light.living_room_bookshelf
     - light.living_room_floor_lamp
-    - light.living_room_ceiling_lights
     to: 'on'
     for: 00:10:00
+  - trigger: time_pattern
+    minutes: /10
   conditions:
   - condition: state
     entity_id: binary_sensor.living_room_eppro_occupancy
@@ -5406,11 +5402,49 @@
     entity_id: binary_sensor.living_room_tv_state
     state: 'off'
     for: 00:05:00
+  - condition: state
+    entity_id: light.living_room_ceiling_lights
+    state: 'off'
   - condition: template
     value_template: "{{\n  is_state('light.living_room_bookshelf', 'on')\n  or is_state('light.living_room_floor_lamp',
-      'on')\n  or is_state('light.living_room_ceiling_lights', 'on')\n}}\n"
+      'on')\n}}\n"
   actions:
   - action: scene.turn_on
     target:
       entity_id: scene.living_room_lights_0_off
+  mode: restart
+- id: '1777073358590'
+  alias: Bathroom Lights Watchdog - Off
+  description: 'Turns bathroom lights off if they remain on while bathroom motion
+    is clear.
+
+    '
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.bathroom_motion_occupancy
+    to: 'off'
+    for: 00:03:00
+  - trigger: state
+    entity_id: light.bathroom_ceiling
+    to: 'on'
+    for: 00:10:00
+  - trigger: time_pattern
+    minutes: /10
+  conditions:
+  - condition: state
+    entity_id: binary_sensor.bathroom_motion_occupancy
+    state: 'off'
+    for: 00:03:00
+  - condition: state
+    entity_id: light.bathroom_ceiling
+    state: 'on'
+  actions:
+  - action: light.turn_off
+    target:
+      entity_id: light.bathroom_ceiling
+  - action: homeassistant.update_entity
+    target:
+      entity_id:
+      - sensor.bathroom_aqara_humidity
+      - sensor.bathroom_aqara_temperature
   mode: restart
