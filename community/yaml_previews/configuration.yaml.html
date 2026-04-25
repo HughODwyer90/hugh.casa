@@ -35,7 +35,9 @@ template: !include_dir_merge_list custom_sensors_template/
 rest: !include_dir_merge_list custom_sensors_rest/
 
 recorder:
-  purge_keep_days: 366
+  purge_keep_days: 60
+  auto_purge: true
+  commit_interval: 30
   exclude:
     entities:
       - switch.zigbee2mqtt_bridge_permit_join
