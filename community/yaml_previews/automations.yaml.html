@@ -1295,11 +1295,6 @@
       - action: light.turn_off
         target:
           entity_id: light.bathroom_ceiling
-      - action: homeassistant.update_entity
-        target:
-          entity_id:
-          - sensor.bathroom_aqara_humidity
-          - sensor.bathroom_aqara_temperature
   mode: single
 - id: &#x27;1711199503084&#x27;
   alias: Hugh Room Occupied Off
@@ -5457,11 +5452,6 @@
   - action: light.turn_off
     target:
       entity_id: light.bathroom_ceiling
-  - action: homeassistant.update_entity
-    target:
-      entity_id:
-      - sensor.bathroom_aqara_humidity
-      - sensor.bathroom_aqara_temperature
   mode: restart
 </pre>
             </div>
