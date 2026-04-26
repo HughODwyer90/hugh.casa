@@ -1403,28 +1403,24 @@
   mode: single
 - id: &#x27;1713039340245&#x27;
   alias: Bathroom Previous Readings
-  description: Updates the previous humidity level after a change or every 30 minutes.
+  description: Updates previous bathroom readings every 5 minutes.
   triggers:
-  - trigger: state
-    entity_id: sensor.bathroom_aqara_humidity
-  - trigger: state
-    entity_id:
-    - sensor.bathroom_aqara_temperature
   - trigger: time_pattern
-    minutes: /20
+    minutes: /5
   actions:
-  - delay: 00:00:10
   - target:
       entity_id: input_number.previous_bathroom_humidity
     data:
-      value: &#x27;{{ states(&#x27;&#x27;sensor.bathroom_aqara_humidity&#x27;&#x27;) | replace(&#x27;&#x27;unknown&#x27;&#x27;,
-        &#x27;&#x27;0&#x27;&#x27;) | float }}&#x27;
+      value: &#x27;{{ states(&#x27;&#x27;sensor.bathroom_aqara_humidity&#x27;&#x27;) | float(0) }}
+
+        &#x27;
     action: input_number.set_value
   - target:
       entity_id: input_number.previous_bathroom_temperature
     data:
-      value: &#x27;{{ states(&#x27;&#x27;sensor.bathroom_aqara_temperature&#x27;&#x27;) | replace(&#x27;&#x27;unknown&#x27;&#x27;,
-        &#x27;&#x27;0&#x27;&#x27;) | float }}&#x27;
+      value: &#x27;{{ states(&#x27;&#x27;sensor.bathroom_aqara_temperature&#x27;&#x27;) | float(0) }}
+
+        &#x27;
     action: input_number.set_value
   mode: single
 - id: &#x27;1715100856321&#x27;
@@ -5272,9 +5268,11 @@
 - id: &#x27;1777042022647&#x27;
   alias: Master Bedroom Blind – Basic Control
   description: &quot;Logic:\n - If bed becomes occupied after dark threshold, close blind\n
-    - If TV turns on, close blind\n - If TV turns off → wait → open if bed unoccupied\n
-    - If sun elevation drops, close blind\n - Morning time → open if not in bed\n
-    - If bed unoccupied for 20 mins during day → open if closed\n&quot;
+    - If TV turns on, close blind\n - If bathroom humidity rises quickly, close blind\n
+    - If TV turns off → wait → open if bed unoccupied\n - If sun elevation drops,
+    close blind\n - Morning time → open if not in bed\n - If bed unoccupied for 20
+    mins during day → open if closed\n - If I leave home during the day → open blind\n
+    - If humidity stays very high (post-shower) → reopen blind (failsafe)\n&quot;
   triggers:
   - id: bed_occupied
     trigger: state
@@ -5300,6 +5298,19 @@
   - id: morning_open
     trigger: time
     at: 09:30:00
+  - id: shower_humidity_rise
+    trigger: state
+    entity_id: sensor.bathroom_aqara_humidity
+  - id: humidity_stable_high
+    trigger: numeric_state
+    entity_id: sensor.bathroom_aqara_humidity
+    above: 90
+    for: 00:15:00
+  - id: left_home
+    trigger: state
+    entity_id: person.hughod90
+    from: home
+    to: not_home
   actions:
   - choose:
     - conditions:
@@ -5320,6 +5331,24 @@
     - conditions:
       - condition: trigger
         id: tv_on
+      sequence:
+      - action: cover.close_cover
+        target:
+          entity_id: cover.master_blind
+    - conditions:
+      - condition: trigger
+        id: shower_humidity_rise
+      - condition: template
+        value_template: &#x27;{% set current = states(&#x27;&#x27;sensor.bathroom_aqara_humidity&#x27;&#x27;)
+          | float(0) %} {% set previous = states(&#x27;&#x27;sensor.previous_bathroom_humidity&#x27;&#x27;)
+          | float(0) %} {{ (current - previous) &gt;= 5 }}
+
+          &#x27;
+      - condition: template
+        value_template: &#x27;{{ state_attr(&#x27;&#x27;cover.master_blind&#x27;&#x27;, &#x27;&#x27;current_position&#x27;&#x27;)
+          | int(0) &gt; 20 }}
+
+          &#x27;
       sequence:
       - action: cover.close_cover
         target:
@@ -5374,6 +5403,39 @@
       - condition: state
         entity_id: binary_sensor.bed_sensor
         state: &#x27;off&#x27;
+      sequence:
+      - action: cover.open_cover
+        target:
+          entity_id: cover.master_blind
+    - conditions:
+      - condition: trigger
+        id: left_home
+      - condition: numeric_state
+        entity_id: sensor.sun_elevation
+        above: -6
+      - condition: template
+        value_template: &#x27;{{ state_attr(&#x27;&#x27;cover.master_blind&#x27;&#x27;, &#x27;&#x27;current_position&#x27;&#x27;)
+          | int(0) &lt; 90 }}
+
+          &#x27;
+      sequence:
+      - action: cover.open_cover
+        target:
+          entity_id: cover.master_blind
+    - conditions:
+      - condition: trigger
+        id: humidity_stable_high
+      - condition: numeric_state
+        entity_id: sensor.sun_elevation
+        above: -6
+      - condition: state
+        entity_id: binary_sensor.bed_sensor
+        state: &#x27;off&#x27;
+      - condition: template
+        value_template: &#x27;{{ state_attr(&#x27;&#x27;cover.master_blind&#x27;&#x27;, &#x27;&#x27;current_position&#x27;&#x27;)
+          | int(0) &lt; 90 }}
+
+          &#x27;
       sequence:
       - action: cover.open_cover
         target:
