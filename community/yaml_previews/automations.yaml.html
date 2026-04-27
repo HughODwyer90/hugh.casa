@@ -2847,8 +2847,7 @@
     state: &#x27;off&#x27;
   - condition: state
     entity_id: binary_sensor.pc_webcam_active
-    state:
-    - &#x27;off&#x27;
+    state: &#x27;off&#x27;
   actions:
   - choose:
     - conditions:
@@ -2860,6 +2859,11 @@
       - condition: state
         entity_id: binary_sensor.bed_sensor
         state: &#x27;off&#x27;
+        for: 00:02:00
+      - condition: template
+        value_template: &quot;{{ states(&#x27;sensor.uptime&#x27;) not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;]\n
+          \  and (as_timestamp(now()) - as_timestamp(states(&#x27;sensor.uptime&#x27;))) &gt; 600
+          }}\n&quot;
       - condition: or
         conditions:
         - condition: time
@@ -2935,6 +2939,7 @@
       - condition: state
         entity_id: binary_sensor.bed_sensor
         state: &#x27;off&#x27;
+        for: 00:02:00
       sequence:
       - choose:
         - conditions:
@@ -3016,9 +3021,14 @@
       - condition: state
         entity_id: binary_sensor.bed_sensor
         state: &#x27;off&#x27;
+        for: 00:02:00
       - condition: state
         entity_id: light.hugh_room_lamp
         state: &#x27;off&#x27;
+      - condition: template
+        value_template: &quot;{{ states(&#x27;sensor.uptime&#x27;) not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;]\n
+          \  and (as_timestamp(now()) - as_timestamp(states(&#x27;sensor.uptime&#x27;))) &gt; 600
+          }}\n&quot;
       sequence:
       - action: light.turn_on
         target:
@@ -4009,8 +4019,19 @@
     to: &#x27;off&#x27;
     for: 00:00:10
     trigger: state
+  - id: ha_start
+    event: start
+    trigger: homeassistant
   actions:
   - choose:
+    - conditions:
+      - condition: trigger
+        id: ha_start
+      sequence:
+      - target:
+          entity_id: input_boolean.hugh_room_webcam_scene_saved
+        action: input_boolean.turn_off
+        data: {}
     - conditions:
       - condition: trigger
         id: webcam_on
@@ -4038,6 +4059,10 @@
       - condition: trigger
         id: webcam_off
       sequence:
+      - condition: template
+        value_template: &quot;{{ states(&#x27;sensor.uptime&#x27;) not in [&#x27;unknown&#x27;, &#x27;unavailable&#x27;]\n
+          \  and (as_timestamp(now()) - as_timestamp(states(&#x27;sensor.uptime&#x27;))) &gt; 600
+          }}\n&quot;
       - condition: state
         entity_id: input_boolean.hugh_room_webcam_scene_saved
         state: &#x27;on&#x27;
