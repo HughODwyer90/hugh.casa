@@ -18,9 +18,6 @@ shell_command: !include shell_commands.yaml
 rest_command: !include custom_command.yaml
 template: !include_dir_merge_list custom_sensors_template/
 rest: !include_dir_merge_list custom_sensors_rest/
-sensor:
-  - platform: uptime
-    name: Uptime
     
 recorder:
   purge_keep_days: 60
