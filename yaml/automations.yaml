@@ -2832,8 +2832,7 @@
     state: 'off'
   - condition: state
     entity_id: binary_sensor.pc_webcam_active
-    state:
-    - 'off'
+    state: 'off'
   actions:
   - choose:
     - conditions:
@@ -2845,6 +2844,11 @@
       - condition: state
         entity_id: binary_sensor.bed_sensor
         state: 'off'
+        for: 00:02:00
+      - condition: template
+        value_template: "{{ states('sensor.uptime') not in ['unknown', 'unavailable']\n
+          \  and (as_timestamp(now()) - as_timestamp(states('sensor.uptime'))) > 600
+          }}\n"
       - condition: or
         conditions:
         - condition: time
@@ -2920,6 +2924,7 @@
       - condition: state
         entity_id: binary_sensor.bed_sensor
         state: 'off'
+        for: 00:02:00
       sequence:
       - choose:
         - conditions:
@@ -3001,9 +3006,14 @@
       - condition: state
         entity_id: binary_sensor.bed_sensor
         state: 'off'
+        for: 00:02:00
       - condition: state
         entity_id: light.hugh_room_lamp
         state: 'off'
+      - condition: template
+        value_template: "{{ states('sensor.uptime') not in ['unknown', 'unavailable']\n
+          \  and (as_timestamp(now()) - as_timestamp(states('sensor.uptime'))) > 600
+          }}\n"
       sequence:
       - action: light.turn_on
         target:
@@ -3994,8 +4004,19 @@
     to: 'off'
     for: 00:00:10
     trigger: state
+  - id: ha_start
+    event: start
+    trigger: homeassistant
   actions:
   - choose:
+    - conditions:
+      - condition: trigger
+        id: ha_start
+      sequence:
+      - target:
+          entity_id: input_boolean.hugh_room_webcam_scene_saved
+        action: input_boolean.turn_off
+        data: {}
     - conditions:
       - condition: trigger
         id: webcam_on
@@ -4023,6 +4044,10 @@
       - condition: trigger
         id: webcam_off
       sequence:
+      - condition: template
+        value_template: "{{ states('sensor.uptime') not in ['unknown', 'unavailable']\n
+          \  and (as_timestamp(now()) - as_timestamp(states('sensor.uptime'))) > 600
+          }}\n"
       - condition: state
         entity_id: input_boolean.hugh_room_webcam_scene_saved
         state: 'on'
