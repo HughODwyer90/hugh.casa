@@ -5551,6 +5551,10 @@
   - condition: time
     after: '23:00:00'
     before: 06:00:00
+  - condition: state
+    entity_id: input_boolean.bed_automation_enabled
+    state:
+    - 'on'
   actions:
   - variables:
       hugh_room_light_entities:
@@ -5566,8 +5570,6 @@
     - condition: template
       value_template: '{{ any_hugh_room_light_on }}'
     then:
-    - delay:
-        minutes: 1
     - variables:
         any_hugh_room_light_on_after_delay: "{{ expand(hugh_room_light_entities)\n
           \ | selectattr('state', 'eq', 'on')\n  | list\n  | count > 0 }}\n"
