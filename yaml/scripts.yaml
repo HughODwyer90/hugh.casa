@@ -366,17 +366,20 @@ ai_plant_message_direct:
     plant_name:
       description: The plant's name
       example: Patrick
+      default: Patrick
     notify_target:
       description: The notify service to send the message
       example: notify.mobile_app_yourphone
+      default: notify.notifications
     need_type:
       description: What the plant needs (e.g. water, food)
       example: water
+      default: water
   sequence:
   - action: conversation.process
     response_variable: ai_message
     data:
-      agent_id: conversation.openai_conversation
+      agent_id: conversation.claude_conversation
       text: 'Pretend you are {{ plant_name }} the Plant.
 
         {% if need_type | lower == ''water'' %} Write a short, unique reminder in
