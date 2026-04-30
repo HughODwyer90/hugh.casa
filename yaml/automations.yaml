@@ -5540,3 +5540,46 @@
     target:
       entity_id: light.bathroom_ceiling
   mode: restart
+- id: '1777524419985'
+  alias: Hugh Room Lights Watchdog
+  description: Force Hugh room lights off if occupancy stays clear and any light remains
+    on
+  triggers:
+  - trigger: time_pattern
+    minutes: /2
+  conditions:
+  - condition: time
+    after: '23:00:00'
+    before: 06:00:00
+  actions:
+  - variables:
+      hugh_room_light_entities:
+      - light.hugh_room_lamp
+      - light.hugh_room_ceiling
+      any_hugh_room_light_on: "{{ expand(hugh_room_light_entities)\n  | selectattr('state',
+        'eq', 'on')\n  | list\n  | count > 0 }}\n"
+  - if:
+    - condition: state
+      entity_id: binary_sensor.bed_sensor
+      state:
+      - 'on'
+    - condition: template
+      value_template: '{{ any_hugh_room_light_on }}'
+    then:
+    - delay:
+        minutes: 1
+    - variables:
+        any_hugh_room_light_on_after_delay: "{{ expand(hugh_room_light_entities)\n
+          \ | selectattr('state', 'eq', 'on')\n  | list\n  | count > 0 }}\n"
+    - condition: state
+      entity_id: binary_sensor.bed_sensor
+      state:
+      - 'on'
+    - condition: template
+      value_template: '{{ any_hugh_room_light_on_after_delay }}'
+    - action: scene.turn_on
+      target:
+        entity_id:
+        - scene.hugh_room_all_lights_off
+      data: {}
+  mode: restart
