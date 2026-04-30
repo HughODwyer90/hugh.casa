@@ -400,6 +400,15 @@
     - action: notify.notifications
       data:
         message: System has restarted and is now ready.
+  - if:
+    - condition: time
+      after: 03:00:00
+      before: 04:00:00
+    then:
+    - action: light.turn_off
+      target:
+        entity_id: light.hugh_room_lamp
+      data: {}
   mode: single
 - id: &#x27;1702818164083&#x27;
   alias: Living Room Lights – Occupancy + TV
@@ -4844,37 +4853,43 @@
   mode: restart
 - id: &#x27;1774058190777&#x27;
   alias: Kitchen Occupancy Watchdog
-  description: Force kitchen lights off if occupancy stays clear and lights remain
-    on
+  description: Force kitchen lights off if occupancy stays clear and any kitchen light
+    remains on
   triggers:
   - trigger: state
     entity_id: binary_sensor.kitchen_epone_occupancy
     to: &#x27;off&#x27;
+  - trigger: time_pattern
+    minutes: /2
   actions:
+  - variables:
+      kitchen_light_entities:
+      - light.kitchen_ceiling_1
+      - light.kitchen_ceiling_2
+      - light.kitchen_ceiling_3
+      - light.kitchen_ceiling_4
+      any_kitchen_light_on: &quot;{{ expand(kitchen_light_entities)\n  | selectattr(&#x27;state&#x27;,
+        &#x27;eq&#x27;, &#x27;on&#x27;)\n  | list\n  | count &gt; 0 }}\n&quot;
   - if:
     - condition: state
       entity_id: binary_sensor.kitchen_epone_occupancy
       state: &#x27;off&#x27;
-    - condition: state
-      entity_id: light.kitchen_lights
-      state: &#x27;on&#x27;
+    - condition: template
+      value_template: &#x27;{{ any_kitchen_light_on }}&#x27;
     then:
     - delay:
-        hours: 0
         minutes: 1
-        seconds: 0
-        milliseconds: 0
+    - variables:
+        any_kitchen_light_on_after_delay: &quot;{{ expand(kitchen_light_entities)\n  |
+          selectattr(&#x27;state&#x27;, &#x27;eq&#x27;, &#x27;on&#x27;)\n  | list\n  | count &gt; 0 }}\n&quot;
     - condition: state
       entity_id: binary_sensor.kitchen_epone_occupancy
       state: &#x27;off&#x27;
-    - condition: state
-      entity_id: light.kitchen_lights
-      state: &#x27;on&#x27;
+    - condition: template
+      value_template: &#x27;{{ any_kitchen_light_on_after_delay }}&#x27;
     - action: scene.turn_on
       target:
-        entity_id:
-        - scene.kitchen_lights_0_off
-      data: {}
+        entity_id: scene.kitchen_lights_0_off
   mode: restart
 - id: &#x27;1774082499649&#x27;
   alias: Hugh Room Purifier Watchdog
