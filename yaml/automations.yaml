@@ -385,6 +385,15 @@
     - action: notify.notifications
       data:
         message: System has restarted and is now ready.
+  - if:
+    - condition: time
+      after: 03:00:00
+      before: 04:00:00
+    then:
+    - action: light.turn_off
+      target:
+        entity_id: light.hugh_room_lamp
+      data: {}
   mode: single
 - id: '1702818164083'
   alias: Living Room Lights – Occupancy + TV
@@ -4829,37 +4838,43 @@
   mode: restart
 - id: '1774058190777'
   alias: Kitchen Occupancy Watchdog
-  description: Force kitchen lights off if occupancy stays clear and lights remain
-    on
+  description: Force kitchen lights off if occupancy stays clear and any kitchen light
+    remains on
   triggers:
   - trigger: state
     entity_id: binary_sensor.kitchen_epone_occupancy
     to: 'off'
+  - trigger: time_pattern
+    minutes: /2
   actions:
+  - variables:
+      kitchen_light_entities:
+      - light.kitchen_ceiling_1
+      - light.kitchen_ceiling_2
+      - light.kitchen_ceiling_3
+      - light.kitchen_ceiling_4
+      any_kitchen_light_on: "{{ expand(kitchen_light_entities)\n  | selectattr('state',
+        'eq', 'on')\n  | list\n  | count > 0 }}\n"
   - if:
     - condition: state
       entity_id: binary_sensor.kitchen_epone_occupancy
       state: 'off'
-    - condition: state
-      entity_id: light.kitchen_lights
-      state: 'on'
+    - condition: template
+      value_template: '{{ any_kitchen_light_on }}'
     then:
     - delay:
-        hours: 0
         minutes: 1
-        seconds: 0
-        milliseconds: 0
+    - variables:
+        any_kitchen_light_on_after_delay: "{{ expand(kitchen_light_entities)\n  |
+          selectattr('state', 'eq', 'on')\n  | list\n  | count > 0 }}\n"
     - condition: state
       entity_id: binary_sensor.kitchen_epone_occupancy
       state: 'off'
-    - condition: state
-      entity_id: light.kitchen_lights
-      state: 'on'
+    - condition: template
+      value_template: '{{ any_kitchen_light_on_after_delay }}'
     - action: scene.turn_on
       target:
-        entity_id:
-        - scene.kitchen_lights_0_off
-      data: {}
+        entity_id: scene.kitchen_lights_0_off
   mode: restart
 - id: '1774082499649'
   alias: Hugh Room Purifier Watchdog
