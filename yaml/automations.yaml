@@ -1069,12 +1069,14 @@
           plant_name: Patrick
           notify_target: notify.notifications
           need_type: food
+          notification_icon: mdi:leaf
     default:
     - action: script.ai_plant_message_direct
       data:
         plant_name: Patrick
         notify_target: notify.notifications
         need_type: water
+        notification_icon: mdi:water
   - action: input_boolean.turn_on
     target:
       entity_id: input_boolean.patrick_needs_water
