@@ -361,7 +361,10 @@ play_spotify_playlist_2:
       radio_mode: true
 ai_plant_message_direct:
   alias: AI Plant Message Direct
-  mode: single
+  description: Sends a Claude-generated plant notification based on need type and
+    current conditions
+  mode: queued
+  max: 3
   fields:
     plant_name:
       description: The plant's name
@@ -375,6 +378,10 @@ ai_plant_message_direct:
       description: What the plant needs (e.g. water, food)
       example: water
       default: water
+    notification_icon:
+      description: Override the notification icon (e.g. mdi:cactus)
+      example: mdi:cactus
+      default: mdi:sprout
   sequence:
   - action: conversation.process
     response_variable: ai_message
@@ -385,7 +392,7 @@ ai_plant_message_direct:
         {% if need_type | lower == ''water'' %} Write a short, unique reminder in
         the tone of a drunk alcoholic craving another drink. Sound intoxicated, slightly
         desperate, lightly slurred (a missed word here or there, or cut short words),
-        and fixated on getting a “drink”, but still clearly asking for {{ need_type
+        and fixated on getting a "drink", but still clearly asking for {{ need_type
         }}. All environmental conditions should be interpreted through this persona.
         {% elif need_type | lower == ''food'' %} Write a short, unique reminder in
         the tone of a stoner with the munchies. Sound relaxed, hazy, and overly focused
@@ -435,17 +442,24 @@ ai_plant_message_direct:
         — sound like you''re talking to yourself. {% endif %}
 
         Keep it under 30 words. Do not be dramatic. Keep tone consistent with the
-        persona. Never repeat phrasing. Sign off with your name only, but maybe tied
-        to the persona.'
+        persona. Never repeat phrasing. Use a different structure and opening each
+        time. Sign off with your name only, tied to the persona. Do not use quotation
+        marks. Plain text only. No emojis unless they fit the persona.'
+  - condition: template
+    value_template: '{{ ai_message.response.speech.plain.speech | default('''') !=
+      '''' }}'
   - action: '{{ notify_target }}'
     data:
-      message: '{{ ai_message.response.speech.plain.speech }}'
+      message: '{{ ai_message.response.speech.plain.speech | default(''Psst... I need
+        some '' + need_type + ''. - '' + plant_name) }}'
       title: '{{ plant_name }} the Plant'
       data:
-        notification_icon: "{% set need = need_type | lower %} {% if need == 'water'
-          %}\n  mdi:water\n{% elif need == 'food' %}\n  mdi:food\n{% elif need in
-          ['fertilizer', 'feed'] %}\n  mdi:leaf\n{% elif need in ['light', 'sun']
-          %}\n  mdi:white-balance-sunny\n{% else %}\n  mdi:sprout\n{% endif %}"
+        notification_icon: "{% if notification_icon is defined and notification_icon
+          != '' %}\n  {{ notification_icon }}\n{% else %}\n  {% set need = need_type
+          | lower %}\n  {% if need == 'water' %}\n    mdi:water\n  {% elif need ==
+          'food' %}\n    mdi:food\n  {% elif need in ['fertilizer', 'feed'] %}\n    mdi:leaf\n
+          \ {% elif need in ['light', 'sun'] %}\n    mdi:white-balance-sunny\n  {%
+          else %}\n    mdi:sprout\n  {% endif %}\n{% endif %}"
 reload_tuya_local_integration:
   alias: Reload Tuya Local Integration
   sequence:
