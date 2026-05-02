@@ -5600,12 +5600,10 @@
     - 'on'
   conditions: []
   actions:
-  - action: light.toggle
+  - action: light.turn_on
     metadata: {}
-    data:
-      brightness_pct: 100
-      color_temp_kelvin: 2000
-      transition: 1
     target:
-      entity_id: light.living_room_ceiling_lights
+      entity_id: light.dining_table
+    data:
+      transition: 1
   mode: single
