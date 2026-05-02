@@ -5587,3 +5587,25 @@
         - scene.hugh_room_all_lights_off
       data: {}
   mode: restart
+- id: '1777720394311'
+  alias: Dining vibration light toggle
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.dining_table_vibration_vibration
+    from:
+    - 'off'
+    to:
+    - 'on'
+  conditions: []
+  actions:
+  - action: light.toggle
+    metadata: {}
+    data:
+      brightness_pct: 100
+      color_temp_kelvin: 2000
+      transition: 1
+    target:
+      entity_id: light.living_room_ceiling_lights
+  mode: single
