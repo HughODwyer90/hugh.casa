@@ -11,13 +11,13 @@
         <body>
             <div class="fixed-header">
                 <h1>Home Assistant Entities</h1>
-                <p>Total Entities: 1058 (Redacted: 16)</p>
-                <p>Version: 2026-05-02-110905</p>
+                <p>Total Entities: 1073 (Redacted: 16)</p>
+                <p>Version: 2026-05-02-111333</p>
                 <div class="search-container">
                     <input type="text" id="entitySearch" class="search-box" placeholder="🔍 Search entities...">
                 </div>
                 <div>
-                    <p id="table-count">Search total: 1058</p>
+                    <p id="table-count">Search total: 1073</p>
                 </div>
                 <div class="filters">
                     <div id="filter-All" class="filter entity-filter active">All</div>
@@ -239,6 +239,14 @@
             <tr>
                 <td>automation.dim_down_living_room_lights</td>
                 <td>Living Room Accent Dim</td>
+                <td>N/A</td>
+                <td>on</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>automation.dining_vibration_light_toggle</td>
+                <td>Dining vibration light toggle</td>
                 <td>N/A</td>
                 <td>on</td>
                 <td>Yes</td>
@@ -1186,6 +1194,14 @@
                 <td>N/A</td>
                 <td>unavailable</td>
                 <td>No</td>
+            </tr>
+        
+            <tr>
+                <td>binary_sensor.dining_table_vibration_vibration</td>
+                <td>Dining table vibration Vibration</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -2333,6 +2349,14 @@
             </tr>
         
             <tr>
+                <td>event.dining_table_vibration_action</td>
+                <td>Dining table vibration Action</td>
+                <td>N/A</td>
+                <td>2026-05-02 11:08:43</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>event.folder_watcher_media</td>
                 <td>Folder Watcher /media/</td>
                 <td>N/A</td>
@@ -2872,7 +2896,7 @@
                 <td>input_number.previous_bathroom_humidity</td>
                 <td>Previous Bathroom Humidity</td>
                 <td>%</td>
-                <td>66.7</td>
+                <td>67.3</td>
                 <td>Yes</td>
             </tr>
         
@@ -3120,7 +3144,7 @@
                 <td>light.hallway</td>
                 <td>Hallway</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3264,7 +3288,7 @@
                 <td>light.utility_ceiling</td>
                 <td>Utility Ceiling</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3609,6 +3633,14 @@
                 <td>Bed Presence Right Unoccupied Pressure</td>
                 <td>%</td>
                 <td>27.24</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.dining_table_vibration_sensitivity</td>
+                <td>Dining table vibration Sensitivity</td>
+                <td>N/A</td>
+                <td>1</td>
                 <td>Yes</td>
             </tr>
         
@@ -5000,7 +5032,7 @@
                 <td>sensor.bed_presence_right_pressure</td>
                 <td>Bed Presence Right Pressure</td>
                 <td>%</td>
-                <td>25.9410820007324</td>
+                <td>26.9112548828125</td>
                 <td>Yes</td>
             </tr>
         
@@ -5008,7 +5040,7 @@
                 <td>sensor.bed_presence_uptime</td>
                 <td>Bed Presence Uptime</td>
                 <td>s</td>
-                <td>1618448.75</td>
+                <td>1618748.75</td>
                 <td>Yes</td>
             </tr>
         
@@ -5256,7 +5288,7 @@
                 <td>sensor.date_time_iso</td>
                 <td>Date & Time (ISO)</td>
                 <td>N/A</td>
-                <td>2026-05-02 12:09:00</td>
+                <td>2026-05-02 12:13:00</td>
                 <td>Yes</td>
             </tr>
         
@@ -5305,6 +5337,94 @@
                 <td>Home Assistant Devices</td>
                 <td>N/A</td>
                 <td>148</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.dining_table_vibration_action</td>
+                <td>Dining table vibration Action</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.dining_table_vibration_angle_x</td>
+                <td>Dining table vibration Angle x</td>
+                <td>°</td>
+                <td>0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.dining_table_vibration_angle_y</td>
+                <td>Dining table vibration Angle y</td>
+                <td>°</td>
+                <td>2</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.dining_table_vibration_angle_z</td>
+                <td>Dining table vibration Angle z</td>
+                <td>°</td>
+                <td>88</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.dining_table_vibration_battery</td>
+                <td>Dining table vibration Battery</td>
+                <td>%</td>
+                <td>90</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.dining_table_vibration_device_temperature</td>
+                <td>Dining table vibration Temperature</td>
+                <td>°C</td>
+                <td>32</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.dining_table_vibration_strength</td>
+                <td>Dining table vibration Strength</td>
+                <td>N/A</td>
+                <td>115</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.dining_table_vibration_voltage</td>
+                <td>Dining table vibration Voltage</td>
+                <td>mV</td>
+                <td>2985</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.dining_table_vibration_x_axis</td>
+                <td>Dining table vibration X axis</td>
+                <td>N/A</td>
+                <td>10</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.dining_table_vibration_y_axis</td>
+                <td>Dining table vibration Y axis</td>
+                <td>N/A</td>
+                <td>46</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.dining_table_vibration_z_axis</td>
+                <td>Dining table vibration Z axis</td>
+                <td>N/A</td>
+                <td>1185</td>
                 <td>Yes</td>
             </tr>
         
@@ -5360,7 +5480,7 @@
                 <td>sensor.hall_motion_illuminance</td>
                 <td>Hall Motion Illuminance</td>
                 <td>lx</td>
-                <td>130</td>
+                <td>57</td>
                 <td>Yes</td>
             </tr>
         
@@ -5368,7 +5488,7 @@
                 <td>sensor.hall_motion_temperature</td>
                 <td>Hue Temperature</td>
                 <td>°C</td>
-                <td>22.39</td>
+                <td>22.91</td>
                 <td>Yes</td>
             </tr>
         
@@ -5568,7 +5688,7 @@
                 <td>sensor.hugh_room_aqara_humidity</td>
                 <td>Aqara Humidity</td>
                 <td>%</td>
-                <td>63.27</td>
+                <td>63.17</td>
                 <td>Yes</td>
             </tr>
         
@@ -5576,7 +5696,7 @@
                 <td>sensor.hugh_room_aqara_pressure</td>
                 <td>Hugh Room Aqara Atmospheric pressure</td>
                 <td>hPa</td>
-                <td>1011.9</td>
+                <td>1012.2</td>
                 <td>Yes</td>
             </tr>
         
@@ -5584,7 +5704,7 @@
                 <td>sensor.hugh_room_aqara_temperature</td>
                 <td>Aqara Temperature</td>
                 <td>°C</td>
-                <td>20.12</td>
+                <td>20.14</td>
                 <td>Yes</td>
             </tr>
         
@@ -5680,7 +5800,7 @@
                 <td>sensor.hugh_room_plug_blanket_current</td>
                 <td>Hugh Room Plug Blanket Current</td>
                 <td>A</td>
-                <td>0</td>
+                <td>0.01</td>
                 <td>Yes</td>
             </tr>
         
@@ -5712,7 +5832,7 @@
                 <td>sensor.hugh_room_plug_fan_bed_current</td>
                 <td>Hugh Room Plug Fan Bed Current</td>
                 <td>A</td>
-                <td>0.01</td>
+                <td>0.02</td>
                 <td>Yes</td>
             </tr>
         
@@ -5736,7 +5856,7 @@
                 <td>sensor.hugh_room_plug_fan_bed_voltage</td>
                 <td>Hugh Room Plug Fan Bed Voltage</td>
                 <td>V</td>
-                <td>236</td>
+                <td>237</td>
                 <td>Yes</td>
             </tr>
         
@@ -5872,7 +5992,7 @@
                 <td>sensor.kitchen_epone_humidity</td>
                 <td>Humidity</td>
                 <td>%</td>
-                <td>34.8721313476562</td>
+                <td>35.01708984375</td>
                 <td>Yes</td>
             </tr>
         
@@ -5880,7 +6000,7 @@
                 <td>sensor.kitchen_epone_illuminance</td>
                 <td>Kitchen EPOne Illuminance</td>
                 <td>lx</td>
-                <td>8.02621173858643</td>
+                <td>27.2816925048828</td>
                 <td>Yes</td>
             </tr>
         
@@ -5896,7 +6016,7 @@
                 <td>sensor.kitchen_epone_temperature</td>
                 <td>Temperature</td>
                 <td>°C</td>
-                <td>23.3114261627197</td>
+                <td>23.2847232818604</td>
                 <td>Yes</td>
             </tr>
         
@@ -6144,7 +6264,7 @@
                 <td>sensor.living_room_eppro_humidity</td>
                 <td>Humidity</td>
                 <td>%</td>
-                <td>25.67138671875</td>
+                <td>25.604248046875</td>
                 <td>Yes</td>
             </tr>
         
@@ -6152,7 +6272,7 @@
                 <td>sensor.living_room_eppro_illuminance</td>
                 <td>Illuminance</td>
                 <td>lx</td>
-                <td>76.2893600463867</td>
+                <td>214.493103027344</td>
                 <td>Yes</td>
             </tr>
         
@@ -6160,7 +6280,7 @@
                 <td>sensor.living_room_eppro_target_1_angle</td>
                 <td>Living Room EPPro Target 1 Angle</td>
                 <td>°</td>
-                <td>-11.626651763916</td>
+                <td>-12.8136157989502</td>
                 <td>Yes</td>
             </tr>
         
@@ -6168,7 +6288,7 @@
                 <td>sensor.living_room_eppro_target_1_distance</td>
                 <td>Living Room EPPro Target 1 Distance</td>
                 <td>mm</td>
-                <td>4966.9130859375</td>
+                <td>4887.720703125</td>
                 <td>Yes</td>
             </tr>
         
@@ -6192,7 +6312,7 @@
                 <td>sensor.living_room_eppro_target_1_x</td>
                 <td>Living Room EPPro Target 1 X</td>
                 <td>mm</td>
-                <td>2069.0</td>
+                <td>2128.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -6200,7 +6320,7 @@
                 <td>sensor.living_room_eppro_target_1_y</td>
                 <td>Living Room EPPro Target 1 Y</td>
                 <td>mm</td>
-                <td>4515.0</td>
+                <td>4400.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -6304,7 +6424,7 @@
                 <td>sensor.living_room_eppro_temperature</td>
                 <td>Temperature</td>
                 <td>°C</td>
-                <td>24.1761016845703</td>
+                <td>24.189453125</td>
                 <td>Yes</td>
             </tr>
         
@@ -6520,7 +6640,7 @@
                 <td>sensor.next_alarm_in</td>
                 <td>Next Alarm In</td>
                 <td>N/A</td>
-                <td>20h 21m</td>
+                <td>20h 17m</td>
                 <td>Yes</td>
             </tr>
         
@@ -6608,7 +6728,7 @@
                 <td>sensor.previous_bathroom_humidity</td>
                 <td>Aqara Humidity (previous)</td>
                 <td>%</td>
-                <td>66.7</td>
+                <td>67.3</td>
                 <td>Yes</td>
             </tr>
         
@@ -6744,7 +6864,7 @@
                 <td>sensor.snake_plant_illuminance</td>
                 <td>Snake Plant Illuminance</td>
                 <td>lx</td>
-                <td>278</td>
+                <td>509</td>
                 <td>Yes</td>
             </tr>
         
@@ -6760,7 +6880,7 @@
                 <td>sensor.snake_plant_signal_strength</td>
                 <td>Snake Plant Signal Strength</td>
                 <td>dBm</td>
-                <td>-86</td>
+                <td>-75</td>
                 <td>Yes</td>
             </tr>
         
@@ -6784,7 +6904,7 @@
                 <td>sensor.sun_azimuth</td>
                 <td>Sunlight Intensity Sun Azimuth</td>
                 <td>°</td>
-                <td>147.73</td>
+                <td>149.5</td>
                 <td>Yes</td>
             </tr>
         
@@ -6792,7 +6912,7 @@
                 <td>sensor.sun_elevation</td>
                 <td>Sunlight Intensity Sun Elevation</td>
                 <td>°</td>
-                <td>49.68</td>
+                <td>50.08</td>
                 <td>Yes</td>
             </tr>
         
@@ -6848,7 +6968,7 @@
                 <td>sensor.sun_wall_intensity_back</td>
                 <td>Sunlight Intensity Sun Wall Intensity Back</td>
                 <td>%</td>
-                <td>64.15</td>
+                <td>66.11</td>
                 <td>Yes</td>
             </tr>
         
@@ -6872,7 +6992,7 @@
                 <td>sensor.sun_wall_intensity_right</td>
                 <td>Sunlight Intensity Sun Wall Intensity Right</td>
                 <td>%</td>
-                <td>35.85</td>
+                <td>33.89</td>
                 <td>Yes</td>
             </tr>
         
@@ -6912,7 +7032,7 @@
                 <td>sensor.total_sensors_count</td>
                 <td>Total Entities</td>
                 <td>sensors</td>
-                <td>1058</td>
+                <td>1073</td>
                 <td>Yes</td>
             </tr>
         
@@ -7000,7 +7120,7 @@
                 <td>sensor.utility_motion_illuminance</td>
                 <td>Utility Motion Illuminance</td>
                 <td>lx</td>
-                <td>188</td>
+                <td>205</td>
                 <td>Yes</td>
             </tr>
         
@@ -7336,7 +7456,7 @@
                 <td>sensor.watchman_status</td>
                 <td>Watchman Status</td>
                 <td>N/A</td>
-                <td>idle</td>
+                <td>pending</td>
                 <td>Yes</td>
             </tr>
         
@@ -7376,7 +7496,7 @@
                 <td>sensor.weather_dew_point</td>
                 <td>weather Dew point temperature</td>
                 <td>°C</td>
-                <td>10.73</td>
+                <td>11.7</td>
                 <td>Yes</td>
             </tr>
         
@@ -7384,7 +7504,7 @@
                 <td>sensor.weather_feels_like_temperature</td>
                 <td>weather Apparent temperature</td>
                 <td>°C</td>
-                <td>13.31</td>
+                <td>14.41</td>
                 <td>Yes</td>
             </tr>
         
@@ -7432,7 +7552,7 @@
                 <td>sensor.weather_temperature</td>
                 <td>weather Temperature</td>
                 <td>°C</td>
-                <td>13.74</td>
+                <td>14.74</td>
                 <td>Yes</td>
             </tr>
         
@@ -7488,7 +7608,7 @@
                 <td>sensor.weather_wind_speed</td>
                 <td>weather Wind speed</td>
                 <td>km/h</td>
-                <td>12.96</td>
+                <td>16.668</td>
                 <td>Yes</td>
             </tr>
         
