@@ -5293,11 +5293,13 @@
 - id: '1777042022647'
   alias: Master Bedroom Blind – Basic Control
   description: "Logic:\n - If bed becomes occupied after dark threshold, close blind\n
-    - If TV turns on, close blind\n - If bathroom humidity rises quickly, close blind\n
-    - If TV turns off → wait → open if bed unoccupied\n - If sun elevation drops,
-    close blind\n - Morning time → open if not in bed\n - If bed unoccupied for 20
-    mins during day → open if closed\n - If I leave home during the day → open blind\n
-    - If humidity stays very high (post-shower) → reopen blind (failsafe)\n"
+    - If TV turns on, close blind\n - If bathroom humidity rises quickly, close blind
+    (with 5-min automation cooldown)\n - If TV turns off → wait → open if bed unoccupied\n
+    - If sun elevation drops, close blind\n - Morning time → open if not in bed\n
+    - If bed unoccupied for 20 mins during day → open if closed\n - If I leave home
+    during the day → open blind\n - If humidity stays very high (post-shower) → reopen
+    blind (failsafe)\n - Cooldown flag (input_boolean.blind_humidity_cooldown) blocks
+    automation opens only\n - Manual open during cooldown clears the flag\n"
   triggers:
   - id: bed_occupied
     trigger: state
@@ -5336,6 +5338,10 @@
     entity_id: person.hughod90
     from: home
     to: not_home
+  - id: blind_manually_opened
+    trigger: state
+    entity_id: cover.master_blind
+    to: open
   actions:
   - choose:
     - conditions:
@@ -5378,9 +5384,29 @@
       - action: cover.close_cover
         target:
           entity_id: cover.master_blind
+      - action: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.blind_humidity_cooldown
+      - delay: 00:05:00
+      - action: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.blind_humidity_cooldown
+    - conditions:
+      - condition: trigger
+        id: blind_manually_opened
+      - condition: state
+        entity_id: input_boolean.blind_humidity_cooldown
+        state: 'on'
+      sequence:
+      - action: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.blind_humidity_cooldown
     - conditions:
       - condition: trigger
         id: tv_off
+      - condition: state
+        entity_id: input_boolean.blind_humidity_cooldown
+        state: 'off'
       sequence:
       - delay: 00:00:20
       - wait_for_trigger:
@@ -5406,6 +5432,9 @@
       - condition: numeric_state
         entity_id: sensor.sun_elevation
         above: -6
+      - condition: state
+        entity_id: input_boolean.blind_humidity_cooldown
+        state: 'off'
       - condition: template
         value_template: '{{ state_attr(''cover.master_blind'', ''current_position'')
           | int(0) < 90 }}
@@ -5428,6 +5457,9 @@
       - condition: state
         entity_id: binary_sensor.bed_sensor
         state: 'off'
+      - condition: state
+        entity_id: input_boolean.blind_humidity_cooldown
+        state: 'off'
       sequence:
       - action: cover.open_cover
         target:
@@ -5438,6 +5470,9 @@
       - condition: numeric_state
         entity_id: sensor.sun_elevation
         above: -6
+      - condition: state
+        entity_id: input_boolean.blind_humidity_cooldown
+        state: 'off'
       - condition: template
         value_template: '{{ state_attr(''cover.master_blind'', ''current_position'')
           | int(0) < 90 }}
@@ -5462,6 +5497,9 @@
 
           '
       sequence:
+      - action: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.blind_humidity_cooldown
       - action: cover.open_cover
         target:
           entity_id: cover.master_blind
