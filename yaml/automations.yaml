@@ -4756,7 +4756,7 @@
   mode: single
 - id: '1773869262911'
   alias: Coffee table light
-  description: ''
+  description: Brightens lights when open, restores previous state on close
   triggers:
   - trigger: state
     entity_id:
@@ -4767,27 +4767,25 @@
     - conditions:
       - condition: state
         entity_id: binary_sensor.coffee_table_contact
-        state:
-        - 'on'
+        state: 'on'
       sequence:
+      - action: scene.create
+        data:
+          scene_id: coffee_table_pre_open_snapshot
+          snapshot_entities:
+          - light.living_room_ceiling_lights
+          - light.living_room_accents
       - action: scene.turn_on
-        metadata: {}
         target:
-          entity_id:
-          - scene.living_room_lights_3_accents
-        data: {}
+          entity_id: scene.living_room_lights_3_accents
     - conditions:
       - condition: state
         entity_id: binary_sensor.coffee_table_contact
-        state:
-        - 'off'
+        state: 'off'
       sequence:
       - action: scene.turn_on
-        metadata: {}
         target:
-          entity_id:
-          - scene.living_room_lights_2_dimmers
-        data: {}
+          entity_id: scene.coffee_table_pre_open_snapshot
   mode: single
 - id: '1773959263569'
   alias: Kitchen Lights State Reconciliation
