@@ -5648,7 +5648,7 @@
   description: ''
   triggers:
   - trigger: time
-    at: '16:00:00'
+    at: '17:00:00'
     weekday:
     - mon
     - tue
@@ -5657,6 +5657,6 @@
     - fri
   conditions: []
   actions:
-  - action: python_script.jira_quarter_confluence
+  - action: shell_command.jira_quarter
     data: {}
   mode: single
