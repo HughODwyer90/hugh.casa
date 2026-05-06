@@ -5643,3 +5643,20 @@
     data:
       transition: 1
   mode: single
+- id: '1778079813706'
+  alias: Jira Quarter
+  description: ''
+  triggers:
+  - trigger: time
+    at: '16:00:00'
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  conditions: []
+  actions:
+  - action: python_script.jira_quarter_confluence
+    data: {}
+  mode: single
