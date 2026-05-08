@@ -1,0 +1,98 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>bed-presence-ba9bdc.yaml</title>
+            <link rel="stylesheet" id="dynamic-styles">
+            <link rel="icon" id="dynamic-favicon">
+        </head>
+        <body>
+            <div class="fixed-header">
+                <h1>Viewing: bed-presence-ba9bdc.yaml</h1>
+            </div>
+            <div class="scrollable-content">
+                <pre class="yaml-content">esphome:
+  name: bed-presence-ba9bdc
+  friendly_name: Bed Presence
+  min_version: 2024.6.0
+  name_add_mac_suffix: false
+  project:
+    name: ElevatedSensors.BedPresenceMk1
+    version: DIY
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: esp-idf
+    sdkconfig_options:
+      CONFIG_BT_BLE_42_FEATURES_SUPPORTED: y
+      CONFIG_BT_BLE_50_FEATURES_SUPPORTED: n
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+# Enable wifi
+wifi:
+  # Set up a wifi access point
+  ap: {}
+
+# In combination with the `ap` this allows the user
+# to provision wifi credentials to the device via WiFi AP.
+captive_portal:
+
+# Enable esphome OTA updates
+ota:
+- platform: esphome
+
+################################################################################
+packages:
+  remote_package:
+    url: https://github.com/ElevatedSensors/sensor-configs
+    ref: main
+    refresh: 1s
+    files:
+    - bed-presence-mk1/base.yaml
+    - esphome-common/bluetooth-proxy.yaml
+
+# See https://github.com/ElevatedSensors/sensor-configs/blob/main/bed-presence-mk1/sensor.yaml for a detailed
+# description of available substitutions.
+#
+# substitutions:
+#   trigger_percentile: &#x27;0.75&#x27;
+#   averaging_window_samples: &#x27;5&#x27;
+#   fast_delayed_on: &#x27;0ms&#x27;
+#   fast_delayed_off: &#x27;0ms&#x27;
+#   standard_delayed_on: &#x27;0s&#x27;
+#   standard_delayed_off: &#x27;1s&#x27;
+#   slow_delayed_on: &#x27;2s&#x27;
+#   slow_delayed_off: &#x27;5s&#x27;
+#   reporting_delta: &#x27;1.0&#x27;
+#   reporting_interval_max: &#x27;180s&#x27;
+#   calibrate_100: &#x27;408000&#x27;
+#   calibrate_0: &#x27;276000&#x27;
+</pre>
+            </div>
+            <script>
+                (function fixPaths() {
+                    // ✅ If inside yaml_previews, use "../assets/", otherwise use "assets/"
+                    var basePath = window.location.pathname.includes("/yaml_previews/") ? "../assets/" : "assets/";
+
+                    // ✅ Apply correct asset paths
+                    document.getElementById("dynamic-styles").href = basePath + "table-styles.css";
+                    document.getElementById("dynamic-favicon").href = basePath + "favicon.ico";
+
+                    var script = document.createElement("script");
+                    script.src = basePath + "table-functions.js";
+                    document.body.appendChild(script);
+                })();
+            </script>
+        </body>
+        </html>
+        
