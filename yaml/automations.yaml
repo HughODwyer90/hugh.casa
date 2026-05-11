@@ -232,7 +232,7 @@
         before: 05:00:00
       - condition: numeric_state
         entity_id: sensor.hall_motion_illuminance
-        below: 130
+        below: 150
       sequence:
       - action: script.occupancy_lights_with_scene_fallback
         data:
@@ -249,7 +249,7 @@
         state: 'on'
       - condition: numeric_state
         entity_id: sensor.hall_motion_illuminance
-        below: 130
+        below: 150
       - condition: numeric_state
         entity_id: sensor.sun_elevation
         above: -6
@@ -269,7 +269,7 @@
         state: 'on'
       - condition: numeric_state
         entity_id: sensor.hall_motion_illuminance
-        below: 130
+        below: 150
       - condition: numeric_state
         entity_id: sensor.sun_elevation
         below: -6
