@@ -4972,22 +4972,6 @@
     data:
       level: low
   mode: single
-- id: &#x27;1774892857781&#x27;
-  alias: Find vibration sensor
-  description: &#x27;&#x27;
-  triggers:
-  - trigger: state
-    entity_id:
-    - binary_sensor.bathroom_vibration
-    to:
-    - &#x27;on&#x27;
-  conditions: []
-  actions:
-  - action: notify.mobile_app_sm_s9060
-    metadata: {}
-    data:
-      message: Vibration sensor moved
-  mode: single
 - id: &#x27;1774903515502&#x27;
   alias: Living Room Ceiling Brighten
   description: Brighten ceiling lights; if all off, turn both on; if already max,
@@ -5654,7 +5638,8 @@
   - action: light.turn_on
     metadata: {}
     target:
-      entity_id: light.dining_table
+      entity_id:
+      - light.dining_room_table
     data:
       transition: 1
   mode: single
