@@ -834,18 +834,18 @@
         "entity_id": "script.update_entities_html",
         "state": "on",
         "attributes": {
-            "last_triggered": "2026-05-12T17:38:08.283379+00:00",
+            "last_triggered": "2026-05-12T17:39:12.398276+00:00",
             "mode": "single",
             "current": 1,
             "icon": "mdi:git",
             "friendly_name": "Github Backup"
         },
-        "last_changed": "2026-05-12T17:38:08.283552+00:00",
-        "last_reported": "2026-05-12T17:38:08.283552+00:00",
-        "last_updated": "2026-05-12T17:38:08.283552+00:00",
+        "last_changed": "2026-05-12T17:39:12.398342+00:00",
+        "last_reported": "2026-05-12T17:39:12.398342+00:00",
+        "last_updated": "2026-05-12T17:39:12.398342+00:00",
         "context": {
-            "id": "01KREM4MTZFQWJT8NZR33BP0KH",
-            "parent_id": null,
+            "id": "01KREMAXWCC0RV2G6TAKC59JK0",
+            "parent_id": "01KREMAXW5CF71455THW9CV7ZT",
             "user_id": null
         }
     },
@@ -2550,32 +2550,32 @@
             "configuration": {},
             "manual_control": [],
             "brightness_pct": 100,
-            "color_temp_kelvin": 3430,
+            "color_temp_kelvin": 3425,
             "color_temp_mired": 291,
             "rgb_color": [
                 255,
-                191,
+                190,
                 137
             ],
             "xy_color": [
-                0.458,
-                0.376
+                0.459,
+                0.375
             ],
             "hs_color": [
-                27.179,
+                26.667,
                 45.882
             ],
-            "sun_position": 0.5628783878669235,
+            "sun_position": 0.5585857226538178,
             "force_rgb_color": false,
             "autoreset_time_remaining": {},
             "icon": "mdi:theme-light-dark",
             "friendly_name": "Bathroom Adaptive Lighting: Bathroom"
         },
         "last_changed": "2026-05-12T17:34:08.320876+00:00",
-        "last_reported": "2026-05-12T17:37:17.012965+00:00",
-        "last_updated": "2026-05-12T17:37:17.012965+00:00",
+        "last_reported": "2026-05-12T17:38:47.507141+00:00",
+        "last_updated": "2026-05-12T17:38:47.507141+00:00",
         "context": {
-            "id": "01KREM7D6M3QMMEFNCTBE9M4XC",
+            "id": "01KREMA5JKR0M212D5B7T7E0ZH",
             "parent_id": null,
             "user_id": null
         }
@@ -2701,16 +2701,16 @@
     },
     {
         "entity_id": "sensor.date_time_iso",
-        "state": "2026-05-12T18:38:00",
+        "state": "2026-05-12T18:39:00",
         "attributes": {
             "icon": "mdi:calendar-clock",
             "friendly_name": "Date & Time (ISO)"
         },
-        "last_changed": "2026-05-12T17:38:00.001307+00:00",
-        "last_reported": "2026-05-12T17:38:00.001307+00:00",
-        "last_updated": "2026-05-12T17:38:00.001307+00:00",
+        "last_changed": "2026-05-12T17:39:00.001455+00:00",
+        "last_reported": "2026-05-12T17:39:00.001455+00:00",
+        "last_updated": "2026-05-12T17:39:00.001455+00:00",
         "context": {
-            "id": "01KREM8Q61TVC7X6EBNRJBEA5E",
+            "id": "01KREMAHS1V9WXW17N9EBDVZSY",
             "parent_id": null,
             "user_id": null
         }
@@ -3798,24 +3798,24 @@
     },
     {
         "entity_id": "sensor.next_alarm_in",
-        "state": "12h 52m",
+        "state": "12h 51m",
         "attributes": {
             "next_alarm_at": "2026-05-13 07:30:00+01:00",
             "icon": "mdi:alarm",
             "friendly_name": "Next Alarm In"
         },
-        "last_changed": "2026-05-12T17:38:00.997081+00:00",
-        "last_reported": "2026-05-12T17:38:00.997081+00:00",
-        "last_updated": "2026-05-12T17:38:00.997081+00:00",
+        "last_changed": "2026-05-12T17:39:01.031952+00:00",
+        "last_reported": "2026-05-12T17:39:01.031952+00:00",
+        "last_updated": "2026-05-12T17:39:01.031952+00:00",
         "context": {
-            "id": "01KREM8R55Y3NK1Q0XBYXMCYF8",
+            "id": "01KREMAJS7YG2PCEWX47CAJFWZ",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.missing_entities_mirror",
-        "state": "12",
+        "state": "17",
         "attributes": {
             "state_class": "measurement",
             "entities": [
@@ -3826,10 +3826,28 @@
                     "occurrences": "automations.yaml:1095,1100,1105,1112,1164,1316,1930,1933,1938,1945,2889,2907,2947,2978,3041"
                 },
                 {
+                    "id": "binary_sensor.bathroom_motion_occupancy",
+                    "state": "missing",
+                    "friendly_name": "",
+                    "occurrences": "automations.yaml:1270,1273,1280,1288,5559,5570"
+                },
+                {
                     "id": "light.bathroom_ceiling",
                     "state": "missing",
                     "friendly_name": "",
                     "occurrences": "automations.yaml:1285,1293,5563,5574,5579"
+                },
+                {
+                    "id": "sensor.bathroom_aqara_humidity",
+                    "state": "missing",
+                    "friendly_name": "",
+                    "occurrences": "automations.yaml:1410,5330,5333,5373"
+                },
+                {
+                    "id": "sensor.bathroom_aqara_temperature",
+                    "state": "missing",
+                    "friendly_name": "",
+                    "occurrences": "automations.yaml:1417"
                 },
                 {
                     "id": "media_player.hugh_room_speaker_2_g",
@@ -3862,10 +3880,22 @@
                     "occurrences": "automations.yaml:3889"
                 },
                 {
+                    "id": "binary_sensor.coffee_table_contact",
+                    "state": "missing",
+                    "friendly_name": "",
+                    "occurrences": "automations.yaml:4763,4769,4783"
+                },
+                {
                     "id": "light.living_room_accents",
                     "state": "missing",
                     "friendly_name": "",
                     "occurrences": "automations.yaml:4777"
+                },
+                {
+                    "id": "binary_sensor.bathroom_vibration",
+                    "state": "missing",
+                    "friendly_name": "",
+                    "occurrences": "automations.yaml:4966"
                 },
                 {
                     "id": "remote.living_room_tv",
@@ -3896,11 +3926,11 @@
             "icon": "mdi:alert-circle-outline",
             "friendly_name": "Missing Entities"
         },
-        "last_changed": "2026-05-12T17:37:52.073294+00:00",
-        "last_reported": "2026-05-12T17:37:52.073294+00:00",
-        "last_updated": "2026-05-12T17:37:52.073294+00:00",
+        "last_changed": "2026-05-12T17:39:07.219725+00:00",
+        "last_reported": "2026-05-12T17:39:07.219725+00:00",
+        "last_updated": "2026-05-12T17:39:07.219725+00:00",
         "context": {
-            "id": "01KREM8FE4VEMG3JG4EGYBSM95",
+            "id": "01KREMARTDWD9VS4X07D967FWQ",
             "parent_id": null,
             "user_id": null
         }
@@ -3944,17 +3974,17 @@
     },
     {
         "entity_id": "sensor.air_purifier_speed",
-        "state": "High",
+        "state": "Low",
         "attributes": {
-            "raw_percentage": 100,
-            "icon": "mdi:fan-speed-3",
+            "raw_percentage": 33,
+            "icon": "mdi:fan-speed-1",
             "friendly_name": "Air Purifier Fan Speed"
         },
-        "last_changed": "2026-05-12T17:38:08.268218+00:00",
-        "last_reported": "2026-05-12T17:38:08.268218+00:00",
-        "last_updated": "2026-05-12T17:38:08.268218+00:00",
+        "last_changed": "2026-05-12T17:38:28.839206+00:00",
+        "last_reported": "2026-05-12T17:38:28.839206+00:00",
+        "last_updated": "2026-05-12T17:38:28.839206+00:00",
         "context": {
-            "id": "01KREM4MTZFQWJT8NZR33BP0KH",
+            "id": "01KREM9KB1YMK3DNDDYFWHP557",
             "parent_id": null,
             "user_id": null
         }
@@ -4044,18 +4074,18 @@
     },
     {
         "entity_id": "sensor.total_sensors_count",
-        "state": "1087",
+        "state": "1045",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "sensors",
             "icon": "mdi:counter",
             "friendly_name": "Total Entities"
         },
-        "last_changed": "2026-05-12T17:35:44.467342+00:00",
-        "last_reported": "2026-05-12T17:35:44.467342+00:00",
-        "last_updated": "2026-05-12T17:35:44.467342+00:00",
+        "last_changed": "2026-05-12T17:39:13.201259+00:00",
+        "last_reported": "2026-05-12T17:39:13.201259+00:00",
+        "last_updated": "2026-05-12T17:39:13.201259+00:00",
         "context": {
-            "id": "01KREM4JTKBC9JAYK6BE3ADCRQ",
+            "id": "01KREMAYNG3B22EX9CT1PF2JT5",
             "parent_id": null,
             "user_id": null
         }
@@ -4830,7 +4860,7 @@
                 "auto",
                 "sleep"
             ],
-            "percentage": 100,
+            "percentage": 33,
             "percentage_step": 33.333333333333336,
             "preset_mode": null,
             "active_time": null,
@@ -4841,10 +4871,10 @@
             "supported_features": 57
         },
         "last_changed": "2026-05-12T17:34:18.283080+00:00",
-        "last_reported": "2026-05-12T17:38:08.262890+00:00",
-        "last_updated": "2026-05-12T17:38:08.262890+00:00",
+        "last_reported": "2026-05-12T17:38:28.833667+00:00",
+        "last_updated": "2026-05-12T17:38:28.833667+00:00",
         "context": {
-            "id": "01KREM4MTZFQWJT8NZR33BP0KH",
+            "id": "01KREM9KB1YMK3DNDDYFWHP557",
             "parent_id": null,
             "user_id": null
         }
@@ -5292,7 +5322,7 @@
     },
     {
         "entity_id": "sensor.hugh_phone_wifi_signal_strength",
-        "state": "-31",
+        "state": "-47",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "dBm",
@@ -5300,11 +5330,11 @@
             "icon": "mdi:wifi-strength-3",
             "friendly_name": "Hugh Phone SM-S9060 Wi-Fi signal strength"
         },
-        "last_changed": "2026-05-12T17:34:19.041618+00:00",
-        "last_reported": "2026-05-12T17:35:22.427771+00:00",
-        "last_updated": "2026-05-12T17:34:19.041618+00:00",
+        "last_changed": "2026-05-12T17:38:10.707726+00:00",
+        "last_reported": "2026-05-12T17:38:10.707726+00:00",
+        "last_updated": "2026-05-12T17:38:10.707726+00:00",
         "context": {
-            "id": "01KREM1ZD1BRVJJFWTG34C9C11",
+            "id": "01KREM91MKM1XBVCGAJTQ1BDPV",
             "parent_id": null,
             "user_id": null
         }
@@ -6156,7 +6186,7 @@
     },
     {
         "entity_id": "sensor.bathroom_motion_battery_plus",
-        "state": "88.5",
+        "state": "unknown",
         "attributes": {
             "state_class": "measurement",
             "battery_quantity": 2,
@@ -6175,11 +6205,11 @@
             "device_class": "battery",
             "friendly_name": "Bathroom Motion Battery+"
         },
-        "last_changed": "2026-05-12T17:37:22.609026+00:00",
-        "last_reported": "2026-05-12T17:37:22.609026+00:00",
-        "last_updated": "2026-05-12T17:37:22.609026+00:00",
+        "last_changed": "2026-05-12T17:39:00.356008+00:00",
+        "last_reported": "2026-05-12T17:39:00.356008+00:00",
+        "last_updated": "2026-05-12T17:39:00.356008+00:00",
         "context": {
-            "id": "01KREM7JNH104DNDRXPSHQVTC7",
+            "id": "01KREMAJ44RVBAKX7PKTX6H1NT",
             "parent_id": null,
             "user_id": null
         }
@@ -6446,7 +6476,7 @@
     },
     {
         "entity_id": "sensor.bathroom_aqara_battery_plus",
-        "state": "100.0",
+        "state": "unknown",
         "attributes": {
             "state_class": "measurement",
             "battery_quantity": 1,
@@ -6465,11 +6495,11 @@
             "device_class": "battery",
             "friendly_name": "Bathroom Aqara Battery+"
         },
-        "last_changed": "2026-05-12T17:37:22.604799+00:00",
-        "last_reported": "2026-05-12T17:37:22.604799+00:00",
-        "last_updated": "2026-05-12T17:37:22.604799+00:00",
+        "last_changed": "2026-05-12T17:38:46.282212+00:00",
+        "last_reported": "2026-05-12T17:38:46.282212+00:00",
+        "last_updated": "2026-05-12T17:38:46.282212+00:00",
         "context": {
-            "id": "01KREM7JNC7H2R90ZM1245HBT7",
+            "id": "01KREMA4CAHZ8JE7KXPZD4S9KG",
             "parent_id": null,
             "user_id": null
         }
@@ -6766,7 +6796,7 @@
     },
     {
         "entity_id": "sensor.bathroom_vibration_sensor_battery_plus",
-        "state": "90.0",
+        "state": "unknown",
         "attributes": {
             "state_class": "measurement",
             "battery_quantity": 1,
@@ -6785,11 +6815,11 @@
             "device_class": "battery",
             "friendly_name": "Bathroom Vibration Sensor Battery+"
         },
-        "last_changed": "2026-05-12T17:37:22.540195+00:00",
-        "last_reported": "2026-05-12T17:37:22.540195+00:00",
-        "last_updated": "2026-05-12T17:37:22.540195+00:00",
+        "last_changed": "2026-05-12T17:38:53.634763+00:00",
+        "last_reported": "2026-05-12T17:38:53.634763+00:00",
+        "last_updated": "2026-05-12T17:38:53.634763+00:00",
         "context": {
-            "id": "01KREM7JKC9S0HEJB7W1GQRNXQ",
+            "id": "01KREMABJ2YFCC8WP0DMRGH3H8",
             "parent_id": null,
             "user_id": null
         }
@@ -7086,7 +7116,7 @@
     },
     {
         "entity_id": "sensor.coffee_table_battery_plus",
-        "state": "100.0",
+        "state": "unknown",
         "attributes": {
             "state_class": "measurement",
             "battery_quantity": 1,
@@ -7105,11 +7135,11 @@
             "device_class": "battery",
             "friendly_name": "Coffee Table Battery+"
         },
-        "last_changed": "2026-05-12T17:37:22.573345+00:00",
-        "last_reported": "2026-05-12T17:37:22.573345+00:00",
-        "last_updated": "2026-05-12T17:37:22.573345+00:00",
+        "last_changed": "2026-05-12T17:39:06.605596+00:00",
+        "last_reported": "2026-05-12T17:39:06.605596+00:00",
+        "last_updated": "2026-05-12T17:39:06.605596+00:00",
         "context": {
-            "id": "01KREM7JMDWJ4GYEXCD0B5CGH3",
+            "id": "01KREMAR7D03CA59E872ACMKRG",
             "parent_id": null,
             "user_id": null
         }
@@ -7278,7 +7308,7 @@
     },
     {
         "entity_id": "sensor.dining_table_vibration_battery_plus",
-        "state": "90.0",
+        "state": "unknown",
         "attributes": {
             "state_class": "measurement",
             "battery_quantity": 1,
@@ -7297,11 +7327,11 @@
             "device_class": "battery",
             "friendly_name": "Dining table vibration Battery+"
         },
-        "last_changed": "2026-05-12T17:37:22.646225+00:00",
-        "last_reported": "2026-05-12T17:37:22.646225+00:00",
-        "last_updated": "2026-05-12T17:37:22.646225+00:00",
+        "last_changed": "2026-05-12T17:39:12.395527+00:00",
+        "last_reported": "2026-05-12T17:39:12.395527+00:00",
+        "last_updated": "2026-05-12T17:39:12.395527+00:00",
         "context": {
-            "id": "01KREM7JPPGJF4VX11RXYRH0B8",
+            "id": "01KREMAXWBWAXGH2YM7AH8DR1F",
             "parent_id": null,
             "user_id": null
         }
@@ -9111,24 +9141,24 @@
     },
     {
         "entity_id": "sensor.last_updated",
-        "state": "2026-05-12T17:37:52+00:00",
+        "state": "2026-05-12T17:39:07+00:00",
         "attributes": {
             "device_class": "timestamp",
             "icon": "mdi:calendar-clock",
             "friendly_name": "Last Updated"
         },
-        "last_changed": "2026-05-12T17:37:52.067191+00:00",
-        "last_reported": "2026-05-12T17:37:52.067191+00:00",
-        "last_updated": "2026-05-12T17:37:52.067191+00:00",
+        "last_changed": "2026-05-12T17:39:07.211994+00:00",
+        "last_reported": "2026-05-12T17:39:07.211994+00:00",
+        "last_updated": "2026-05-12T17:39:07.211994+00:00",
         "context": {
-            "id": "01KREM8FE3MG1ZE5RZXQVGJMM6",
+            "id": "01KREMARTB1FRZS53YJBZA3GBW",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.missing_entities",
-        "state": "12",
+        "state": "17",
         "attributes": {
             "state_class": "measurement",
             "entities": [
@@ -9139,10 +9169,28 @@
                     "occurrences": "automations.yaml:1095,1100,1105,1112,1164,1316,1930,1933,1938,1945,2889,2907,2947,2978,3041"
                 },
                 {
+                    "id": "binary_sensor.bathroom_motion_occupancy",
+                    "state": "missing",
+                    "friendly_name": "",
+                    "occurrences": "automations.yaml:1270,1273,1280,1288,5559,5570"
+                },
+                {
                     "id": "light.bathroom_ceiling",
                     "state": "missing",
                     "friendly_name": "",
                     "occurrences": "automations.yaml:1285,1293,5563,5574,5579"
+                },
+                {
+                    "id": "sensor.bathroom_aqara_humidity",
+                    "state": "missing",
+                    "friendly_name": "",
+                    "occurrences": "automations.yaml:1410,5330,5333,5373"
+                },
+                {
+                    "id": "sensor.bathroom_aqara_temperature",
+                    "state": "missing",
+                    "friendly_name": "",
+                    "occurrences": "automations.yaml:1417"
                 },
                 {
                     "id": "media_player.hugh_room_speaker_2_g",
@@ -9175,10 +9223,22 @@
                     "occurrences": "automations.yaml:3889"
                 },
                 {
+                    "id": "binary_sensor.coffee_table_contact",
+                    "state": "missing",
+                    "friendly_name": "",
+                    "occurrences": "automations.yaml:4763,4769,4783"
+                },
+                {
                     "id": "light.living_room_accents",
                     "state": "missing",
                     "friendly_name": "",
                     "occurrences": "automations.yaml:4777"
+                },
+                {
+                    "id": "binary_sensor.bathroom_vibration",
+                    "state": "missing",
+                    "friendly_name": "",
+                    "occurrences": "automations.yaml:4966"
                 },
                 {
                     "id": "remote.living_room_tv",
@@ -9209,11 +9269,11 @@
             "icon": "mdi:shield-half-full",
             "friendly_name": "Missing Entities"
         },
-        "last_changed": "2026-05-12T17:37:52.068009+00:00",
-        "last_reported": "2026-05-12T17:37:52.068009+00:00",
-        "last_updated": "2026-05-12T17:37:52.068009+00:00",
+        "last_changed": "2026-05-12T17:39:07.213119+00:00",
+        "last_reported": "2026-05-12T17:39:07.213119+00:00",
+        "last_updated": "2026-05-12T17:39:07.213119+00:00",
         "context": {
-            "id": "01KREM8FE4VEMG3JG4EGYBSM95",
+            "id": "01KREMARTDWD9VS4X07D967FWQ",
             "parent_id": null,
             "user_id": null
         }
@@ -10202,18 +10262,18 @@
     },
     {
         "entity_id": "sensor.living_room_eppro_temperature",
-        "state": "23.1400299072266",
+        "state": "23.1507110595703",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
             "device_class": "temperature",
             "friendly_name": "Temperature"
         },
-        "last_changed": "2026-05-12T17:37:57.168778+00:00",
-        "last_reported": "2026-05-12T17:37:57.168778+00:00",
-        "last_updated": "2026-05-12T17:37:57.168778+00:00",
+        "last_changed": "2026-05-12T17:38:57.170931+00:00",
+        "last_reported": "2026-05-12T17:38:57.170931+00:00",
+        "last_updated": "2026-05-12T17:38:57.170931+00:00",
         "context": {
-            "id": "01KREM8MDG0P0N3HD1TC8V9XGQ",
+            "id": "01KREMAF0JKZ6X0S3JT96TN0AX",
             "parent_id": null,
             "user_id": null
         }
@@ -10575,18 +10635,18 @@
     },
     {
         "entity_id": "sensor.living_room_eppro_humidity",
-        "state": "22.1450805664062",
+        "state": "22.13134765625",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "%",
             "device_class": "humidity",
             "friendly_name": "Humidity"
         },
-        "last_changed": "2026-05-12T17:37:57.170306+00:00",
-        "last_reported": "2026-05-12T17:37:57.170306+00:00",
-        "last_updated": "2026-05-12T17:37:57.170306+00:00",
+        "last_changed": "2026-05-12T17:38:57.172020+00:00",
+        "last_reported": "2026-05-12T17:38:57.172020+00:00",
+        "last_updated": "2026-05-12T17:38:57.172020+00:00",
         "context": {
-            "id": "01KREM8MDJKGA53B4WFQH65VSW",
+            "id": "01KREMAF0MBGWPW6A3C1K1QPJK",
             "parent_id": null,
             "user_id": null
         }
@@ -11438,18 +11498,18 @@
     },
     {
         "entity_id": "sensor.kitchen_epone_temperature",
-        "state": "18.9321537017822",
+        "state": "18.9054508209229",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
             "device_class": "temperature",
             "friendly_name": "Temperature"
         },
-        "last_changed": "2026-05-12T17:37:49.388697+00:00",
-        "last_reported": "2026-05-12T17:37:49.388697+00:00",
-        "last_updated": "2026-05-12T17:37:49.388697+00:00",
+        "last_changed": "2026-05-12T17:38:49.437321+00:00",
+        "last_reported": "2026-05-12T17:38:49.437321+00:00",
+        "last_updated": "2026-05-12T17:38:49.437321+00:00",
         "context": {
-            "id": "01KREM8CTCPCY94H4E9DTPYKVF",
+            "id": "01KREMA7EXK63BN2W4FDH3C99W",
             "parent_id": null,
             "user_id": null
         }
@@ -11463,11 +11523,11 @@
             "device_class": "illuminance",
             "friendly_name": "Kitchen EPOne Illuminance"
         },
-        "last_changed": "2026-05-12T17:38:08.055907+00:00",
-        "last_reported": "2026-05-12T17:38:08.055907+00:00",
-        "last_updated": "2026-05-12T17:38:08.055907+00:00",
+        "last_changed": "2026-05-12T17:38:52.069002+00:00",
+        "last_reported": "2026-05-12T17:38:52.069002+00:00",
+        "last_updated": "2026-05-12T17:38:52.069002+00:00",
         "context": {
-            "id": "01KREM8Z1Q8SCCRXJE89E2KBVE",
+            "id": "01KREMAA156NSXZ3Z233V6KQJT",
             "parent_id": null,
             "user_id": null
         }
@@ -11491,18 +11551,18 @@
     },
     {
         "entity_id": "sensor.kitchen_epone_humidity",
-        "state": "35.2383422851562",
+        "state": "35.2459716796875",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "%",
             "device_class": "humidity",
             "friendly_name": "Humidity"
         },
-        "last_changed": "2026-05-12T17:37:49.390587+00:00",
-        "last_reported": "2026-05-12T17:37:49.390587+00:00",
-        "last_updated": "2026-05-12T17:37:49.390587+00:00",
+        "last_changed": "2026-05-12T17:38:49.438354+00:00",
+        "last_reported": "2026-05-12T17:38:49.438354+00:00",
+        "last_updated": "2026-05-12T17:38:49.438354+00:00",
         "context": {
-            "id": "01KREM8CTE46MQJXV9SYW34WCD",
+            "id": "01KREMA7EYWD62HAYMB3HT7HT6",
             "parent_id": null,
             "user_id": null
         }
@@ -11893,42 +11953,42 @@
     },
     {
         "entity_id": "sensor.bed_presence_wifi_signal_db",
-        "state": "-69.0",
+        "state": "-65.0",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "dBm",
             "device_class": "signal_strength",
             "friendly_name": "Bed Presence WiFi Signal dB"
         },
-        "last_changed": "2026-05-12T17:37:16.724452+00:00",
-        "last_reported": "2026-05-12T17:37:16.724452+00:00",
-        "last_updated": "2026-05-12T17:37:16.724452+00:00",
+        "last_changed": "2026-05-12T17:38:16.732375+00:00",
+        "last_reported": "2026-05-12T17:38:16.732375+00:00",
+        "last_updated": "2026-05-12T17:38:16.732375+00:00",
         "context": {
-            "id": "01KREM7CXM0Q20YNXCGXZZ99MP",
+            "id": "01KREM97GWMRA29QQHSXG5F3YX",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.bed_presence_wifi_signal_percent",
-        "state": "62.0",
+        "state": "70.0",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "%",
             "friendly_name": "Bed Presence WiFi Signal Percent"
         },
-        "last_changed": "2026-05-12T17:37:16.723364+00:00",
-        "last_reported": "2026-05-12T17:37:16.723364+00:00",
-        "last_updated": "2026-05-12T17:37:16.723364+00:00",
+        "last_changed": "2026-05-12T17:38:16.731099+00:00",
+        "last_reported": "2026-05-12T17:38:16.731099+00:00",
+        "last_updated": "2026-05-12T17:38:16.731099+00:00",
         "context": {
-            "id": "01KREM7CXKRDDE0HAQJBK7HK1R",
+            "id": "01KREM97GV49MRX4WWHKKSYFB4",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.bed_presence_uptime",
-        "state": "536904.1875",
+        "state": "536964.1875",
         "attributes": {
             "state_class": "total_increasing",
             "unit_of_measurement": "s",
@@ -11936,11 +11996,11 @@
             "icon": "mdi:timer-outline",
             "friendly_name": "Bed Presence Uptime"
         },
-        "last_changed": "2026-05-12T17:38:03.205093+00:00",
-        "last_reported": "2026-05-12T17:38:03.205093+00:00",
-        "last_updated": "2026-05-12T17:38:03.205093+00:00",
+        "last_changed": "2026-05-12T17:39:03.288157+00:00",
+        "last_reported": "2026-05-12T17:39:03.288157+00:00",
+        "last_updated": "2026-05-12T17:39:03.288157+00:00",
         "context": {
-            "id": "01KREM8TA5BS2FF6JFQMRH60WK",
+            "id": "01KREMAMZRYNRT8HACYW5PRMEW",
             "parent_id": null,
             "user_id": null
         }
@@ -12884,39 +12944,6 @@
         }
     },
     {
-        "entity_id": "binary_sensor.bathroom_motion_occupancy",
-        "state": "off",
-        "attributes": {
-            "device_class": "occupancy",
-            "icon": "mdi:motion-sensor",
-            "friendly_name": "Hue Motion"
-        },
-        "last_changed": "2026-05-12T17:37:22.460279+00:00",
-        "last_reported": "2026-05-12T17:37:22.460279+00:00",
-        "last_updated": "2026-05-12T17:37:22.460279+00:00",
-        "context": {
-            "id": "01KREM7JGWHV9ETTZS9WN4KNFZ",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "binary_sensor.bathroom_vibration",
-        "state": "off",
-        "attributes": {
-            "device_class": "vibration",
-            "friendly_name": "Shower Vibration"
-        },
-        "last_changed": "2026-05-12T17:37:22.472418+00:00",
-        "last_reported": "2026-05-12T17:37:22.472418+00:00",
-        "last_updated": "2026-05-12T17:37:22.472418+00:00",
-        "context": {
-            "id": "01KREM7JH8WNEZ3AH1E4M6AF76",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
         "entity_id": "binary_sensor.datamars_webcamactive",
         "state": "unavailable",
         "attributes": {
@@ -12933,22 +12960,6 @@
         }
     },
     {
-        "entity_id": "binary_sensor.coffee_table_contact",
-        "state": "off",
-        "attributes": {
-            "device_class": "opening",
-            "friendly_name": "Coffee Table Door"
-        },
-        "last_changed": "2026-05-12T17:37:22.324847+00:00",
-        "last_reported": "2026-05-12T17:37:22.324847+00:00",
-        "last_updated": "2026-05-12T17:37:22.324847+00:00",
-        "context": {
-            "id": "01KREM7JCMWESD24H7RV5911G5",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
         "entity_id": "binary_sensor.utility_motion_presence",
         "state": "off",
         "attributes": {
@@ -12960,22 +12971,6 @@
         "last_updated": "2026-05-12T17:37:22.509672+00:00",
         "context": {
             "id": "01KREM7JJDJ4T466QVVKW1EMFK",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "binary_sensor.dining_table_vibration_vibration",
-        "state": "off",
-        "attributes": {
-            "device_class": "vibration",
-            "friendly_name": "Dining table vibration Vibration"
-        },
-        "last_changed": "2026-05-12T17:37:22.426146+00:00",
-        "last_reported": "2026-05-12T17:37:22.426146+00:00",
-        "last_updated": "2026-05-12T17:37:22.426146+00:00",
-        "context": {
-            "id": "01KREM7JFTFR7JGTDK8C293Z2F",
             "parent_id": null,
             "user_id": null
         }
@@ -13147,28 +13142,6 @@
         }
     },
     {
-        "entity_id": "event.bathroom_vibration_sensor_action",
-        "state": "unknown",
-        "attributes": {
-            "event_types": [
-                "vibration",
-                "tilt",
-                "drop"
-            ],
-            "event_type": "vibration",
-            "icon": "mdi:gesture-double-tap",
-            "friendly_name": "Bathroom Vibration Sensor Action"
-        },
-        "last_changed": "2026-05-12T17:37:22.396982+00:00",
-        "last_reported": "2026-05-12T17:37:22.396982+00:00",
-        "last_updated": "2026-05-12T17:37:22.396982+00:00",
-        "context": {
-            "id": "01KREM7JEWC99B217TSSWTDF3P",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
         "entity_id": "event.hugh_room_desk_aqara_button_action",
         "state": "unknown",
         "attributes": {
@@ -13189,28 +13162,6 @@
         "last_updated": "2026-05-12T17:37:22.453367+00:00",
         "context": {
             "id": "01KREM7JGN07TWZP3AM1T3S3CS",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "event.dining_table_vibration_action",
-        "state": "unknown",
-        "attributes": {
-            "event_types": [
-                "vibration",
-                "tilt",
-                "drop"
-            ],
-            "event_type": "drop",
-            "icon": "mdi:gesture-double-tap",
-            "friendly_name": "Dining table vibration Action"
-        },
-        "last_changed": "2026-05-12T17:37:22.375635+00:00",
-        "last_reported": "2026-05-12T17:37:22.375635+00:00",
-        "last_updated": "2026-05-12T17:37:22.375635+00:00",
-        "context": {
-            "id": "01KREM7JE7AWQKB9GBNN2MZVZG",
             "parent_id": null,
             "user_id": null
         }
@@ -14050,46 +14001,6 @@
         }
     },
     {
-        "entity_id": "number.bathroom_motion_occupancy_timeout",
-        "state": "120",
-        "attributes": {
-            "min": 0.0,
-            "max": 65535.0,
-            "step": 1.0,
-            "mode": "auto",
-            "unit_of_measurement": "s",
-            "icon": "mdi:timer",
-            "friendly_name": "Bathroom Motion Occupancy timeout"
-        },
-        "last_changed": "2026-05-12T17:37:22.309416+00:00",
-        "last_reported": "2026-05-12T17:37:22.309416+00:00",
-        "last_updated": "2026-05-12T17:37:22.309416+00:00",
-        "context": {
-            "id": "01KREM7JC5M4MYSRV8G32TXQDE",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "number.bathroom_vibration_sensor_sensitivity",
-        "state": "unknown",
-        "attributes": {
-            "min": 1.0,
-            "max": 21.0,
-            "step": 1.0,
-            "mode": "auto",
-            "friendly_name": "Bathroom Vibration Sensor Sensitivity"
-        },
-        "last_changed": "2026-05-12T17:37:22.333519+00:00",
-        "last_reported": "2026-05-12T17:37:22.333519+00:00",
-        "last_updated": "2026-05-12T17:37:22.333519+00:00",
-        "context": {
-            "id": "01KREM7JCXC7QZ05FBCKJRG2CW",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
         "entity_id": "number.hugh_room_plug_fan_bed_countdown",
         "state": "0",
         "attributes": {
@@ -14266,25 +14177,6 @@
         "last_updated": "2026-05-12T17:37:22.444692+00:00",
         "context": {
             "id": "01KREM7JGCWDP3AF1HSJTKWF11",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "number.dining_table_vibration_sensitivity",
-        "state": "10",
-        "attributes": {
-            "min": 1.0,
-            "max": 21.0,
-            "step": 1.0,
-            "mode": "auto",
-            "friendly_name": "Dining table vibration Sensitivity"
-        },
-        "last_changed": "2026-05-12T17:37:22.491436+00:00",
-        "last_reported": "2026-05-12T17:37:22.491436+00:00",
-        "last_updated": "2026-05-12T17:37:22.491436+00:00",
-        "context": {
-            "id": "01KREM7JHV1DPN1BFQ52SP44MV",
             "parent_id": null,
             "user_id": null
         }
@@ -14695,23 +14587,23 @@
     },
     {
         "entity_id": "event.repair",
-        "state": "2026-05-12T17:35:52.553+00:00",
+        "state": "2026-05-12T17:39:12.958+00:00",
         "attributes": {
             "event_types": [
                 "create",
                 "remove",
                 "update"
             ],
-            "event_type": "update",
+            "event_type": "create",
             "domain": "spook",
-            "issue_id": "automation_unknown_entity_references_automation.bathroom_lights_watchdog_off",
+            "issue_id": "automation_unknown_entity_references_automation.dining_vibration_light_toggle",
             "friendly_name": "Repairs"
         },
-        "last_changed": "2026-05-12T17:35:52.553173+00:00",
-        "last_reported": "2026-05-12T17:35:52.553173+00:00",
-        "last_updated": "2026-05-12T17:35:52.553173+00:00",
+        "last_changed": "2026-05-12T17:39:12.958512+00:00",
+        "last_reported": "2026-05-12T17:39:12.958512+00:00",
+        "last_updated": "2026-05-12T17:39:12.958512+00:00",
         "context": {
-            "id": "01KREM4TQ9GNEHZDWX9KDY77CM",
+            "id": "01KREMAYDY49W9MFCF5A5ACX2M",
             "parent_id": null,
             "user_id": null
         }
@@ -14756,29 +14648,6 @@
         "last_updated": "2026-05-12T17:37:22.404001+00:00",
         "context": {
             "id": "01KREM7JF4ZKR7ST03F1AEDRH6",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "select.bathroom_motion_motion_sensitivity",
-        "state": "high",
-        "attributes": {
-            "options": [
-                "low",
-                "medium",
-                "high",
-                "very_high",
-                "max"
-            ],
-            "icon": "mdi:tune",
-            "friendly_name": "Bathroom Motion Motion sensitivity"
-        },
-        "last_changed": "2026-05-12T17:37:22.451454+00:00",
-        "last_reported": "2026-05-12T17:37:22.451454+00:00",
-        "last_updated": "2026-05-12T17:37:22.451454+00:00",
-        "context": {
-            "id": "01KREM7JGKNMF2WNWZYE34C1CK",
             "parent_id": null,
             "user_id": null
         }
@@ -15446,42 +15315,6 @@
         }
     },
     {
-        "entity_id": "sensor.bathroom_motion_temperature",
-        "state": "20.33",
-        "attributes": {
-            "state_class": "measurement",
-            "unit_of_measurement": "\u00b0C",
-            "device_class": "temperature",
-            "friendly_name": "Hue Temperature"
-        },
-        "last_changed": "2026-05-12T17:37:22.433538+00:00",
-        "last_reported": "2026-05-12T17:37:22.433538+00:00",
-        "last_updated": "2026-05-12T17:37:22.433538+00:00",
-        "context": {
-            "id": "01KREM7JG11TBJPWD7Z0V3G83D",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.bathroom_motion_battery",
-        "state": "88.5",
-        "attributes": {
-            "state_class": "measurement",
-            "unit_of_measurement": "%",
-            "device_class": "battery",
-            "friendly_name": "Bathroom Motion Battery"
-        },
-        "last_changed": "2026-05-12T17:37:22.431800+00:00",
-        "last_reported": "2026-05-12T17:37:22.431800+00:00",
-        "last_updated": "2026-05-12T17:37:22.431800+00:00",
-        "context": {
-            "id": "01KREM7JFZG0Z2P1WKEVVR0008",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
         "entity_id": "sensor.hugh_room_plug_fan_desk_power",
         "state": "0",
         "attributes": {
@@ -15742,172 +15575,6 @@
         }
     },
     {
-        "entity_id": "sensor.bathroom_vibration_sensor_battery",
-        "state": "90",
-        "attributes": {
-            "state_class": "measurement",
-            "unit_of_measurement": "%",
-            "device_class": "battery",
-            "friendly_name": "Bathroom Vibration Sensor Battery"
-        },
-        "last_changed": "2026-05-12T17:37:22.301775+00:00",
-        "last_reported": "2026-05-12T17:37:22.301775+00:00",
-        "last_updated": "2026-05-12T17:37:22.301775+00:00",
-        "context": {
-            "id": "01KREM7JBXFTTZNKKCYFVZM98A",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.bathroom_vibration_sensor_device_temperature",
-        "state": "24",
-        "attributes": {
-            "state_class": "measurement",
-            "unit_of_measurement": "\u00b0C",
-            "device_class": "temperature",
-            "friendly_name": "Bathroom Vibration Sensor Temperature"
-        },
-        "last_changed": "2026-05-12T17:37:22.511179+00:00",
-        "last_reported": "2026-05-12T17:37:22.511179+00:00",
-        "last_updated": "2026-05-12T17:37:22.511179+00:00",
-        "context": {
-            "id": "01KREM7JJF4QH4Y4HSBTZFW8AV",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.bathroom_vibration_sensor_strength",
-        "state": "248",
-        "attributes": {
-            "friendly_name": "Bathroom Vibration Sensor Strength"
-        },
-        "last_changed": "2026-05-12T17:37:22.298426+00:00",
-        "last_reported": "2026-05-12T17:37:22.298426+00:00",
-        "last_updated": "2026-05-12T17:37:22.298426+00:00",
-        "context": {
-            "id": "01KREM7JBTQP9YXECQTE6JJ16A",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.bathroom_vibration_sensor_angle_x",
-        "state": "-25",
-        "attributes": {
-            "unit_of_measurement": "\u00b0",
-            "friendly_name": "Bathroom Vibration Sensor Angle x"
-        },
-        "last_changed": "2026-05-12T17:37:22.337120+00:00",
-        "last_reported": "2026-05-12T17:37:22.337120+00:00",
-        "last_updated": "2026-05-12T17:37:22.337120+00:00",
-        "context": {
-            "id": "01KREM7JD1VM2D40SB9ZMJ06G4",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.bathroom_vibration_sensor_angle_y",
-        "state": "6",
-        "attributes": {
-            "unit_of_measurement": "\u00b0",
-            "friendly_name": "Bathroom Vibration Sensor Angle y"
-        },
-        "last_changed": "2026-05-12T17:37:22.464052+00:00",
-        "last_reported": "2026-05-12T17:37:22.464052+00:00",
-        "last_updated": "2026-05-12T17:37:22.464052+00:00",
-        "context": {
-            "id": "01KREM7JH0MQ6AWY8E13P6HT8G",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.bathroom_vibration_sensor_angle_z",
-        "state": "64",
-        "attributes": {
-            "unit_of_measurement": "\u00b0",
-            "friendly_name": "Bathroom Vibration Sensor Angle z"
-        },
-        "last_changed": "2026-05-12T17:37:22.441478+00:00",
-        "last_reported": "2026-05-12T17:37:22.441478+00:00",
-        "last_updated": "2026-05-12T17:37:22.441478+00:00",
-        "context": {
-            "id": "01KREM7JG976T728HEFC28Z77E",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.bathroom_vibration_sensor_x_axis",
-        "state": "-529",
-        "attributes": {
-            "state_class": "measurement",
-            "icon": "mdi:axis-x-arrow",
-            "friendly_name": "Bathroom Vibration Sensor X axis"
-        },
-        "last_changed": "2026-05-12T17:37:22.441113+00:00",
-        "last_reported": "2026-05-12T17:37:22.441113+00:00",
-        "last_updated": "2026-05-12T17:37:22.441113+00:00",
-        "context": {
-            "id": "01KREM7JG98P8C9RVHGEMQK9QN",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.bathroom_vibration_sensor_y_axis",
-        "state": "138",
-        "attributes": {
-            "state_class": "measurement",
-            "icon": "mdi:axis-y-arrow",
-            "friendly_name": "Bathroom Vibration Sensor Y axis"
-        },
-        "last_changed": "2026-05-12T17:37:22.481458+00:00",
-        "last_reported": "2026-05-12T17:37:22.481458+00:00",
-        "last_updated": "2026-05-12T17:37:22.481458+00:00",
-        "context": {
-            "id": "01KREM7JHHS1G1KM0A4KVRPF1Y",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.bathroom_vibration_sensor_z_axis",
-        "state": "1102",
-        "attributes": {
-            "state_class": "measurement",
-            "icon": "mdi:axis-z-arrow",
-            "friendly_name": "Bathroom Vibration Sensor Z axis"
-        },
-        "last_changed": "2026-05-12T17:37:22.416453+00:00",
-        "last_reported": "2026-05-12T17:37:22.416453+00:00",
-        "last_updated": "2026-05-12T17:37:22.416453+00:00",
-        "context": {
-            "id": "01KREM7JFG5ATZ9964YVVBMV4C",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.bathroom_vibration_sensor_action",
-        "state": "unknown",
-        "attributes": {
-            "icon": "mdi:gesture-double-tap",
-            "friendly_name": "Bathroom Vibration Sensor Action"
-        },
-        "last_changed": "2026-05-12T17:37:22.377209+00:00",
-        "last_reported": "2026-05-12T17:37:22.377209+00:00",
-        "last_updated": "2026-05-12T17:37:22.377209+00:00",
-        "context": {
-            "id": "01KREM7JE9AF8KQKV9P6RQ2A9P",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
         "entity_id": "sensor.hugh_room_desk_aqara_button_battery",
         "state": "97",
         "attributes": {
@@ -15979,36 +15646,36 @@
     },
     {
         "entity_id": "sensor.hugh_room_plug_blanket_current",
-        "state": "0",
+        "state": "0.01",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "A",
             "device_class": "current",
             "friendly_name": "Hugh Room Plug Blanket Current"
         },
-        "last_changed": "2026-05-12T17:37:22.307316+00:00",
-        "last_reported": "2026-05-12T17:37:22.307316+00:00",
-        "last_updated": "2026-05-12T17:37:22.307316+00:00",
+        "last_changed": "2026-05-12T17:38:22.642129+00:00",
+        "last_reported": "2026-05-12T17:38:22.642129+00:00",
+        "last_updated": "2026-05-12T17:38:22.642129+00:00",
         "context": {
-            "id": "01KREM7JC3HK964APN3AVB17TN",
+            "id": "01KREM9D9JVAW2HWYACJAJMV4Z",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.hugh_room_plug_blanket_voltage",
-        "state": "230",
+        "state": "228",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "V",
             "device_class": "voltage",
             "friendly_name": "Hugh Room Plug Blanket Voltage"
         },
-        "last_changed": "2026-05-12T17:37:22.518602+00:00",
-        "last_reported": "2026-05-12T17:37:22.518602+00:00",
-        "last_updated": "2026-05-12T17:37:22.518602+00:00",
+        "last_changed": "2026-05-12T17:38:22.641464+00:00",
+        "last_reported": "2026-05-12T17:38:22.641464+00:00",
+        "last_updated": "2026-05-12T17:38:22.641464+00:00",
         "context": {
-            "id": "01KREM7JJPMYF0Z3WQQ3BKF8HM",
+            "id": "01KREM9D9HFRKTTNQ93F1BKHJM",
             "parent_id": null,
             "user_id": null
         }
@@ -16069,18 +15736,18 @@
     },
     {
         "entity_id": "sensor.hugh_room_plug_fan_bed_voltage",
-        "state": "231",
+        "state": "229",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "V",
             "device_class": "voltage",
             "friendly_name": "Hugh Room Plug Fan Bed Voltage"
         },
-        "last_changed": "2026-05-12T17:37:22.450953+00:00",
-        "last_reported": "2026-05-12T17:37:22.450953+00:00",
-        "last_updated": "2026-05-12T17:37:22.450953+00:00",
+        "last_changed": "2026-05-12T17:38:22.595702+00:00",
+        "last_reported": "2026-05-12T17:38:22.595702+00:00",
+        "last_updated": "2026-05-12T17:38:22.595702+00:00",
         "context": {
-            "id": "01KREM7JGJX3CV371GW7PW2VKN",
+            "id": "01KREM9D83MBK1CHDNVBVPHS4S",
             "parent_id": null,
             "user_id": null
         }
@@ -16099,78 +15766,6 @@
         "last_updated": "2026-05-12T17:37:22.374105+00:00",
         "context": {
             "id": "01KREM7JE66F1CXN1810YXBZ6A",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.bathroom_aqara_battery",
-        "state": "100",
-        "attributes": {
-            "state_class": "measurement",
-            "unit_of_measurement": "%",
-            "device_class": "battery",
-            "friendly_name": "Bathroom Aqara Battery"
-        },
-        "last_changed": "2026-05-12T17:37:22.415365+00:00",
-        "last_reported": "2026-05-12T17:37:22.415365+00:00",
-        "last_updated": "2026-05-12T17:37:22.415365+00:00",
-        "context": {
-            "id": "01KREM7JFFB820EPHRGDYMN890",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.bathroom_aqara_temperature",
-        "state": "20.7",
-        "attributes": {
-            "state_class": "measurement",
-            "unit_of_measurement": "\u00b0C",
-            "device_class": "temperature",
-            "friendly_name": "Aqara Temperature"
-        },
-        "last_changed": "2026-05-12T17:37:22.318251+00:00",
-        "last_reported": "2026-05-12T17:37:22.318251+00:00",
-        "last_updated": "2026-05-12T17:37:22.318251+00:00",
-        "context": {
-            "id": "01KREM7JCE61DJJYFM1TH6WSAV",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.bathroom_aqara_humidity",
-        "state": "55.9",
-        "attributes": {
-            "state_class": "measurement",
-            "unit_of_measurement": "%",
-            "device_class": "humidity",
-            "friendly_name": "Aqara Humidity"
-        },
-        "last_changed": "2026-05-12T17:37:22.316291+00:00",
-        "last_reported": "2026-05-12T17:37:22.316291+00:00",
-        "last_updated": "2026-05-12T17:37:22.316291+00:00",
-        "context": {
-            "id": "01KREM7JCCSND386QEK3E7JT16",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.bathroom_aqara_pressure",
-        "state": "1017.8",
-        "attributes": {
-            "state_class": "measurement",
-            "unit_of_measurement": "hPa",
-            "device_class": "atmospheric_pressure",
-            "friendly_name": "Bathroom Aqara Atmospheric pressure"
-        },
-        "last_changed": "2026-05-12T17:37:22.518093+00:00",
-        "last_reported": "2026-05-12T17:37:22.518093+00:00",
-        "last_updated": "2026-05-12T17:37:22.518093+00:00",
-        "context": {
-            "id": "01KREM7JJP2DKED1HTCV4HB5DZ",
             "parent_id": null,
             "user_id": null
         }
@@ -16248,60 +15843,6 @@
         }
     },
     {
-        "entity_id": "sensor.coffee_table_battery",
-        "state": "100",
-        "attributes": {
-            "state_class": "measurement",
-            "unit_of_measurement": "%",
-            "device_class": "battery",
-            "friendly_name": "Coffee Table Battery"
-        },
-        "last_changed": "2026-05-12T17:37:22.383945+00:00",
-        "last_reported": "2026-05-12T17:37:22.383945+00:00",
-        "last_updated": "2026-05-12T17:37:22.383945+00:00",
-        "context": {
-            "id": "01KREM7JEFH04WKGRSRV0RXJ4R",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.coffee_table_device_temperature",
-        "state": "21",
-        "attributes": {
-            "state_class": "measurement",
-            "unit_of_measurement": "\u00b0C",
-            "device_class": "temperature",
-            "friendly_name": "Coffee Table Temperature"
-        },
-        "last_changed": "2026-05-12T17:37:22.373653+00:00",
-        "last_reported": "2026-05-12T17:37:22.373653+00:00",
-        "last_updated": "2026-05-12T17:37:22.373653+00:00",
-        "context": {
-            "id": "01KREM7JE5ZTYE9NDSTQGEENYQ",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.coffee_table_voltage",
-        "state": "3065",
-        "attributes": {
-            "state_class": "measurement",
-            "unit_of_measurement": "mV",
-            "device_class": "voltage",
-            "friendly_name": "Coffee Table Voltage"
-        },
-        "last_changed": "2026-05-12T17:37:22.382923+00:00",
-        "last_reported": "2026-05-12T17:37:22.382923+00:00",
-        "last_updated": "2026-05-12T17:37:22.382923+00:00",
-        "context": {
-            "id": "01KREM7JEEFH1ZEDJB189EGZP1",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
         "entity_id": "sensor.living_room_floor_lamp_color_options",
         "state": "",
         "attributes": {
@@ -16329,190 +15870,6 @@
         "last_updated": "2026-05-12T17:37:22.374604+00:00",
         "context": {
             "id": "01KREM7JE6FY5XCZ3Y7D91YZ1A",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.dining_table_vibration_battery",
-        "state": "90",
-        "attributes": {
-            "state_class": "measurement",
-            "unit_of_measurement": "%",
-            "device_class": "battery",
-            "friendly_name": "Dining table vibration Battery"
-        },
-        "last_changed": "2026-05-12T17:37:22.492557+00:00",
-        "last_reported": "2026-05-12T17:37:22.492557+00:00",
-        "last_updated": "2026-05-12T17:37:22.492557+00:00",
-        "context": {
-            "id": "01KREM7JHW9282KD5BXW59FYQ5",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.dining_table_vibration_device_temperature",
-        "state": "29",
-        "attributes": {
-            "state_class": "measurement",
-            "unit_of_measurement": "\u00b0C",
-            "device_class": "temperature",
-            "friendly_name": "Dining table vibration Temperature"
-        },
-        "last_changed": "2026-05-12T17:37:22.530080+00:00",
-        "last_reported": "2026-05-12T17:37:22.530080+00:00",
-        "last_updated": "2026-05-12T17:37:22.530080+00:00",
-        "context": {
-            "id": "01KREM7JK2T6FMQT8XWXBKVFCW",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.dining_table_vibration_strength",
-        "state": "37",
-        "attributes": {
-            "friendly_name": "Dining table vibration Strength"
-        },
-        "last_changed": "2026-05-12T17:37:22.403157+00:00",
-        "last_reported": "2026-05-12T17:37:22.403157+00:00",
-        "last_updated": "2026-05-12T17:37:22.403157+00:00",
-        "context": {
-            "id": "01KREM7JF36J0PAM1NKKRMQ554",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.dining_table_vibration_angle_x",
-        "state": "3",
-        "attributes": {
-            "unit_of_measurement": "\u00b0",
-            "friendly_name": "Dining table vibration Angle x"
-        },
-        "last_changed": "2026-05-12T17:37:22.345588+00:00",
-        "last_reported": "2026-05-12T17:37:22.345588+00:00",
-        "last_updated": "2026-05-12T17:37:22.345588+00:00",
-        "context": {
-            "id": "01KREM7JD9K32RRDNQ11W7XG7T",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.dining_table_vibration_angle_y",
-        "state": "0",
-        "attributes": {
-            "unit_of_measurement": "\u00b0",
-            "friendly_name": "Dining table vibration Angle y"
-        },
-        "last_changed": "2026-05-12T17:37:22.376112+00:00",
-        "last_reported": "2026-05-12T17:37:22.376112+00:00",
-        "last_updated": "2026-05-12T17:37:22.376112+00:00",
-        "context": {
-            "id": "01KREM7JE8G9A0R1MCSH927D6W",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.dining_table_vibration_angle_z",
-        "state": "87",
-        "attributes": {
-            "unit_of_measurement": "\u00b0",
-            "friendly_name": "Dining table vibration Angle z"
-        },
-        "last_changed": "2026-05-12T17:37:22.452315+00:00",
-        "last_reported": "2026-05-12T17:37:22.452315+00:00",
-        "last_updated": "2026-05-12T17:37:22.452315+00:00",
-        "context": {
-            "id": "01KREM7JGMHVVQQQ6GWBNAY5ZS",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.dining_table_vibration_x_axis",
-        "state": "61",
-        "attributes": {
-            "state_class": "measurement",
-            "icon": "mdi:axis-x-arrow",
-            "friendly_name": "Dining table vibration X axis"
-        },
-        "last_changed": "2026-05-12T17:37:22.507495+00:00",
-        "last_reported": "2026-05-12T17:37:22.507495+00:00",
-        "last_updated": "2026-05-12T17:37:22.507495+00:00",
-        "context": {
-            "id": "01KREM7JJBRECFEMZBGF6JA4BB",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.dining_table_vibration_y_axis",
-        "state": "-7",
-        "attributes": {
-            "state_class": "measurement",
-            "icon": "mdi:axis-y-arrow",
-            "friendly_name": "Dining table vibration Y axis"
-        },
-        "last_changed": "2026-05-12T17:37:22.440290+00:00",
-        "last_reported": "2026-05-12T17:37:22.440290+00:00",
-        "last_updated": "2026-05-12T17:37:22.440290+00:00",
-        "context": {
-            "id": "01KREM7JG84X3JWFF9AAKBMZXJ",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.dining_table_vibration_z_axis",
-        "state": "1175",
-        "attributes": {
-            "state_class": "measurement",
-            "icon": "mdi:axis-z-arrow",
-            "friendly_name": "Dining table vibration Z axis"
-        },
-        "last_changed": "2026-05-12T17:37:22.471390+00:00",
-        "last_reported": "2026-05-12T17:37:22.471390+00:00",
-        "last_updated": "2026-05-12T17:37:22.471390+00:00",
-        "context": {
-            "id": "01KREM7JH7WM10BYHZQE32XP6J",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.dining_table_vibration_voltage",
-        "state": "2985",
-        "attributes": {
-            "state_class": "measurement",
-            "unit_of_measurement": "mV",
-            "device_class": "voltage",
-            "friendly_name": "Dining table vibration Voltage"
-        },
-        "last_changed": "2026-05-12T17:37:22.392445+00:00",
-        "last_reported": "2026-05-12T17:37:22.392445+00:00",
-        "last_updated": "2026-05-12T17:37:22.392445+00:00",
-        "context": {
-            "id": "01KREM7JERWDT15A3NYPAZWDXG",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "sensor.dining_table_vibration_action",
-        "state": "unknown",
-        "attributes": {
-            "icon": "mdi:gesture-double-tap",
-            "friendly_name": "Dining table vibration Action"
-        },
-        "last_changed": "2026-05-12T17:37:22.299216+00:00",
-        "last_reported": "2026-05-12T17:37:22.299216+00:00",
-        "last_updated": "2026-05-12T17:37:22.299216+00:00",
-        "context": {
-            "id": "01KREM7JBVXRBK9X8HHSXFXGN6",
             "parent_id": null,
             "user_id": null
         }
@@ -16650,22 +16007,6 @@
         "last_updated": "2026-05-12T17:37:22.432169+00:00",
         "context": {
             "id": "01KREM7JG0HQHX6SFNZGHNYY7G",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "switch.bathroom_motion_led_indication",
-        "state": "off",
-        "attributes": {
-            "icon": "mdi:led-on",
-            "friendly_name": "Bathroom Motion Led indication"
-        },
-        "last_changed": "2026-05-12T17:37:22.387040+00:00",
-        "last_reported": "2026-05-12T17:37:22.387040+00:00",
-        "last_updated": "2026-05-12T17:37:22.387040+00:00",
-        "context": {
-            "id": "01KREM7JEK1Z464JA8EJMGCEEN",
             "parent_id": null,
             "user_id": null
         }
@@ -16881,17 +16222,17 @@
     },
     {
         "entity_id": "sensor.binary_sensors",
-        "state": "75",
+        "state": "72",
         "attributes": {
             "state_class": "total",
             "icon": "mdi:numeric-10",
             "friendly_name": "Home Assistant Binary sensors"
         },
-        "last_changed": "2026-05-12T17:35:51.519965+00:00",
-        "last_reported": "2026-05-12T17:35:51.519965+00:00",
-        "last_updated": "2026-05-12T17:35:51.519965+00:00",
+        "last_changed": "2026-05-12T17:39:12.026437+00:00",
+        "last_reported": "2026-05-12T17:39:12.026437+00:00",
+        "last_updated": "2026-05-12T17:39:12.026437+00:00",
         "context": {
-            "id": "01KREM4SPZ4FVCTEDRPWT365YE",
+            "id": "01KREMAXGTTCJ3ABEV7CAANZBX",
             "parent_id": null,
             "user_id": null
         }
@@ -17051,17 +16392,17 @@
     },
     {
         "entity_id": "sensor.entities",
-        "state": "1087",
+        "state": "1059",
         "attributes": {
             "state_class": "total",
             "icon": "mdi:counter",
             "friendly_name": "Home Assistant Entities"
         },
-        "last_changed": "2026-05-12T17:35:51.522878+00:00",
-        "last_reported": "2026-05-12T17:35:51.522878+00:00",
-        "last_updated": "2026-05-12T17:35:51.522878+00:00",
+        "last_changed": "2026-05-12T17:39:12.029253+00:00",
+        "last_reported": "2026-05-12T17:39:12.029253+00:00",
+        "last_updated": "2026-05-12T17:39:12.029253+00:00",
         "context": {
-            "id": "01KREM4SQ2V4XBR13S5HTC0WJD",
+            "id": "01KREMAXGXPDCCART8GV7B533Z",
             "parent_id": null,
             "user_id": null
         }
@@ -17306,17 +16647,17 @@
     },
     {
         "entity_id": "sensor.numbers",
-        "state": "57",
+        "state": "55",
         "attributes": {
             "state_class": "total",
             "icon": "mdi:ray-vertex",
             "friendly_name": "Home Assistant Numbers"
         },
-        "last_changed": "2026-05-12T17:34:30.757893+00:00",
-        "last_reported": "2026-05-12T17:36:01.344377+00:00",
-        "last_updated": "2026-05-12T17:34:30.757893+00:00",
+        "last_changed": "2026-05-12T17:39:01.338728+00:00",
+        "last_reported": "2026-05-12T17:39:01.338728+00:00",
+        "last_updated": "2026-05-12T17:39:01.338728+00:00",
         "context": {
-            "id": "01KREM2AV53YMES7J4JP3WEFEC",
+            "id": "01KREMAK2T8T5BCT6ZBHZ64E9B",
             "parent_id": null,
             "user_id": null
         }
@@ -17408,34 +16749,34 @@
     },
     {
         "entity_id": "sensor.selects",
-        "state": "48",
+        "state": "47",
         "attributes": {
             "state_class": "total",
             "icon": "mdi:format-list-bulleted",
             "friendly_name": "Home Assistant Selects"
         },
-        "last_changed": "2026-05-12T17:34:30.761842+00:00",
-        "last_reported": "2026-05-12T17:36:01.345139+00:00",
-        "last_updated": "2026-05-12T17:34:30.761842+00:00",
+        "last_changed": "2026-05-12T17:39:01.339888+00:00",
+        "last_reported": "2026-05-12T17:39:01.339888+00:00",
+        "last_updated": "2026-05-12T17:39:01.339888+00:00",
         "context": {
-            "id": "01KREM2AV9B5GF7Y14WD6PVAPW",
+            "id": "01KREMAK2V8EYJRXE3EF630WKT",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.sensors",
-        "state": "373",
+        "state": "354",
         "attributes": {
             "state_class": "total",
             "icon": "mdi:eye",
             "friendly_name": "Home Assistant Sensors"
         },
-        "last_changed": "2026-05-12T17:35:51.548703+00:00",
-        "last_reported": "2026-05-12T17:35:51.548703+00:00",
-        "last_updated": "2026-05-12T17:35:51.548703+00:00",
+        "last_changed": "2026-05-12T17:39:12.036023+00:00",
+        "last_reported": "2026-05-12T17:39:12.036023+00:00",
+        "last_updated": "2026-05-12T17:39:12.036023+00:00",
         "context": {
-            "id": "01KREM4SQWRPJ5WVET3MDXG49S",
+            "id": "01KREMAXH4ZAYFRS1M5SG2HT4J",
             "parent_id": null,
             "user_id": null
         }
@@ -17493,17 +16834,17 @@
     },
     {
         "entity_id": "sensor.switches",
-        "state": "28",
+        "state": "27",
         "attributes": {
             "state_class": "total",
             "icon": "mdi:toggle-switch",
             "friendly_name": "Home Assistant Switches"
         },
-        "last_changed": "2026-05-12T17:35:51.550055+00:00",
-        "last_reported": "2026-05-12T17:35:51.550055+00:00",
-        "last_updated": "2026-05-12T17:35:51.550055+00:00",
+        "last_changed": "2026-05-12T17:39:01.341305+00:00",
+        "last_reported": "2026-05-12T17:39:01.341305+00:00",
+        "last_updated": "2026-05-12T17:39:01.341305+00:00",
         "context": {
-            "id": "01KREM4SQYX2K3DJSGR435MHKM",
+            "id": "01KREMAK2XDYSABS8RWYDVWRD7",
             "parent_id": null,
             "user_id": null
         }
@@ -17578,17 +16919,17 @@
     },
     {
         "entity_id": "sensor.update",
-        "state": "60",
+        "state": "59",
         "attributes": {
             "state_class": "total",
             "icon": "mdi:cellphone-arrow-down",
             "friendly_name": "Home Assistant Update"
         },
-        "last_changed": "2026-05-12T17:34:41.781091+00:00",
-        "last_reported": "2026-05-12T17:36:01.346363+00:00",
-        "last_updated": "2026-05-12T17:34:41.781091+00:00",
+        "last_changed": "2026-05-12T17:39:01.342180+00:00",
+        "last_reported": "2026-05-12T17:39:01.342180+00:00",
+        "last_updated": "2026-05-12T17:39:01.342180+00:00",
         "context": {
-            "id": "01KREM2NKN18NRX6EKQCX9W9JD",
+            "id": "01KREMAK2YA6W5GJCQP036CH24",
             "parent_id": null,
             "user_id": null
         }
@@ -17646,36 +16987,36 @@
     },
     {
         "entity_id": "sensor.issues",
-        "state": "7",
+        "state": "12",
         "attributes": {
             "state_class": "total",
             "unit_of_measurement": "issues",
             "icon": "mdi:wrench",
             "friendly_name": "Repairs Total"
         },
-        "last_changed": "2026-05-12T17:35:52.553934+00:00",
-        "last_reported": "2026-05-12T17:35:52.553934+00:00",
-        "last_updated": "2026-05-12T17:35:52.553934+00:00",
+        "last_changed": "2026-05-12T17:39:12.959323+00:00",
+        "last_reported": "2026-05-12T17:39:12.959323+00:00",
+        "last_updated": "2026-05-12T17:39:12.959323+00:00",
         "context": {
-            "id": "01KREM4TQ98HDNA4B05NYACR0Q",
+            "id": "01KREMAYDZ7BFZMYZM2DS22AT2",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.active_issues",
-        "state": "2",
+        "state": "7",
         "attributes": {
             "state_class": "total",
             "unit_of_measurement": "issues",
             "icon": "mdi:wrench-check",
             "friendly_name": "Repairs Active"
         },
-        "last_changed": "2026-05-12T17:35:52.560631+00:00",
-        "last_reported": "2026-05-12T17:35:52.560631+00:00",
-        "last_updated": "2026-05-12T17:35:52.560631+00:00",
+        "last_changed": "2026-05-12T17:39:12.959956+00:00",
+        "last_reported": "2026-05-12T17:39:12.959956+00:00",
+        "last_updated": "2026-05-12T17:39:12.959956+00:00",
         "context": {
-            "id": "01KREM4TQG069GYDZD5KG0HTWZ",
+            "id": "01KREMAYDZKRGQ65RWHG3E1306",
             "parent_id": null,
             "user_id": null
         }
@@ -18006,34 +17347,6 @@
         "last_updated": "2026-05-12T17:37:22.510102+00:00",
         "context": {
             "id": "01KREM7JJEJGQ9MZ3PN2ZBBGAR",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "update.bathroom_motion",
-        "state": "off",
-        "attributes": {
-            "auto_update": false,
-            "display_precision": 0,
-            "installed_version": "33576193",
-            "in_progress": false,
-            "latest_version": "33576193",
-            "release_summary": null,
-            "release_url": null,
-            "skipped_version": null,
-            "title": null,
-            "update_percentage": null,
-            "device_class": "firmware",
-            "entity_picture": "https://github.com/Koenkk/zigbee2mqtt/raw/master/images/logo.png",
-            "friendly_name": "Bathroom Motion",
-            "supported_features": 5
-        },
-        "last_changed": "2026-05-12T17:37:22.385082+00:00",
-        "last_reported": "2026-05-12T17:37:22.385082+00:00",
-        "last_updated": "2026-05-12T17:37:22.385082+00:00",
-        "context": {
-            "id": "01KREM7JEHNK91V7JXJRQ5EE8N",
             "parent_id": null,
             "user_id": null
         }
@@ -18932,14 +18245,14 @@
             "id": "1702207044468",
             "last_triggered": "2026-05-12T17:35:46.527614+00:00",
             "mode": "single",
-            "current": 1,
+            "current": 0,
             "friendly_name": "Admin on Start"
         },
         "last_changed": "2026-05-12T17:34:32.916156+00:00",
-        "last_reported": "2026-05-12T17:35:46.530245+00:00",
-        "last_updated": "2026-05-12T17:35:46.527722+00:00",
+        "last_reported": "2026-05-12T17:39:08.306960+00:00",
+        "last_updated": "2026-05-12T17:39:08.306960+00:00",
         "context": {
-            "id": "01KREM4MTZFQWJT8NZR33BP0KH",
+            "id": "01KREMASWJWYW9CVKEC7CSE5XD",
             "parent_id": null,
             "user_id": null
         }
@@ -20109,17 +19422,17 @@
         "state": "on",
         "attributes": {
             "id": "1734951741728",
-            "last_triggered": "2026-05-12T16:52:17.087976+00:00",
+            "last_triggered": "2026-05-12T17:39:12.396654+00:00",
             "mode": "single",
-            "current": 0,
+            "current": 1,
             "friendly_name": "Git Backup"
         },
         "last_changed": "2026-05-12T17:34:32.944363+00:00",
-        "last_reported": "2026-05-12T17:34:32.944363+00:00",
-        "last_updated": "2026-05-12T17:34:32.944363+00:00",
+        "last_reported": "2026-05-12T17:39:12.396724+00:00",
+        "last_updated": "2026-05-12T17:39:12.396724+00:00",
         "context": {
-            "id": "01KREM2CZG6D8051QE3K2667E8",
-            "parent_id": null,
+            "id": "01KREMAXWCC0RV2G6TAKC59JK0",
+            "parent_id": "01KREMAXW5CF71455THW9CV7ZT",
             "user_id": null
         }
     },
@@ -20698,17 +20011,17 @@
         "state": "on",
         "attributes": {
             "id": "1770299469577",
-            "last_triggered": "2026-05-12T17:38:08.271986+00:00",
+            "last_triggered": "2026-05-12T17:38:28.841078+00:00",
             "mode": "restart",
-            "current": 1,
+            "current": 0,
             "friendly_name": "Turn off purifier display"
         },
         "last_changed": "2026-05-12T17:34:32.957563+00:00",
-        "last_reported": "2026-05-12T17:38:08.272082+00:00",
-        "last_updated": "2026-05-12T17:38:08.272082+00:00",
+        "last_reported": "2026-05-12T17:38:44.516265+00:00",
+        "last_updated": "2026-05-12T17:38:44.516265+00:00",
         "context": {
-            "id": "01KREM8Z8FZK3N7B05ZXRNKTT4",
-            "parent_id": "01KREM4MTZFQWJT8NZR33BP0KH",
+            "id": "01KREMA2N4FF3BZMP5ZSFRRTXE",
+            "parent_id": null,
             "user_id": null
         }
     },
@@ -20926,17 +20239,17 @@
         "state": "on",
         "attributes": {
             "id": "1773869262911",
-            "last_triggered": "2026-05-12T17:37:22.555774+00:00",
+            "last_triggered": "2026-05-12T17:39:06.784849+00:00",
             "mode": "single",
             "current": 0,
             "friendly_name": "Coffee table light"
         },
         "last_changed": "2026-05-12T17:34:32.963324+00:00",
-        "last_reported": "2026-05-12T17:37:22.559561+00:00",
-        "last_updated": "2026-05-12T17:37:22.559561+00:00",
+        "last_reported": "2026-05-12T17:39:06.787301+00:00",
+        "last_updated": "2026-05-12T17:39:06.787301+00:00",
         "context": {
-            "id": "01KREM7JKV40W2F50JTYJ3KWFV",
-            "parent_id": "01KREM7JCMWESD24H7RV5911G5",
+            "id": "01KREMARD0D8YXVNG8FTJXRG1M",
+            "parent_id": "01KREMARCWWYB4P5MDHXRSHHYF",
             "user_id": null
         }
     },
@@ -21118,15 +20431,15 @@
             "id": "1776786649594",
             "last_triggered": "2026-05-12T17:37:22.661600+00:00",
             "mode": "restart",
-            "current": 1,
+            "current": 0,
             "friendly_name": "Utility Light Control"
         },
         "last_changed": "2026-05-12T17:34:32.967582+00:00",
-        "last_reported": "2026-05-12T17:37:22.661666+00:00",
-        "last_updated": "2026-05-12T17:37:22.661666+00:00",
+        "last_reported": "2026-05-12T17:38:22.673608+00:00",
+        "last_updated": "2026-05-12T17:38:22.673608+00:00",
         "context": {
-            "id": "01KREM7JQ5A9H145ATE624QS82",
-            "parent_id": "01KREM7JJDJ4T466QVVKW1EMFK",
+            "id": "01KREM9DAH22TPDX9NKM953Z9F",
+            "parent_id": null,
             "user_id": null
         }
     },
@@ -21135,17 +20448,17 @@
         "state": "on",
         "attributes": {
             "id": "1777042022647",
-            "last_triggered": "2026-05-12T17:37:22.547730+00:00",
+            "last_triggered": "2026-05-12T17:38:46.553920+00:00",
             "mode": "restart",
             "current": 0,
             "friendly_name": "Master Bedroom Blind \u2013 Basic Control"
         },
         "last_changed": "2026-05-12T17:34:32.967994+00:00",
-        "last_reported": "2026-05-12T17:37:22.554205+00:00",
-        "last_updated": "2026-05-12T17:37:22.554205+00:00",
+        "last_reported": "2026-05-12T17:38:46.557430+00:00",
+        "last_updated": "2026-05-12T17:38:46.557430+00:00",
         "context": {
-            "id": "01KREM7JKKBY54YRBSHQFNB287",
-            "parent_id": "01KREM7JCCSND386QEK3E7JT16",
+            "id": "01KREMA4MS5978QNK5EDQ75JXC",
+            "parent_id": "01KREMA4MNG8PVC7D1K9CXQJQJ",
             "user_id": null
         }
     },
@@ -21264,18 +20577,18 @@
     },
     {
         "entity_id": "sensor.snake_plant_signal_strength",
-        "state": "-90",
+        "state": "-88",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "dBm",
             "device_class": "signal_strength",
             "friendly_name": "Snake Plant Signal Strength"
         },
-        "last_changed": "2026-05-12T17:38:06.268058+00:00",
-        "last_reported": "2026-05-12T17:38:06.268058+00:00",
-        "last_updated": "2026-05-12T17:38:06.268058+00:00",
+        "last_changed": "2026-05-12T17:38:55.277689+00:00",
+        "last_reported": "2026-05-12T17:38:55.277689+00:00",
+        "last_updated": "2026-05-12T17:38:55.277689+00:00",
         "context": {
-            "id": "01KREM8X9WCJWGC2W83P8MHJZT",
+            "id": "01KREMAD5D1EE14K8VC335REYZ",
             "parent_id": null,
             "user_id": null
         }
