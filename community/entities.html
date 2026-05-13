@@ -11,13 +11,13 @@
         <body>
             <div class="fixed-header">
                 <h1>Home Assistant Entities</h1>
-                <p>Total Entities: 884 (Redacted: 16)</p>
-                <p>Version: 2026-05-12-222829</p>
+                <p>Total Entities: 1057 (Redacted: 16)</p>
+                <p>Version: 2026-05-13-005038</p>
                 <div class="search-container">
                     <input type="text" id="entitySearch" class="search-box" placeholder="🔍 Search entities...">
                 </div>
                 <div>
-                    <p id="table-count">Search total: 884</p>
+                    <p id="table-count">Search total: 1057</p>
                 </div>
                 <div class="filters">
                     <div id="filter-All" class="filter entity-filter active">All</div>
@@ -301,14 +301,6 @@
             </tr>
         
             <tr>
-                <td>automation.find_vibration_sensor</td>
-                <td>Find vibration sensor</td>
-                <td>N/A</td>
-                <td>on</td>
-                <td>Yes</td>
-            </tr>
-        
-            <tr>
                 <td>automation.generate_watchman_report</td>
                 <td>Admin Generate Watchman Report</td>
                 <td>N/A</td>
@@ -400,8 +392,8 @@
                 <td>automation.hugh_room_desk_fan_on</td>
                 <td>Hugh Room Desk Fan On</td>
                 <td>N/A</td>
-                <td>on</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -1101,11 +1093,19 @@
             </tr>
         
             <tr>
-                <td>binary_sensor.bathroom_vibration_sensor_battery_plus_low</td>
-                <td>Bathroom Vibration Sensor Battery low</td>
+                <td>binary_sensor.bathroom_motion_occupancy</td>
+                <td>Hue Motion</td>
                 <td>N/A</td>
                 <td>off</td>
                 <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>binary_sensor.bathroom_vibration_sensor_battery_plus_low</td>
+                <td>Battery low</td>
+                <td>N/A</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -1120,7 +1120,7 @@
                 <td>binary_sensor.bed_presence_bed_occupied_either</td>
                 <td>Bed Presence Bed Occupied Either</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -1128,7 +1128,7 @@
                 <td>binary_sensor.bed_presence_bed_occupied_left</td>
                 <td>Bed Presence Bed Occupied Left</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -1152,7 +1152,7 @@
                 <td>binary_sensor.bed_sensor</td>
                 <td>Bed Sensor</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -1173,24 +1173,48 @@
             </tr>
         
             <tr>
-                <td>binary_sensor.datamars_webcamactive</td>
-                <td>Datamars webcamactive</td>
-                <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
-            </tr>
-        
-            <tr>
-                <td>binary_sensor.dining_table_vibration_battery_plus_low</td>
-                <td>Dining table vibration Battery low</td>
+                <td>binary_sensor.coffee_table_contact</td>
+                <td>Coffee Table Door</td>
                 <td>N/A</td>
                 <td>off</td>
                 <td>Yes</td>
             </tr>
         
             <tr>
+                <td>binary_sensor.datamars_webcamactive</td>
+                <td>Datamars webcamactive</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>binary_sensor.dining_table_vibration_battery_plus_low</td>
+                <td>Battery low</td>
+                <td>N/A</td>
+                <td>unavailable</td>
+                <td>No</td>
+            </tr>
+        
+            <tr>
+                <td>binary_sensor.dining_table_vibration_vibration</td>
+                <td>Dining table vibration Vibration</td>
+                <td>N/A</td>
+                <td>unavailable</td>
+                <td>No</td>
+            </tr>
+        
+            <tr>
                 <td>binary_sensor.hall_motion_battery_low</td>
                 <td>Hall Motion Battery low</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>binary_sensor.hall_motion_occupancy</td>
+                <td>Hue Motion</td>
                 <td>N/A</td>
                 <td>off</td>
                 <td>Yes</td>
@@ -1222,10 +1246,10 @@
         
             <tr>
                 <td>binary_sensor.hugh_room_aqara_battery_plus_low</td>
-                <td>Hugh Room Aqara Battery low</td>
+                <td>Battery low</td>
                 <td>N/A</td>
-                <td>off</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -1240,16 +1264,16 @@
                 <td>binary_sensor.hugh_room_aqara_door_button_battery_plus_low</td>
                 <td>Hugh Room Aqara Door Button Battery low</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
             <tr>
                 <td>binary_sensor.hugh_room_desk_aqara_button_battery_plus_low</td>
-                <td>Hugh Room Desk Aqara Button Battery low</td>
+                <td>Battery low</td>
                 <td>N/A</td>
-                <td>off</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -1264,32 +1288,32 @@
                 <td>binary_sensor.kitchen_epone_mmwave</td>
                 <td>Kitchen EPOne mmWave</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>binary_sensor.kitchen_epone_occupancy</td>
                 <td>Occupancy</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>binary_sensor.kitchen_epone_pir</td>
                 <td>Kitchen EPOne PIR</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>binary_sensor.kitchen_epone_target_1_active</td>
                 <td>Kitchen EPOne Target 1 Active</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -1310,10 +1334,10 @@
         
             <tr>
                 <td>binary_sensor.living_room_aqara_button_battery_plus_low</td>
-                <td>Living Room Aqara Button Battery low</td>
+                <td>Battery low</td>
                 <td>N/A</td>
-                <td>off</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -1328,7 +1352,7 @@
                 <td>binary_sensor.living_room_eppro_mmwave_presence</td>
                 <td>Living Room EPPro mmWave Presence</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -1336,7 +1360,7 @@
                 <td>binary_sensor.living_room_eppro_motion</td>
                 <td>Living Room EPPro Motion</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -1344,7 +1368,7 @@
                 <td>binary_sensor.living_room_eppro_occupancy</td>
                 <td>Occupancy</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -1360,7 +1384,7 @@
                 <td>binary_sensor.living_room_eppro_tracking_presence</td>
                 <td>Living Room EPPro Tracking Presence</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -1382,17 +1406,17 @@
         
             <tr>
                 <td>binary_sensor.living_room_phillips_switch_battery_low</td>
-                <td>Battery low</td>
+                <td>Living Room Phillips Switch Battery low</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>binary_sensor.living_room_tv_state</td>
                 <td>TV State</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -1408,7 +1432,7 @@
                 <td>binary_sensor.master_blind_battery_plus_low</td>
                 <td>Master Blind Battery low</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>unknown</td>
                 <td>Yes</td>
             </tr>
         
@@ -1432,7 +1456,7 @@
                 <td>binary_sensor.pc_status</td>
                 <td>PC Status</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -1621,11 +1645,19 @@
             </tr>
         
             <tr>
-                <td>binary_sensor.zigbee2mqtt_bridge_connection_state</td>
+                <td>binary_sensor.utility_motion_presence</td>
+                <td>Utility Motion Occupancy</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>binary_sensor.zigbee2mqtt_bridge_connection_state_2</td>
                 <td>Zigbee2MQTT Bridge Connection state</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>on</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -1744,8 +1776,8 @@
                 <td>button.hall_speaker_favourite_current_song_2</td>
                 <td>Hall speaker Favourite current song</td>
                 <td>N/A</td>
-                <td>unknown</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -1800,16 +1832,16 @@
                 <td>button.hugh_room_ceiling_identify</td>
                 <td>Hugh Room Ceiling Identify</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>unknown</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>button.hugh_room_ceiling_restart</td>
                 <td>Hugh Room Ceiling Restart</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>unknown</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -1878,10 +1910,10 @@
         
             <tr>
                 <td>button.hugh_speaker_group_favourite_current_song_2</td>
-                <td>Hugh Speaker Group Favourite current song</td>
+                <td>Favourite current song</td>
                 <td>N/A</td>
-                <td>unknown</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -1912,16 +1944,16 @@
                 <td>button.kitchen_epone_apply_update</td>
                 <td>Kitchen EPOne Apply Update</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>unknown</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>button.kitchen_epone_mmwave_set_distance</td>
                 <td>Kitchen EPOne mmWave Set Distance</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>unknown</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -1935,6 +1967,14 @@
             <tr>
                 <td>button.living_room_aqara_button_battery_replaced</td>
                 <td>Living Room Aqara Button Battery replaced</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>button.living_room_bookshelf_identify</td>
+                <td>Living Room Bookshelf Identify</td>
                 <td>N/A</td>
                 <td>unknown</td>
                 <td>Yes</td>
@@ -1967,6 +2007,14 @@
             <tr>
                 <td>button.living_room_eppro_restart_device</td>
                 <td>Living Room EPPro Restart Device</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>button.living_room_floor_lamp_identify</td>
+                <td>Living Room Floor lamp Identify</td>
                 <td>N/A</td>
                 <td>unknown</td>
                 <td>Yes</td>
@@ -2006,10 +2054,10 @@
         
             <tr>
                 <td>button.master_bedroom_display_favourite_current_song</td>
-                <td>Master bedroom display Favourite current song</td>
+                <td>Favourite current song</td>
                 <td>N/A</td>
-                <td>unknown</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -2024,8 +2072,8 @@
                 <td>button.master_bedroom_tv_favourite_current_song</td>
                 <td>Master bedroom TV Favourite current song</td>
                 <td>N/A</td>
-                <td>unknown</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -2072,8 +2120,8 @@
                 <td>button.tv_favourite_current_song</td>
                 <td>TV Favourite current song</td>
                 <td>N/A</td>
-                <td>unknown</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -2150,10 +2198,10 @@
         
             <tr>
                 <td>button.zigbee2mqtt_bridge_restart</td>
-                <td>Zigbee Restart</td>
+                <td>Zigbee2MQTT Bridge Restart</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>unknown</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -2229,6 +2277,14 @@
             </tr>
         
             <tr>
+                <td>cover.master_blind</td>
+                <td>Master Blind</td>
+                <td>N/A</td>
+                <td>open</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>cover.middle_window</td>
                 <td>Middle Window</td>
                 <td>N/A</td>
@@ -2264,7 +2320,7 @@
                 <td>event.backup_automatic_backup</td>
                 <td>Backup Automatic backup</td>
                 <td>N/A</td>
-                <td>2026-05-12 04:47:51</td>
+                <td>2026-05-12 04:43:06</td>
                 <td>Yes</td>
             </tr>
         
@@ -2277,10 +2333,42 @@
             </tr>
         
             <tr>
+                <td>event.hugh_room_aqara_bed_button_action</td>
+                <td>Hugh Room Aqara Bed Button Action</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>event.hugh_room_aqara_door_button_action</td>
+                <td>Hugh Room Aqara Door Button Action</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>event.hugh_room_phillips_switch_action</td>
+                <td>Hugh Room Phillips Switch Action</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>event.living_room_phillips_switch_action</td>
+                <td>Living Room Phillips Switch Action</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>event.repair</td>
                 <td>Repairs</td>
                 <td>N/A</td>
-                <td>2026-05-12 22:22:10</td>
+                <td>2026-05-13 00:50:30</td>
                 <td>Yes</td>
             </tr>
         
@@ -2288,7 +2376,7 @@
                 <td>fan.air_purifier</td>
                 <td>Air Purifier</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -2360,7 +2448,7 @@
                 <td>input_boolean.hugh_room_occupied</td>
                 <td>Occupied</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -2376,7 +2464,7 @@
                 <td>input_boolean.living_room_curtains_manual_override</td>
                 <td>Living Room Curtains Manual Override</td>
                 <td>N/A</td>
-                <td>off</td>
+                <td>on</td>
                 <td>Yes</td>
             </tr>
         
@@ -2520,7 +2608,7 @@
                 <td>input_button.update_z2m_devices</td>
                 <td>Update Zigbee Devices</td>
                 <td>N/A</td>
-                <td>2026-05-06 15:41:40</td>
+                <td>2026-05-11 23:27:29</td>
                 <td>Yes</td>
             </tr>
         
@@ -2536,7 +2624,7 @@
                 <td>input_datetime.driving_start_time</td>
                 <td>Driving Start Time</td>
                 <td>N/A</td>
-                <td>2026-05-12 17:00:00</td>
+                <td>2026-05-10 16:27:35</td>
                 <td>Yes</td>
             </tr>
         
@@ -2568,7 +2656,7 @@
                 <td>input_datetime.last_toothbrush_decrement</td>
                 <td>Last Toothbrush decrement</td>
                 <td>N/A</td>
-                <td>2026-05-12 00:43:59</td>
+                <td>2026-05-13 01:09:06</td>
                 <td>Yes</td>
             </tr>
         
@@ -2608,7 +2696,7 @@
                 <td>input_datetime.today_sunrise</td>
                 <td>Today Sunrise</td>
                 <td>N/A</td>
-                <td>2026-05-12 05:43:51</td>
+                <td>2026-05-13 05:42:15</td>
                 <td>Yes</td>
             </tr>
         
@@ -2616,7 +2704,7 @@
                 <td>input_datetime.today_sunset</td>
                 <td>Today Sunset</td>
                 <td>N/A</td>
-                <td>2026-05-12 21:17:22</td>
+                <td>2026-05-13 21:18:56</td>
                 <td>Yes</td>
             </tr>
         
@@ -2680,7 +2768,7 @@
                 <td>input_number.daily_driving_seconds</td>
                 <td>Daily Driving Seconds</td>
                 <td>N/A</td>
-                <td>2475.32704305649</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -2688,7 +2776,7 @@
                 <td>input_number.daily_fuel_used</td>
                 <td>Daily Fuel Used</td>
                 <td>N/A</td>
-                <td>2.0</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -2760,7 +2848,7 @@
                 <td>input_number.previous_bathroom_humidity</td>
                 <td>Previous Bathroom Humidity</td>
                 <td>%</td>
-                <td>0.0</td>
+                <td>52.2</td>
                 <td>Yes</td>
             </tr>
         
@@ -2768,7 +2856,7 @@
                 <td>input_number.previous_bathroom_temperature</td>
                 <td>Previous Bathroom Temperature</td>
                 <td>°C</td>
-                <td>0.0</td>
+                <td>21.4</td>
                 <td>Yes</td>
             </tr>
         
@@ -2784,7 +2872,7 @@
                 <td>input_number.previous_odometer_reading</td>
                 <td>Previous Odometer Reading</td>
                 <td>km</td>
-                <td>84677.0</td>
+                <td>84691.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -2824,7 +2912,7 @@
                 <td>input_number.yearly_driving_seconds</td>
                 <td>Yearly Driving Seconds</td>
                 <td>N/A</td>
-                <td>267094.531367305</td>
+                <td>264619.194868328</td>
                 <td>Yes</td>
             </tr>
         
@@ -2862,7 +2950,7 @@
         
             <tr>
                 <td>input_text.epl_player_stats</td>
-                <td>Player Stats (EPL)</td>
+                <td>EPL Player Stats</td>
                 <td>N/A</td>
                 <td>Haaland: 26 (-15 Ekitiké)</td>
                 <td>Yes</td>
@@ -2878,7 +2966,7 @@
         
             <tr>
                 <td>input_text.liverpool_tv_channel</td>
-                <td>N/A</td>
+                <td>Liverpool TV Channel</td>
                 <td>N/A</td>
                 <td>No TV channel information available</td>
                 <td>Yes</td>
@@ -2894,7 +2982,7 @@
         
             <tr>
                 <td>input_text.ucl_player_stats</td>
-                <td>Player Stats (UCL)</td>
+                <td>UCL Player Stats</td>
                 <td>N/A</td>
                 <td>Mbappé: 15 (-10 Szoboszlai)</td>
                 <td>Yes</td>
@@ -2925,67 +3013,187 @@
             </tr>
         
             <tr>
+                <td>light.bathroom_ceiling</td>
+                <td>Bathroom ceiling</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>light.dining_room_table</td>
+                <td>Dining table</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>light.hall_ceiling_1</td>
+                <td>Hall Ceiling 1</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>light.hall_ceiling_2</td>
+                <td>Hall Ceiling 2</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>light.hall_ceiling_lights</td>
                 <td>Hall Ceiling Lights</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>light.hall_console</td>
+                <td>Hall console</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>light.hall_wall_1</td>
+                <td>Hall Wall 1</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>light.hall_wall_2</td>
+                <td>Hall Wall 2</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>light.hall_wall_3</td>
+                <td>Hall Wall 3</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>light.hall_wall_lights</td>
                 <td>Hall Wall Lights</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>light.hallway</td>
                 <td>Hallway</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>light.hugh_room_ceiling</td>
                 <td>Light Ceiling</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>light.hugh_room_lamp</td>
+                <td>Hugh Room Lamp</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>light.kitchen_ceiling_1</td>
+                <td>Kitchen Ceiling 1</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>light.kitchen_ceiling_2</td>
+                <td>Kitchen Ceiling 2</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>light.kitchen_ceiling_3</td>
+                <td>Kitchen Ceiling 3</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>light.kitchen_ceiling_4</td>
+                <td>Kitchen Ceiling 4</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>light.kitchen_lights</td>
                 <td>Kitchen Lights</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>light.kitchen_lights_2</td>
                 <td>Kitchen Lights</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>light.living_room_accent_lights</td>
                 <td>Living Room Accent Lights</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>light.living_room_bookshelf</td>
+                <td>Bookshelf</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>light.living_room_ceiling_lights</td>
                 <td>Living Room Ceiling Lights</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>light.living_room_coffee_table</td>
+                <td>Coffee Table</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -3005,27 +3213,43 @@
             </tr>
         
             <tr>
+                <td>light.living_room_floor_lamp</td>
+                <td>Living Room Floor lamp</td>
+                <td>N/A</td>
+                <td>on</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>light.living_room_lights</td>
                 <td>Living Room Lights</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>on</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>light.living_room_lights_2</td>
                 <td>Living Room Lights</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>on</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>light.utility_ceiling</td>
+                <td>Utility Ceiling</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>media_player.hall_speaker_2</td>
                 <td>Hall speaker</td>
                 <td>N/A</td>
-                <td>off</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -3126,10 +3350,10 @@
         
             <tr>
                 <td>media_player.hugh_speaker_group_3</td>
-                <td>Hugh Speaker Group</td>
                 <td>N/A</td>
-                <td>off</td>
-                <td>Yes</td>
+                <td>N/A</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -3184,7 +3408,7 @@
                 <td>media_player.living_room_tv_2</td>
                 <td>Living Room TV</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3192,7 +3416,7 @@
                 <td>media_player.living_room_tv_3</td>
                 <td>Living Room TV</td>
                 <td>N/A</td>
-                <td>playing</td>
+                <td>idle</td>
                 <td>Yes</td>
             </tr>
         
@@ -3200,7 +3424,7 @@
                 <td>media_player.living_room_tv_samsung</td>
                 <td>Living Room TV</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3214,10 +3438,10 @@
         
             <tr>
                 <td>media_player.master_bedroom_display_2</td>
-                <td>Master bedroom display</td>
                 <td>N/A</td>
-                <td>idle</td>
-                <td>Yes</td>
+                <td>N/A</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -3232,8 +3456,8 @@
                 <td>media_player.master_bedroom_tv</td>
                 <td>Master bedroom TV</td>
                 <td>N/A</td>
-                <td>idle</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -3262,7 +3486,7 @@
         
             <tr>
                 <td>media_player.smart_tv_pro</td>
-                <td>Master bedroom TV</td>
+                <td>N/A</td>
                 <td>N/A</td>
                 <td>unavailable</td>
                 <td>No</td>
@@ -3280,8 +3504,8 @@
                 <td>media_player.tv</td>
                 <td>TV</td>
                 <td>N/A</td>
-                <td>idle</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -3293,10 +3517,34 @@
             </tr>
         
             <tr>
+                <td>notify.hugh_phone</td>
+                <td>Hugh Phone</td>
+                <td>N/A</td>
+                <td>2026-05-12 06:50:05</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>notify.remote_work_log</td>
                 <td>remote_work_log</td>
                 <td>N/A</td>
                 <td>2024-06-10 11:49:52</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.bathroom_ceiling_effect_speed</td>
+                <td>Bathroom Ceiling Effect speed</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.bathroom_motion_occupancy_timeout</td>
+                <td>Bathroom Motion Occupancy timeout</td>
+                <td>s</td>
+                <td>90</td>
                 <td>Yes</td>
             </tr>
         
@@ -3349,83 +3597,187 @@
             </tr>
         
             <tr>
-                <td>number.kitchen_epone_humidity_offset</td>
-                <td>Kitchen EPOne Humidity Offset</td>
-                <td>%</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>number.dining_room_table_effect_speed</td>
+                <td>Living Room Dining Table Effect speed</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
-                <td>number.kitchen_epone_illuminance_offset</td>
-                <td>Kitchen EPOne Illuminance Offset</td>
-                <td>lx</td>
-                <td>unavailable</td>
-                <td>No</td>
-            </tr>
-        
-            <tr>
-                <td>number.kitchen_epone_mmwave_off_latency</td>
-                <td>Kitchen EPOne mmWave off latency</td>
-                <td>seconds</td>
-                <td>unavailable</td>
-                <td>No</td>
-            </tr>
-        
-            <tr>
-                <td>number.kitchen_epone_mmwave_on_latency</td>
-                <td>Kitchen EPOne mmWave on latency</td>
-                <td>seconds</td>
-                <td>unavailable</td>
-                <td>No</td>
-            </tr>
-        
-            <tr>
-                <td>number.kitchen_epone_mmwave_sensitivity</td>
-                <td>Kitchen EPOne mmWave sensitivity</td>
+                <td>number.dining_table_vibration_sensitivity</td>
+                <td>Dining table vibration Sensitivity</td>
                 <td>N/A</td>
                 <td>unavailable</td>
                 <td>No</td>
             </tr>
         
             <tr>
+                <td>number.hall_ceiling_1_effect_speed</td>
+                <td>Hall Ceiling 1 Effect speed</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.hall_ceiling_2_effect_speed</td>
+                <td>Hall Ceiling 2 Effect speed</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.hall_console_effect_speed</td>
+                <td>Hall Console Effect speed</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.hall_motion_occupancy_timeout</td>
+                <td>Hall Motion Occupancy timeout</td>
+                <td>s</td>
+                <td>90</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.hall_wall_1_effect_speed</td>
+                <td>Hall Wall 1 Effect speed</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.hall_wall_2_effect_speed</td>
+                <td>Hall Wall 2 Effect speed</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.hall_wall_3_effect_speed</td>
+                <td>Hall Wall 3 Effect speed</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.hugh_room_lamp_effect_speed</td>
+                <td>Hugh Room Lamp Effect speed</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.hugh_room_plug_blanket_countdown</td>
+                <td>Hugh Room Plug Blanket Countdown</td>
+                <td>s</td>
+                <td>0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.hugh_room_plug_fan_bed_countdown</td>
+                <td>Hugh Room Plug Fan Bed Countdown</td>
+                <td>s</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.kitchen_epone_humidity_offset</td>
+                <td>Kitchen EPOne Humidity Offset</td>
+                <td>%</td>
+                <td>0.0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.kitchen_epone_illuminance_offset</td>
+                <td>Kitchen EPOne Illuminance Offset</td>
+                <td>lx</td>
+                <td>0.0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.kitchen_epone_mmwave_off_latency</td>
+                <td>Kitchen EPOne mmWave off latency</td>
+                <td>seconds</td>
+                <td>30.0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.kitchen_epone_mmwave_on_latency</td>
+                <td>Kitchen EPOne mmWave on latency</td>
+                <td>seconds</td>
+                <td>0.0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.kitchen_epone_mmwave_sensitivity</td>
+                <td>Kitchen EPOne mmWave sensitivity</td>
+                <td>N/A</td>
+                <td>9.0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>number.kitchen_epone_mmwave_zone_1_end</td>
                 <td>Kitchen EPOne mmWave Zone 1 End</td>
                 <td>cm</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>350.0</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>number.kitchen_epone_mmwave_zone_1_start</td>
                 <td>Kitchen EPOne mmWave Zone 1 Start</td>
                 <td>cm</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>0.0</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>number.kitchen_epone_occupancy_off_latency</td>
                 <td>Kitchen EPOne Occupancy off latency</td>
                 <td>seconds</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>60.0</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>number.kitchen_epone_pir_off_latency</td>
                 <td>Kitchen EPOne PIR off latency</td>
                 <td>seconds</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>10.0</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>number.kitchen_epone_temperature_offset</td>
                 <td>Kitchen EPOne Temperature Offset</td>
                 <td>°C</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>-7.9</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.living_room_coffee_table_effect_speed</td>
+                <td>Coffee Table Effect speed</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -3573,6 +3925,62 @@
             </tr>
         
             <tr>
+                <td>number.pc_plug_countdown</td>
+                <td>PC Plug Countdown</td>
+                <td>s</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.utility_ceiling_effect_speed</td>
+                <td>Utility Ceiling Effect speed</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.utility_motion_fading_time</td>
+                <td>Utility Motion Fading time</td>
+                <td>s</td>
+                <td>30</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.utility_motion_humidity_calibration</td>
+                <td>Utility Motion Humidity calibration</td>
+                <td>%</td>
+                <td>0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.utility_motion_illuminance_interval</td>
+                <td>Utility Motion Illuminance interval</td>
+                <td>minutes</td>
+                <td>1</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.utility_motion_motion_detection_sensitivity</td>
+                <td>Utility Motion Motion detection sensitivity</td>
+                <td>N/A</td>
+                <td>12</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>number.utility_motion_temperature_calibration</td>
+                <td>Utility Motion Temperature calibration</td>
+                <td>°C</td>
+                <td>0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>person.hughod90</td>
                 <td>REDACTED</td>
                 <td>N/A</td>
@@ -3592,7 +4000,7 @@
                 <td>remote.living_room_tv_g</td>
                 <td>Google TV</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3600,7 +4008,7 @@
                 <td>remote.living_room_tv_samsung</td>
                 <td>Living Room TV</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -3624,7 +4032,7 @@
                 <td>scene.curtains_close</td>
                 <td>Curtains Close</td>
                 <td>N/A</td>
-                <td>2026-05-12 22:07:39</td>
+                <td>2026-05-13 00:05:17</td>
                 <td>Yes</td>
             </tr>
         
@@ -3632,7 +4040,7 @@
                 <td>scene.curtains_close_partial</td>
                 <td>Curtains Close Partial</td>
                 <td>N/A</td>
-                <td>2026-05-11 16:59:46</td>
+                <td>2026-05-08 16:09:22</td>
                 <td>Yes</td>
             </tr>
         
@@ -3640,47 +4048,47 @@
                 <td>scene.curtains_open</td>
                 <td>Curtains Open</td>
                 <td>N/A</td>
-                <td>2026-05-12 04:56:31</td>
+                <td>2026-05-13 00:05:09</td>
                 <td>Yes</td>
             </tr>
         
             <tr>
-                <td>scene.hallway_0_off</td>
-                <td>Hallway Off</td>
+                <td>scene.hallway_0_hall_lights_off</td>
+                <td>Hallway Hall Lights Off</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>2026-05-13 00:50:34</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
-                <td>scene.hallway_1_on</td>
-                <td>Hallway On</td>
+                <td>scene.hallway_1_hall_lights_on</td>
+                <td>Hallway Hall Lights On</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>unknown</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
-                <td>scene.hallway_2_on_walls</td>
-                <td>Hallway On - Walls</td>
+                <td>scene.hallway_2_hall_lights_walls</td>
+                <td>Hallway Hall Lights Walls</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>unknown</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
-                <td>scene.hallway_3_late_night</td>
-                <td>Hallway Late Night</td>
+                <td>scene.hallway_3_hall_lights_console</td>
+                <td>Hallway Hall Lights Console</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>unknown</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>scene.hugh_room_all_lights_off</td>
                 <td>Hugh Room All Lights Off</td>
                 <td>N/A</td>
-                <td>2026-05-12 18:58:00</td>
+                <td>2026-05-13 00:40:00</td>
                 <td>Yes</td>
             </tr>
         
@@ -3688,64 +4096,96 @@
                 <td>scene.hugh_room_all_lights_on</td>
                 <td>Hugh Room All Lights On</td>
                 <td>N/A</td>
-                <td>2026-05-12 18:37:20</td>
+                <td>2026-05-13 00:12:48</td>
                 <td>Yes</td>
             </tr>
         
             <tr>
-                <td>scene.kitchen_lights_0_off</td>
-                <td>Kitchen Lights Off</td>
+                <td>scene.kitchen_lights_0_kitchen_lights_on</td>
+                <td>Kitchen Lights Kitchen Lights On</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>unknown</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
-                <td>scene.kitchen_lights_1_on</td>
-                <td>Kitchen Lights On</td>
+                <td>scene.kitchen_lights_1_kitchen_lights_off</td>
+                <td>Kitchen Lights Kitchen Lights Off</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>unknown</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>scene.lamp</td>
                 <td>Hugh Room Lamp</td>
                 <td>N/A</td>
-                <td>2026-05-12 01:21:12</td>
+                <td>2026-05-12 18:33:19</td>
                 <td>Yes</td>
             </tr>
         
             <tr>
-                <td>scene.living_room_lights_0_off</td>
-                <td>Living Room Lights Off</td>
+                <td>scene.living_room_lights_0_living_room_ceiling_glow</td>
+                <td>Living Room Lights Living Room Ceiling Glow</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>unknown</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
-                <td>scene.living_room_lights_1_on</td>
-                <td>Living Room Lights On</td>
+                <td>scene.living_room_lights_1_living_room_ceiling_bright</td>
+                <td>Living Room Lights Living Room Ceiling Bright</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>unknown</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
-                <td>scene.living_room_lights_2_dimmers</td>
-                <td>Living Room Lights Dimmers</td>
+                <td>scene.living_room_lights_3_living_room_off</td>
+                <td>Living Room Lights Living Room Off</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>unknown</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
-                <td>scene.living_room_lights_3_accents</td>
-                <td>Living Room Lights Accents</td>
+                <td>scene.living_room_lights_4_living_room_accents_bright</td>
+                <td>Living Room Lights Living Room Accents Bright</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>scene.living_room_lights_5_living_room_accents_glow</td>
+                <td>Living Room Lights Living Room Accents Glow</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>scene.living_room_lights_6_living_room_accents_dim</td>
+                <td>Living Room Lights Living Room Accents Dim</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>scene.living_room_lights_7_living_room_glow</td>
+                <td>Living Room Lights Living Room Glow</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>scene.living_room_lights_8_living_room_bright</td>
+                <td>Living Room Lights Living Room Bright</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -3888,7 +4328,7 @@
                 <td>select.aroma_diffuser_mood_lighting</td>
                 <td>Aroma diffuser Mood lighting</td>
                 <td>N/A</td>
-                <td>Cycle</td>
+                <td>Fixed</td>
                 <td>Yes</td>
             </tr>
         
@@ -3897,6 +4337,22 @@
                 <td>Aroma diffuser Timer</td>
                 <td>N/A</td>
                 <td>cancel</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.bathroom_ceiling_power_on_behavior</td>
+                <td>Bathroom Ceiling Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.bathroom_motion_motion_sensitivity</td>
+                <td>Bathroom Motion Motion sensitivity</td>
+                <td>N/A</td>
+                <td>max</td>
                 <td>Yes</td>
             </tr>
         
@@ -3917,19 +4373,171 @@
             </tr>
         
             <tr>
+                <td>select.dining_room_table_power_on_behavior</td>
+                <td>Living Room Dining Table Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.hall_ceiling_1_power_on_behavior</td>
+                <td>Hall Ceiling 1 Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.hall_ceiling_2_power_on_behavior</td>
+                <td>Hall Ceiling 2 Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.hall_console_power_on_behavior</td>
+                <td>Hall Console Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.hall_motion_motion_sensitivity</td>
+                <td>Hall Motion Motion sensitivity</td>
+                <td>N/A</td>
+                <td>max</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.hall_wall_1_power_on_behavior</td>
+                <td>Hall Wall 1 Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.hall_wall_2_power_on_behavior</td>
+                <td>Hall Wall 2 Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.hall_wall_3_power_on_behavior</td>
+                <td>Hall Wall 3 Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.hugh_room_lamp_power_on_behavior</td>
+                <td>Hugh Room Lamp Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.hugh_room_plug_blanket_indicator_mode</td>
+                <td>Hugh Room Plug Blanket Indicator mode</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.hugh_room_plug_blanket_power_outage_memory</td>
+                <td>Hugh Room Plug Blanket Power outage memory</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.hugh_room_plug_fan_bed_indicator_mode</td>
+                <td>Hugh Room Plug Fan Bed Indicator mode</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.hugh_room_plug_fan_bed_power_outage_memory</td>
+                <td>Hugh Room Plug Fan Bed Power outage memory</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.kitchen_ceiling_1_power_on_behavior</td>
+                <td>Kitchen Ceiling 1 Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.kitchen_ceiling_2_power_on_behavior</td>
+                <td>Kitchen Ceiling 2 Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.kitchen_ceiling_3_power_on_behavior</td>
+                <td>Kitchen Ceiling 3 Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.kitchen_ceiling_4_power_on_behavior</td>
+                <td>Kitchen Ceiling 4 Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>select.kitchen_epone_bluetooth_proxy</td>
                 <td>Kitchen EPOne Bluetooth Proxy</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>Enabled</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>select.kitchen_epone_co2_sensor</td>
                 <td>Kitchen EPOne CO2 Sensor</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>Disabled</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.living_room_bookshelf_power_on_behavior</td>
+                <td>Living Room Bookshelf Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.living_room_coffee_table_power_on_behavior</td>
+                <td>Coffee Table Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -4013,6 +4621,54 @@
             </tr>
         
             <tr>
+                <td>select.living_room_floor_lamp_power_on_behavior</td>
+                <td>Living Room Floor lamp Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.master_blind_motor_direction</td>
+                <td>Master Blind Motor direction</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.pc_plug_indicator_mode</td>
+                <td>PC Plug Indicator mode</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.pc_plug_power_outage_memory</td>
+                <td>PC Plug Power outage memory</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.utility_ceiling_power_on_behavior</td>
+                <td>Utility Ceiling Power-on behavior</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>select.utility_motion_temperature_unit</td>
+                <td>Utility Motion Temperature unit</td>
+                <td>N/A</td>
+                <td>celsius</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>select.vacuum_cleangenius</td>
                 <td>Vacuum CleanGenius</td>
                 <td>N/A</td>
@@ -4040,15 +4696,15 @@
                 <td>select.zigbee2mqtt_bridge_log_level</td>
                 <td>Zigbee2MQTT Bridge Log level</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>info</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.active_issues</td>
                 <td>Repairs Active</td>
                 <td>issues</td>
-                <td>48</td>
+                <td>2</td>
                 <td>Yes</td>
             </tr>
         
@@ -4056,7 +4712,7 @@
                 <td>sensor.activewindow_filtered</td>
                 <td>Active Window</td>
                 <td>N/A</td>
-                <td>Off</td>
+                <td>Teams (Datamars)</td>
                 <td>Yes</td>
             </tr>
         
@@ -4096,7 +4752,7 @@
                 <td>sensor.air_purifier_pm2_5</td>
                 <td>Air Purifier PM2.5</td>
                 <td>μg/m³</td>
-                <td>1</td>
+                <td>5</td>
                 <td>Yes</td>
             </tr>
         
@@ -4104,7 +4760,7 @@
                 <td>sensor.air_purifier_speed</td>
                 <td>Air Purifier Fan Speed</td>
                 <td>N/A</td>
-                <td>Low</td>
+                <td>Off</td>
                 <td>Yes</td>
             </tr>
         
@@ -4144,7 +4800,7 @@
                 <td>sensor.automations</td>
                 <td>Home Assistant Automations</td>
                 <td>N/A</td>
-                <td>129</td>
+                <td>128</td>
                 <td>Yes</td>
             </tr>
         
@@ -4176,7 +4832,7 @@
                 <td>sensor.backup_last_successful_automatic_backup</td>
                 <td>Backup Last successful automatic backup</td>
                 <td>N/A</td>
-                <td>2026-05-12 04:47:49</td>
+                <td>2026-05-12 04:43:03</td>
                 <td>Yes</td>
             </tr>
         
@@ -4185,6 +4841,14 @@
                 <td>Backup Next scheduled automatic backup</td>
                 <td>N/A</td>
                 <td>2026-05-13 04:30:00</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.bathroom_aqara_battery</td>
+                <td>Bathroom Aqara Battery</td>
+                <td>%</td>
+                <td>100</td>
                 <td>Yes</td>
             </tr>
         
@@ -4200,7 +4864,7 @@
                 <td>sensor.bathroom_aqara_battery_plus</td>
                 <td>Bathroom Aqara Battery+</td>
                 <td>%</td>
-                <td>unknown</td>
+                <td>100.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -4209,6 +4873,38 @@
                 <td>Bathroom Aqara Battery type</td>
                 <td>N/A</td>
                 <td>CR2032</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.bathroom_aqara_humidity</td>
+                <td>Aqara Humidity</td>
+                <td>%</td>
+                <td>52.2</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.bathroom_aqara_pressure</td>
+                <td>Bathroom Aqara Atmospheric pressure</td>
+                <td>hPa</td>
+                <td>1011.9</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.bathroom_aqara_temperature</td>
+                <td>Aqara Temperature</td>
+                <td>°C</td>
+                <td>21.4</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.bathroom_motion_battery</td>
+                <td>Bathroom Motion Battery</td>
+                <td>%</td>
+                <td>76</td>
                 <td>Yes</td>
             </tr>
         
@@ -4224,7 +4920,7 @@
                 <td>sensor.bathroom_motion_battery_plus</td>
                 <td>Bathroom Motion Battery+</td>
                 <td>%</td>
-                <td>unknown</td>
+                <td>76.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -4233,6 +4929,14 @@
                 <td>Bathroom Motion Battery type</td>
                 <td>N/A</td>
                 <td>2× AAA</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.bathroom_motion_temperature</td>
+                <td>Hue Temperature</td>
+                <td>°C</td>
+                <td>20.96</td>
                 <td>Yes</td>
             </tr>
         
@@ -4246,10 +4950,10 @@
         
             <tr>
                 <td>sensor.bathroom_vibration_sensor_battery_plus</td>
-                <td>Bathroom Vibration Sensor Battery+</td>
+                <td>Battery+</td>
                 <td>%</td>
-                <td>unknown</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -4264,7 +4968,7 @@
                 <td>sensor.bed_presence_left_pressure</td>
                 <td>Bed Presence Left Pressure</td>
                 <td>%</td>
-                <td>0.0</td>
+                <td>79.5508880615234</td>
                 <td>Yes</td>
             </tr>
         
@@ -4272,7 +4976,7 @@
                 <td>sensor.bed_presence_right_pressure</td>
                 <td>Bed Presence Right Pressure</td>
                 <td>%</td>
-                <td>39.7794990539551</td>
+                <td>43.5979766845703</td>
                 <td>Yes</td>
             </tr>
         
@@ -4280,7 +4984,7 @@
                 <td>sensor.bed_presence_uptime</td>
                 <td>Bed Presence Uptime</td>
                 <td>s</td>
-                <td>3.59899997711182</td>
+                <td>8523.7275390625</td>
                 <td>Yes</td>
             </tr>
         
@@ -4288,7 +4992,7 @@
                 <td>sensor.bed_presence_wifi_signal_db</td>
                 <td>Bed Presence WiFi Signal dB</td>
                 <td>dBm</td>
-                <td>-72.0</td>
+                <td>-63.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -4296,7 +5000,7 @@
                 <td>sensor.bed_presence_wifi_signal_percent</td>
                 <td>Bed Presence WiFi Signal Percent</td>
                 <td>%</td>
-                <td>56.0</td>
+                <td>74.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -4304,7 +5008,7 @@
                 <td>sensor.binary_sensors</td>
                 <td>Home Assistant Binary sensors</td>
                 <td>N/A</td>
-                <td>69</td>
+                <td>73</td>
                 <td>Yes</td>
             </tr>
         
@@ -4312,7 +5016,7 @@
                 <td>sensor.buttons</td>
                 <td>Home Assistant Buttons</td>
                 <td>N/A</td>
-                <td>66</td>
+                <td>68</td>
                 <td>Yes</td>
             </tr>
         
@@ -4336,7 +5040,7 @@
                 <td>sensor.car_daily_distance_traveled</td>
                 <td>Today Distance</td>
                 <td>km</td>
-                <td>14.0</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -4344,7 +5048,7 @@
                 <td>sensor.car_daily_driving_time</td>
                 <td>Today Driving Time</td>
                 <td>min</td>
-                <td>41.25</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -4432,7 +5136,7 @@
                 <td>sensor.car_yearly_driving_time</td>
                 <td>YTD Driving Time</td>
                 <td>h</td>
-                <td>74.11</td>
+                <td>73.3</td>
                 <td>Yes</td>
             </tr>
         
@@ -4441,6 +5145,14 @@
                 <td>Home Assistant Climate</td>
                 <td>N/A</td>
                 <td>0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.coffee_table_battery</td>
+                <td>Coffee Table Battery</td>
+                <td>%</td>
+                <td>100</td>
                 <td>Yes</td>
             </tr>
         
@@ -4456,7 +5168,7 @@
                 <td>sensor.coffee_table_battery_plus</td>
                 <td>Coffee Table Battery+</td>
                 <td>%</td>
-                <td>unknown</td>
+                <td>100.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -4469,10 +5181,26 @@
             </tr>
         
             <tr>
+                <td>sensor.coffee_table_device_temperature</td>
+                <td>Coffee Table Temperature</td>
+                <td>°C</td>
+                <td>22</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.coffee_table_voltage</td>
+                <td>Coffee Table Voltage</td>
+                <td>mV</td>
+                <td>3025</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>sensor.covers</td>
                 <td>Home Assistant Covers</td>
                 <td>N/A</td>
-                <td>4</td>
+                <td>5</td>
                 <td>Yes</td>
             </tr>
         
@@ -4488,15 +5216,15 @@
                 <td>sensor.datamars_activewindow</td>
                 <td>Datamars Screen</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>Calendar | Microsoft Teams</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.datamars_activewindow_filtered</td>
                 <td>Active Window (Datamars)</td>
                 <td>N/A</td>
-                <td>Off</td>
+                <td>Calendar | Microsoft Teams</td>
                 <td>Yes</td>
             </tr>
         
@@ -4504,7 +5232,7 @@
                 <td>sensor.date_time_iso</td>
                 <td>Date & Time (ISO)</td>
                 <td>N/A</td>
-                <td>2026-05-12 23:28:00</td>
+                <td>2026-05-13 01:50:00</td>
                 <td>Yes</td>
             </tr>
         
@@ -4528,7 +5256,7 @@
                 <td>sensor.daylight_duration</td>
                 <td>Daylight Duration</td>
                 <td>h</td>
-                <td>15.33</td>
+                <td>15.36</td>
                 <td>Yes</td>
             </tr>
         
@@ -4536,7 +5264,7 @@
                 <td>sensor.days_until_retirement</td>
                 <td>Days Until Retirement</td>
                 <td>days</td>
-                <td>11014</td>
+                <td>11013</td>
                 <td>Yes</td>
             </tr>
         
@@ -4552,8 +5280,16 @@
                 <td>sensor.devices</td>
                 <td>Home Assistant Devices</td>
                 <td>N/A</td>
-                <td>124</td>
+                <td>146</td>
                 <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.dining_table_vibration_battery</td>
+                <td>Dining table vibration Battery</td>
+                <td>%</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -4566,10 +5302,10 @@
         
             <tr>
                 <td>sensor.dining_table_vibration_battery_plus</td>
-                <td>Dining table vibration Battery+</td>
+                <td>Battery+</td>
                 <td>%</td>
-                <td>unknown</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -4581,10 +5317,26 @@
             </tr>
         
             <tr>
+                <td>sensor.dining_table_vibration_device_temperature</td>
+                <td>Dining table vibration Temperature</td>
+                <td>°C</td>
+                <td>unavailable</td>
+                <td>No</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.dining_table_vibration_strength</td>
+                <td>Dining table vibration Strength</td>
+                <td>N/A</td>
+                <td>unavailable</td>
+                <td>No</td>
+            </tr>
+        
+            <tr>
                 <td>sensor.entities</td>
                 <td>Home Assistant Entities</td>
                 <td>N/A</td>
-                <td>885</td>
+                <td>1052</td>
                 <td>Yes</td>
             </tr>
         
@@ -4593,6 +5345,14 @@
                 <td>Home Assistant Fans</td>
                 <td>N/A</td>
                 <td>2</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.hall_motion_battery</td>
+                <td>Hall Motion Battery</td>
+                <td>%</td>
+                <td>87</td>
                 <td>Yes</td>
             </tr>
         
@@ -4608,7 +5368,7 @@
                 <td>sensor.hall_motion_battery_plus</td>
                 <td>Hall Motion Battery+</td>
                 <td>%</td>
-                <td>unknown</td>
+                <td>87.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -4617,6 +5377,22 @@
                 <td>Hall Motion Battery type</td>
                 <td>N/A</td>
                 <td>2× AAA</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.hall_motion_illuminance</td>
+                <td>Hall Motion Illuminance</td>
+                <td>lx</td>
+                <td>1</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.hall_motion_temperature</td>
+                <td>Hue Temperature</td>
+                <td>°C</td>
+                <td>22.04</td>
                 <td>Yes</td>
             </tr>
         
@@ -4632,7 +5408,7 @@
                 <td>sensor.hugh_phone_battery_level</td>
                 <td>Hugh Phone Battery level</td>
                 <td>%</td>
-                <td>12</td>
+                <td>70</td>
                 <td>Yes</td>
             </tr>
         
@@ -4680,7 +5456,7 @@
                 <td>sensor.hugh_phone_wifi_signal_strength</td>
                 <td>Hugh Phone SM-S9060 Wi-Fi signal strength</td>
                 <td>dBm</td>
-                <td>-53</td>
+                <td>-47</td>
                 <td>Yes</td>
             </tr>
         
@@ -4694,10 +5470,10 @@
         
             <tr>
                 <td>sensor.hugh_room_aqara_battery_plus</td>
-                <td>Hugh Room Aqara Battery+</td>
+                <td>Battery+</td>
                 <td>%</td>
-                <td>unknown</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -4705,6 +5481,22 @@
                 <td>Hugh Room Aqara Battery type</td>
                 <td>N/A</td>
                 <td>CR2032</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.hugh_room_aqara_bed_button_action</td>
+                <td>Hugh Room Aqara Bed Button Action</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.hugh_room_aqara_bed_button_battery</td>
+                <td>Hugh Room Aqara Bed Button Battery</td>
+                <td>%</td>
+                <td>100</td>
                 <td>Yes</td>
             </tr>
         
@@ -4720,7 +5512,7 @@
                 <td>sensor.hugh_room_aqara_bed_button_battery_plus</td>
                 <td>Hugh Room Aqara Bed Button Battery+</td>
                 <td>%</td>
-                <td>unknown</td>
+                <td>100.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -4729,6 +5521,30 @@
                 <td>Hugh Room Aqara Bed Button Battery type</td>
                 <td>N/A</td>
                 <td>CR2032</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.hugh_room_aqara_bed_button_device_temperature</td>
+                <td>Hugh Room Aqara Bed Button Temperature</td>
+                <td>°C</td>
+                <td>22</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.hugh_room_aqara_door_button_action</td>
+                <td>Hugh Room Aqara Door Button Action</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.hugh_room_aqara_door_button_battery</td>
+                <td>Hugh Room Aqara Door Button Battery</td>
+                <td>%</td>
+                <td>0</td>
                 <td>Yes</td>
             </tr>
         
@@ -4744,7 +5560,7 @@
                 <td>sensor.hugh_room_aqara_door_button_battery_plus</td>
                 <td>Hugh Room Aqara Door Button Battery+</td>
                 <td>%</td>
-                <td>unknown</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -4753,6 +5569,14 @@
                 <td>Hugh Room Aqara Door Button Battery type</td>
                 <td>N/A</td>
                 <td>CR2032</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.hugh_room_aqara_door_button_device_temperature</td>
+                <td>Hugh Room Aqara Door Button Temperature</td>
+                <td>°C</td>
+                <td>28</td>
                 <td>Yes</td>
             </tr>
         
@@ -4766,10 +5590,10 @@
         
             <tr>
                 <td>sensor.hugh_room_desk_aqara_button_battery_plus</td>
-                <td>Hugh Room Desk Aqara Button Battery+</td>
+                <td>Battery+</td>
                 <td>%</td>
-                <td>unknown</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -4777,6 +5601,22 @@
                 <td>Hugh Room Desk Aqara Button Battery type</td>
                 <td>N/A</td>
                 <td>CR2032</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.hugh_room_phillips_switch_action</td>
+                <td>Hugh Room Phillips Switch Action</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.hugh_room_phillips_switch_battery</td>
+                <td>Hugh Room Phillips Switch Battery</td>
+                <td>%</td>
+                <td>89</td>
                 <td>Yes</td>
             </tr>
         
@@ -4792,7 +5632,7 @@
                 <td>sensor.hugh_room_phillips_switch_battery_plus</td>
                 <td>Hugh Room Phillips Switch Battery+</td>
                 <td>%</td>
-                <td>unknown</td>
+                <td>89.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -4801,6 +5641,70 @@
                 <td>Hugh Room Phillips Switch Battery type</td>
                 <td>N/A</td>
                 <td>CR2032</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.hugh_room_plug_blanket_current</td>
+                <td>Hugh Room Plug Blanket Current</td>
+                <td>A</td>
+                <td>0.01</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.hugh_room_plug_blanket_energy</td>
+                <td>Hugh Room Plug Blanket Energy</td>
+                <td>kWh</td>
+                <td>25.26</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.hugh_room_plug_blanket_power</td>
+                <td>Hugh Room Plug Blanket Power</td>
+                <td>W</td>
+                <td>0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.hugh_room_plug_blanket_voltage</td>
+                <td>Hugh Room Plug Blanket Voltage</td>
+                <td>V</td>
+                <td>236</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.hugh_room_plug_fan_bed_current</td>
+                <td>Hugh Room Plug Fan Bed Current</td>
+                <td>A</td>
+                <td>0.01</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.hugh_room_plug_fan_bed_energy</td>
+                <td>Hugh Room Plug Fan Bed Energy</td>
+                <td>kWh</td>
+                <td>3.75</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.hugh_room_plug_fan_bed_power</td>
+                <td>Hugh Room Plug Fan Bed Power</td>
+                <td>W</td>
+                <td>0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.hugh_room_plug_fan_bed_voltage</td>
+                <td>Hugh Room Plug Fan Bed Voltage</td>
+                <td>V</td>
+                <td>237</td>
                 <td>Yes</td>
             </tr>
         
@@ -4848,7 +5752,7 @@
                 <td>sensor.imap_hughodwyer90_gmail_com_messages</td>
                 <td>IMAP (hughodwyer90@gmail.com) Messages</td>
                 <td>messages</td>
-                <td>136</td>
+                <td>135</td>
                 <td>Yes</td>
             </tr>
         
@@ -4904,7 +5808,7 @@
                 <td>sensor.integrations</td>
                 <td>Home Assistant Integrations</td>
                 <td>N/A</td>
-                <td>109</td>
+                <td>108</td>
                 <td>Yes</td>
             </tr>
         
@@ -4912,7 +5816,7 @@
                 <td>sensor.issues</td>
                 <td>Repairs Total</td>
                 <td>issues</td>
-                <td>53</td>
+                <td>7</td>
                 <td>Yes</td>
             </tr>
         
@@ -4920,39 +5824,39 @@
                 <td>sensor.kitchen_epone_humidity</td>
                 <td>Humidity</td>
                 <td>%</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>30.677490234375</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.kitchen_epone_illuminance</td>
                 <td>Kitchen EPOne Illuminance</td>
                 <td>lx</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>0.0</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.kitchen_epone_target_1_distance</td>
                 <td>Kitchen EPOne Target 1 Distance</td>
                 <td>m</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>0.0</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.kitchen_epone_temperature</td>
                 <td>Temperature</td>
                 <td>°C</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>22.4195499420166</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>sensor.last_updated</td>
                 <td>Last Updated</td>
                 <td>N/A</td>
-                <td>2026-05-12 22:28:27</td>
+                <td>2026-05-13 00:50:27</td>
                 <td>Yes</td>
             </tr>
         
@@ -5000,7 +5904,7 @@
                 <td>sensor.lights</td>
                 <td>Home Assistant Lights</td>
                 <td>N/A</td>
-                <td>13</td>
+                <td>30</td>
                 <td>Yes</td>
             </tr>
         
@@ -5142,10 +6046,10 @@
         
             <tr>
                 <td>sensor.living_room_aqara_button_battery_plus</td>
-                <td>Living Room Aqara Button Battery+</td>
+                <td>Battery+</td>
                 <td>%</td>
-                <td>unknown</td>
-                <td>Yes</td>
+                <td>unavailable</td>
+                <td>No</td>
             </tr>
         
             <tr>
@@ -5157,10 +6061,18 @@
             </tr>
         
             <tr>
+                <td>sensor.living_room_bookshelf_color_options</td>
+                <td>Living Room Bookshelf Color options</td>
+                <td>N/A</td>
+                <td></td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>sensor.living_room_eppro_humidity</td>
                 <td>Humidity</td>
                 <td>%</td>
-                <td>21.8597412109375</td>
+                <td>22.4212646484375</td>
                 <td>Yes</td>
             </tr>
         
@@ -5168,7 +6080,7 @@
                 <td>sensor.living_room_eppro_illuminance</td>
                 <td>Illuminance</td>
                 <td>lx</td>
-                <td>0.565944850444794</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5176,7 +6088,7 @@
                 <td>sensor.living_room_eppro_target_1_angle</td>
                 <td>Living Room EPPro Target 1 Angle</td>
                 <td>°</td>
-                <td>-23.371675491333</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5184,7 +6096,7 @@
                 <td>sensor.living_room_eppro_target_1_distance</td>
                 <td>Living Room EPPro Target 1 Distance</td>
                 <td>mm</td>
-                <td>3042.646484375</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5192,7 +6104,7 @@
                 <td>sensor.living_room_eppro_target_1_resolution</td>
                 <td>Living Room EPPro Target 1 Resolution</td>
                 <td>mm</td>
-                <td>360.0</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5208,7 +6120,7 @@
                 <td>sensor.living_room_eppro_target_1_x</td>
                 <td>Living Room EPPro Target 1 X</td>
                 <td>mm</td>
-                <td>1804.0</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5216,7 +6128,7 @@
                 <td>sensor.living_room_eppro_target_1_y</td>
                 <td>Living Room EPPro Target 1 Y</td>
                 <td>mm</td>
-                <td>2449.0</td>
+                <td>0.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5320,7 +6232,7 @@
                 <td>sensor.living_room_eppro_temperature</td>
                 <td>Temperature</td>
                 <td>°C</td>
-                <td>23.5005187988281</td>
+                <td>22.6700592041016</td>
                 <td>Yes</td>
             </tr>
         
@@ -5329,6 +6241,30 @@
                 <td>Living Room EPPro Zone 1 Target Count</td>
                 <td> </td>
                 <td>0.0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.living_room_floor_lamp_color_options</td>
+                <td>Living Room Floor lamp Color options</td>
+                <td>N/A</td>
+                <td></td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.living_room_phillips_switch_action</td>
+                <td>Living Room Phillips Switch Action</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.living_room_phillips_switch_battery</td>
+                <td>Living Room Phillips Switch Battery</td>
+                <td>%</td>
+                <td>85</td>
                 <td>Yes</td>
             </tr>
         
@@ -5342,10 +6278,10 @@
         
             <tr>
                 <td>sensor.living_room_phillips_switch_battery_plus</td>
-                <td>Battery+</td>
+                <td>Living Room Phillips Switch Battery+</td>
                 <td>%</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>85.0</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -5381,6 +6317,14 @@
             </tr>
         
             <tr>
+                <td>sensor.master_blind_battery</td>
+                <td>Master Blind Battery</td>
+                <td>%</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>sensor.master_blind_battery_last_replaced</td>
                 <td>Master Blind Battery last replaced</td>
                 <td>N/A</td>
@@ -5401,6 +6345,14 @@
                 <td>Master Blind Battery type</td>
                 <td>N/A</td>
                 <td>Rechargeable</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.master_blind_work_state</td>
+                <td>Master Blind Work state</td>
+                <td>N/A</td>
+                <td>closing</td>
                 <td>Yes</td>
             </tr>
         
@@ -5464,7 +6416,7 @@
                 <td>sensor.missing_entities</td>
                 <td>Missing Entities</td>
                 <td>items</td>
-                <td>56</td>
+                <td>52</td>
                 <td>Yes</td>
             </tr>
         
@@ -5472,7 +6424,7 @@
                 <td>sensor.missing_entities_mirror</td>
                 <td>Missing Entities</td>
                 <td>N/A</td>
-                <td>56</td>
+                <td>52</td>
                 <td>Yes</td>
             </tr>
         
@@ -5496,7 +6448,7 @@
                 <td>sensor.next_alarm_in</td>
                 <td>Next Alarm In</td>
                 <td>N/A</td>
-                <td>8h 2m</td>
+                <td>5h 40m</td>
                 <td>Yes</td>
             </tr>
         
@@ -5528,7 +6480,39 @@
                 <td>sensor.numbers</td>
                 <td>Home Assistant Numbers</td>
                 <td>N/A</td>
-                <td>34</td>
+                <td>55</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.pc_plug_current</td>
+                <td>PC Plug Current</td>
+                <td>A</td>
+                <td>0.01</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.pc_plug_energy</td>
+                <td>PC Plug Energy</td>
+                <td>kWh</td>
+                <td>119.72</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.pc_plug_power</td>
+                <td>PC Plug Power</td>
+                <td>W</td>
+                <td>0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.pc_plug_voltage</td>
+                <td>PC Plug Voltage</td>
+                <td>V</td>
+                <td>235</td>
                 <td>Yes</td>
             </tr>
         
@@ -5536,7 +6520,7 @@
                 <td>sensor.persistent_notifications</td>
                 <td>Home Assistant Persistent notifications</td>
                 <td>N/A</td>
-                <td>1</td>
+                <td>0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5552,7 +6536,7 @@
                 <td>sensor.phone_ble_rssi</td>
                 <td>IR Receiver Phone BLE RSSI</td>
                 <td>dBm</td>
-                <td>unknown</td>
+                <td>-97.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5568,7 +6552,7 @@
                 <td>sensor.previous_bathroom_humidity</td>
                 <td>Aqara Humidity (previous)</td>
                 <td>%</td>
-                <td>0.0</td>
+                <td>52.2</td>
                 <td>Yes</td>
             </tr>
         
@@ -5624,7 +6608,7 @@
                 <td>sensor.scenes</td>
                 <td>Home Assistant Scenes</td>
                 <td>N/A</td>
-                <td>17</td>
+                <td>21</td>
                 <td>Yes</td>
             </tr>
         
@@ -5640,7 +6624,7 @@
                 <td>sensor.selects</td>
                 <td>Home Assistant Selects</td>
                 <td>N/A</td>
-                <td>20</td>
+                <td>47</td>
                 <td>Yes</td>
             </tr>
         
@@ -5648,7 +6632,7 @@
                 <td>sensor.sensors</td>
                 <td>Home Assistant Sensors</td>
                 <td>N/A</td>
-                <td>302</td>
+                <td>344</td>
                 <td>Yes</td>
             </tr>
         
@@ -5704,7 +6688,7 @@
                 <td>sensor.snake_plant_illuminance</td>
                 <td>Snake Plant Illuminance</td>
                 <td>lx</td>
-                <td>82</td>
+                <td>58</td>
                 <td>Yes</td>
             </tr>
         
@@ -5720,7 +6704,7 @@
                 <td>sensor.snake_plant_signal_strength</td>
                 <td>Snake Plant Signal Strength</td>
                 <td>dBm</td>
-                <td>-90</td>
+                <td>-81</td>
                 <td>Yes</td>
             </tr>
         
@@ -5728,7 +6712,7 @@
                 <td>sensor.snake_plant_temperature</td>
                 <td>Snake Plant Temperature</td>
                 <td>°C</td>
-                <td>22.3</td>
+                <td>22.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5744,7 +6728,7 @@
                 <td>sensor.sun_azimuth</td>
                 <td>Sunlight Intensity Sun Azimuth</td>
                 <td>°</td>
-                <td>329.17</td>
+                <td>4.78</td>
                 <td>Yes</td>
             </tr>
         
@@ -5752,7 +6736,7 @@
                 <td>sensor.sun_elevation</td>
                 <td>Sunlight Intensity Sun Elevation</td>
                 <td>°</td>
-                <td>-14.9</td>
+                <td>-19.68</td>
                 <td>Yes</td>
             </tr>
         
@@ -5776,7 +6760,7 @@
                 <td>sensor.sun_next_midnight</td>
                 <td>Sun Next midnight</td>
                 <td>N/A</td>
-                <td>2026-05-13 00:30:05</td>
+                <td>2026-05-14 00:30:05</td>
                 <td>Yes</td>
             </tr>
         
@@ -5848,7 +6832,7 @@
                 <td>sensor.switches</td>
                 <td>Home Assistant Switches</td>
                 <td>N/A</td>
-                <td>17</td>
+                <td>26</td>
                 <td>Yes</td>
             </tr>
         
@@ -5856,7 +6840,7 @@
                 <td>sensor.texts</td>
                 <td>Home Assistant Texts</td>
                 <td>N/A</td>
-                <td>7</td>
+                <td>18</td>
                 <td>Yes</td>
             </tr>
         
@@ -5872,7 +6856,7 @@
                 <td>sensor.total_sensors_count</td>
                 <td>Total Entities</td>
                 <td>sensors</td>
-                <td>884</td>
+                <td>1057</td>
                 <td>Yes</td>
             </tr>
         
@@ -5904,7 +6888,7 @@
                 <td>sensor.update</td>
                 <td>Home Assistant Update</td>
                 <td>N/A</td>
-                <td>35</td>
+                <td>60</td>
                 <td>Yes</td>
             </tr>
         
@@ -5912,7 +6896,15 @@
                 <td>sensor.uptime</td>
                 <td>Uptime</td>
                 <td>N/A</td>
-                <td>2026-05-12 17:34:17</td>
+                <td>2026-05-13 00:48:55</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.utility_motion_battery</td>
+                <td>Utility Motion Battery</td>
+                <td>%</td>
+                <td>90</td>
                 <td>Yes</td>
             </tr>
         
@@ -5928,7 +6920,7 @@
                 <td>sensor.utility_motion_battery_plus</td>
                 <td>Utility Motion Battery+</td>
                 <td>%</td>
-                <td>unknown</td>
+                <td>90.0</td>
                 <td>Yes</td>
             </tr>
         
@@ -5937,6 +6929,30 @@
                 <td>Utility Motion Battery type</td>
                 <td>N/A</td>
                 <td>2× AAA</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.utility_motion_humidity</td>
+                <td>Utility Motion Humidity</td>
+                <td>%</td>
+                <td>52</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.utility_motion_illuminance</td>
+                <td>Utility Motion Illuminance</td>
+                <td>lx</td>
+                <td>0</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>sensor.utility_motion_temperature</td>
+                <td>Utility Motion Temperature</td>
+                <td>°C</td>
+                <td>21.6</td>
                 <td>Yes</td>
             </tr>
         
@@ -6232,7 +7248,7 @@
                 <td>sensor.watchman_last_parse</td>
                 <td>Watchman Last Parse</td>
                 <td>N/A</td>
-                <td>2026-05-12 17:36:19</td>
+                <td>2026-05-13 00:04:49</td>
                 <td>Yes</td>
             </tr>
         
@@ -6248,7 +7264,7 @@
                 <td>sensor.watchman_parse_duration</td>
                 <td>Watchman Parse Duration</td>
                 <td>s</td>
-                <td>1.06983817099996</td>
+                <td>0.648653519998334</td>
                 <td>Yes</td>
             </tr>
         
@@ -6264,7 +7280,7 @@
                 <td>sensor.watchman_status</td>
                 <td>Watchman Status</td>
                 <td>N/A</td>
-                <td>idle</td>
+                <td>pending</td>
                 <td>Yes</td>
             </tr>
         
@@ -6288,7 +7304,7 @@
                 <td>sensor.weather_cloud_coverage</td>
                 <td>weather Cloud coverage</td>
                 <td>%</td>
-                <td>20</td>
+                <td>75</td>
                 <td>Yes</td>
             </tr>
         
@@ -6296,7 +7312,7 @@
                 <td>sensor.weather_condition</td>
                 <td>weather Condition</td>
                 <td>N/A</td>
-                <td>partlycloudy</td>
+                <td>cloudy</td>
                 <td>Yes</td>
             </tr>
         
@@ -6304,7 +7320,7 @@
                 <td>sensor.weather_dew_point</td>
                 <td>weather Dew point temperature</td>
                 <td>°C</td>
-                <td>4.74</td>
+                <td>5.7</td>
                 <td>Yes</td>
             </tr>
         
@@ -6312,7 +7328,7 @@
                 <td>sensor.weather_feels_like_temperature</td>
                 <td>weather Apparent temperature</td>
                 <td>°C</td>
-                <td>6.55</td>
+                <td>9.72</td>
                 <td>Yes</td>
             </tr>
         
@@ -6336,7 +7352,7 @@
                 <td>sensor.weather_pressure</td>
                 <td>weather Pressure</td>
                 <td>hPa</td>
-                <td>1015</td>
+                <td>1014</td>
                 <td>Yes</td>
             </tr>
         
@@ -6360,7 +7376,7 @@
                 <td>sensor.weather_temperature</td>
                 <td>weather Temperature</td>
                 <td>°C</td>
-                <td>9.74</td>
+                <td>10.74</td>
                 <td>Yes</td>
             </tr>
         
@@ -6384,7 +7400,7 @@
                 <td>sensor.weather_weather</td>
                 <td>weather Weather</td>
                 <td>N/A</td>
-                <td>few clouds</td>
+                <td>broken clouds</td>
                 <td>Yes</td>
             </tr>
         
@@ -6392,7 +7408,7 @@
                 <td>sensor.weather_weather_code</td>
                 <td>weather Weather code</td>
                 <td>N/A</td>
-                <td>801</td>
+                <td>803</td>
                 <td>Yes</td>
             </tr>
         
@@ -6400,7 +7416,7 @@
                 <td>sensor.weather_wind_bearing</td>
                 <td>weather Wind direction</td>
                 <td>°</td>
-                <td>270</td>
+                <td>280</td>
                 <td>Yes</td>
             </tr>
         
@@ -6416,7 +7432,7 @@
                 <td>sensor.weather_wind_speed</td>
                 <td>weather Wind speed</td>
                 <td>km/h</td>
-                <td>25.92</td>
+                <td>27.792</td>
                 <td>Yes</td>
             </tr>
         
@@ -6448,8 +7464,8 @@
                 <td>sensor.zigbee2mqtt_bridge_version</td>
                 <td>Zigbee2MQTT Bridge Version</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>2.10.1</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -6520,6 +7536,14 @@
                 <td>switch.air_purifier_display</td>
                 <td>Air Purifier Display</td>
                 <td>N/A</td>
+                <td>on</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>switch.bathroom_motion_led_indication</td>
+                <td>Bathroom Motion Led indication</td>
+                <td>N/A</td>
                 <td>off</td>
                 <td>Yes</td>
             </tr>
@@ -6549,6 +7573,14 @@
             </tr>
         
             <tr>
+                <td>switch.hall_motion_led_indication</td>
+                <td>Hall Motion Led indication</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>switch.home_assistant</td>
                 <td>Home Assistant</td>
                 <td>N/A</td>
@@ -6561,6 +7593,38 @@
                 <td>Home Assistant LED</td>
                 <td>N/A</td>
                 <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>switch.hugh_room_plug_blanket</td>
+                <td>Hugh Room Plug Blanket</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>switch.hugh_room_plug_blanket_child_lock</td>
+                <td>Hugh Room Plug Blanket Child lock</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>switch.hugh_room_plug_fan_bed</td>
+                <td>Hugh Room Plug Fan Bed</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>switch.hugh_room_plug_fan_bed_child_lock</td>
+                <td>Hugh Room Plug Fan Bed Child lock</td>
+                <td>N/A</td>
+                <td>unknown</td>
                 <td>Yes</td>
             </tr>
         
@@ -6597,6 +7661,30 @@
             </tr>
         
             <tr>
+                <td>switch.pc_plug</td>
+                <td>Plug PC</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>switch.pc_plug_child_lock</td>
+                <td>PC Plug Child lock</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>switch.utility_motion_indicator</td>
+                <td>Utility Motion Indicator</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>switch.vacuum_dnd</td>
                 <td>Vacuum DnD</td>
                 <td>N/A</td>
@@ -6606,10 +7694,10 @@
         
             <tr>
                 <td>switch.zigbee2mqtt_bridge_permit_join</td>
-                <td>Zigbee Permit Join</td>
+                <td>Zigbee2MQTT Bridge Permit join</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
@@ -6661,6 +7749,86 @@
             </tr>
         
             <tr>
+                <td>text.bathroom_ceiling_effect_color</td>
+                <td>Bathroom Ceiling Effect color</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>text.dining_room_table_effect_color</td>
+                <td>Living Room Dining Table Effect color</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>text.hall_ceiling_1_effect_color</td>
+                <td>Hall Ceiling 1 Effect color</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>text.hall_ceiling_2_effect_color</td>
+                <td>Hall Ceiling 2 Effect color</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>text.hall_console_effect_color</td>
+                <td>Hall Console Effect color</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>text.hall_wall_1_effect_color</td>
+                <td>Hall Wall 1 Effect color</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>text.hall_wall_2_effect_color</td>
+                <td>Hall Wall 2 Effect color</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>text.hall_wall_3_effect_color</td>
+                <td>Hall Wall 3 Effect color</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>text.hugh_room_lamp_effect_color</td>
+                <td>Hugh Room Lamp Effect color</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>text.living_room_coffee_table_effect_color</td>
+                <td>Coffee Table Effect color</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>text.living_room_eppro_polygon_exclusion_1</td>
                 <td>Living Room EPPro Polygon Exclusion 1</td>
                 <td>N/A</td>
@@ -6703,6 +7871,14 @@
             <tr>
                 <td>text.living_room_eppro_polygon_zone_4</td>
                 <td>Living Room EPPro Polygon Zone 4</td>
+                <td>N/A</td>
+                <td>unknown</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>text.utility_ceiling_effect_color</td>
+                <td>Utility Ceiling Effect color</td>
                 <td>N/A</td>
                 <td>unknown</td>
                 <td>Yes</td>
@@ -6789,6 +7965,22 @@
             </tr>
         
             <tr>
+                <td>update.bathroom_ceiling</td>
+                <td>Bathroom Ceiling</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.bathroom_motion</td>
+                <td>Bathroom Motion</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>update.battery_notes_update</td>
                 <td>Battery Notes Update</td>
                 <td>N/A</td>
@@ -6821,6 +8013,14 @@
             </tr>
         
             <tr>
+                <td>update.dining_room_table</td>
+                <td>Living Room Dining Table</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>update.dreame_vacuum_update</td>
                 <td>Dreame Vacuum Update</td>
                 <td>N/A</td>
@@ -6832,7 +8032,7 @@
                 <td>update.everything_presence_zone_configurator_update</td>
                 <td>Everything Presence Zone Configurator Update</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -6853,8 +8053,72 @@
             </tr>
         
             <tr>
+                <td>update.hall_ceiling_1</td>
+                <td>Hall Ceiling 1</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.hall_ceiling_2</td>
+                <td>Hall Ceiling 2</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.hall_console</td>
+                <td>Hall Console</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.hall_motion</td>
+                <td>Hall Motion</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.hall_wall_1</td>
+                <td>Hall Wall 1</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.hall_wall_2</td>
+                <td>Hall Wall 2</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.hall_wall_3</td>
+                <td>Hall Wall 3</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>update.hive_local_thermostat_update</td>
                 <td>Hive Local Thermostat Update</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.home_assistant_connect_zbt_2_e072a1fa8754_firmware</td>
+                <td>ZBT-2 Firmware</td>
                 <td>N/A</td>
                 <td>off</td>
                 <td>Yes</td>
@@ -6864,7 +8128,7 @@
                 <td>update.home_assistant_core_update</td>
                 <td>Home Assistant Core Update</td>
                 <td>N/A</td>
-                <td>on</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -6885,10 +8149,34 @@
             </tr>
         
             <tr>
-                <td>update.home_assistant_yellow_radio_firmware</td>
-                <td>Home Assistant Yellow Radio firmware</td>
+                <td>update.hugh_room_lamp</td>
+                <td>Hugh Room Lamp</td>
                 <td>N/A</td>
-                <td>unknown</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.hugh_room_phillips_switch</td>
+                <td>Hugh Room Phillips Switch</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.hugh_room_plug_blanket</td>
+                <td>Hugh Room Plug Blanket</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.hugh_room_plug_fan_bed</td>
+                <td>Hugh Room Plug Fan Bed</td>
+                <td>N/A</td>
+                <td>off</td>
                 <td>Yes</td>
             </tr>
         
@@ -6901,16 +8189,64 @@
             </tr>
         
             <tr>
+                <td>update.kitchen_ceiling_1</td>
+                <td>Kitchen Ceiling 1</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.kitchen_ceiling_2</td>
+                <td>Kitchen Ceiling 2</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.kitchen_ceiling_3</td>
+                <td>Kitchen Ceiling 3</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.kitchen_ceiling_4</td>
+                <td>Kitchen Ceiling 4</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>update.kitchen_epone_everything_presence_one_firmware</td>
                 <td>Kitchen EPOne Everything Presence One Firmware</td>
                 <td>N/A</td>
-                <td>unavailable</td>
-                <td>No</td>
+                <td>off</td>
+                <td>Yes</td>
             </tr>
         
             <tr>
                 <td>update.kitchen_epone_firmware</td>
                 <td>Kitchen EPOne Firmware</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.living_room_bookshelf</td>
+                <td>Living Room Bookshelf</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.living_room_coffee_table</td>
+                <td>Coffee Table</td>
                 <td>N/A</td>
                 <td>off</td>
                 <td>Yes</td>
@@ -6933,8 +8269,32 @@
             </tr>
         
             <tr>
+                <td>update.living_room_floor_lamp</td>
+                <td>Living Room Floor lamp</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.living_room_phillips_switch</td>
+                <td>Living Room Phillips Switch</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>update.matter_server_update</td>
                 <td>Matter Server Update</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.mosquitto_broker_update</td>
+                <td>Mosquitto broker Update</td>
                 <td>N/A</td>
                 <td>off</td>
                 <td>Yes</td>
@@ -6959,6 +8319,14 @@
             <tr>
                 <td>update.passive_ble_monitor_integration_update</td>
                 <td>Passive BLE monitor integration Update</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.pc_plug</td>
+                <td>PC Plug</td>
                 <td>N/A</td>
                 <td>off</td>
                 <td>Yes</td>
@@ -7021,6 +8389,14 @@
             </tr>
         
             <tr>
+                <td>update.utility_ceiling</td>
+                <td>Utility Ceiling</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
                 <td>update.watchman_update</td>
                 <td>Watchman Update</td>
                 <td>N/A</td>
@@ -7031,6 +8407,14 @@
             <tr>
                 <td>update.yahoo_finance_update</td>
                 <td>Yahoo Finance Update</td>
+                <td>N/A</td>
+                <td>off</td>
+                <td>Yes</td>
+            </tr>
+        
+            <tr>
+                <td>update.zigbee2mqtt_update</td>
+                <td>Zigbee2MQTT Update</td>
                 <td>N/A</td>
                 <td>off</td>
                 <td>Yes</td>
@@ -7048,7 +8432,7 @@
                 <td>weather.weather</td>
                 <td>weather</td>
                 <td>N/A</td>
-                <td>partlycloudy</td>
+                <td>cloudy</td>
                 <td>Yes</td>
             </tr>
         
