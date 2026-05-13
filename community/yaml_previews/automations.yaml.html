@@ -879,23 +879,6 @@
         target:
           entity_id: select.hugh_room_plug_fan_bed_indicator_mode
   mode: single
-- id: &#x27;1705703139343&#x27;
-  alias: Hugh Room Desk Fan On
-  description: Turn on Desk Fan
-  trigger:
-  - trigger: device
-    domain: mqtt
-    device_id: 105dad18f2a2a0ceab0b94b61060ee0d
-    type: action
-    subtype: off_hold
-    discovery_id: 0x001788010b72e620 action_off_hold
-  condition: []
-  action:
-  - type: toggle
-    device_id: 2c33ae7dadbfb51f658e6a27043d53f6
-    entity_id: a97b8336160219a85f69fb46116b1b0e
-    domain: switch
-  mode: single
 - id: &#x27;1705864250061&#x27;
   alias: Hugh Room Diffuser Lights Off
   description: Turns off the diffuser light after 11pm
