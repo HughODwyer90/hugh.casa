@@ -238,8 +238,8 @@
         data:
           occupancy_sensor: binary_sensor.hall_motion_occupancy
           target_light: light.hallway
-          on_scene: scene.hallway_3_late_night
-          off_scene: scene.hallway_0_off
+          on_scene: scene.hallway_3_hall_lights_console
+          off_scene: scene.hallway_0_hall_lights_off
           brightness_pct: 100
           transition: 1
           direct_scene: true
@@ -258,8 +258,8 @@
         data:
           occupancy_sensor: binary_sensor.hall_motion_occupancy
           target_light: light.hallway
-          on_scene: scene.hallway_1_on
-          off_scene: scene.hallway_0_off
+          on_scene: scene.hallway_1_hall_lights_on
+          off_scene: scene.hallway_0_hall_lights_off
           brightness_pct: 100
           transition: 1
           direct_scene: true
@@ -278,8 +278,8 @@
         data:
           occupancy_sensor: binary_sensor.hall_motion_occupancy
           target_light: light.hallway
-          on_scene: scene.hallway_2_on_walls
-          off_scene: scene.hallway_0_off
+          on_scene: scene.hallway_2_hall_lights_walls
+          off_scene: scene.hallway_0_hall_lights_off
           brightness_pct: 100
           transition: 1
           direct_scene: true
@@ -292,8 +292,8 @@
         data:
           occupancy_sensor: binary_sensor.hall_motion_occupancy
           target_light: light.hallway
-          on_scene: scene.hallway_1_on
-          off_scene: scene.hallway_0_off
+          on_scene: scene.hallway_0_hall_lights_off
+          off_scene: scene.hallway_0_hall_lights_off
           brightness_pct: 100
           transition: 1
     default: []
@@ -490,8 +490,7 @@
       sequence:
       - action: scene.turn_on
         target:
-          entity_id:
-          - scene.living_room_lights_0_off
+          entity_id: scene.living_room_lights_3_living_room_off
         data: {}
     - conditions:
       - condition: state
@@ -516,8 +515,7 @@
       - action: scene.turn_on
         data: {}
         target:
-          entity_id:
-          - scene.living_room_lights_2_dimmers
+          entity_id: scene.living_room_lights_6_living_room_accents_dim
     - conditions:
       - condition: state
         entity_id: binary_sensor.living_room_eppro_occupancy
@@ -554,8 +552,7 @@
       sequence:
       - action: scene.turn_on
         target:
-          entity_id:
-          - scene.living_room_lights_3_accents
+          entity_id: scene.living_room_lights_5_living_room_accents_glow
         data: {}
     default: []
   mode: restart
@@ -826,40 +823,46 @@
 - id: '1705702948959'
   alias: Hugh Room Fan Desk Indicator
   description: Updates the indicator state based on the power state of the switch
-  trigger:
+  triggers:
   - trigger: state
     entity_id:
-    - switch.hugh_room_plug_fan_desk
-    from: 'off'
-    to: 'on'
+    - switch.hugh_room_plug_fan_bed
+    from:
+    - 'off'
+    to:
+    - 'on'
   - trigger: state
     entity_id:
-    - switch.hugh_room_plug_fan_desk
-    from: 'on'
-    to: 'off'
-  condition: []
-  action:
+    - switch.hugh_room_plug_fan_bed
+    from:
+    - 'on'
+    to:
+    - 'off'
+  conditions: []
+  actions:
   - choose:
     - conditions:
       - condition: state
-        state: 'on'
-        entity_id: switch.hugh_room_plug_fan_desk
+        state:
+        - 'on'
+        entity_id: switch.hugh_room_plug_fan_bed
       sequence:
       - action: select.select_option
         data:
           option: 'on'
         target:
-          entity_id: select.hugh_room_plug_fan_desk_indicator_mode
+          entity_id: select.hugh_room_plug_fan_bed_indicator_mode
     - conditions:
       - condition: state
-        state: 'off'
-        entity_id: switch.hugh_room_plug_fan_desk
+        state:
+        - 'off'
+        entity_id: switch.hugh_room_plug_fan_bed
       sequence:
       - action: select.select_option
         data:
           option: 'off'
         target:
-          entity_id: select.hugh_room_plug_fan_desk_indicator_mode
+          entity_id: select.hugh_room_plug_fan_bed_indicator_mode
   mode: single
 - id: '1705703139343'
   alias: Hugh Room Desk Fan On
@@ -1950,10 +1953,6 @@
   alias: PC Turn On
   description: ''
   triggers:
-  - trigger: state
-    entity_id:
-    - sensor.hugh_room_desk_aqara_button_action
-    to: single
   - trigger: state
     entity_id:
     - binary_sensor.typhoon_power
@@ -4652,8 +4651,8 @@
   - data:
       occupancy_sensor: binary_sensor.kitchen_epone_occupancy
       target_light: light.kitchen_lights
-      on_scene: scene.kitchen_lights_on
-      off_scene: scene.kitchen_lights_off
+      on_scene: scene.kitchen_lights_0_kitchen_lights_on
+      off_scene: scene.kitchen_lights_1_kitchen_lights_off
       brightness_pct: 100
       transition: 1
     action: script.occupancy_lights_with_scene_fallback
@@ -4874,7 +4873,8 @@
       value_template: '{{ any_kitchen_light_on_after_delay }}'
     - action: scene.turn_on
       target:
-        entity_id: scene.kitchen_lights_0_off
+        entity_id: scene.kitchen_lights_1_kitchen_lights_off
+      data: {}
   mode: restart
 - id: '1774082499649'
   alias: Hugh Room Purifier Watchdog
@@ -5039,7 +5039,7 @@
     discovery_id: 0x0017880109a49868 action_down_hold
   actions:
   - variables:
-      ceiling_on_lights: "{{\n  [\n    'light.dining_table',\n    'light.living_room_coffee_table'\n
+      ceiling_on_lights: "{{\n  [\n    'light.dining_room_table',\n    'light.living_room_coffee_table'\n
         \ ]\n  | select('is_state', 'on')\n  | list\n}}\n"
   - choose:
     - conditions:
@@ -5530,7 +5530,8 @@
   actions:
   - action: scene.turn_on
     target:
-      entity_id: scene.living_room_lights_0_off
+      entity_id: scene.living_room_lights_3_living_room_off
+    data: {}
   mode: restart
 - id: '1777073358590'
   alias: Bathroom Lights Watchdog - Off
