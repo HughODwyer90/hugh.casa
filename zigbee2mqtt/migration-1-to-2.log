@@ -1,0 +1,7 @@
+[ADDITION] Migrated settings to version 2
+
+[REMOVAL] Entity attributes (homeassistant.legacy_entity_attributes setting) has been removed. This means that entities discovered by Zigbee2MQTT will no longer have entity attributes (Home Assistant entity attributes are accessed via e.g. states.binary_sensor.my_sensor.attributes).
+
+[REMOVAL] The permit_join setting has been removed, use the frontend or MQTT to permit joining.
+
+For more details, see https://github.com/Koenkk/zigbee2mqtt/discussions/24198
