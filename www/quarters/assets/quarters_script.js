@@ -1,0 +1,1100 @@
+const PROJ_KEYS=Object.keys(ALL_DATA);
+
+// Persisted state via URL hash — format: #PROJ:tab  e.g. #DLK:trends
+// Hash survives refresh automatically; no storage API required.
+const _OOS_ONLY_TABS=["oosopen","oos"];
+(function _parseHash(){
+  const [p,t]=(location.hash||"").replace("#","").split(":");
+  window._hsProj=ALL_DATA[p]?p:null;
+  window._hsTab =t||"overview";
+})();
+const _lsProj=window._hsProj;
+const _lsTab =window._hsTab;
+
+// Active project state — updated by switchProject()
+let AP=PROJ_KEYS[0];
+let QS={}, PROJ_KEY="", PROJ_DISPLAY="", BOARD_ID="", PROJ_USE_SP=false, PROJ_USE_OOS=true;
+let ordered=[];
+let cur="";
+let curTab="overview";
+let trendWindow=4; // rolling quarters shown in trend charts
+let activeSprint=null; // null = all sprints; sprint ID string = filtered to that sprint
+let trendsMode="quarterly"; // "quarterly" or "sprint"
+
+function switchProject(p,skipRender){
+  AP=p;
+  const pd=ALL_DATA[p];
+  QS=pd.qs||{};
+  PROJ_KEY=pd.proj_key||p;
+  PROJ_DISPLAY=pd.display||p;
+  BOARD_ID=pd.board_id||"";
+  activeSprint=null;  // reset to "All sprints" whenever the project changes
+  // Prefer project-level flag (set by Python main()); fall back to first available
+  // quarter's kpis.use_story_points for HTMLs generated before that field existed.
+  const _firstKpis=Object.values(pd.qs||{})[0]?.kpis||{};
+  PROJ_USE_SP=!!(pd.use_story_points??_firstKpis.use_story_points??false);
+  PROJ_USE_OOS=!!(pd.use_oos??true);
+  ordered=Object.keys(QS).sort((a,b)=>{
+    const[qa,ya]=a.split(" ");const[qb,yb]=b.split(" ");
+    return(+yb-+ya)||(+qb[1]-+qa[1]);
+  });
+  cur=ordered[0]||"";
+  // Update project tab UI
+  document.querySelectorAll(".proj-tab").forEach(t=>t.classList.toggle("active",t.dataset.proj===p));
+  // Update logo text
+  const ln=document.getElementById("proj-name");if(ln)ln.textContent=PROJ_DISPLAY;
+  // Rebuild quarter dropdown and sprint label
+  document.getElementById("q-input").value=cur;
+  buildOpts("");
+  updateSprintLabel();
+  if(!skipRender&&cur){
+    const _t=(!PROJ_USE_OOS&&_OOS_ONLY_TABS.includes(curTab))?"overview":curTab;
+    render(cur,_t);
+  }
+}
+
+/* ---- Escape ---- */
+function e(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+
+/* ---- Date formatting ---- */
+function fmtDate(s,short){
+  if(!s)return"";
+  const d=new Date(s+"T12:00:00");
+  return short
+    ?d.toLocaleDateString("en-GB",{day:"numeric",month:"short"})
+    :d.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
+}
+
+/* ---- Badge helpers ---- */
+function scls(cat){return cat==="done"?"bd":cat==="indeterminate"?"bi":"bt"}
+function tcls(t){return t==="Bug"?"bbug":t==="Story"?"bstory":t==="Task"?"btask":"bt"}
+function pcls(p){if(!p)return"bt";p=p.toLowerCase();return(p==="highest"||p==="high")?"bhi":p==="medium"?"bmed":"blo"}
+
+/* ---- Quarter dropdown ---- */
+// Track which year groups have been manually toggled open/closed
+const _yrOpen={};
+function _curYr(){return cur?(cur.split(" ")[1]||""):""}
+
+function buildOpts(filter){
+  const lc=(filter||"").toLowerCase();
+  const el=document.getElementById("q-opts");
+  const filtered=ordered.filter(q=>q.toLowerCase().includes(lc));
+  if(!filtered.length){el.innerHTML=`<div class="q-opt" style="color:var(--muted);cursor:default">No results</div>`;return;}
+
+  // When searching, collapse into a flat list (no accordion — results could span years)
+  if(lc){
+    el.innerHTML=filtered.map(q=>{
+      const d=QS[q];const sc=q===cur?" sel":"";const n=(d.sprints||[]).length;
+      return`<div class="q-opt${sc}" data-q="${e(q)}">${e(q)}<span class="q-badge">${n} sprint${n!==1?"s":""}</span></div>`;
+    }).join("");
+    el.querySelectorAll(".q-opt[data-q]").forEach(o=>{
+      o.addEventListener("click",()=>{const t=curTab;cur=o.dataset.q;closeDd();render(cur,t);});
+    });
+    return;
+  }
+
+  // Group by year — current year open by default, older years collapsed
+  const byYr={};
+  filtered.forEach(q=>{const yr=q.split(" ")[1]||"?";(byYr[yr]=byYr[yr]||[]).push(q);});
+  const curYr=_curYr();
+  el.innerHTML=Object.keys(byYr).sort((a,b)=>b-a).map(yr=>{
+    // Open if current year, or previously toggled open
+    const open=(_yrOpen[yr]!==undefined)?_yrOpen[yr]:(yr===curYr);
+    const arrow=open?"▾":"▸";
+    const opts=byYr[yr].sort((a,b)=>+b[1]-+a[1]).map(q=>{
+      const d=QS[q];const sc=q===cur?" sel":"";const n=(d.sprints||[]).length;
+      return`<div class="q-opt${sc}" data-q="${e(q)}">${e(q)}<span class="q-badge">${n} sprint${n!==1?"s":""}</span></div>`;
+    }).join("");
+    return`<div class="q-yr-hdr" data-yr="${yr}"><span>${yr}</span><span class="q-yr-arrow">${arrow}</span></div>`
+          +`<div class="q-yr-group${open?"":" collapsed"}" data-yrg="${yr}">${opts}</div>`;
+  }).join("");
+
+  // Year header toggle
+  el.querySelectorAll(".q-yr-hdr").forEach(h=>{
+    h.addEventListener("click",ev=>{
+      ev.stopPropagation();
+      const yr=h.dataset.yr;
+      const grp=el.querySelector(`.q-yr-group[data-yrg="${yr}"]`);
+      const nowOpen=grp.classList.toggle("collapsed");
+      _yrOpen[yr]=!nowOpen;
+      h.querySelector(".q-yr-arrow").textContent=nowOpen?"▸":"▾";
+    });
+  });
+
+  el.querySelectorAll(".q-opt[data-q]").forEach(o=>{
+    o.addEventListener("click",()=>{const t=curTab;cur=o.dataset.q;closeDd();render(cur,t);});
+  });
+}
+function openDd(){document.getElementById("q-dd").classList.add("open");buildOpts("");document.getElementById("q-search").value="";document.getElementById("q-search").focus();}
+function closeDd(){document.getElementById("q-dd").classList.remove("open");document.getElementById("q-input").value=cur;}
+document.getElementById("q-input").addEventListener("click",()=>{document.getElementById("q-dd").classList.contains("open")?closeDd():openDd();});
+document.getElementById("q-search").addEventListener("input",function(){buildOpts(this.value);});
+document.addEventListener("click",ev=>{if(!ev.target.closest(".qs"))closeDd();});
+
+/* ---- Project tabs — built from ALL_DATA keys ---- */
+(function(){
+  const container=document.getElementById("proj-tabs");
+  PROJ_KEYS.forEach(p=>{
+    const btn=document.createElement("button");
+    btn.className="proj-tab";
+    btn.dataset.proj=p;
+    btn.textContent=ALL_DATA[p].display||p;
+    btn.addEventListener("click",()=>switchProject(p));
+    container.appendChild(btn);
+  });
+  // Hide tab row if only one project
+  if(PROJ_KEYS.length<2)container.style.display="none";
+  // Initialise state only — render happens after all const definitions below
+  switchProject((ALL_DATA[_lsProj]?_lsProj:PROJ_KEYS[0]),true);
+})();
+
+/* ---- Current sprint label — updated on project switch ---- */
+function updateSprintLabel(){
+  const now=new Date();
+  const liveLabel=`Q${Math.floor(now.getMonth()/3)+1} ${now.getFullYear()}`;
+  const liveData=QS[liveLabel];
+  const activeSprint=liveData?(liveData.sprints||[]).find(s=>s.state==="active"):null;
+  document.getElementById("hdr-sprint").textContent=activeSprint?activeSprint.name:"";
+}
+
+/* ---- Sprint selector ---- */
+function buildSprintSelector(sprints){
+  const bar=document.getElementById("sprint-sel-bar");
+  if(!bar)return;
+  if(!sprints||!sprints.length){bar.innerHTML="";return;}
+  const active=activeSprint;
+  const btns=[{id:null,label:"All"},...sprints.map(s=>({id:String(s.id),label:s.name.replace(/.*Sprint\s*/i,"S")}))];
+  bar.innerHTML='<div class="sprint-sel">'+btns.map(b=>{
+    const cls="ssb"+(active===b.id?" active":"");
+    const onclick=b.id===null?"setActiveSprint(null)":"setActiveSprint('"+b.id+"')";
+    return'<button class="'+cls+'" onclick="'+onclick+'">'+b.label+"</button>";
+  }).join("")+"</div>";
+}
+function setActiveSprint(id){activeSprint=id;render(cur,curTab);}
+
+/* ---- Refresh button ---- */
+(function(){
+  const btn=document.getElementById("refresh-btn");
+  if(!REFRESH_WEBHOOK){return;}
+  btn.style.display="";
+  const COOLDOWN_MS=60*60*1000;
+  const SK="dlk_last_manual_refresh";
+
+  function fmtTime(ts){
+    const d=new Date(ts);
+    return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+  }
+  function showModal(title,msg){
+    document.getElementById("refresh-modal-title").textContent=title;
+    document.getElementById("refresh-modal-msg").textContent=msg;
+    document.getElementById("refresh-modal").classList.add("open");
+  }
+
+  // Fetch last refresh time from HA-written file (cross-browser source of truth).
+  // Falls back to localStorage if file not yet created.
+  async function getLastRefresh(){
+    try{
+      const r=await fetch("./data/last_refresh.json?_="+Date.now());
+      if(r.ok){
+        const d=await r.json();
+        if(d.timestamp){
+          const fileTs=new Date(d.timestamp).getTime();
+          const localTs=+localStorage.getItem(SK)||0;
+          return Math.max(fileTs,localTs);
+        }
+      }
+    }catch(_){}
+    return +localStorage.getItem(SK)||0;
+  }
+
+  btn.addEventListener("click",async()=>{
+    const last=await getLastRefresh();
+    const now=Date.now();
+    if(now-last<COOLDOWN_MS){
+      showModal(
+        "Too soon to refresh",
+        `The dashboard was last refreshed at ${fmtTime(last)}. Manual refreshes are limited to once per hour — try again at ${fmtTime(last+COOLDOWN_MS)}.`
+      );
+      return;
+    }
+    localStorage.setItem(SK,String(now));
+    btn.disabled=true;
+    btn.textContent="↻ Refreshing…";
+    fetch(REFRESH_WEBHOOK,{method:"POST",mode:"no-cors"})
+      .then(()=>{
+        btn.textContent="↻ Done — reload shortly";
+      })
+      .catch(err=>{
+        localStorage.removeItem(SK);
+        showModal(
+          "Refresh failed",
+          `Could not reach Home Assistant${err.message?` (${err.message})`:""}. Check that HA is running and the webhook is configured. You can try again now.`
+        );
+        btn.textContent="↻ Refresh";
+        btn.disabled=false;
+      })
+      .finally(()=>{
+        if(!btn.disabled)return;
+        setTimeout(()=>{btn.disabled=false;btn.textContent="↻ Refresh";},8000);
+      });
+  });
+})();
+
+/* ---- Header height sync ---- */
+function _syncHdr(){
+  const h=document.getElementById("site-header")?.offsetHeight;
+  if(h)document.documentElement.style.setProperty("--hdr",h+"px");
+}
+new ResizeObserver(_syncHdr).observe(document.getElementById("site-header"));
+
+/* ---- Back to top ---- */
+window.addEventListener("scroll",()=>{document.getElementById("btt").classList.toggle("vis",window.scrollY>300);},{passive:true});
+
+/* ---- Tab switching ---- */
+function showTab(id){
+  curTab=id;
+  history.replaceState(null,"",location.pathname+location.search+"#"+AP+":"+id);
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab===id));
+  document.querySelectorAll(".tab-pane").forEach(p=>p.classList.toggle("active",p.dataset.pane===id));
+  const bar=document.getElementById("sprint-sel-bar");
+  if(bar)bar.style.display=id==="trends"?"none":"";
+  window.scrollTo({top:0,behavior:"instant"});
+}
+
+/* ---- Table builder ---- */
+let _tid=0;
+function mkTable(cols,rows,jiraUrl){
+  const fid="f"+(_tid++);const bid="b"+_tid;const cid="c"+_tid;
+  const toolbar=`<div class="ttb">
+    <input class="tf" id="${fid}" placeholder="Filter…">
+    <span class="tc" id="${cid}">${rows.length} item${rows.length!==1?"s":""}</span>
+    ${jiraUrl?`<a class="jl" href="${e(jiraUrl)}" target="_blank">Open in Jira ↗</a>`:""}
+  </div>`;
+  const head=cols.map((c,i)=>`<th data-i="${i}">${e(c.h)}<span class="si"></span></th>`).join("");
+  const body=rows.length
+    ?rows.map(r=>`<tr class="${r._rowCls||''}">${cols.map(c=>`<td>${c.r(r)}</td>`).join("")}</tr>`).join("")
+    :`<tr class="er"><td colspan="${cols.length}">No items</td></tr>`;
+  const html=`<div class="tw">${toolbar}<div class="tw-body"><table><thead><tr>${head}</tr></thead><tbody id="${bid}">${body}</tbody></table></div></div>`;
+  setTimeout(()=>{
+    const fi=document.getElementById(fid);const tb=document.getElementById(bid);const ct=document.getElementById(cid);
+    if(!fi||!tb)return;
+    fi.addEventListener("input",()=>{
+      const lc=fi.value.toLowerCase();let vis=0;
+      tb.querySelectorAll("tr:not(.er)").forEach(r=>{const show=r.textContent.toLowerCase().includes(lc);r.style.display=show?"":"none";if(show)vis++;});
+      if(ct)ct.textContent=fi.value?`${vis} of ${rows.length}`:`${rows.length} item${rows.length!==1?"s":""}`;
+    });
+    let ss={};
+    tb.closest("table").querySelectorAll("thead th").forEach(th=>{
+      th.addEventListener("click",()=>{
+        const i=+th.dataset.i;const asc=ss[i]!==true;ss={};ss[i]=asc;
+        tb.closest("table").querySelectorAll(".si").forEach(s=>s.textContent="");
+        th.querySelector(".si").textContent=asc?" ▲":" ▼";
+        const rs=Array.from(tb.querySelectorAll("tr:not(.er)"));
+        rs.sort((a,b)=>{const av=a.cells[i]?.textContent.trim()??"";const bv=b.cells[i]?.textContent.trim()??"";return asc?av.localeCompare(bv,undefined,{numeric:true}):bv.localeCompare(av,undefined,{numeric:true});});
+        rs.forEach(r=>tb.appendChild(r));
+      });
+    });
+  },0);
+  return html;
+}
+
+/* ---- Column helpers ---- */
+function issueCols(extra){
+  return[
+    {h:"Key",     r:r=>`<a class="ik" href="${e(r.url)}" target="_blank">${e(r.key)}</a>`},
+    {h:"Type",    r:r=>`<span class="b ${tcls(r.type)}">${e(r.type)}</span>`},
+    {h:"Summary", r:r=>`<div class="is" title="${e(r.summary)}">${e(r.summary)}</div>`},
+    {h:"Assignee",r:r=>e(r.assignee)},
+    ...(extra||[]),
+    {h:"Status",  r:r=>`<span class="b ${scls(r.status_cat)}">${e(r.status)}</span>`},
+  ];
+}
+const priCol={h:"Priority",r:r=>r.priority?`<span class="b ${pcls(r.priority)}">${e(r.priority)}</span>`:"&mdash;"};
+const lblCol={h:"Labels",  r:r=>(r.labels||[]).filter(l=>l!=="Out_Of_Sprint").map(l=>`<span class="b bt">${e(l)}</span>`).join(" ")||"&mdash;"};
+
+/* ---- Pane wrapper ---- */
+function pane(id,content){
+  return`<div class="tab-pane" data-pane="${id}">${content}</div>`;
+}
+
+/* ---- Main render ---- */
+function render(qk,activeTab){
+  const D=QS[qk];
+  if(cur!==qk){activeSprint=null;trendsMode="quarterly";}
+  cur=qk;
+  document.getElementById("q-input").value=qk;
+  document.title=PROJ_DISPLAY+" Quarter Dashboard - "+qk;
+
+  if(!D){document.getElementById("dash").innerHTML='<div class="nodata">No data for '+e(qk)+'</div>';return;}
+  const {kpis,notes,sprints}=D;
+  buildSprintSelector(sprints);
+  const sp=activeSprint?(kpis.per_sprint||{})[activeSprint]||null:null;
+  const iss=kpis.issues||{};
+  const jb=kpis.jira_base||"";
+  const verIds=kpis.version_ids||{};
+  const oa=activeSprint&&sp?(sp.oos_open||0):kpis.oos_open;
+  const ids=(kpis.sprint_ids||[]).join(", ");
+  const base=`project = ${PROJ_KEY} AND sprint in (${ids})`;
+
+  (function(){
+    const raw=kpis.as_of||"";
+    let display=raw;
+    if(raw){
+      const d=new Date(raw);
+      if(!isNaN(d.getTime()))
+        display=d.toLocaleString(undefined,{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",timeZoneName:"short"});
+    }
+    document.getElementById("as-of").textContent="Updated: "+display;
+  })();
+
+  /* Version column — needs jb and verIds closure */
+  const verCol={h:"Fix Ver.",r:r=>{
+    if(!(r.fix_versions||[]).length)return"—";
+    return`<div class="vv">${r.fix_versions.map(v=>{
+      const vid=verIds[v];
+      if(vid&&jb){const url=`${jb}/projects/${PROJ_KEY}/versions/${vid}/tab/release-report-all-issues`;return`<a class="b bstory vlink" href="${e(url)}" target="_blank">${e(v)}</a>`;}
+      return`<span class="b bstory">${e(v)}</span>`;
+    }).join("")}</div>`;
+  }};
+
+  /* Column sets */
+  const allCols =issueCols([priCol,verCol,lblCol]);
+  const oosCols =issueCols([priCol,lblCol]);
+  const relCols =issueCols([verCol,lblCol]);
+  /* In Progress columns — Key cell includes ⓘ icon for cross-quarter carry-overs */
+  const ipCols=[
+    {h:"Key",r:r=>{
+      const lnk=`<a class="ik" href="${e(r.url)}" target="_blank">${e(r.key)}</a>`;
+      if(r.resolved_quarter){
+        const sprint=r.resolved_sprint?` · ${r.resolved_sprint}`:"";
+        const tip=`Completed in ${r.resolved_quarter}${sprint} · ${r.resolved_date||''}`;
+        return lnk+`<span class="ri" data-tip="${e(tip)}">&#x2139;</span>`;
+      }
+      if(r.origin_quarter&&isCurrentQ){
+        const qc=r.quarters_carried||1;
+        const cls=qc>=2?"ci-red":"ci";
+        const tip=`Carry-over from ${r.origin_quarter} · in progress since ${r.ip_date||''} (${qc} quarter${qc>1?"s":""})`
+        return lnk+`<span class="${cls}" data-tip="${e(tip)}">&#x2139;</span>`;
+      }
+      return lnk;
+    }},
+    {h:"Type",    r:r=>`<span class="b ${tcls(r.type)}">${e(r.type)}</span>`},
+    {h:"Summary", r:r=>`<div class="is" title="${e(r.summary)}">${e(r.summary)}</div>`},
+    {h:"Assignee",r:r=>e(r.assignee)},
+    priCol,
+    {h:"Status",  r:r=>`<span class="b ${scls(r.status_cat)}">${e(r.status)}</span>`},
+  ];
+
+  /* Jira URLs per section */
+  function jUrl(jql){return jb?`${jb}/issues/?jql=${encodeURIComponent(jql)}`:null;}
+
+  const isCurrentQ=!!(sprints||[]).find(s=>s.state==="active");
+
+  /* KPI cards */
+  const K=sp||kpis;
+  const cr=K.completion_rate;
+  const crC=cr>=80?"green":cr>=60?"yellow":"red";
+  const oosC=oa===0?"green":oa>2?"red":"yellow";
+  const rollPct=K.rollover_pct||0;
+  const rollC=rollPct===0?"green":rollPct<20?"yellow":"red";
+  const cycleC="blue";
+  const sn=sp&&sp.notes?sp.notes:{};
+  const cards=sp?[
+    {l:"Total Items",       v:K.total,                                                        c:"blue",  tip:"All tickets in this sprint."},
+    {l:"Completed",         v:K.completed,                                                    c:"green", tip:"Tickets moved to Done in this sprint."},
+    {l:"Completion Rate",   v:cr+"%",                                                         c:crC,     tip:"% of sprint tickets completed.", bar:cr, n:sn.completion_rate||""},
+    {l:"Releases",          v:K.releases_shipped||0,                                          c:"blue",  tip:"Fix versions released within this sprint date range."},
+    ...(PROJ_USE_OOS?[{l:"Out-of-Sprint",v:K.oos_total||0,c:"yellow",tip:"Tickets added to this sprint after it started.",n:sn.oos_total||""}]:[]),
+    {l:"Bug / Story / Task",v:K.bugs+" / "+K.stories+" / "+K.tasks+" ("+K.bug_pct+"% bugs)", c:"blue",  tip:"Issue type breakdown for this sprint.",                n:sn.type_split||""},
+    {l:"Rollover",          v:K.rollover_count+" items ("+rollPct+"%)",                       c:rollC,   tip:"Items carried forward from an earlier sprint this quarter.", n:sn.rollover||""},
+    {l:"Cycle Time",        v:(K.med_cycle_days||0)+"d median ("+(K.avg_cycle_days||0)+"d avg)", c:cycleC, tip:"Median days In Progress to Done for tickets completed this sprint.", n:sn.cycle_time||""},
+    ...(PROJ_USE_SP?[
+      {l:"SP Planned",    v:K.sp_total||0,     c:"blue",  tip:"Total story points committed to this sprint."},
+      {l:"SP Completed",  v:K.sp_completed||0,
+       c:(K.sp_total&&K.sp_completed/K.sp_total>=.8)?"green":(K.sp_total&&K.sp_completed/K.sp_total>=.6)?"yellow":"red",
+       tip:"Story points completed this sprint."},
+    ]:[
+      {l:"Hours Logged",      v:(K.time_logged_h||0)+"h",                                      c:"blue",  tip:"Total hours logged by the team in this sprint."},
+      {l:"Estimate Accuracy", v:(K.estimate_accuracy_pct||0)+"%",
+       c:K.estimate_accuracy_pct>=80?"green":K.estimate_accuracy_pct>=60?"yellow":"red",
+       tip:"How close logged hours were to estimates for this sprint."},
+    ]),
+  ]:[
+    {l:"Total Items",           v:kpis.total,                                        n:notes.total,            c:"blue",   tip:"All tickets in scope across every sprint this quarter, regardless of status or type."},
+    {l:"Completed / Released",  v:kpis.completed,                                    n:notes.completed,        c:"green",  tip:"Tickets moved to Done status this quarter. Compare against Total Items to gauge delivery."},
+    {l:"Completion Rate",       v:cr+"%",                                            n:notes.completion_rate,  c:crC,      tip:"Percentage of in-scope tickets completed. 80%+ is healthy; 60—79% warrants a look at blockers; below 60% is a concern.",  bar:cr},
+    {l:"Releases Shipped",      v:kpis.releases_shipped,                             n:notes.releases_shipped, c:"blue",   tip:"Number of Jira fix versions released this quarter. Multiple releases indicate a healthy delivery cadence."},
+    ...(PROJ_USE_OOS?[
+      {l:"Out-of-Sprint (total)", v:kpis.oos_total, n:notes.oos_total, c:"yellow", tip:"Tickets added to a sprint after it started — unplanned reactive work. High OOS (>20% of total) signals planning or scope issues."},
+      {l:"Open OOS Items",        v:oa,             n:notes.oos_open,  c:oosC,     tip:"Out-of-sprint tickets still unresolved. Any open OOS items are unplanned debt that should be closed or explicitly deferred."},
+    ]:[]),
+    {l:"Bug / Story / Task",    v:`${kpis.bugs} / ${kpis.stories} / ${kpis.tasks} (${kpis.bug_pct}% bugs)`, n:notes.type_split, c:"blue", tip:"Breakdown of issue types in scope. A bug ratio above 40% signals quality concerns; a healthy quarter is mostly stories and tasks."},
+    {l:"Releases / Sprint",     v:`${kpis.med_releases_per_sprint} median (${kpis.avg_releases_per_sprint} avg)`, n:notes.avg_releases, c:"blue", tip:"Median releases per closed sprint — more reliable than the mean when one sprint has an unusually large batch. Healthy cadence varies by team type.",
+     xn:(()=>{const med=kpis.med_releases_per_sprint||0,avg=kpis.avg_releases_per_sprint||0;return(avg>med*1.5&&avg-med>0.5)?`⚠ Average is skewed — at least one sprint had an unusually high release count (${avg} avg vs ${med} median).`:""})()},
+    {l:"Sprint Rollover",       v:kpis.rollover_count+" items ("+rollPct+"%)",       n:notes.rollover,         c:rollC,    tip:"Tickets carried from a closed sprint without completing. Note: an item rolling across multiple sprints within the quarter may be counted more than once.",
+     xn:kpis.rollover_count>0?"⚠ Count may include items that rolled across multiple sprints within this quarter — actual unique items could be lower.":""},
+    {l:"Cycle Time",            v:`${kpis.med_cycle_days||0}d median (${kpis.avg_cycle_days||0}d avg)`,         n:notes.cycle_time,   c:cycleC,   tip:"Median calendar days from In Progress to Done — more reliable than the mean when a small number of long-running tickets inflate the average. Under 3d excellent; 3—7d normal; over 7d investigate blockers.",
+     xn:(()=>{const med=kpis.med_cycle_days||0,avg=kpis.avg_cycle_days||0;return(avg>med*1.5&&avg-med>2)?`⚠ Average skewed by long-running outlier tickets (${avg}d avg vs ${med}d median) — median is the more representative figure.`:""})()},
+    ...(PROJ_USE_SP?[
+      {l:"SP Planned",   v:kpis.sp_total||0,        n:notes.sp_velocity||"",  c:"blue",   tip:"Total story points committed across all sprints this quarter."},
+      {l:"SP Completed", v:kpis.sp_completed||0,
+       c:(kpis.sp_total&&kpis.sp_completed/kpis.sp_total>=.8)?"green":(kpis.sp_total&&kpis.sp_completed/kpis.sp_total>=.6)?"yellow":"red",
+       n:"", tip:"Story points completed this quarter."},
+      {l:"SP Velocity",  v:(kpis.sp_velocity_avg||0)+" avg/sprint",            n:"",        c:"blue",   tip:"Average story points completed per closed sprint."},
+    ]:[]),
+  ];
+  const kpiHtml=`<div class="kpi-grid">${cards.map(c=>`
+    <div class="kpi-card ${c.c}">
+      <div class="kl">${e(c.l)}${c.tip?`<span class="trend-info" data-tip="${e(c.tip)}" style="margin-left:4px">&#x2139;</span>`:""}</div>
+      <div class="kv">${e(String(c.v))}</div>
+      ${c.bar!==undefined?`<div class="kpi-bar"><div class="kpi-bar-fill" style="width:${Math.min(c.bar,100)}%"></div></div>`:""}
+      <div class="kn">${e(c.n||"")}</div>
+      ${c.xn?`<div class="kn" style="color:var(--yellow-text);margin-top:4px">${e(c.xn)}</div>`:""}
+    </div>`).join("")}</div>`;
+
+  /* Sprint table */
+  const sRows=(sprints||[]).slice().reverse().map(s=>{
+    const start=fmtDate(s.start_date,true);const end=fmtDate(s.end_date,false);
+    const dates=start&&end?`${start} — ${end}`:start?`From ${start}`:"";
+    const chip=`<span class="chip chip-${e(s.status_color)}">${e(s.status_label)}</span>`;
+    const surl=(jb&&s.state==="active")?`${jb}/jira/software/projects/${PROJ_KEY}/boards/${e(kpis.board_id||"")}?sprint=${e(String(s.id))}`:null;
+    const nm=surl?`<a class="ik" href="${e(surl)}" target="_blank">${e(s.name)}</a>`:e(s.name);
+    return`<tr><td>${nm}</td><td style="white-space:nowrap">${e(dates)}</td><td>${chip}</td><td>${e((s.state||"").charAt(0).toUpperCase()+(s.state||"").slice(1))}</td></tr>`;
+  }).join("")||`<tr class="er"><td colspan="4">No sprints</td></tr>`;
+  const sprintTable=`<div class="tw"><div class="tw-body"><table>
+    <thead><tr><th>Sprint</th><th>Dates</th><th>Status</th><th>State</th></tr></thead>
+    <tbody>${sRows}</tbody>
+  </table></div></div>`;
+
+  /* Build all tab panes */
+  function spF(rows){return activeSprint?rows.filter(r=>(r.sprint_ids||[]).includes(activeSprint)):rows;}
+  const ipRows      =spF(iss.in_progress||[]);
+  const ipUnresolved=ipRows.filter(r=>!r.resolved_quarter);
+  const ipCarried   =ipRows.filter(r=>!!r.resolved_quarter);
+  const ipCarriedIn =ipRows.filter(r=>!!r.origin_quarter);
+  const oosOpenRows=spF(iss.oos_open||[]);
+  const oosAllRows =spF(iss.oos_all||[]);
+  const relRows    =spF(iss.released||[]);
+  const allRows    =spF(iss.all||[]);
+
+  /* OOS alert (reused in multiple panes) — must be after oosOpenRows */
+  let oosAlert="";
+  if(PROJ_USE_OOS){
+    let alertLinks="";
+    if(oa>0){
+      if(activeSprint&&sp){
+        const shown=oosOpenRows.slice(0,3);
+        if(shown.length){
+          alertLinks=" — "+shown.map(r=>`<a href="${e(r.url)}" target="_blank" data-tip="${e(r.summary)}">${e(r.key)}</a>`).join(", ");
+          if(oosOpenRows.length>3)alertLinks+=` +${oosOpenRows.length-3} more`;
+        }
+      } else if(kpis.oos_open_detail){
+        const shown=kpis.oos_open_detail.slice(0,3);
+        alertLinks=" — "+shown.map(i=>`<a href="${e(jb+"/browse/"+i.key)}" target="_blank" data-tip="${e(i.summary)}">${e(i.key)}</a>`).join(", ");
+        if(kpis.oos_open_detail.length>3)alertLinks+=` +${kpis.oos_open_detail.length-3} more`;
+      }
+    }
+    oosAlert=!isCurrentQ&&oa===0?""
+      :oa>2?`<div class="alert alert-red">⚠ ${oa} open out-of-sprint items need attention${alertLinks}.</div>`
+      :oa>0?`<div class="alert alert-yellow">⚠ ${oa} open out-of-sprint item${oa>1?"s":""} pending${alertLinks}.</div>`
+      :isCurrentQ?`<div class="alert alert-green">✓ All out-of-sprint items resolved.</div>`
+      :"";
+  }
+
+  /* Release breakdown table */
+  const verDets=(kpis.version_details||[]).slice().sort((a,b)=>(b.release_date||"").localeCompare(a.release_date||""));
+  const relBreakdown=verDets.length?`
+    <div class="section-label">Release Breakdown</div>
+    <div class="tw"><div class="tw-body"><table class="rel-table">
+      <thead><tr><th>Release</th><th>Date</th><th>Tickets</th></tr></thead>
+      <tbody>${verDets.map(v=>{
+        const url=(v.version_id&&jb)?`${jb}/projects/${PROJ_KEY}/versions/${e(v.version_id)}/tab/release-report-all-issues`:null;
+        const nm=url?`<a class="ik" href="${e(url)}" target="_blank">${e(v.name)}</a>`:e(v.name);
+        return`<tr><td>${nm}</td><td style="white-space:nowrap">${e(v.release_date||'—')}</td><td>${v.ticket_count}</td></tr>`;
+      }).join('')}</tbody>
+    </table></div></div>`:'';
+
+  const dashHtml=[
+    pane("overview",`
+      ${oosAlert}
+      <div class="pane-title">Quarter at a Glance</div>
+      <div class="pane-desc">KPIs and sprint summary for ${e(qk)}.</div>
+      ${kpiHtml}
+      <div class="section-label">Sprints</div>
+      ${sprintTable}
+    `),
+    pane("inprogress",`
+      <div class="pane-title">In Progress <span class="tab-cnt ${!isCurrentQ&&ipUnresolved.length>0?"warn":""}">${ipRows.length}</span></div>
+      ${!isCurrentQ&&ipUnresolved.length>0?`<div class="alert alert-yellow">⚠ ${ipUnresolved.length} item${ipUnresolved.length>1?"s are":" is"} still in progress after quarter close — may need follow-up.</div>`:""}
+      ${!isCurrentQ&&ipCarried.length>0?`<div class="alert alert-green">✓ ${ipCarried.length} item${ipCarried.length>1?"s were":" was"} resolved in a later quarter — hover &#x2139; for details.</div>`:""}
+      ${isCurrentQ?`<div class="pane-desc">Items currently being worked on across all sprints this quarter.${ipCarriedIn.length>0?` Coloured &#x2139; marks ${ipCarriedIn.length} item${ipCarriedIn.length>1?"s":""}  carried over from a previous quarter.`:""}</div>`:""}
+      ${mkTable(ipCols,isCurrentQ?ipRows:ipRows.map(r=>r._rowCls==='resolved-carried'?r:{...r,_rowCls:''}),jUrl(base+" AND statusCategory != Done ORDER BY status ASC, assignee ASC"))}
+    `),
+    ...(PROJ_USE_OOS?[
+    pane("oosopen",`
+      ${oosAlert}
+      <div class="pane-title">Open OOS Items <span class="tab-cnt ${isCurrentQ?(oa>2?"urgent":oa>0?"warn":"clear"):""}">${oa}</span></div>
+      <div class="pane-desc">Out-of-sprint items that are still open and need resolution.</div>
+      ${mkTable(oosCols,oosOpenRows,jUrl(base+" AND labels = Out_Of_Sprint AND statusCategory != Done ORDER BY priority ASC"))}
+    `),
+    pane("oos",`
+      <div class="pane-title">Out-of-Sprint Items <span class="tab-cnt">${oosAllRows.length}</span></div>
+      <div class="pane-desc">All items flagged Out_Of_Sprint this quarter, including resolved ones.</div>
+      ${mkTable(oosCols,oosAllRows,jUrl(base+" AND labels = Out_Of_Sprint ORDER BY status ASC"))}
+    `),
+    ]:[]),
+    pane("released",`
+      <div class="pane-title">Released <span class="tab-cnt">${relRows.length}</span></div>
+      <div class="pane-desc">Items with status Released, Closed, or Merged that have a fix version attached.</div>
+      ${relBreakdown}
+      ${mkTable(relCols,relRows,jUrl(base+" AND status in (Released,Closed,Merged) AND fixVersion is not EMPTY ORDER BY fixVersions ASC"))}
+    `),
+    pane("all",`
+      <div class="pane-title">All Items <span class="tab-cnt">${allRows.length}</span></div>
+      <div class="pane-desc">Every issue in scope across all ${e(qk)} sprints.</div>
+      ${mkTable(allCols,allRows,jUrl(base+" ORDER BY sprint ASC, status ASC"))}
+    `),
+    pane("time",`
+      ${(()=>{
+        const useSp=PROJ_USE_SP||false;
+        const spSel=!!(activeSprint&&sp);
+        const neRows=spF(iss.no_estimate||[]);
+        const ne=spSel?neRows.length:(kpis.no_estimate_count||0);
+        const nePct=spSel?(K.total?Math.round(neRows.length/K.total*100):0):(kpis.no_estimate_pct||0);
+        const neC=nePct===0?'green':nePct<20?'yellow':'red';
+
+        if(useSp){
+          // ---- Story Points mode ----
+          const spt=spSel?(K.sp_total||0):(kpis.sp_total||0);
+          const spc=spSel?(K.sp_completed||0):(kpis.sp_completed||0);
+          const spPct=spt?Math.round(spc/spt*100):0;
+          const spCards=spSel?[
+            // Sprint view: planned / completed / completion % / no-est
+            {l:'SP Planned',   v:spt, c:'blue', n:'Story points committed to this sprint.'},
+            {l:'SP Completed', v:spc, c:spPct>=80?'green':spPct>=60?'yellow':'red', n:''},
+            {l:'Completion',   v:spt?spPct+'%':'—', c:spPct>=80?'green':spPct>=60?'yellow':'red',
+             n:'SP completed vs planned for this sprint.'},
+            {l:'No SP Est',    v:ne, c:neC, n:nePct>0?nePct+'% of items in this sprint have no story points.':''},
+          ]:[
+            // Quarter view: planned / completed / velocity / no-est
+            {l:'SP Planned',   v:kpis.sp_total||0,        c:'blue',   n:'Total story points across all sprint items this quarter.'},
+            {l:'SP Completed', v:kpis.sp_completed||0,
+             c:spPct>=80?'green':spPct>=60?'yellow':'red', n:notes.sp_velocity||''},
+            {l:'SP Velocity',  v:(kpis.sp_velocity_avg||0)+' avg/sprint', c:'blue',
+             n:'Average story points completed per closed sprint.'},
+            {l:'No SP Est',    v:ne, c:neC, n:nePct>0?(notes.no_estimate||(nePct+'% of items have no story points set.')):''},
+          ];
+          const spKpiHtml='<div class="kpi-grid">'+spCards.map(c=>`
+            <div class="kpi-card ${c.c}">
+              <div class="kl">${e(c.l)}</div>
+              <div class="kv">${e(String(c.v))}</div>
+              <div class="kn">${e(c.n)}</div>
+            </div>`).join('')+'</div>';
+          const maxSp=Math.max(spt,spc,1);
+          const barW=v=>Math.round((v/maxSp)*100);
+          const compBar=spt?`<div class="section-label" style="margin-bottom:8px">SP Planned vs Completed</div>
+            <div style="display:flex;flex-direction:column;gap:6px;max-width:480px;margin-bottom:24px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <span style="width:90px;font-size:12px;color:var(--muted);text-align:right">Planned</span>
+                <div style="flex:1;background:var(--border);border-radius:3px;height:16px;overflow:hidden">
+                  <div style="width:${barW(spt)}%;height:100%;background:var(--accent);border-radius:3px"></div>
+                </div>
+                <span style="width:50px;font-size:12px;font-weight:600">${e(String(spt))}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <span style="width:90px;font-size:12px;color:var(--muted);text-align:right">Completed</span>
+                <div style="flex:1;background:var(--border);border-radius:3px;height:16px;overflow:hidden">
+                  <div style="width:${barW(spc)}%;height:100%;background:${spPct>=80?'var(--green)':spPct>=60?'var(--yellow)':'var(--red)'};border-radius:3px"></div>
+                </div>
+                <span style="width:50px;font-size:12px;font-weight:600">${e(String(spc))}</span>
+              </div>
+            </div>`:'';
+          const neAlert=nePct>20
+            ?`<div class="alert alert-red">⚠ ${ne} items (${nePct}%) have no story points — velocity reporting is affected.</div>`
+            :nePct>0
+            ?`<div class="alert alert-yellow">⚠ ${ne} items (${nePct}%) have no story points.</div>`
+            :`<div class="alert alert-green">✓ All items have story point estimates.</div>`;
+          const neCols=issueCols([priCol,{h:'Story Points',r:r=>r.story_points||'—'}]);
+          return '<div class="pane-title">Story Points</div>'
+            +'<div class="pane-desc">'+(spSel?'Story points planned vs completed for '+e(sp.sprint_name)+'.':'Story points planned vs completed across all sprints. Items without story points affect velocity reporting.')+'</div>'
+            +spKpiHtml+compBar+neAlert
+            +'<div class="section-label" style="margin-bottom:10px">Items Without Story Points</div>'
+            +mkTable(neCols,neRows,jUrl(base+' AND "Story Points" is EMPTY ORDER BY status ASC'));
+        }
+
+        // ---- Time / Hours mode ----
+        const tl=K.time_logged_h||0, te=K.time_estimated_h||0;
+        const acc=K.estimate_accuracy_pct||0, vari=kpis.estimate_variance_pct||0;
+        const nl=spSel?allRows.filter(r=>!(r.logged_h>0)).length:(kpis.no_log_count||0);
+        const diffH=Math.round((tl-te)*10)/10;
+        const diffStr=te===0?'—':(diffH>0?'+'+diffH+'h over':diffH<0?Math.abs(diffH)+'h under':'exact');
+        const diffC=Math.abs(vari)<10?'green':Math.abs(vari)<25?'yellow':'red';
+        const timeCards=[
+          {l:'Hours Logged',      v:tl+'h',   n:spSel?'':notes.time_logged||'',    c:'blue'},
+          {l:'Hours Estimated',   v:te+'h',   n:te?'':'No estimates set.',           c:'blue'},
+          {l:'Estimate Accuracy', v:acc+'%',  n:'Logged vs estimated. 100% = exact.',c:diffC},
+          {l:'Over / Under',      v:diffStr,  n:'Difference between logged and estimated hours.', c:diffC},
+          {l:'No Estimate',       v:ne,       n:spSel?nePct+'% of items lack an estimate.':notes.no_estimate||(nePct+'% of items lack an estimate.'),c:neC},
+          {l:'No Time Logged',    v:nl,       n:'Items with zero time recorded.',    c:nl===0?'green':'yellow'},
+        ];
+        const timeKpiHtml='<div class="kpi-grid">'+timeCards.map(c=>`
+          <div class="kpi-card ${c.c}">
+            <div class="kl">${e(c.l)}</div>
+            <div class="kv">${e(String(c.v))}</div>
+            <div class="kn">${e(c.n)}</div>
+          </div>`).join('')+'</div>';
+        const maxH=Math.max(tl,te,1);
+        const barW=v=>Math.round((v/maxH)*100);
+        const compBar=te?`<div class="section-label" style="margin-bottom:8px">Logged vs Estimated</div>
+          <div style="display:flex;flex-direction:column;gap:6px;max-width:480px;margin-bottom:24px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="width:90px;font-size:12px;color:var(--muted);text-align:right">Estimated</span>
+              <div style="flex:1;background:var(--border);border-radius:3px;height:16px;overflow:hidden">
+                <div style="width:${barW(te)}%;height:100%;background:var(--accent);border-radius:3px"></div>
+              </div>
+              <span style="width:50px;font-size:12px;font-weight:600">${e(te+'h')}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="width:90px;font-size:12px;color:var(--muted);text-align:right">Logged</span>
+              <div style="flex:1;background:var(--border);border-radius:3px;height:16px;overflow:hidden">
+                <div style="width:${barW(tl)}%;height:100%;background:${vari>25?'var(--red)':vari>0?'var(--yellow)':'var(--green)'};border-radius:3px"></div>
+              </div>
+              <span style="width:50px;font-size:12px;font-weight:600">${e(tl+'h')}</span>
+            </div>
+          </div>`:'';
+        const neAlert=nePct>20
+          ?`<div class="alert alert-red">⚠ ${ne} items (${nePct}%) have no time estimate — accuracy reporting is skewed.</div>`
+          :nePct>0
+          ?`<div class="alert alert-yellow">⚠ ${ne} items (${nePct}%) have no time estimate.</div>`
+          :`<div class="alert alert-green">✓ All items have time estimates.</div>`;
+        const neCols=issueCols([priCol,{h:'Logged',r:r=>r.logged_h?r.logged_h+'h':'—'}]);
+        return '<div class="pane-title">Time Tracking</div>'
+          +'<div class="pane-desc">Logged vs estimated hours across all sprint items. Items without estimates affect accuracy reporting.</div>'
+          +timeKpiHtml+compBar+neAlert
+          +'<div class="section-label" style="margin-bottom:10px">Items Without Estimates</div>'
+          +mkTable(neCols,neRows,jUrl(base+' AND originalEstimate is EMPTY ORDER BY status ASC'));
+      })()}
+    `),
+    pane("team",`
+      <div class="pane-title">Team</div>
+      <div class="pane-desc">Workload breakdown by assignee for ${activeSprint&&sp?e(sp.sprint_name):e(qk)+'. '+e(notes.assignee_workload||'')}.</div>
+      ${(()=>{
+        const useSp=PROJ_USE_SP||false;
+        const as=(sp?sp.assignee_stats:null)||kpis.assignee_stats||[];
+        if(!as.length)return'<div class="nodata">No assignee data.</div>';
+        const team=as.filter(a=>a.is_team), others=as.filter(a=>!a.is_team);
+        function mkRow(a){
+          const ratC=a.completion_rate>=80?'green':a.completion_rate>=60?'yellow':'red';
+          let bar;
+          if(useSp){
+            const spt=a.sp_total||0, spc=a.sp_completed||0;
+            const spPct=spt?Math.round(spc/spt*100):0;
+            const col=spPct>=80?'#22c55e':spPct>=60?'#FCE300':'#ef4444';
+            bar=`<div style="display:flex;align-items:center;gap:6px">
+              <div style="flex:1;min-width:60px;background:var(--border);border-radius:3px;height:8px;overflow:hidden">
+                ${spt?`<div style="width:${spPct}%;height:100%;background:${col};border-radius:3px"></div>`:'<div style="width:0%"></div>'}
+              </div>
+              <span style="font-size:12px;font-weight:600;white-space:nowrap">${e(String(spc))} SP</span>
+            </div>`;
+          } else {
+            bar=`<div style="display:flex;align-items:center;gap:6px">
+              <div style="flex:1;min-width:60px;background:var(--border);border-radius:3px;height:8px;overflow:hidden">${(()=>{
+                if(!a.estimated_h)return'<div style="width:0%"></div>';
+                const over=a.logged_h>a.estimated_h;
+                const acc=Math.round(Math.min(a.logged_h,a.estimated_h)/Math.max(a.logged_h,a.estimated_h)*100);
+                const col=acc>=80?'#22c55e':acc>=60?'#FCE300':'#ef4444';
+                const w=over?100:acc;
+                return`<div style="width:${w}%;height:100%;background:${col};border-radius:3px"></div>`;
+              })()}
+              </div>
+              <span style="font-size:12px;font-weight:600;white-space:nowrap">${e(a.logged_h+'h')}${a.estimated_h&&a.logged_h>a.estimated_h?`<span style="font-size:10px;color:#ef4444;margin-left:3px">+${Math.round((a.logged_h/a.estimated_h-1)*100)}%</span>`:''}</span>
+            </div>`;
+          }
+          const jql=a.account_id
+            ?`project = ${PROJ_KEY} AND sprint in (${ids}) AND assignee = "${e(a.account_id)}" ORDER BY status ASC`
+            :`project = ${PROJ_KEY} AND sprint in (${ids}) AND assignee is EMPTY ORDER BY status ASC`;
+          const nameCell=jb
+            ?`<a class="assignee-link" href="${e(jb+'/issues/?jql='+encodeURIComponent(jql))}" target="_blank">${e(a.name)}</a>`
+            :`<span style="font-weight:500">${e(a.name)}</span>`;
+          if(useSp){
+            const spt=a.sp_total||0;
+            return`<tr><td>${nameCell}</td><td style="text-align:center">${e(String(a.total))}</td><td style="text-align:center">${e(String(a.completed))}</td><td style="text-align:center"><span class="b ${ratC==="green"?"bd":ratC==="yellow"?"bmed":"bbug"}">${e(a.completion_rate+"%")}</span></td><td style="min-width:140px">${bar}</td><td style="text-align:center;color:var(--muted)">${e(spt>0?String(spt):'—')}</td></tr>`;
+          }
+          const accVal=(a.logged_h>0&&a.estimated_h>0)
+            ?Math.round(Math.min(a.logged_h,a.estimated_h)/Math.max(a.logged_h,a.estimated_h)*100)
+            :null;
+          const accInner=accVal===null
+            ?`<span style="color:var(--muted)">—</span>`
+            :isCurrentQ
+              ?`<span style="color:var(--muted)">${accVal}%</span>`
+              :`<span class="b ${accVal>=80?'bd':accVal>=60?'bmed':'bbug'}">${accVal}%</span>`;
+          return`<tr><td>${nameCell}</td><td style="text-align:center">${e(String(a.total))}</td><td style="text-align:center">${e(String(a.completed))}</td><td style="text-align:center"><span class="b ${ratC==="green"?"bd":ratC==="yellow"?"bmed":"bbug"}">${e(a.completion_rate+"%")}</span></td><td style="min-width:140px">${bar}</td><td style="text-align:center;color:var(--muted)">${e(a.estimated_h>0?a.estimated_h+'h':'—')}</td><td style="text-align:center">${accInner}</td></tr>`;
+        }
+        const thead=useSp
+          ?`<thead><tr>
+              <th>Assignee</th><th style="text-align:center">Items</th>
+              <th style="text-align:center">Done</th><th style="text-align:center">Rate</th>
+              <th>SP Completed</th><th style="text-align:center">SP Planned</th>
+            </tr></thead>`
+          :`<thead><tr>
+              <th>Assignee</th><th style="text-align:center">Items</th>
+              <th style="text-align:center">Done</th><th style="text-align:center">Rate</th>
+              <th>Hours Logged</th><th style="text-align:center">Estimated</th>
+              <th style="text-align:center">Accuracy${isCurrentQ?'<span class="trend-info" data-tip="Partial quarter — accuracy will change as more time is logged" style="margin-left:4px">&#x2139;</span>':''}</th>
+            </tr></thead>`;
+        const colSpan=useSp?6:7;
+        let html=`<div class="section-label">Features Team</div>
+          <div class="tw"><div class="tw-body"><table>${thead}<tbody>${team.map(mkRow).join("")||`<tr class="er"><td colspan="${colSpan}">No team member data</td></tr>`}</tbody></table></div></div>`;
+        if(others.length){
+          html+=`<div class="section-label" style="margin-top:20px">Other Assignees</div>
+          <div class="tw"><div class="tw-body"><table>${thead}<tbody>${others.map(mkRow).join("")}</tbody></table></div></div>`;
+        }
+        return html;
+      })()}
+    `),
+    pane("trends",renderTrends()),
+  ].join("");
+
+  document.getElementById("dash").innerHTML=dashHtml;
+
+  /* Tab bar with counts */
+  const tabDefs=[
+    {id:"overview",   label:"Overview"},
+    {id:"inprogress", label:"In Progress",   cnt:ipRows.length,    cls:!isCurrentQ&&ipUnresolved.length>0?"warn":""},
+    ...(PROJ_USE_OOS?[
+      {id:"oosopen",label:"Open OOS",      cnt:oa,               cls:isCurrentQ?(oa>2?"urgent":oa>0?"warn":"clear"):""},
+      {id:"oos",    label:"Out-of-Sprint", cnt:oosAllRows.length,cls:""},
+    ]:[]),
+    {id:"released",   label:"Released",      cnt:relRows.length,   cls:""},
+    {id:"all",        label:"All Items",     cnt:allRows.length,   cls:""},
+    {id:"time",       label:PROJ_USE_SP?"Points":"Time"},
+    {id:"team",       label:"Team"},
+    {id:"trends",     label:"Trends"},
+  ];
+  document.getElementById("tabs-bar").innerHTML=tabDefs.map(t=>{
+    const badge=t.cnt!==undefined?`<span class="tab-cnt ${t.cls}">${t.cnt}</span>`:"";
+    return`<button class="tab" data-tab="${t.id}">${e(t.label)}${badge}</button>`;
+  }).join("");
+  document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>showTab(t.dataset.tab)));
+
+  /* Sync --hdr with actual header height so toolbar sticky offset is correct */
+  _syncHdr();
+
+  showTab(activeTab||"overview");
+}
+
+/* ---- Trend charts ---- */
+function mkLineChart(values,labels,higherIsBetter,lastIsWip,tipVals){
+  const n=values.length;
+  if(n<2)return'<p style="text-align:center;color:var(--muted);font-size:12px;padding:20px 0">Not enough data</p>';
+  const W=300,H=90,pL=36,pR=12,pT=10,pB=22;
+  const cW=W-pL-pR,cH=H-pT-pB;
+  const min=Math.min(...values),max=Math.max(...values),span=max-min||1;
+  const cx=i=>pL+(n<2?cW/2:(i/(n-1))*cW);
+  const cy=v=>pT+cH-((v-min)/span)*cH;
+  // Per-segment colour: each segment coloured by its own direction
+  function segCol(delta){
+    if(higherIsBetter===null||delta===0)return'#94a3b8';
+    return(higherIsBetter?delta>0:delta<0)?'#22c55e':'#ef4444';
+  }
+  const fmt=v=>Number.isInteger(v)?v:v.toFixed(1);
+  const midY=(pT+(pT+cH))/2;
+  const grid=`<line x1="${pL}" y1="${midY.toFixed(1)}" x2="${W-pR}" y2="${midY.toFixed(1)}" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>`;
+  const yLbls=`<text x="${pL-4}" y="${(pT+6).toFixed(0)}" text-anchor="end" font-size="9" fill="#94a3b8">${fmt(max)}</text>`
+             +`<text x="${pL-4}" y="${(pT+cH).toFixed(0)}" text-anchor="end" font-size="9" fill="#94a3b8">${fmt(min)}</text>`;
+  const xLbls=labels.map((l,i)=>{
+    if(n>=6&&i>0&&i<n-1&&i%2!==0)return''; // skip odd intermediates when crowded
+    const lbl=l.replace('·20',"'"); // "Q1·2026"→"Q1'26" always
+    const anchor=i===0?'start':i===n-1?'end':'middle';
+    return`<text x="${cx(i).toFixed(1)}" y="${H-3}" text-anchor="${anchor}" font-size="9" fill="#94a3b8">${e(lbl)}</text>`;
+  }).join('');
+  // Area fill uses neutral tint — segments carry the colour story
+  const solidPts=values.map((v,i)=>`${cx(i).toFixed(1)},${cy(v).toFixed(1)}`);
+  // Per-segment fills (trapezoid under each segment) + coloured lines
+  const bot=(pT+cH).toFixed(1);
+  function segFill(sc){return sc==='#22c55e'?'rgba(34,197,94,.15)':sc==='#ef4444'?'rgba(239,68,68,.15)':'rgba(148,163,184,.08)';}
+  const fills=[],segs=[];
+  for(let i=0;i<n-1;i++){
+    const x1=cx(i).toFixed(1),y1=cy(values[i]).toFixed(1);
+    const x2=cx(i+1).toFixed(1),y2=cy(values[i+1]).toFixed(1);
+    const isWipSeg=lastIsWip&&i===n-2;
+    if(isWipSeg){
+      fills.push(`<polygon points="${x1},${bot} ${x1},${y1} ${x2},${y2} ${x2},${bot}" fill="rgba(148,163,184,.06)"/>`);
+      segs.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>`);
+    }else{
+      const sc=segCol(values[i+1]-values[i]);
+      fills.push(`<polygon points="${x1},${bot} ${x1},${y1} ${x2},${y2} ${x2},${bot}" fill="${segFill(sc)}"/>`);
+      segs.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${sc}" stroke-width="2" stroke-linecap="round"/>`);
+    }
+  }
+  // Dots coloured by incoming segment direction
+  const dots=values.map((v,i)=>{
+    const isLast=i===n-1,isWip=isLast&&lastIsWip;
+    const tip=tipVals?tipVals[i]:'';
+    const tipAttr=tip?` data-tip="${tip}"`:'';
+    const halfStep=n>1?cW/(n-1)/2:cW/2;
+    const hL=(i===0?pL:cx(i)-halfStep).toFixed(1);
+    const hW=(i===0?halfStep:(i===n-1?W-pR-cx(i)+halfStep:halfStep*2)).toFixed(1);
+    const hit=`<rect x="${hL}" y="${pT}" width="${hW}" height="${H-pT-pB}" fill="transparent"${tipAttr}/>`;
+    const dc=i>0&&!isWip?segCol(values[i]-values[i-1]):'#94a3b8';
+    let dot;
+    if(isWip)dot=`<circle cx="${cx(i).toFixed(1)}" cy="${cy(v).toFixed(1)}" r="4" fill="var(--surface)" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="2,2"/>`;
+    else dot=`<circle cx="${cx(i).toFixed(1)}" cy="${cy(v).toFixed(1)}" r="${isLast?4:2.5}" fill="${isLast?dc:'var(--surface)'}" stroke="${dc}" stroke-width="1.5"/>`;
+    return hit+dot;
+  }).join('');
+  return`<svg viewBox="0 0 ${W} ${H}" style="width:100%;display:block" xmlns="http://www.w3.org/2000/svg">`
+    +grid+yLbls
+    +fills.join('')
+    +segs.join('')
+    +dots+xLbls+`</svg>`;
+}
+
+function trendNote(compVals,fmt,hi,lastIsWip,unit){
+  unit=unit||'quarter';
+  if(compVals.length<2)return'';
+  const first=compVals[0],last=compVals[compVals.length-1];
+  const d=last-first;
+  const nq=compVals.length;
+  const span=nq+' '+unit+(nq!==1?'s':'');
+  const fv=fmt(typeof first==='number'&&!Number.isInteger(first)?+first.toFixed(1):first);
+  const lv=fmt(typeof last==='number'&&!Number.isInteger(last)?+last.toFixed(1):last);
+  if(Math.abs(d)<0.05)return`Held steady at ${lv} across ${span}.`;
+  const improving=hi===null?null:(hi?d>=0:d<=0);
+  const dir=d>0?'Up':'Down';
+  const suffix=hi===null?'':(improving?' — trending well.':' — needs attention.');
+  return`${dir} from ${fv} to ${lv} across ${span}.${suffix}`;
+}
+
+function renderTrends(){
+  const now=new Date();
+  const curLabel=`Q${Math.floor(now.getMonth()/3)+1} ${now.getFullYear()}`;
+  // All quarters oldest→newest; keep last trendWindow, always append current if present
+  const allOldestFirst=Object.keys(QS).slice().reverse();
+  const completed=allOldestFirst.filter(q=>q!==curLabel);
+  const hasCurrent=QS[curLabel]!==undefined;
+  const windowed=completed.slice(-trendWindow);
+  // If current quarter exists, append it (marked WIP) but only if we have room or it's the only one
+  const qs=hasCurrent?[...windowed,curLabel]:windowed;
+  const lastIsWip=hasCurrent;
+  // Sprint trends need ≥2 sprints in the current quarter — quarterly trends need ≥2 quarters.
+  // Check sprint data BEFORE blocking, so a project with only 1 quarter can still show sprint trends.
+  const _MBase=[
+    {k:'completion_rate',  lbl:'Completion Rate',  fmt:v=>v+'%', hi:true,
+     desc:'% of sprint items that reached Done. Core measure of delivery against commitment.'},
+    {k:'completed',        lbl:'Items Completed',  fmt:v=>v,     hi:true,
+     desc:'Total issues moved to Done across all sprints in the quarter.'},
+    {k:'total',            lbl:'Total Items',      fmt:v=>v,     hi:true,
+     desc:'All issues across the quarter\'s sprints, regardless of status.'},
+    {k:'releases_shipped', lbl:'Releases Shipped', fmt:v=>v,     hi:true,
+     desc:'Number of fix versions marked as released — proxy for customer-facing delivery.'},
+    ...(PROJ_USE_OOS?[{k:'oos_pct',lbl:'OOS Rate',fmt:v=>v+'%',hi:false,
+     since:'Q2 2025',sinceNote:'Out-of-Sprint tracking introduced',
+     desc:'% of items added to a sprint after it started (Out Of Sprint label). High values indicate scope creep or poor planning.'}]:[]),
+    {k:'bug_pct',          lbl:'Bug %',            fmt:v=>v+'%', hi:false,
+     desc:'Bugs as a % of all sprint items. Rising trend signals quality or tech-debt concerns.'},
+    {k:'rollover_pct',     lbl:'Rollover Rate',    fmt:v=>v+'%', hi:false,
+     desc:'% of items from closed sprints still not completed. High values suggest over-commitment or items abandoned without resolution.'},
+    {k:'avg_cycle_days',   lbl:'Avg Cycle Time',   fmt:v=>v+'d', hi:false,
+     desc:'Average days from "In Progress" to Done for completed items. Excludes items closed without being worked on.'},
+    {k:'tickets_per_day',  lbl:'Tickets / Day',    fmt:v=>v,     hi:true,
+     desc:'Completed items divided by calendar days elapsed in the quarter. Normalises velocity across quarters of different lengths.'},
+  ];
+  const _MTime=[
+    {k:'time_logged_h',         lbl:'Hours Logged',      fmt:v=>v+'h', hi:true,
+     autoSince:true, sinceNote:'Time logging adopted',
+     desc:'Total hours logged against sprint items. Low values may indicate poor time-tracking discipline.'},
+    {k:'estimate_accuracy_pct', lbl:'Estimate Accuracy', fmt:v=>v+'%', hi:true,
+     autoSince:true, sinceNote:'Time tracking adopted',
+     desc:'How closely logged hours matched estimates (100% = exact). Measures planning discipline, not effort.'},
+    {k:'no_estimate_pct',       lbl:'Missing Estimates', fmt:v=>v+'%', hi:false,
+     autoSince:true, autoSinceKey:'time_logged_h', sinceNote:'Time tracking adopted',
+     desc:'% of items with no time estimate set. High values undermine sprint planning and capacity tracking.'},
+  ];
+  const _MSp=[
+    {k:'sp_completed',    lbl:'SP Completed',       fmt:v=>v,     hi:true,
+     desc:'Total story points moved to Done this quarter.'},
+    {k:'sp_velocity_avg', lbl:'SP Velocity (avg)',  fmt:v=>v,     hi:true,
+     desc:'Average story points completed per closed sprint. A rising trend indicates increasing team throughput.'},
+    {k:'no_estimate_pct', lbl:'Missing SP Est',     fmt:v=>v+'%', hi:false,
+     desc:'% of items with no story points set. High values undermine velocity reporting.'},
+  ];
+  const useSp=PROJ_USE_SP||false;
+  const M=[..._MBase,...(useSp?_MSp:_MTime)];
+  const wipNote=hasCurrent?`<p style="font-size:12px;color:var(--muted);margin-bottom:16px">` +
+    `<span style="display:inline-flex;align-items:center;gap:6px">` +
+    `<svg width="24" height="10" viewBox="0 0 24 10"><line x1="0" y1="5" x2="24" y2="5" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"/></svg>` +
+    `${e(curLabel)} is in progress — shown dashed, excluded from trend direction.</span></p>`:'';
+  // Sprint trends data
+  const perSprint=QS[cur]?.kpis?.per_sprint||{};
+  const sprintList=(QS[cur]?.sprints||[]).slice().sort((a,b)=>a.id-b.id);
+  const hasSprints=sprintList.length>=2&&Object.keys(perSprint).length>=2;
+
+  // Not enough data for either mode — show early exit
+  if(qs.length<2&&!hasSprints)
+    return'<div class="nodata">At least 2 sprints are needed for sprint trends, or 2 quarters for quarterly trends.</div>';
+  // Only 1 quarter available — auto-switch to sprint mode if possible
+  if(qs.length<2&&trendsMode==="quarterly") trendsMode="sprint";
+
+  // Mode toggle
+  const modeToggle='<div class="trend-controls" style="margin-bottom:0"><span>Mode:</span>'
+    +'<button class="twb'+(trendsMode==="quarterly"?" active":"")+'" onclick="trendsMode=\'quarterly\';document.querySelector(\'[data-pane=trends]\').innerHTML=renderTrends()">Quarterly</button>'
+    +(hasSprints?'<button class="twb'+(trendsMode==="sprint"?" active":"")+'" onclick="trendsMode=\'sprint\';document.querySelector(\'[data-pane=trends]\').innerHTML=renderTrends()">Sprints ('+e(cur)+')</button>':"")
+    +"</div>";
+
+  // Sprint trends view
+  if(trendsMode==="sprint"&&hasSprints){
+    const _SMBase=[
+      {k:"completion_rate", lbl:"Completion Rate", fmt:function(v){return v+"%";}, hi:true,  desc:"% of sprint items that reached Done."},
+      {k:"completed",       lbl:"Items Completed", fmt:function(v){return v;},     hi:true,  desc:"Issues moved to Done in this sprint."},
+      {k:"total",           lbl:"Total Items",     fmt:function(v){return v;},     hi:true,  desc:"All issues in this sprint."},
+      {k:"rollover_pct",    lbl:"Rollover Rate",   fmt:function(v){return v+"%";}, hi:false, desc:"% of items carried forward from an earlier sprint this quarter."},
+      {k:"bug_pct",         lbl:"Bug %",           fmt:function(v){return v+"%";}, hi:false, desc:"Bugs as % of all sprint items."},
+      {k:"avg_cycle_days",  lbl:"Avg Cycle Time",  fmt:function(v){return v+"d";}, hi:false, desc:"Average days In Progress to Done."},
+    ];
+    const _SMTime=[
+      {k:"time_logged_h",         lbl:"Hours Logged",      fmt:function(v){return v+"h";}, hi:true, desc:"Total hours logged by the team."},
+      {k:"estimate_accuracy_pct", lbl:"Estimate Accuracy", fmt:function(v){return v+"%";}, hi:true, desc:"Logged vs estimated hours accuracy."},
+    ];
+    const _SMSp=[
+      {k:"sp_total",     lbl:"SP Planned",    fmt:function(v){return v;}, hi:true,  desc:"Story points committed this sprint."},
+      {k:"sp_completed", lbl:"SP Completed",  fmt:function(v){return v;}, hi:true,  desc:"Story points completed this sprint."},
+    ];
+    const SM=[..._SMBase,...(useSp?_SMSp:_SMTime)];
+    const sIds=sprintList.map(function(s){return String(s.id);});
+    const sLbls=sprintList.map(function(s){return s.name.replace(/.*Sprint\s*/i,"S");});
+    const lastState=sprintList[sprintList.length-1].state;
+    const lastIsActive=lastState==="active";
+    const closed=sprintList.map(function(s){return s.state.toLowerCase()==="closed";});
+    // Indices of closed sprints for delta comparison
+    const closedIdxs=closed.reduce(function(a,v,i){if(v)a.push(i);return a;},[]);
+    const spNote=activeSprint?'<span class="trend-info" data-tip="Sprint selection does not filter Trends — all sprints within the quarter are always compared." style="vertical-align:middle;margin-left:6px">&#x2139;</span>':'';
+    return '<div class="pane-title">Trends</div>'
+      +'<div class="pane-desc">Sprint-on-sprint movement within '+e(cur)+'.'+spNote+'</div>'
+      +modeToggle+'<br><div class="trend-grid">'+SM.map(function(m){
+        const vals=sIds.map(function(sid){return+(perSprint[sid]?perSprint[sid][m.k]||0:0);});
+        const compVals=vals.filter(function(_,i){return closed[i];});
+        const tipVals=sIds.map(function(sid,i){return sLbls[i]+": "+m.fmt(+(perSprint[sid]?perSprint[sid][m.k]||0:0));});
+        // Delta between last two closed sprints
+        const cv=compVals[compVals.length-1]??vals[vals.length-1];
+        const pv=compVals[compVals.length-2]??cv;
+        const d=cv-pv;
+        const improving=m.hi?d>=0:d<=0;
+        let dcls='flat',dstr='—';
+        if(d!==0){dcls=improving?'pos':'neg';dstr=(d>0?'+':'')+(Number.isInteger(d)?d:d.toFixed(1));}
+        const dispVal=lastIsActive?vals[vals.length-1]:cv;
+        const wipSub=lastIsActive?'<div class="trend-val-sub">'+e(sLbls[sLbls.length-1])+' · in progress</div>':'';
+        // Delta label: "S94 → S95" using last two closed sprint labels
+        const prevLbl=closedIdxs.length>=2?sLbls[closedIdxs[closedIdxs.length-2]]:null;
+        const curLbl =closedIdxs.length>=1?sLbls[closedIdxs[closedIdxs.length-1]]:null;
+        const deltaLbl=prevLbl&&curLbl?'<div class="delta-lbl">'+e(prevLbl)+' → '+e(curLbl)+'</div>':'';
+        const infoIcon=m.desc?'<span class="trend-info" data-tip="'+e(m.desc)+'">&#x2139;</span>':'';
+        const note=trendNote(compVals,m.fmt,m.hi,false,'sprint');
+        if(vals.length<2)return'<div class="trend-card"><div class="trend-lbl">'+e(m.lbl)+infoIcon+'</div>'
+          +'<p style="font-size:12px;color:var(--muted);padding:12px 0">Not enough data</p></div>';
+        return'<div class="trend-card">'
+          +'<div class="trend-hdr"><div><div class="trend-lbl">'+e(m.lbl)+infoIcon+'</div>'
+          +'<div class="trend-val">'+e(String(m.fmt(dispVal)))+'</div>'+wipSub+'</div>'
+          +'<div style="text-align:right;flex-shrink:0">'+deltaLbl+'<span class="trend-delta '+dcls+'">'+e(dstr)+'</span></div></div>'
+          +mkLineChart(vals,sLbls,m.hi,lastIsActive,tipVals)
+          +(note?'<div class="trend-note">'+e(note)+'</div>':'')
+          +'</div>';
+      }).join("")+"</div>";
+  }
+
+  const winOpts=[{w:4,l:"4Q"},{w:6,l:"6Q"},{w:8,l:"8Q"},{w:9999,l:"All"}];
+  const winCtrl='<div class="trend-controls"><span>Show:</span>'
+    +winOpts.map(function(o){return'<button class="twb'+(trendWindow===o.w?" active":"")+'" data-w="'+o.w+'">'+o.l+"</button>";}).join("")
+    +"</div>";
+  function qOrd(q){const[qn,yr]=q.split(' ');return+yr*4+(+qn[1]);}
+  function firstNonZero(allQs,k){for(const q of allQs){if(+(QS[q]?.kpis[k]??0)>0)return q;}return null;}
+  const qNote=activeSprint?'<span class="trend-info" data-tip="Sprint selection does not filter Trends — all quarters are always shown." style="vertical-align:middle;margin-left:6px">&#x2139;</span>':'';
+  return '<div class="pane-title">Trends</div>'
+    +'<div class="pane-desc">Quarter-on-quarter movement across key metrics. Green = improving, red = declining.'+qNote+'</div>'
+    +modeToggle+"<br>"+winCtrl+wipNote+'<div class="trend-grid">'+M.map(m=>{
+    // Per-metric since filtering — exclude quarters before this metric was tracked
+    const mSince=m.since||(m.autoSince?firstNonZero(qs,m.autoSinceKey||m.k):null);
+    const sinceOrd=mSince?qOrd(mSince):0;
+    const mQs=sinceOrd?qs.filter(q=>qOrd(q)>=sinceOrd):qs;
+    const mLbls=mQs.map(q=>q.replace(' ','·'));
+    const mLastIsWip=lastIsWip&&mQs[mQs.length-1]===curLabel;
+    const trimmed=mQs.length<qs.length;
+    const vals=mQs.map(q=>+(QS[q]?.kpis[m.k]??0));
+    // Delta uses last 2 completed points only
+    const compVals=mLastIsWip?vals.slice(0,-1):vals;
+    const cur=compVals[compVals.length-1]??vals[vals.length-1];
+    const prev=compVals[compVals.length-2]??cur;
+    const d=cur-prev;
+    const improving=m.hi===null?null:(m.hi?d>=0:d<=0);
+    let dcls='flat',dstr='—';
+    if(d!==0){
+      dcls=m.hi===null?'flat':improving?'pos':'neg';
+      dstr=(d>0?'+':'')+(Number.isInteger(d)?d:d.toFixed(1));
+    }
+    const dispVal=mLastIsWip?vals[vals.length-1]:cur;
+    const wipSub=mLastIsWip?`<div class="trend-val-sub">${e(mQs[mQs.length-1])} · in progress</div>`:'';
+    // For the releases card, show the last release date of the displayed quarter
+    let extraSub='';
+    if(m.k==='releases_shipped'){
+      const dispQ=mLastIsWip?mQs[mQs.length-1]:(mQs[compVals.length-1]||mQs[mQs.length-1]);
+      const lrd=(QS[dispQ]?.kpis?.last_release_date)||'';
+      if(lrd)extraSub=`<div class="trend-val-sub">last: ${e(lrd)}</div>`;
+    }
+    const prevQ=compVals.length>=2?mQs[compVals.length-2]:null;
+    const curQ =compVals.length>=1?mQs[compVals.length-1]:null;
+    const deltaLbl=prevQ&&curQ?`<div class="delta-lbl">${e(prevQ)} → ${e(curQ)}</div>`:'';
+    const note=trendNote(compVals,m.fmt,m.hi,mLastIsWip);
+    const tipVals=mQs.map((q,i)=>q+': '+m.fmt(vals[i]));
+    const infoIcon=m.desc?`<span class="trend-info" data-tip="${e(m.desc)}">&#x2139;</span>`:'';
+    const sinceNote=trimmed?`<div class="trend-note" style="opacity:.7">&#x2139; ${e(m.sinceNote)} — data from ${e(mSince||'')} onwards.</div>`:'';
+    if(mQs.length<2)return`<div class="trend-card"><div class="trend-lbl">${e(m.lbl)}${infoIcon}</div>`
+      +`<p style="font-size:12px;color:var(--muted);padding:12px 0">Not enough data</p>${sinceNote}</div>`;
+    return`<div class="trend-card">`
+      +`<div class="trend-hdr"><div><div class="trend-lbl">${e(m.lbl)}${infoIcon}</div>`
+      +`<div class="trend-val">${e(String(m.fmt(dispVal)))}</div>`
+      +wipSub+extraSub
+      +`</div><div style="text-align:right;flex-shrink:0">${deltaLbl}<span class="trend-delta ${dcls}">${e(dstr)}</span></div></div>`
+      +mkLineChart(vals,mLbls,m.hi,mLastIsWip,tipVals)
+      +(note?`<div class="trend-note">${e(note)}</div>`:'')
+      +sinceNote
+      +`</div>`;
+  }).join('')+'</div>';
+}
+
+/* ---- Init ---- */
+if(!ordered.length){
+  document.getElementById("dash").innerHTML=`<div class="nodata">No quarter data available.</div>`;
+}else{
+  const _initTab=(!PROJ_USE_OOS&&_OOS_ONLY_TABS.includes(_lsTab))?"overview":_lsTab;
+  render(ordered[0],_initTab);
+}
+
+/* ---- Trend window selector ---- */
+document.body.addEventListener('click',ev=>{
+  const btn=ev.target.closest('.twb');
+  if(!btn)return;
+  trendWindow=+btn.dataset.w;
+  const pane=document.querySelector('[data-pane="trends"]');
+  if(pane)pane.innerHTML=renderTrends();
+});
+
+/* ---- Hover tooltip for chart data points ---- */
+document.body.addEventListener('mousemove',ev=>{
+  const t=ev.target.closest('[data-tip]');
+  const tt=document.getElementById('tt');
+  if(t){
+    tt.textContent=t.dataset.tip;
+    tt.classList.add('vis');
+    // Position above cursor, clamped so it never bleeds off screen edges
+    const pad=8,vw=window.innerWidth,vh=window.innerHeight;
+    const tw=tt.offsetWidth,th=tt.offsetHeight;
+    let x=ev.clientX-tw/2;
+    let y=ev.clientY-th-12;
+    if(x<pad)x=pad;
+    if(x+tw>vw-pad)x=vw-tw-pad;
+    if(y<pad)y=ev.clientY+18; // flip below cursor if too close to top
+    tt.style.left=x+'px';
+    tt.style.top=y+'px';
+  }else{
+    tt.classList.remove('vis');
+  }
+});
