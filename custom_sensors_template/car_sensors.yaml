@@ -1,0 +1,205 @@
+- sensor:
+    - name: "Car GPS Latitude"
+      unique_id: "car_gps_latitude_sensor"
+      state: "{{ state_attr('device_tracker.car_location', 'latitude') | string }}"
+      unit_of_measurement: "°"
+      state_class: measurement
+      device_class: distance
+      icon: "mdi:map-marker"
+
+    - name: "Car GPS Longitude"
+      unique_id: "car_gps_longitude_sensor"
+      state: "{{ state_attr('device_tracker.car_location', 'longitude') | string }}"
+      unit_of_measurement: "°"
+      state_class: measurement
+      device_class: distance
+      icon: "mdi:map-marker"
+
+    - name: "Car GPS Map URL"
+      unique_id: "car_gps_map_url_sensor"
+      state: >
+        {% set latitude = states('sensor.car_gps_latitude') %}
+        {% set longitude = states('sensor.car_gps_longitude') %}
+        {% if latitude not in ['unknown', 'unavailable', 'None'] and longitude not in ['unknown', 'unavailable', 'None'] %}
+          https://www.google.com/maps?q={{ latitude }},{{ longitude }}
+        {% else %}
+          Coordinates not available
+        {% endif %}
+      icon: "mdi:map"
+
+    - name: "Car Today Distance"
+      unique_id: "car_daily_distance_traveled_sensor"
+      unit_of_measurement: "km"
+      state_class: measurement
+      device_class: distance
+      state: >
+        {% set current = states('sensor.car_mileage') | float(default=none) %}
+        {% set previous = states('input_number.previous_odometer_reading') | float(default=none) %}
+
+        {% if current is not none and previous is not none and current >= previous %}
+          {{ (current - previous) | round(2) }}
+        {% else %}
+          {{ none }}
+        {% endif %}
+      icon: "mdi:map-marker-distance"
+
+    - name: "Car Fuel Remaining"
+      unique_id: "car_fuel_tank_remaining_sensor"
+      state: >
+        {% set current_fuel_quantity = states('sensor.car_fuel_quantity') %}
+        {% if current_fuel_quantity not in ['unknown', 'unavailable'] %}
+          {% set current_fuel_quantity = current_fuel_quantity | float %}
+          {% if current_fuel_quantity == current_fuel_quantity | round(0) %}
+            {{ current_fuel_quantity | round(0) | int }}
+          {% else %}
+            {{ current_fuel_quantity }}
+          {% endif %}
+        {% else %}
+          unknown
+        {% endif %}
+      unit_of_measurement: "L"
+      state_class: measurement
+      device_class: volume
+      icon: "mdi:fuel"
+      attributes:
+        percent_remaining: >
+          {% set current_fuel_quantity = states('sensor.car_fuel_quantity') %}
+          {% set max_fuel_capacity = 44 %}
+          {% if current_fuel_quantity not in ['unknown', 'unavailable'] %}
+            {% set current_fuel_quantity = current_fuel_quantity | float %}
+            {% set percent_remaining = (current_fuel_quantity / max_fuel_capacity) * 100 %}
+            {% if percent_remaining == percent_remaining | round(0) %}
+              {{ percent_remaining | round(0) | int }}%
+            {% else %}
+              {{ percent_remaining | round(2) }}%
+            {% endif %}
+          {% else %}
+            unknown
+          {% endif %}
+
+    - name: "Car Engine Distance"
+      unique_id: "car_engine_distance_sensor"
+      unit_of_measurement: "km"
+      state_class: measurement
+      device_class: distance
+      state: >
+        {% set engine_replacement_km = 68899 %}
+        {% set current_mileage = states('sensor.car_mileage') | float(default=none) %}
+        {% if current_mileage is not none and current_mileage > engine_replacement_km %}
+          {{ (current_mileage - engine_replacement_km) | round(2) }}
+        {% else %}
+          {{ none }}
+        {% endif %}
+      icon: "mdi:engine"
+
+    - name: "Car YTD Distance"
+      unique_id: "car_yearly_distance_traveled_sensor"
+      unit_of_measurement: "km"
+      state_class: measurement
+      device_class: distance
+      state: >
+        {% set previous_year = states('input_number.previous_year_mileage') | float(default=none) %}
+        {% set current = states('sensor.car_mileage') | float(default=none) %}
+        {% if previous_year is not none and current is not none %}
+          {% set distance = current - previous_year %}
+          {% if distance > 0 %}
+            {{ distance | round(2) }}
+          {% else %}
+            {{ none }}
+          {% endif %}
+        {% else %}
+          {{ none }}
+        {% endif %}
+      icon: "mdi:map-marker-distance"
+
+    - name: "Today Driving Time"
+      unique_id: car_daily_driving_time
+      unit_of_measurement: "min"
+      state_class: measurement
+      state: >
+        {% set s = states('input_number.daily_driving_seconds') | int(0) %}
+        {% set m = s // 60 %}
+        {% set sec = s % 60 %}
+        {{ '{}.{:02}'.format(m, (sec / 60 * 100) | int) }}
+      attributes:
+        readable_time: >
+          {% set s = states('input_number.daily_driving_seconds') | int(0) %}
+          {% set h = s // 3600 %}
+          {% set m = (s % 3600) // 60 %}
+          {% set sec = s % 60 %}
+          {% if h > 0 %}{{ h }}h {{ m }}m {{ sec }}s{% else %}{{ m }}m {{ sec }}s{% endif %}
+      icon: mdi:car-clock
+
+    - name: "YTD Driving Time"
+      unique_id: car_yearly_driving_time
+      unit_of_measurement: "h"
+      state_class: measurement
+      state: >
+        {% set s = states('input_number.yearly_driving_seconds') | int(0) %}
+        {% set h = s // 3600 %}
+        {% set m = (s % 3600) // 60 %}
+        {{ '{}.{:02}'.format(h, m | int) }}
+      attributes:
+        readable_time: >
+          {% set s = states('input_number.yearly_driving_seconds') | int(0) %}
+          {% set d = s // 86400 %}
+          {% set h = (s % 86400) // 3600 %}
+          {% set m = (s % 3600) // 60 %}
+          {% set sec = s % 60 %}
+          {% if d > 0 %}{{ d }}d {{ h }}h {{ m }}m {{ sec }}s
+          {% elif h > 0 %}{{ h }}h {{ m }}m {{ sec }}s
+          {% else %}{{ m }}m {{ sec }}s{% endif %}
+      icon: mdi:car-clock
+
+    - name: "Windscreen Freeze Risk"
+      unique_id: "windscreen_freeze_risk_sensor"
+      state: >
+        {% set temp  = states('sensor.weather_temperature') | float(999) %}
+        {% set dp    = states('sensor.weather_dew_point')   | float(999) %}
+        {% set rh    = states('sensor.weather_humidity')    | float(0)   %}
+        {% set cloud = states('sensor.weather_cloud_coverage') | float(100) %}
+        {% set wind  = states('sensor.weather_wind_speed')  | float(0)   %}
+        {% set cond  = states('sensor.weather_condition')   | lower %}
+        {% set rain  = states('sensor.weather_rain') | float(0) %}
+        {% set snow  = states('sensor.weather_snow') | float(0) %}
+
+        {% set has_precip = (['rain','snow','sleet','mist','drizzle','shower'] | select('in', cond) | list | length > 0) or (rain + snow > 0) %}
+        {% set calm_clear = (cloud < 70) and (wind < 25) %}
+        {% set prev     = states('sensor.windscreen_freeze_risk') %}
+        {% set thawing  = (temp > 4) and (rh < 80) and (states('sensor.sun_elevation') | float(0) > 10) %}
+
+        {% if (dp <= 1 and temp <= 3 and calm_clear) or (temp <= 0 and has_precip) %}
+          Likely Frozen
+        {% elif prev == 'Likely Frozen' and not thawing %}
+          Likely Frozen
+        {% else %}
+          Not Frozen
+        {% endif %}
+      attributes:
+        Frozen?: >
+          {% if is_state('sensor.windscreen_freeze_risk', 'Likely Frozen') %}
+            Yes
+          {% else %}
+            {% set temp  = states('sensor.weather_temperature') | float(999) %}
+            {% set dp    = states('sensor.weather_dew_point')   | float(999) %}
+            {% set cloud = states('sensor.weather_cloud_coverage') | float(100) %}
+            {% set wind  = states('sensor.weather_wind_speed')  | float(0) %}
+            {% set rh    = states('sensor.weather_humidity')    | float(0) %}
+            {% if dp > 1 or temp > 3 %}
+              No — Too warm ({{ temp }}°C / dew point {{ dp }}°C)
+            {% elif cloud >= 70 %}
+              No — Too cloudy ({{ cloud }}%)
+            {% elif wind >= 25 %}
+              No — Too windy ({{ wind }} km/h)
+            {% elif (temp > 4) and (rh < 80) and (states('sensor.sun_elevation') | float(0) > 10) %}
+              No — Thawing
+            {% else %}
+              No — Conditions borderline but not all criteria met
+            {% endif %}
+          {% endif %}
+      icon: >
+        {% if is_state('sensor.windscreen_freeze_risk', 'Likely Frozen') %}
+          mdi:snowflake
+        {% else %}
+          mdi:weather-sunny
+        {% endif %}
