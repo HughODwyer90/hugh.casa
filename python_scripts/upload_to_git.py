@@ -12,14 +12,14 @@ HA_BASE_URL = "http://homeassistant.local:8123"
 
 EXCLUDED_DIRS = {
     ".storage",
-    ".cache",
     ".cloud",
-    ".vscode",
+    "deps",
+    "tts",
     "blueprints",
-    "custom_components"
+    "custom_components",
 }
 
-HARDCODED_EXCLUSIONS = {"secrets.yaml", "secrets.yaml.bak"}
+HARDCODED_EXCLUSIONS = {"secrets.yaml.bak"}
 
 secrets = SecretsManager()
 ha_token = secrets["ha_access_token"]
@@ -40,6 +40,8 @@ KEY_PATTERN = re.compile(
     re.MULTILINE,
 )
 
+SECRET_VALUE_PATTERN = re.compile(r'^(\s*(?!#)\w[\w\s]*:\s*)(.+)$', re.MULTILINE)
+
 
 def load_exclusions():
     if os.path.exists(EXCLUDE_FILE_PATH):
@@ -57,9 +59,26 @@ def should_exclude(filename, exclusions):
 def has_encryption_key(file_path: str) -> bool:
     try:
         with open(file_path, "r", encoding="utf-8") as f:
-            return bool(KEY_PATTERN.search(f.read()))
+            content = f.read()
+        match = KEY_PATTERN.search(content)
+        if not match:
+            return False
+        key_value = match.group(1).strip()
+        return not key_value.startswith("!secret")
     except Exception:
         return False
+
+
+def redact_secrets_file(content: str) -> str:
+    """Replace all values in secrets.yaml with ****."""
+    return SECRET_VALUE_PATTERN.sub(r'\1****', content)
+
+
+def read_file(local_path: str):
+    """Read a file as binary or text depending on extension."""
+    is_binary = local_path.endswith((".png", ".jpg", ".jpeg", ".gif", ".ico"))
+    with open(local_path, "rb" if is_binary else "r", encoding=None if is_binary else "utf-8") as f:
+        return f.read()
 
 
 def upload_config_files():
@@ -75,15 +94,21 @@ def upload_config_files():
             local_path = os.path.join(root, filename)
 
             if filename.endswith(".yaml") and has_encryption_key(local_path):
-                print(f"🔒 Skipping {filename} (contains encryption key)")
+                print(f"🔒 Skipping {filename} (contains hardcoded encryption key)")
                 continue
 
             rel_path = os.path.relpath(local_path, CONFIG_ROOT)
             github_path = rel_path.replace(os.sep, "/")
 
             try:
+                content = read_file(local_path)
+
+                if filename == "secrets.yaml":
+                    content = redact_secrets_file(content)
+                    print(f"🔒 Uploading redacted: {github_path}")
+
                 uploader.upload_file(
-                    local_file_path=local_path,
+                    content=content,
                     github_file_path=github_path,
                     commit_message=f"backup: {filename}"
                 )
