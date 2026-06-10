@@ -1,0 +1,85 @@
+# Loads default set of integrations. Do not remove.
+default_config:
+
+#folder_watcher:
+#- folder: /media/
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+google_assistant: !include google.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+notify: !include notifications.yaml
+python_script: !include_dir_merge_named python_scripts
+shell_command: !include shell_commands.yaml
+rest_command: !include custom_command.yaml
+template: !include_dir_merge_list custom_sensors_template/
+rest: !include_dir_merge_list custom_sensors_rest/
+    
+recorder:
+  purge_keep_days: 60
+  auto_purge: true
+  commit_interval: 30
+  exclude:
+    entities:
+      - switch.zigbee2mqtt_bridge_permit_join
+      - select.zigbee2mqtt_bridge_log_level
+      - sensor.zigbee2mqtt_bridge_version
+      - sensor.lucifer_activewindow_filtered
+      - sensor.datamars_activewindow_filtered
+      - sensor.lucifer_activewindow
+      - sensor.datamars_activewindow
+      - sensor.date_time_iso
+      - sensor.next_alarm_in
+
+logger:
+  default: warning
+  logs:
+    custom_components.streamdeck: error
+
+logbook:
+  exclude:
+    entities:
+      - sensor.lucifer_activewindow_filtered
+      - sensor.datamars_activewindow_filtered
+      - sensor.lucifer_activewindow
+      - sensor.datamars_activewindow
+      - sensor.next_alarm_in
+
+homeassistant:
+  customize:
+    zone.home:
+      radius: 15
+  allowlist_external_dirs:
+    - "/config/messages"
+    - "/config/text_files"
+    - "/media/"
+
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 172.30.33.0/24
+    - 127.0.0.1
+    - 192.168.0.0/16
+  ip_ban_enabled: true
+  login_attempts_threshold: 5
+
+media_player:
+  - platform: universal
+    name: universal_player
+    children:
+      - media_player.hugh_room_speaker_g
+      - media_player.hugh_room_speaker_2_g
+      - media_player.master_bedroom_display_g
+
+bluetooth:
+
+yahoofinance:
+  show_trending_icon: true
+  symbols:
+    - VWCE.DE
+  scan_interval: 600
+
