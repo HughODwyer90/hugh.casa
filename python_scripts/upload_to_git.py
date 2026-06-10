@@ -12,6 +12,7 @@ HA_BASE_URL = "http://homeassistant.local:8123"
 
 EXCLUDED_DIRS = {
     ".storage",
+    ".vscode",
     ".cloud",
     ".cache",
     "deps",
@@ -21,6 +22,16 @@ EXCLUDED_DIRS = {
 }
 
 HARDCODED_EXCLUSIONS = {"secrets.yaml.bak"}
+
+SENSITIVE_JSON_FILES = {"SERVICE_ACCOUNT.JSON"}
+
+SENSITIVE_JSON_FIELDS = {
+    "private_key",
+    "private_key_id",
+    "client_id",
+    "client_email",
+    "client_x509_cert_url",
+}
 
 secrets = SecretsManager()
 ha_token = secrets["ha_access_token"]
@@ -75,6 +86,18 @@ def redact_secrets_file(content: str) -> str:
     return SECRET_VALUE_PATTERN.sub(r'\1****', content)
 
 
+def redact_json_file(content: str) -> str:
+    """Redact sensitive fields in a JSON file."""
+    try:
+        data = json.loads(content)
+        for field in SENSITIVE_JSON_FIELDS:
+            if field in data:
+                data[field] = "****"
+        return json.dumps(data, indent=2)
+    except Exception:
+        return content
+
+
 def read_file(local_path: str):
     """Read a file as binary or text depending on extension."""
     is_binary = local_path.endswith((".png", ".jpg", ".jpeg", ".gif", ".ico"))
@@ -95,7 +118,7 @@ def upload_config_files():
             local_path = os.path.join(root, filename)
 
             if filename.endswith(".yaml") and has_encryption_key(local_path):
-                print(f"🔒 Skipping {filename} (contains hardcoded encryption key)")
+                print(f"🔒 Skipping {local_path} (contains hardcoded encryption key)")
                 continue
 
             rel_path = os.path.relpath(local_path, CONFIG_ROOT)
@@ -106,6 +129,10 @@ def upload_config_files():
 
                 if filename == "secrets.yaml":
                     content = redact_secrets_file(content)
+                    print(f"🔒 Uploading redacted: {github_path}")
+
+                if filename in SENSITIVE_JSON_FILES:
+                    content = redact_json_file(content)
                     print(f"🔒 Uploading redacted: {github_path}")
 
                 uploader.upload_file(
