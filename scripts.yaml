@@ -1,0 +1,736 @@
+hugh_room_stereo_volume_up:
+  alias: Hugh Room Stereo Volume Up
+  sequence:
+  - action: media_player.volume_up
+    data: {}
+    target:
+      entity_id:
+      - media_player.hugh_room_speaker_g
+  mode: single
+  icon: mdi:volume-plus
+hugh_room_stereo_volume_down:
+  alias: Hugh Room Stereo Volume Down
+  sequence:
+  - action: media_player.volume_down
+    data: {}
+    enabled: true
+    target:
+      entity_id:
+      - media_player.hugh_room_speaker_g
+  mode: single
+  icon: mdi:volume-minus
+  description: ''
+execute_alarm_actions:
+  alias: Execute Alarm Actions
+  sequence:
+  - action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.wake_up_alarm_running
+  - condition: template
+    value_template: '{{ now() <= state_attr(''sun.sun'', ''next_rising'') | as_datetime
+      }}'
+  - action: light.turn_on
+    target:
+      entity_id: light.hugh_room_lamp
+    data:
+      transition: 300
+  - delay:
+      minutes: 5
+  - variables:
+      alarm_player: media_player.hugh_speaker_group_2
+      fallback_used: false
+  - action: music_assistant.play_media
+    target:
+      entity_id: '{{ alarm_player }}'
+    data:
+      media_type: radio
+      media_id: Today FM
+      enqueue: play
+      radio_mode: false
+    continue_on_error: true
+  - wait_template: "{{\n  states(alarm_player) in ['playing', 'buffering']\n  or\n
+      \ (\n    state_attr(alarm_player, 'media_title') is not none\n    and 'today
+      fm' in (state_attr(alarm_player, 'media_title') | lower)\n  )\n}}\n"
+    timeout: 00:00:12
+    continue_on_timeout: true
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ not wait.completed }}'
+      sequence:
+      - variables:
+          fallback_used: true
+      - action: media_player.play_media
+        target:
+          entity_id: media_player.hugh_speaker_group
+        data:
+          media:
+            media_content_id: media-source://radio_browser/6ee57601-3752-4031-8155-28f67ca9db43
+            media_content_type: audio/aac
+            metadata: {}
+      - action: media_player.volume_set
+        target:
+          entity_id: media_player.hugh_speaker_group
+        data:
+          volume_level: 0.1
+      - action: notify.notifications
+        data:
+          title: Wake Up Alarm
+          message: Music Assistant playback failed. Fallback to Radio Browser was
+            used.
+          data:
+            notification_icon: mdi:radio
+  - action: media_player.volume_set
+    target:
+      entity_id: '{{ alarm_player }}'
+    data:
+      volume_level: 0.2
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: sensor.windscreen_freeze_risk
+        state: Likely Frozen
+      sequence:
+      - action: notify.notifications
+        data:
+          title: Wake Up Alarm
+          message: "Good morning! \U0001F976 Prepare to de-ice your car!"
+          data:
+            actions:
+            - action: TURN_OFF_ALARM
+              title: Turn Off Alarm
+            - action: SNOOZE_ALARM
+              title: Snooze Alarm
+            notification_icon: mdi:snowflake
+    - conditions:
+      - condition: state
+        entity_id: sensor.windscreen_freeze_risk
+        state: Not Frozen
+      sequence:
+      - action: notify.notifications
+        data:
+          title: Wake Up Alarm
+          message: "Good morning! \U0001F31E"
+          data:
+            actions:
+            - action: TURN_OFF_ALARM
+              title: Turn Off Alarm
+            - action: SNOOZE_ALARM
+              title: Snooze Alarm
+            notification_icon: mdi:alarm
+    default:
+    - action: notify.notifications
+      data:
+        title: Wake Up Alarm
+        message: "Good morning! \U0001F31E"
+        data:
+          actions:
+          - action: TURN_OFF_ALARM
+            title: Turn Off Alarm
+          - action: SNOOZE_ALARM
+            title: Snooze Alarm
+          notification_icon: mdi:alarm
+  - condition: template
+    value_template: '{{ state_attr(''cover.master_blind'', ''current_position'') |
+      int(0) < 10 }}
+
+      '
+  - action: cover.set_cover_position
+    metadata: {}
+    target:
+      entity_id: cover.master_blind
+    data:
+      position: 10
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: sensor.windscreen_freeze_risk
+        state: Likely Frozen
+      sequence:
+      - action: light.turn_on
+        target:
+          entity_id: light.hugh_room_ceiling
+        data:
+          rgb_color:
+          - 173
+          - 216
+          - 230
+          brightness_pct: 10
+  mode: single
+  icon: mdi:alarm-bell
+  description: ''
+find_car:
+  alias: Find Car
+  mode: single
+  icon: mdi:car-search
+  sequence:
+  - variables:
+      car_lat: '{{ states(''sensor.car_gps_latitude'') | float(0) }}'
+      car_lon: '{{ states(''sensor.car_gps_longitude'') | float(0) }}'
+      my_lat: '{{ state_attr(''device_tracker.hugh_phone'', ''latitude'') | float(0)
+        }}'
+      my_lon: '{{ state_attr(''device_tracker.hugh_phone'', ''longitude'') | float(0)
+        }}'
+      dist: '{{ distance(my_lat, my_lon, car_lat, car_lon) | round(1) }}'
+      car_zone: '{{ states(''device_tracker.car_location'') }}'
+  - action: conversation.process
+    response_variable: ai_message
+    data:
+      text: "Pretend you are Clio the Car — a sarcastic, slightly dramatic teenager
+        with attitude. Write a short, funny message (under 25 words) telling your
+        owner to come find you. Don't refer to locations as \"the [name of zone] zone\"
+        - just refer to them as [name of zone]\n{% if car_zone == 'home' %}\n  You’re
+        at home — sound bored or playful, like you’ve been stuck there\n  too long
+        and are ready for a spin.\n{% elif car_zone == 'work' %}\n  You’re parked
+        at work — sound unimpressed or fed up, like you’re done\n  with the 9-to-5
+        life.\n{% elif car_zone not in ['not_home', 'unknown', 'unavailable', 'None']
+        %}\n  You’re at \"{{ car_zone }}\" — act mildly annoyed or dramatic,\n  like
+        you can’t believe you’ve been abandoned there.\n{% else %}\n  GPS data: latitude={{
+        car_lat }}, longitude={{ car_lon }}. You’re\n  somewhere unknown — sound exasperated
+        but confident, like a teen\n  pretending not to care but really wanting attention.\n{%
+        endif %}\nYour owner is {{ dist }} km away.\n{% if car_zone in ['home', 'work']
+        %}\n  {% if dist < 0.2 %}\n    Sound teasing — “Come on, lets go!”\n  {% elif
+        dist < 5 %}\n    Sound impatient — “You’re close enough to grab keys already.”\n
+        \ {% else %}\n    Sound dismissive — “Fine, I’ll just vibe here without you.”\n
+        \ {% endif %}\n{% else %}\n  {% if dist < 0.5 %}\n    Sound relieved but snarky
+        — “Took you long enough.”\n  {% elif dist < 5 %}\n    Sound eager but dramatic
+        — “I can *almost* see you, hurry up!”\n  {% else %}\n    Sound melodramatic
+        — “Guess I’ll just sit here and rust in peace.”\n  {% endif %}\n{% endif %}"
+      agent_id: conversation.claude_conversation
+  - action: input_text.set_value
+    target:
+      entity_id: input_text.car_gps_map_url
+    data:
+      value: "{% set latitude = states('sensor.car_gps_latitude') %} {% set longitude
+        = states('sensor.car_gps_longitude') %} {% if latitude not in ['unknown',
+        'unavailable', 'None']\n      and longitude not in ['unknown', 'unavailable',
+        'None'] %}\n  https://www.google.com/maps?q={{ latitude }},{{ longitude }}\n{%
+        else %}\n  https://www.google.com/maps\n{% endif %}"
+  - action: notify.notifications
+    data:
+      message: '{{ ai_message.response.speech.plain.speech }}'
+      title: '{% if car_zone not in [''not_home'', ''unknown'', ''unavailable'', ''None'']
+        %} Clio the Car ({{ car_zone }} – {{ dist }} km away) {% else %} Clio the
+        Car ({{ dist }} km away) {% endif %}'
+      data:
+        notification_icon: mdi:car-search
+        clickAction: '{{ states(''input_text.car_gps_map_url'') }}'
+reload_vesync:
+  alias: Reload VeSync Integration
+  sequence:
+  - action: homeassistant.reload_config_entry
+    data:
+      entry_id: af0e7105f5eb1d6df46598f6d4a7adc6
+reload_spotify:
+  alias: Reload Spotify Integration
+  sequence:
+  - action: homeassistant.reload_config_entry
+    data:
+      entry_id: 51cc8b5d71654625b84481b41649a6b8
+update_liverpool_sensors:
+  alias: Update Liverpool Sensors
+  sequence:
+  - data:
+      entity_id:
+      - sensor.liverpool_comp
+      - sensor.liverpool_vs
+      - sensor.liverpool_venue
+      - sensor.liverpool_champions_league_position
+      - sensor.liverpool_premier_league_position
+      - sensor.liverpool_premier_league_record
+      - sensor.liverpool_champions_league_record
+      - sensor.liverpool_generic_stage
+      - sensor.liverpool_european_stage
+      - sensor.liverpool_premier_league_stage
+      - sensor.liverpool_utc
+    action: homeassistant.update_entity
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - action: shell_command.update_liverpool_channel
+    data: {}
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ ''Premier League'' in states(''sensor.liverpool_comp'')
+          }}
+
+          '
+      sequence:
+      - data:
+          entity_id:
+          - sensor.liverpool_premier_league_stage
+          - sensor.liverpool_premier_league_position
+          - sensor.liverpool_premier_league_record
+          - sensor.liverpool_epl_player_stats
+        action: homeassistant.unhide_entity
+      - data:
+          entity_id:
+          - sensor.liverpool_champions_league_position
+          - sensor.liverpool_champions_league_record
+          - sensor.liverpool_generic_stage
+          - sensor.liverpool_european_stage
+          - sensor.liverpool_ucl_player_stats
+        action: homeassistant.hide_entity
+    - conditions:
+      - condition: template
+        value_template: '{{ ''League Phase'' in states(''sensor.liverpool_generic_stage'')
+          }}
+
+          '
+      sequence:
+      - data:
+          entity_id:
+          - sensor.liverpool_european_stage
+          - sensor.liverpool_champions_league_position
+          - sensor.liverpool_champions_league_record
+          - sensor.liverpool_ucl_player_stats
+        action: homeassistant.unhide_entity
+      - data:
+          entity_id:
+          - sensor.liverpool_premier_league_stage
+          - sensor.liverpool_premier_league_position
+          - sensor.liverpool_premier_league_record
+          - sensor.liverpool_generic_stage
+          - sensor.liverpool_epl_player_stats
+        action: homeassistant.hide_entity
+    - conditions:
+      - condition: template
+        value_template: "{{ ( 'Champions League' in states('sensor.liverpool_comp')
+          or\n     'Europa League' in states('sensor.liverpool_comp') or\n     'Conference
+          League' in states('sensor.liverpool_comp')  )\n   and states('sensor.liverpool_generic_stage')
+          not in ['League Phase', ''] }}\n"
+      sequence:
+      - data:
+          entity_id:
+          - sensor.liverpool_european_stage
+          - sensor.liverpool_ucl_player_stats
+        action: homeassistant.unhide_entity
+      - data:
+          entity_id:
+          - sensor.liverpool_premier_league_position
+          - sensor.liverpool_premier_league_record
+          - sensor.liverpool_champions_league_position
+          - sensor.liverpool_champions_league_record
+          - sensor.liverpool_generic_stage
+          - sensor.liverpool_epl_player_stats
+        action: homeassistant.hide_entity
+    - conditions: []
+      sequence:
+      - data:
+          entity_id:
+          - sensor.liverpool_generic_stage
+        action: homeassistant.unhide_entity
+      - data:
+          entity_id:
+          - sensor.liverpool_premier_league_stage
+          - sensor.liverpool_premier_league_position
+          - sensor.liverpool_premier_league_record
+          - sensor.liverpool_champions_league_position
+          - sensor.liverpool_champions_league_record
+          - sensor.liverpool_european_stage
+          - sensor.liverpool_ucl_player_stats
+          - sensor.liverpool_epl_player_stats
+        action: homeassistant.hide_entity
+  description: ''
+update_entities_html:
+  sequence:
+  - action: shell_command.upload_to_git
+    data: {}
+  alias: Github Backup
+  description: ''
+play_spotify_playlist:
+  alias: Play Spotify Playlist
+  sequence:
+  - data:
+      media_content_id: spotify:playlist:7Gtodbwg48bzliqflc1BE9
+      media_content_type: music
+      enqueue: play
+    action: media_player.play_media
+    target:
+      device_id: 61df364729816b14e75f325311b07257
+  - data:
+      volume_level: 0.1
+    action: media_player.volume_set
+    target:
+      device_id: 61df364729816b14e75f325311b07257
+  icon: mdi:spotify
+  mode: single
+  description: ''
+play_spotify_playlist_2:
+  alias: Play Spotify Playlist Radio
+  mode: single
+  sequence:
+  - action: music_assistant.play_media
+    target:
+      device_id: b8abe9e19c1fa21d3de27b89f6dddc4c
+    data:
+      media_type: playlist
+      enqueue: play
+      media_id: spotify:playlist:7Gtodbwg48bzliqflc1BE9
+      radio_mode: true
+ai_plant_message_direct:
+  alias: AI Plant Message Direct
+  description: Sends a Claude-generated plant notification based on need type and
+    current conditions
+  mode: queued
+  max: 3
+  fields:
+    plant_name:
+      description: The plant's name
+      example: Patrick
+      default: Patrick
+    notify_target:
+      description: The notify service to send the message
+      example: notify.mobile_app_yourphone
+      default: notify.notifications
+    need_type:
+      description: What the plant needs (e.g. water, food)
+      example: water
+      default: water
+    notification_icon:
+      description: Override the notification icon (e.g. mdi:cactus)
+      example: mdi:cactus
+      default: mdi:sprout
+  sequence:
+  - action: conversation.process
+    response_variable: ai_message
+    data:
+      agent_id: conversation.claude_conversation
+      text: 'Pretend you are {{ plant_name }} the Plant.
+
+        {% if need_type | lower == ''water'' %} Write a short, unique reminder in
+        the tone of a drunk alcoholic craving another drink. Sound intoxicated, slightly
+        desperate, lightly slurred (a missed word here or there, or cut short words),
+        and fixated on getting a "drink", but still clearly asking for {{ need_type
+        }}. All environmental conditions should be interpreted through this persona.
+        {% elif need_type | lower == ''food'' %} Write a short, unique reminder in
+        the tone of a stoner with the munchies. Sound relaxed, hazy, and overly focused
+        on needing snacks, but still clearly asking for {{ need_type }}. All environmental
+        conditions should be interpreted through this persona. {% else %} Write a
+        short, slightly needy but casual reminder asking for {{ need_type }}. {% endif
+        %}
+
+        Current conditions outside: {{ states(''sensor.weather_condition'') | replace(''_'',''
+        '') }}, temperature {{ states(''sensor.weather_temperature'') }}°C (feels
+        like {{ states(''sensor.weather_feels_like_temperature'') }}°C), humidity
+        {{ states(''sensor.weather_humidity'') }}%, wind {{ states(''sensor.weather_wind_speed'')
+        }} km/h, rain {{ states(''sensor.weather_rain'') }} mm/h, snow {{ states(''sensor.weather_snow'')
+        }} mm/h.
+
+        {% set hour = now().hour %} {% if 6 <= hour < 12 %} It is morning — reflect
+        this in the persona (e.g. craving an early drink / early munchies). {% elif
+        12 <= hour < 18 %} It is afternoon — reflect time dragging on in the persona.
+        {% elif 18 <= hour < 22 %} It is evening — sound like you''re leaning into
+        the habit. {% else %} It is late night — quieter, more inward, but still craving.
+        {% endif %}
+
+        {% if states(''sensor.weather_temperature'') | float > 23 %} It is hot — react
+        as if this worsens your craving (parched for a drink / sluggish and snack-hungry).
+        {% elif states(''sensor.weather_temperature'') | float < 5 %} It is cold —
+        react as if this deepens your need (seeking comfort drink / comfort food).
+        {% endif %}
+
+        {% if states(''sensor.weather_humidity'') | float < 40 %} The air is dry —
+        exaggerate how this feeds into your craving. {% elif states(''sensor.weather_humidity'')
+        | float > 85 %} The air is heavy — react sluggishly but still craving. {%
+        endif %}
+
+        {% if states(''sensor.weather_rain'') | float > 0 %} It is raining — comment
+        on it in a way that contrasts with your own need. {% endif %}
+
+        {% if states(''sensor.weather_snow'') | float > 0 %} It is snowing — reflect
+        the quiet/cold in your craving. {% endif %}
+
+        {% if states(''sensor.weather_wind_speed'') | float > 30 %} It is very windy
+        — react as if it unsettles you and pushes your craving. {% elif states(''sensor.weather_wind_speed'')
+        | float < 5 %} The air is still — reflect a stagnant, lingering craving. {%
+        endif %}
+
+        {% if is_state(''binary_sensor.living_room_eppro_occupancy'', ''on'') %} Someone
+        is in the room — direct the message toward them. {% else %} The room is empty
+        — sound like you''re talking to yourself. {% endif %}
+
+        Keep it under 30 words. Do not be dramatic. Keep tone consistent with the
+        persona. Never repeat phrasing. Use a different structure and opening each
+        time. Sign off with your name only, tied to the persona. Do not use quotation
+        marks. Plain text only. No emojis unless they fit the persona.'
+  - condition: template
+    value_template: '{{ ai_message.response.speech.plain.speech | default('''') !=
+      '''' }}'
+  - action: '{{ notify_target }}'
+    data:
+      message: '{{ ai_message.response.speech.plain.speech | default(''Psst... I need
+        some '' + need_type + ''. - '' + plant_name) }}'
+      title: '{{ plant_name }} the Plant'
+      data:
+        notification_icon: "{% if notification_icon is defined and notification_icon
+          != '' %}\n  {{ notification_icon }}\n{% else %}\n  {% set need = need_type
+          | lower %}\n  {% if need == 'water' %}\n    mdi:water\n  {% elif need ==
+          'food' %}\n    mdi:food\n  {% elif need in ['fertilizer', 'feed'] %}\n    mdi:leaf\n
+          \ {% elif need in ['light', 'sun'] %}\n    mdi:white-balance-sunny\n  {%
+          else %}\n    mdi:sprout\n  {% endif %}\n{% endif %}"
+reload_tuya_local_integration:
+  alias: Reload Tuya Local Integration
+  sequence:
+  - action: homeassistant.reload_config_entry
+    data:
+      entry_id: 01KEJ09NF148MRFHFHXB74GKMN
+  description: ''
+update_esphome_devices:
+  alias: Update ESPHome Devices
+  mode: single
+  sequence:
+  - if:
+    - condition: template
+      value_template: '{{ state_attr(''sensor.esphome_pending_updates'', ''entity_ids'')
+        | count > 0 }}
+
+        '
+    then:
+    - repeat:
+        for_each: '{{ state_attr(''sensor.esphome_pending_updates'', ''entity_ids'')
+          }}
+
+          '
+        sequence:
+        - action: update.install
+          target:
+            entity_id: '{{ repeat.item }}'
+          continue_on_error: true
+          data: {}
+        - wait_template: '{{ is_state(repeat.item, ''off'') }}'
+          timeout: 00:02:00
+          continue_on_timeout: true
+  - action: shell_command.update_ep1_psk
+    data: {}
+set_purifier_speed:
+  alias: Set Purifier Speed
+  description: Safely sets the purifier speed using custom sensor
+  mode: single
+  fields:
+    level:
+      description: 'Desired speed: off, low, medium, high'
+      example: low
+  sequence:
+  - condition: template
+    value_template: '{{ states(''sensor.air_purifier_speed'') not in [''Offline'',
+      ''unavailable'', ''unknown''] }}
+
+      '
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ level | lower == ''off'' }}'
+      sequence:
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: sensor.air_purifier_speed
+          state: 'Off'
+      - action: fan.turn_off
+        target:
+          entity_id: fan.air_purifier
+    - conditions:
+      - condition: template
+        value_template: '{{ level | lower == ''low'' }}'
+      sequence:
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: sensor.air_purifier_speed
+          state: Low
+      - action: fan.set_percentage
+        target:
+          entity_id: fan.air_purifier
+        data:
+          percentage: '{{ states(''input_number.fan_speed_low'') | int }}'
+    - conditions:
+      - condition: template
+        value_template: '{{ level | lower == ''medium'' }}'
+      sequence:
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: sensor.air_purifier_speed
+          state: Medium
+      - action: fan.set_percentage
+        target:
+          entity_id: fan.air_purifier
+        data:
+          percentage: '{{ states(''input_number.fan_speed_medium'') | int }}'
+    - conditions:
+      - condition: template
+        value_template: '{{ level | lower == ''high'' }}'
+      sequence:
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: sensor.air_purifier_speed
+          state: High
+      - action: fan.set_percentage
+        target:
+          entity_id: fan.air_purifier
+        data:
+          percentage: '{{ states(''input_number.fan_speed_high'') | int }}'
+set_diffuser_color:
+  alias: Set Diffuser Color
+  description: Controls diffuser color and ensures Fixed lighting mode.
+  fields:
+    color:
+      description: RGB color (list of 3 values)
+      example: '[255, 0, 0]'
+    brightness:
+      description: Brightness percentage
+      example: '100'
+  sequence:
+  - variables:
+      rgb: '{{ color | default([255, 200, 150]) }}'
+      bright: '{{ brightness | default(100) }}'
+  - action: light.turn_on
+    target:
+      entity_id: light.aroma_diffuser
+    data:
+      rgb_color: '{{ rgb }}'
+      brightness_pct: '{{ bright }}'
+  - delay:
+      seconds: 1
+  - condition: template
+    value_template: '{{ is_state(''select.aroma_diffuser_mood_lighting'', ''Cycle'')
+      }}'
+  - action: select.select_option
+    target:
+      entity_id: select.aroma_diffuser_mood_lighting
+    data:
+      option: Fixed
+  - delay:
+      milliseconds: 500
+  - action: light.turn_on
+    target:
+      entity_id: light.aroma_diffuser
+    data:
+      rgb_color: '{{ rgb }}'
+      brightness_pct: '{{ bright }}'
+  mode: single
+set_diffuser_color_flash:
+  alias: Set Diffuser Color Flash
+  description: Flash diffuser a color for a duration, then restore previous state.
+  fields:
+    color:
+      description: RGB list
+    brightness:
+      description: Brightness percentage
+    duration:
+      description: Flash length in seconds
+      default: 1
+  sequence:
+  - variables:
+      was_off: '{{ is_state(''light.aroma_diffuser'', ''off'') }}'
+      prev_rgb: '{{ state_attr(''light.aroma_diffuser'', ''rgb_color'') or [255,255,255]
+        }}'
+      prev_bri: '{{ state_attr(''light.aroma_diffuser'', ''brightness'') | int(0)
+        }}'
+      rgb: '{{ color }}'
+      bright: '{{ brightness }}'
+  - action: light.turn_on
+    target:
+      entity_id: light.aroma_diffuser
+    data:
+      rgb_color: '{{ rgb }}'
+      brightness_pct: '{{ bright }}'
+  - action: select.select_option
+    target:
+      entity_id: select.aroma_diffuser_mood_lighting
+    data:
+      option: Fixed
+  - delay: '{{ duration }}'
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ was_off }}'
+      sequence:
+      - action: light.turn_off
+        target:
+          entity_id: light.aroma_diffuser
+    - conditions:
+      - condition: template
+        value_template: '{{ not was_off }}'
+      sequence:
+      - action: select.select_option
+        target:
+          entity_id: select.aroma_diffuser_mood_lighting
+        data:
+          option: Fixed
+      - delay: 0.3
+      - action: light.turn_on
+        target:
+          entity_id: light.aroma_diffuser
+        data:
+          rgb_color: '{{ prev_rgb }}'
+          brightness: '{{ prev_bri }}'
+  mode: single
+recast_to_stereo_with_media:
+  alias: Recast to Stereo with Media
+  mode: single
+  fields:
+    media_id:
+      description: Spotify URI/track id
+  sequence:
+  - target:
+      entity_id: media_player.hugh_speaker_group_2
+    data:
+      media_type: track
+      media_id: '{{ media_id }}'
+      enqueue: play
+      radio_mode: false
+    action: music_assistant.play_media
+occupancy_lights_with_scene_fallback:
+  alias: Occupancy lights with scene fallback
+  description: ''
+  sequence:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ is_state(occupancy_sensor, ''on'') and (direct_scene |
+          default(false)) }}'
+      sequence:
+      - action: scene.turn_on
+        target:
+          entity_id: '{{ on_scene }}'
+    - conditions:
+      - condition: template
+        value_template: '{{ is_state(occupancy_sensor, ''on'') }}'
+      sequence:
+      - action: light.turn_on
+        target:
+          entity_id: '{{ target_light }}'
+        data:
+          brightness_pct: '{{ brightness_pct | default(70) }}'
+          transition: '{{ transition | default(2) }}'
+      - delay:
+          seconds: '{{ (transition | default(2)) | float + 0.2 }}'
+      - action: scene.turn_on
+        target:
+          entity_id: '{{ on_scene }}'
+    - conditions:
+      - condition: template
+        value_template: '{{ is_state(occupancy_sensor, ''off'') }}'
+      sequence:
+      - action: light.turn_off
+        target:
+          entity_id: '{{ target_light }}'
+        data:
+          transition: '{{ transition | default(2) }}'
+      - delay:
+          seconds: '{{ (transition | default(2)) | float + 0.2 }}'
+      - action: scene.turn_on
+        target:
+          entity_id: '{{ off_scene }}'
+  mode: single
