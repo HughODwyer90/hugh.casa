@@ -1,0 +1,268 @@
+- sensor:
+    - name: "ESPHome Pending Updates"
+      unique_id: esphome_pending_updates_sensor
+      unit_of_measurement: "updates"
+      state_class: measurement
+      state: >
+        {{ states.update
+           | selectattr('entity_id', 'search', 'firmware')
+           | selectattr('state', 'eq', 'on')
+           | list | count }}
+      attributes:
+        entity_ids: >
+          {{ states.update
+             | selectattr('entity_id', 'search', 'firmware')
+             | selectattr('state', 'eq', 'on')
+             | map(attribute='entity_id')
+             | list }}
+        devices: >
+          {{ states.update
+             | selectattr('entity_id', 'search', 'firmware')
+             | selectattr('state', 'eq', 'on')
+             | map(attribute='name')
+             | list }}
+        all_devices: >
+          {{ states.update
+             | selectattr('entity_id', 'search', 'firmware')
+             | map(attribute='name')
+             | list }}
+        all_devices_versions: >
+          {% set updates = states.update | selectattr('entity_id', 'search', 'firmware') | list %}
+          {{ updates | map(attribute='name') | list }}
+        version_info: >
+          {% set updates = states.update | selectattr('entity_id', 'search', 'firmware') | list %}
+          {% set ns = namespace(result=[]) %}
+          {% for u in updates %}
+            {% set ns.result = ns.result + [{
+              'name': u.name,
+              'installed': state_attr(u.entity_id, 'installed_version'),
+              'latest': state_attr(u.entity_id, 'latest_version'),
+              'update_available': u.state == 'on'
+            }] %}
+          {% endfor %}
+          {{ ns.result }}
+      icon: "mdi:chip"
+      
+    - name: "Missing Entities Mirror"
+      unique_id: missing_entities_mirror
+      icon: mdi:alert-circle-outline
+      state_class: measurement
+      state: >
+        {{ states('sensor.missing_entities') }}
+      attributes:
+        entities: >
+          {{ state_attr('sensor.missing_entities', 'entities') }}
+        report: >
+          {{ state_attr('sensor.missing_entities', 'report') }}
+
+    - name: "Network Scanner Devices List"
+      unique_id: network_scanner_devices_list_sensor
+      unit_of_measurement: "devices"
+      state_class: measurement
+      state: >
+        {% set devices = state_attr('sensor.network_scanner', 'devices') %}
+        {{ devices | count if devices else 0 }}
+      attributes:
+        devices: >
+          {% set devices = state_attr('sensor.network_scanner', 'devices') %}
+          {% if devices %}
+            {% set sorted = devices | sort(attribute='vendor', case_sensitive=False) %}
+            {% for d in sorted %}
+            IP: {{ d.ip.ljust(13) }} | MAC: {{ d.mac.ljust(17) }}  Vendor: {{ d.vendor or 'Unknown' }}
+            .....................................................................
+            {%- endfor %}
+          {% else %}
+            No devices found
+          {% endif %}
+      icon: "mdi:lan-connect"
+
+    - name: "Air Purifier Filter Life"
+      unique_id: air_purifier_filter_life_sensor
+      unit_of_measurement: "%"
+      state_class: measurement
+      state: >
+        {{ states('sensor.air_purifier_filter_lifetime') | int(0) }}
+      icon: "mdi:air-filter"
+
+    - name: "Air Purifier Fan Speed"
+      unique_id: air_purifier_fan_speed_sensor
+      state: >
+        {% set fan_state = states('fan.air_purifier') %}
+        {% set speed = state_attr('fan.air_purifier', 'percentage') | int(0) %}
+        {% set low = states('input_number.fan_speed_low') | int(0) %}
+        {% set med = states('input_number.fan_speed_medium') | int(0) %}
+        {% set high = states('input_number.fan_speed_high') | int(0) %}
+
+        {% if fan_state in ['unavailable', 'unknown'] %}
+          Offline
+        {% elif fan_state == 'off' %}
+          Off
+        {% elif speed == low %}
+          Low
+        {% elif speed == med %}
+          Medium
+        {% elif speed == high %}
+          High
+        {% else %}
+          {{ speed }}%
+        {% endif %}
+      attributes:
+        raw_percentage: >
+          {{ state_attr('fan.air_purifier', 'percentage') | int(0) }}
+      icon: >
+        {% set fan_state = states('fan.air_purifier') %}
+        {% set speed = state_attr('fan.air_purifier', 'percentage') | int(0) %}
+        {% set low = states('input_number.fan_speed_low') | int(0) %}
+        {% set med = states('input_number.fan_speed_medium') | int(0) %}
+        {% set high = states('input_number.fan_speed_high') | int(0) %}
+
+        {% if fan_state == 'off' %}
+          mdi:fan-off
+        {% elif speed == low %}
+          mdi:fan-speed-1
+        {% elif speed == med %}
+          mdi:fan-speed-2
+        {% elif speed == high %}
+          mdi:fan-speed-3
+        {% else %}
+          mdi:fan
+        {% endif %}
+
+    - name: "Previous Bathroom Humidity"
+      unique_id: previous_bathroom_humidity_sensor
+      unit_of_measurement: "%"
+      state_class: measurement
+      device_class: humidity
+      availability: >
+        {{ states('input_number.previous_bathroom_humidity') not in ['unknown', 'unavailable', 'none', ''] }}
+      state: >
+        {{ states('input_number.previous_bathroom_humidity') | float(0) }}
+      icon: "mdi:water-percent"
+
+    - name: "Next Bin Collection"
+      unique_id: next_bin_collection_sensor
+      state: >
+        {% set bin = states('input_text.bin_collection_type') %}
+        {% if bin not in ['unknown', 'unavailable'] %}
+          {{ bin }}
+        {% else %}
+          Unknown
+        {% endif %}
+      icon: "mdi:trash-can"
+
+    - name: "Active Window (Lucifer)"
+      unique_id: lucifer_activewindow_filtered_sensor
+      state: >
+        {% set value = states('sensor.lucifer_activewindow') %}
+        {% if 'Brave' in value %}
+          Brave
+        {% elif 'Chrome' in value %}
+          Chrome
+        {% elif 'Edge' in value %}
+          Edge
+        {% elif 'Firefox' in value %}
+          Firefox
+        {% elif value in ['unknown', 'unavailable'] %}
+          Off
+        {% else %}
+          {{ value }}
+        {% endif %}
+      icon: "mdi:monitor-eye"
+
+    - name: "Active Window (Datamars)"
+      unique_id: datamars_activewindow_filtered_sensor
+      state: >
+        {% set value = states('sensor.datamars_activewindow') %}
+        {% if value in ['unknown', 'unavailable'] %}
+          Off
+        {% else %}
+          {{ value }}
+        {% endif %}
+      icon: "mdi:monitor-eye"
+
+    - name: "Active Window"
+      unique_id: activewindow_filtered_sensor
+      state: >
+        {% set lucifer_value = states('sensor.lucifer_activewindow') %}
+        {% set datamars_value = states('sensor.datamars_activewindow') %}
+
+        {% if lucifer_value not in ['unknown', 'unavailable'] %}
+          {% if 'Brave' in lucifer_value %}
+            Brave (Lucifer)
+          {% elif 'Chrome' in lucifer_value %}
+            Chrome (Lucifer)
+          {% elif 'Edge' in lucifer_value %}
+            Edge (Lucifer)
+          {% elif 'Firefox' in lucifer_value %}
+            Firefox (Lucifer)
+          {% else %}
+            {{ lucifer_value }} (Lucifer)
+          {% endif %}
+        {% elif datamars_value not in ['unknown', 'unavailable'] %}
+          {% if 'Brave' in datamars_value %}
+            Brave (Datamars)
+          {% elif 'Chrome' in datamars_value %}
+            Chrome (Datamars)
+          {% elif 'Edge' in datamars_value %}
+            Edge (Datamars)
+          {% elif 'Firefox' in datamars_value %}
+            Firefox (Datamars)
+          {% elif 'Teams' in datamars_value %}
+            Teams (Datamars)
+          {% elif 'Outlook' in datamars_value %}
+            Outlook (Datamars)
+          {% else %}
+            {{ datamars_value }} (Datamars)
+          {% endif %}
+        {% else %}
+          Off
+        {% endif %}
+      icon: "mdi:monitor-eye"
+
+    - name: "Total Sensors"
+      unique_id: total_sensors_count_sensor
+      unit_of_measurement: "sensors"
+      state_class: measurement
+      state: >
+        {{ states | length }}
+      icon: "mdi:counter"
+
+    - name: "Work Plug State"
+      unique_id: work_plug_state_sensor
+      state: >
+        {{ states('input_text.work_plug_state') }}
+      icon: >
+        {% if states('input_text.work_plug_state') == 'On' %}
+          mdi:power-plug
+        {% elif states('input_text.work_plug_state') == 'Off' %}
+          mdi:power-plug-off
+        {% else %}
+          mdi:alert
+        {% endif %}
+        
+    - name: "Vacuum Room Mapping"
+      unique_id: vacuum_room_mapping
+      state: >
+        {% set map_name = state_attr('vacuum.vacuum', 'selected_map') %}
+        {{ map_name if map_name else 'Unknown' }}
+      attributes:
+        room_mapping: >
+          {% set map_name = state_attr('vacuum.vacuum', 'selected_map') %}
+          {% set rooms_dict = state_attr('vacuum.vacuum', 'rooms') %}
+          {% set ns = namespace(result = {}) %}
+          {% if map_name and rooms_dict and map_name in rooms_dict %}
+            {% for room in rooms_dict[map_name] %}
+              {% set ns.result = dict(ns.result, **{room.name: room.id}) %}
+            {% endfor %}
+          {% endif %}
+          {{ ns.result }}
+        room_mapping_by_id: >
+          {% set map_name = state_attr('vacuum.vacuum', 'selected_map') %}
+          {% set rooms_dict = state_attr('vacuum.vacuum', 'rooms') %}
+          {% set ns = namespace(result = {}) %}
+          {% if map_name and rooms_dict and map_name in rooms_dict %}
+            {% for room in rooms_dict[map_name] %}
+              {% set ns.result = dict(ns.result, **{(room.id | string): room.name}) %}
+            {% endfor %}
+          {% endif %}
+          {{ ns.result }}
