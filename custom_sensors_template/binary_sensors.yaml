@@ -1,0 +1,119 @@
+- binary_sensor:
+
+    - name: "Living Room Presence"
+      unique_id: living_room_presence_sensor
+      device_class: occupancy
+      state: >
+        {{ is_state('binary_sensor.living_room_eppro_occupancy', 'on')
+          or is_state('binary_sensor.console_presence_occupancy', 'on') }}
+      icon: >
+        {{ 'mdi:account' if this.state == 'on' else 'mdi:account-off' }}
+        
+    - name: "Living Room Occupancy Scene Saved"
+      unique_id: living_room_occupancy_scene_saved_sensor
+      device_class: occupancy
+      state: >
+        {{ is_state('input_boolean.living_room_occupancy_scene_saved', 'on') }}
+      icon: >
+        {{ 'mdi:check-circle'
+          if is_state('input_boolean.living_room_occupancy_scene_saved', 'on')
+          else 'mdi:close-circle' }}
+
+    - name: "Snake Plant Growing Season"
+      unique_id: snake_plant_growing_season_sensor
+      state: >
+        {{ 3 <= now().month <= 9 }}
+      icon: >
+        {{ 'mdi:leaf' if 3 <= now().month <= 9 else 'mdi:snowflake' }}
+
+    - name: "PC Status"
+      unique_id: pc_status_sensor
+      device_class: power
+      state: >
+        {% set pc_on = is_state('input_boolean.pc_on', 'on') %}
+        {% set active_window = states('sensor.activewindow_filtered') %}
+        {{ pc_on and active_window != 'Off' }}
+      icon: >
+        {{ 'mdi:television-ambient-light'
+          if is_state('input_boolean.pc_on', 'on')
+          else 'mdi:television' }}
+
+    - name: "Toothbrush"
+      unique_id: philips_sonicare_toothbrush_sensor
+      device_class: power
+      state: >
+        {{ is_state('binary_sensor.pressure_toothbrush', 'on') }}
+      icon: >
+        {{ 'mdi:tooth'
+          if is_state('binary_sensor.pressure_toothbrush', 'on')
+          else 'mdi:tooth-outline' }}
+
+    - name: "Master Bedroom TV State"
+      unique_id: master_bedroom_display_tv_sensor
+      device_class: power
+      state: >
+        {{ is_state('remote.master_bedroom_tv', 'on')
+          or is_state('remote.master_bedroom_tv', 'on')
+          or is_state('remote.master_bedroom_tv', 'playing')
+          or is_state('media_player.master_bedroom_tv_media_player', 'on')
+          or is_state('media_player.master_bedroom_tv_media_player', 'playing')
+          or is_state('media_player.master_bedroom_tv_ma', 'on')
+          or is_state('media_player.master_bedroom_tv_ma', 'playing') }}
+      icon: >
+        {% if this.state == 'on' %}
+          mdi:monitor
+        {% elif this.state == 'off' %}
+          mdi:monitor-off
+        {% else %}
+          mdi:alert
+        {% endif %}
+
+    - name: "Living Room TV State"
+      unique_id: living_room_tv_state_sensor
+      device_class: power
+      delay_off:
+        seconds: 5
+      state: >
+        {{ is_state('remote.living_room_tv', 'on')
+          or is_state('media_player.living_room_tv_samsung', 'on')
+          or is_state('media_player.living_room_tv_samsung', 'idle')
+          or is_state('media_player.living_room_tv_samsung', 'playing')
+          or is_state('remote.living_room_tv_g', 'on')
+          or is_state('remote.living_room_tv_g', 'playing')
+          or is_state('remote.living_room_tv_g', 'idle') }}
+      icon: >
+        {% if this.state == 'on' %}
+          mdi:television
+        {% elif this.state == 'off' %}
+          mdi:television-off
+        {% else %}
+          mdi:alert
+        {% endif %}
+
+    - name: "Bed Sensor"
+      unique_id: bed_sensor
+      device_class: occupancy
+      state: >
+        {{ is_state('binary_sensor.pressure_bed_sensor_left', 'on') 
+          or is_state('binary_sensor.bed_presence_bed_occupied_either', 'on')
+          or is_state('binary_sensor.pressure_bed_sensor_right', 'on') }}
+      icon: >
+        {{ 'mdi:bed' if this.state == 'on' else 'mdi:bed-empty' }}
+
+    - name: "PC Webcam Active"
+      unique_id: pc_webcam_active
+      device_class: occupancy
+      state: >
+        {{ is_state('binary_sensor.lucifer_webcamactive', 'on')
+          or is_state('binary_sensor.datamars_webcamactive', 'on') }}
+      icon: >
+        {{ 'mdi:webcam' if this.state == 'on' else 'mdi:webcam-off' }}
+      attributes:
+        source: >
+          {% if is_state('binary_sensor.lucifer_webcamactive', 'on') %}
+            lucifer
+          {% elif is_state('binary_sensor.datamars_webcamactive', 'on') %}
+            datamars
+          {% else %}
+            none
+          {% endif %}
