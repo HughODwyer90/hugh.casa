@@ -12,11 +12,10 @@ HA_BASE_URL = "http://homeassistant.local:8123"
 
 EXCLUDED_DIRS = {
     ".storage",
-    ".cloud",
-    "deps",
-    "tts",
+    ".cache",
+    ".vscode",
     "blueprints",
-    "custom_components",
+    "custom_components"
 }
 
 HARDCODED_EXCLUSIONS = {"secrets.yaml", "secrets.yaml.bak"}
