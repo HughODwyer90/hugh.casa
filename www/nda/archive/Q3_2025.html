@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DLK Quarter Dashboard</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* Datamars Livestock brand palette */
+  --dm-yellow:#FCE300;      /* PANTONE 102c  — primary yellow */
+  --dm-blue:#171C8F;        /* PANTONE 2746c — primary blue   */
+  --dm-blue-dark:#001E60;   /* PANTONE 2757c — deep blue      */
+  --dm-grey-light:#D0D0CE;  /* PANTONE Cool Grey 2c           */
+  --dm-grey-mid:#63666A;    /* PANTONE Cool Grey 11c          */
+  --dm-black:#101820;       /* PANTONE Black 6c — near black  */
+
+  --bg:#f4f4f4;--surface:#fff;--border:var(--dm-grey-light);
+  --text:var(--dm-black);--muted:var(--dm-grey-mid);
+  --accent:var(--dm-blue);--accent-dark:var(--dm-blue-dark);
+  --green:#22c55e;--green-bg:#f0fdf4;--green-text:#166534;
+  --red:#ef4444;--red-bg:#fef2f2;--red-text:#991b1b;
+  --yellow:var(--dm-yellow);--yellow-bg:#fffde0;--yellow-text:#4a3a00;
+  --blue-bg:#eceef8;--blue-text:var(--dm-blue);
+  --radius:8px;--shadow:0 1px 3px rgba(0,0,0,.10);
+  --hdr:103px    /* 60px header-top + ~40px tabs + 3px stripe */
+}
+body{font-family:Verdana,"Helvetica Neue",Arial,sans-serif;
+  background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+
+/* ---- Header ---- */
+header{background:var(--dm-blue);border-bottom:1px solid rgba(255,255,255,.12);
+  position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.header-top{display:flex;align-items:center;gap:0;height:60px;padding:0;
+  border-bottom:1px solid rgba(255,255,255,.12)}
+/* Logo block */
+.logo-wrap{display:flex;align-items:center;justify-content:center;
+  padding:0 20px;height:100%;border-right:1px solid rgba(255,255,255,.15);flex-shrink:0}
+.site-logo{height:42px;width:auto;display:block}
+/* Title + selector block */
+.hdr-center{display:flex;align-items:center;gap:16px;padding:0 20px;flex:1;min-width:0}
+.logo{font-weight:700;font-size:14px;color:#fff;white-space:nowrap;letter-spacing:.01em}
+.logo span{color:var(--dm-yellow)}
+.logo-sub{font-weight:400;color:rgba(255,255,255,.6);font-size:12px}
+
+/* ---- Quarter selector ---- */
+.qs{position:relative;flex:0 0 220px}
+#q-input{width:100%;padding:6px 28px 6px 10px;border:1px solid rgba(255,255,255,.35);
+  border-radius:var(--radius);font-size:13px;background:rgba(255,255,255,.12);
+  color:#fff;cursor:pointer;outline:none;font-family:inherit}
+#q-input::placeholder{color:rgba(255,255,255,.55)}
+#q-input:focus{border-color:rgba(255,255,255,.65);background:rgba(255,255,255,.18)}
+.q-arrow{position:absolute;right:9px;top:50%;transform:translateY(-50%);
+  pointer-events:none;color:rgba(255,255,255,.6);font-size:10px}
+.q-dd{display:none;position:absolute;top:calc(100% + 4px);left:0;width:100%;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  box-shadow:0 8px 24px rgba(0,0,0,.20);max-height:280px;overflow-y:auto;z-index:200}
+.q-dd.open{display:block}
+.q-search{width:100%;padding:8px 10px;border:none;border-bottom:1px solid var(--border);
+  font-size:13px;outline:none;background:var(--bg);color:var(--text);font-family:inherit}
+.q-yr-hdr{padding:5px 12px 3px;font-size:10px;font-weight:700;letter-spacing:.08em;
+  color:var(--muted);text-transform:uppercase;border-top:1px solid var(--border);
+  cursor:pointer;display:flex;justify-content:space-between;align-items:center;
+  user-select:none}
+.q-yr-hdr:first-child{border-top:none}
+.q-yr-hdr:hover{color:var(--text)}
+.q-yr-arrow{font-size:9px;transition:transform .15s}
+.q-yr-group{overflow:hidden}
+.q-yr-group.collapsed{display:none}
+.q-opt{padding:8px 12px;cursor:pointer;font-size:13px;display:flex;
+  justify-content:space-between;align-items:center}
+.q-opt:hover{background:var(--blue-bg)}
+.q-opt.sel{font-weight:700;color:var(--accent)}
+.q-badge{font-size:11px;color:var(--muted);background:var(--border);
+  padding:1px 6px;border-radius:99px}
+.as-of{font-size:12px;color:rgba(255,255,255,.65);white-space:nowrap}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+#refresh-btn{font-size:11px;padding:3px 9px;border-radius:var(--radius);
+  border:1px solid rgba(255,255,255,.4);background:transparent;
+  color:rgba(255,255,255,.8);cursor:pointer;transition:all .15s;font-family:inherit}
+#refresh-btn:hover{border-color:var(--dm-yellow);color:var(--dm-yellow)}
+#refresh-btn:disabled{opacity:.35;cursor:not-allowed}
+/* ---- Modal ---- */
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:5000;align-items:center;justify-content:center}
+.modal-backdrop.open{display:flex}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px 28px;max-width:320px;box-shadow:0 12px 40px rgba(0,0,0,.2);text-align:center}
+.modal-box h3{margin:0 0 8px;font-size:15px}
+.modal-box p{margin:0 0 16px;font-size:13px;color:var(--muted);line-height:1.5}
+.modal-close{padding:6px 18px;border-radius:var(--radius);border:1px solid var(--border);
+  background:var(--bg);cursor:pointer;font-size:13px;font-family:inherit}
+.assignee-link{color:var(--dm-blue);text-decoration:underline;text-underline-offset:2px;font-weight:600}
+.assignee-link:hover{color:var(--dm-blue-dark);opacity:.85}
+/* ---- Release breakdown table ---- */
+.rel-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+.rel-table th{text-align:left;padding:5px 10px;font-size:11px;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--border)}
+.rel-table td{padding:6px 10px;border-bottom:1px solid var(--border)}
+.rel-table tr:last-child td{border-bottom:none}
+.rel-table tr:hover td{background:var(--blue-bg)}
+
+/* ---- Tab bar ---- */
+.tabs-bar{display:flex;padding:0 20px;overflow-x:auto;
+  scrollbar-width:none;-ms-overflow-style:none}
+.tabs-bar::-webkit-scrollbar{display:none}
+.tab{padding:10px 14px;border:none;background:none;font-size:12px;font-weight:600;
+  cursor:pointer;color:rgba(255,255,255,.6);border-bottom:3px solid transparent;
+  white-space:nowrap;display:flex;align-items:center;gap:6px;
+  transition:color .15s,border-color .15s;outline:none;margin-bottom:-1px;
+  font-family:inherit;letter-spacing:.01em}
+.tab:hover{color:rgba(255,255,255,.9)}
+.tab.active{color:#fff;border-bottom-color:var(--dm-yellow)}
+.tab-cnt{font-size:11px;font-weight:700;padding:1px 7px;border-radius:99px;
+  background:rgba(255,255,255,.18);color:rgba(255,255,255,.85)}
+.tab-cnt.urgent{background:#ef4444;color:#fff}
+.tab-cnt.warn{background:var(--dm-yellow);color:var(--dm-black)}
+.tab-cnt.clear{background:#22c55e;color:#fff}
+
+/* ---- Yellow accent stripe under header ---- */
+header::after{content:"";display:block;height:3px;background:var(--dm-yellow);width:100%}
+
+/* ---- Tab panes ---- */
+.tab-pane{display:none;padding:24px 24px 80px}
+.tab-pane.active{display:block}
+.pane-title{font-size:16px;font-weight:600;margin-bottom:4px;
+  display:flex;align-items:center;gap:10px}
+.pane-desc{font-size:13px;color:var(--muted);margin-bottom:16px}
+
+/* ---- KPI cards ---- */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:14px;
+  margin-bottom:28px}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:14px 16px;box-shadow:var(--shadow)}
+.kpi-card.green{border-left:3px solid var(--green)}
+.kpi-card.red{border-left:3px solid var(--red)}
+.kpi-card.blue{border-left:3px solid var(--accent)}
+.kpi-card.yellow{border-left:3px solid var(--yellow)}
+.kl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.kv{font-size:26px;font-weight:700;line-height:1;margin-bottom:4px}
+.kn{font-size:12px;color:var(--muted);line-height:1.4}
+.kpi-bar{height:4px;background:var(--border);border-radius:2px;margin:6px 0 4px}
+.kpi-bar-fill{height:100%;border-radius:2px;background:var(--accent);transition:width .4s ease}
+.kpi-card.green .kpi-bar-fill{background:var(--green)}
+.kpi-card.red .kpi-bar-fill{background:var(--red)}
+.kpi-card.yellow .kpi-bar-fill{background:var(--yellow)}
+
+/* ---- Sprint overview section ---- */
+.overview-section{margin-bottom:28px}
+.section-label{font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px}
+
+/* ---- Alert banner ---- */
+.alert{padding:10px 14px;border-radius:var(--radius);font-size:13px;margin-bottom:16px;
+  display:flex;align-items:center;gap:8px}
+.alert-red{background:var(--red-bg);color:var(--red-text);border:1px solid #fecaca}
+.alert-yellow{background:var(--yellow-bg);color:var(--yellow-text);border:1px solid #e8d500}
+.alert-green{background:var(--green-bg);color:var(--green-text);border:1px solid #bbf7d0}
+.alert a{color:inherit;font-weight:600;text-decoration:none}
+.alert a:hover{text-decoration:underline}
+
+/* ---- Tables ---- */
+/* .tw must NOT have overflow set — any overflow value traps sticky children inside it */
+.tw{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow)}
+/* horizontal scroll lives here, inside the sticky toolbar but outside thead */
+.tw-body{overflow-x:auto}
+.ttb{padding:8px 12px;border-bottom:1px solid var(--border);display:flex;
+  gap:8px;align-items:center;flex-wrap:wrap;background:var(--surface);
+  position:sticky;top:var(--hdr);z-index:4;
+  border-radius:var(--radius) var(--radius) 0 0}
+.tf{padding:5px 9px;border:1px solid var(--border);border-radius:6px;font-size:12px;
+  flex:1;min-width:150px;max-width:260px;outline:none}
+.tf:focus{border-color:var(--dm-blue);outline:none}
+.tc{font-size:12px;color:var(--muted);white-space:nowrap}
+.jl{color:var(--muted);font-size:11px;text-decoration:none;padding:4px 8px;
+  border:1px solid var(--border);border-radius:6px;white-space:nowrap;margin-left:auto}
+.jl:hover{background:var(--blue-bg);color:var(--dm-blue)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:var(--bg);padding:7px 10px;text-align:left;font-weight:600;
+  font-size:12px;color:var(--muted);border-bottom:1px solid var(--border);
+  white-space:nowrap;cursor:pointer;user-select:none}
+thead th:hover{color:var(--text)}
+.si{font-size:10px;margin-left:3px}
+tbody tr{border-bottom:1px solid var(--border)}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--blue-bg)}
+td{padding:7px 10px;vertical-align:middle}
+.ik{font-family:monospace;font-size:12px;font-weight:700;color:var(--dm-blue);
+  text-decoration:none;white-space:nowrap}
+.ik:hover{text-decoration:underline;color:var(--dm-blue-dark)}
+.is{max-width:400px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.er td{text-align:center;padding:24px;color:var(--muted);font-style:italic}
+/* Cross-quarter carry-over — resolved in a later quarter */
+tr.resolved-carried>td{background:#f0fdf4}
+tr.resolved-carried>td:first-child{box-shadow:inset 3px 0 0 var(--green)}
+.ri{display:inline-flex;align-items:center;justify-content:center;
+  width:14px;height:14px;border-radius:50%;background:var(--green);color:#fff;
+  font-size:9px;font-weight:700;cursor:help;margin-left:5px;
+  vertical-align:middle;flex-shrink:0}
+/* Carry-in — still in progress but started in a previous quarter */
+tr.carried-in>td{background:#fffbeb}
+tr.carried-in>td:first-child{box-shadow:inset 3px 0 0 var(--dm-yellow)}
+tr.carried-in-long>td{background:#fef2f2}
+tr.carried-in-long>td:first-child{box-shadow:inset 3px 0 0 var(--red)}
+.ci{display:inline-flex;align-items:center;justify-content:center;
+  width:14px;height:14px;border-radius:50%;background:var(--dm-yellow);color:var(--dm-black);
+  font-size:9px;font-weight:700;cursor:help;margin-left:5px;
+  vertical-align:middle;flex-shrink:0}
+.ci-red{display:inline-flex;align-items:center;justify-content:center;
+  width:14px;height:14px;border-radius:50%;background:var(--red);color:#fff;
+  font-size:9px;font-weight:700;cursor:help;margin-left:5px;
+  vertical-align:middle;flex-shrink:0}
+
+/* ---- Badges / chips ---- */
+.b{display:inline-block;font-size:11px;font-weight:500;padding:2px 7px;
+  border-radius:99px;white-space:nowrap}
+.bd{background:var(--green-bg);color:var(--green-text)}
+.bi{background:var(--blue-bg);color:var(--blue-text)}
+.bt{background:var(--border);color:var(--muted)}
+.bbug{background:var(--red-bg);color:var(--red-text)}
+.bstory{background:var(--green-bg);color:var(--green-text)}
+.btask{background:var(--blue-bg);color:var(--blue-text)}
+.bhi{background:var(--red-bg);color:var(--red-text)}
+.bmed{background:var(--yellow-bg);color:var(--yellow-text)}
+.blo{background:var(--green-bg);color:var(--green-text)}
+.b.vlink{text-decoration:none;cursor:pointer}
+.b.vlink:hover{filter:brightness(.92);text-decoration:underline}
+.chip{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px}
+.chip-blue{background:var(--blue-bg);color:var(--dm-blue)}
+.chip-green{background:#dcfce7;color:#16a34a}
+.chip-neutral{background:var(--border);color:var(--muted)}
+.chip-yellow{background:#fffde0;color:#4a3a00}
+.chip-red{background:#fee2e2;color:#dc2626}
+.vv{display:flex;flex-wrap:wrap;gap:3px}
+
+/* ---- Back to top ---- */
+#btt{position:fixed;bottom:28px;right:28px;width:38px;height:38px;border-radius:50%;
+  background:var(--dm-blue);color:#fff;border:none;font-size:17px;line-height:1;
+  cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.25);
+  opacity:0;pointer-events:none;transition:opacity .2s;z-index:50}
+#btt.vis{opacity:1;pointer-events:auto}
+#btt:hover{background:var(--dm-blue-dark)}
+
+.nodata{text-align:center;padding:60px 24px;color:var(--muted)}
+
+/* ---- Trend charts ---- */
+.trend-controls{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.trend-controls span{font-size:12px;color:var(--muted)}
+.twb{font-size:11px;padding:3px 9px;border-radius:4px;border:1px solid var(--border);
+  background:var(--surface);color:var(--muted);cursor:pointer;transition:all .1s}
+.twb.active{background:var(--dm-blue);color:#fff;border-color:var(--dm-blue)}
+.twb:hover:not(.active){border-color:var(--dm-blue);color:var(--dm-blue)}
+.trend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:28px}
+.trend-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
+.trend-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.trend-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;display:flex;align-items:center;gap:4px}
+.trend-info{display:inline-flex;align-items:center;justify-content:center;
+  width:14px;height:14px;border-radius:50%;background:var(--dm-blue);color:#fff;
+  font-size:9px;font-weight:700;cursor:help;margin-left:4px;
+  vertical-align:middle;flex-shrink:0;opacity:.7}
+.trend-info:hover{opacity:1}
+.trend-val{font-size:22px;font-weight:700;line-height:1.1}
+.trend-delta{font-size:12px;font-weight:600;padding:3px 8px;border-radius:99px;white-space:nowrap}
+.trend-delta.pos{background:var(--green-bg);color:var(--green-text)}
+.trend-delta.neg{background:var(--red-bg);color:var(--red-text)}
+.trend-delta.flat{background:var(--border);color:var(--muted)}
+.delta-lbl{font-size:10px;color:var(--muted);margin-bottom:4px;white-space:nowrap;text-align:right}
+.trend-note{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.4}
+.trend-val-sub{font-size:10px;color:var(--muted);margin-top:2px;font-weight:400;letter-spacing:.02em}
+#tt{position:fixed;background:var(--dm-black);color:#f5f5f5;padding:6px 10px;border-radius:6px;font-size:12px;pointer-events:none;opacity:0;transition:opacity .12s;z-index:9999;max-width:240px;white-space:normal;line-height:1.4;font-family:Verdana,sans-serif}
+#tt.vis{opacity:1}
+.proj-tabs{display:flex;gap:4px;align-items:center;margin-right:12px}
+.proj-tab{padding:3px 14px;border:1.5px solid var(--border);border-radius:20px;background:transparent;color:var(--muted);cursor:pointer;font-size:12px;font-weight:700;letter-spacing:.04em;transition:all .15s;font-family:inherit}
+.proj-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.proj-tab:hover:not(.active){color:var(--fg);border-color:var(--fg)}
+</style>
+</head>
+<body>
+
+<header id="site-header">
+  <div class="header-top">
+    <div class="logo-wrap">
+      <img src="data:image/png;base64,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" alt="Datamars Livestock" class="site-logo">
+    </div>
+    <div class="hdr-center">
+      <div class="logo"><div class="proj-tabs" id="proj-tabs"></div><span id="proj-name"></span> Quarter Dashboard</div>
+      <div class="qs">
+        <input type="text" id="q-input" readonly placeholder="Select quarter…">
+        <span class="q-arrow">▼</span>
+        <div class="q-dd" id="q-dd">
+          <input class="q-search" id="q-search" placeholder="Search quarters…">
+          <div id="q-opts"></div>
+        </div>
+      </div>
+      <span class="logo-sub" id="hdr-sprint"></span>
+    </div>
+    <div class="hdr-right">
+      <div class="as-of" id="as-of"></div>
+      <button id="refresh-btn" title="Regenerate dashboard data" style="display:none">↻ Refresh</button>
+    </div>
+  </div>
+  <div class="tabs-bar" id="tabs-bar"></div>
+</header>
+
+<!-- Refresh modal -->
+<div class="modal-backdrop" id="refresh-modal">
+  <div class="modal-box">
+    <h3 id="refresh-modal-title"></h3>
+    <p id="refresh-modal-msg"></p>
+    <button class="modal-close" onclick="document.getElementById('refresh-modal').classList.remove('open')">OK</button>
+  </div>
+</div>
+
+<main id="dash"><div class="nodata">Loading…</div></main>
+<button id="btt" title="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+const ALL_DATA={"NDA": {"qs": {"Q3 2025": {"quarter": "Q3 2025", "kpis": {"total": 96, "completed": 96, "in_progress": 0, "completion_rate": 100, "releases_shipped": 7, "last_release_date": "2025-12-03", "version_details": [{"name": "1.0.11", "release_date": "2025-12-03", "ticket_count": 1, "version_id": "13880"}, {"name": "1.0.7", "release_date": "2025-10-22", "ticket_count": 1, "version_id": "13874"}, {"name": "1.0.6", "release_date": "2025-10-08", "ticket_count": 3, "version_id": "13873"}, {"name": "1.0.5", "release_date": "2025-10-01", "ticket_count": 16, "version_id": "13846"}, {"name": "1.0.4", "release_date": "2025-09-16", "ticket_count": 13, "version_id": "13844"}, {"name": "1.0.3", "release_date": "2025-09-01", "ticket_count": 15, "version_id": "13815"}, {"name": "0.2", "release_date": "2025-08-04", "ticket_count": 48, "version_id": "13722"}], "tickets_per_day": 1.04, "avg_releases_per_sprint": 1.0, "oos_total": 0, "oos_open": 0, "oos_pct": 0, "oos_open_detail": [], "bugs": 7, "stories": 80, "tasks": 9, "bug_pct": 7, "versions": {"1.0.6": 3, "1.0.5": 16, "1.0.4": 13, "1.0.7": 1, "1.0.3": 15, "1.0.11": 1, "0.2": 48}, "version_ids": {"1.0.6": "13873", "1.0.5": "13846", "1.0.4": "13844", "1.0.7": "13874", "1.0.3": "13815", "1.0.11": "13880", "0.2": "13722"}, "sprint_count": 7, "closed_sprint_count": 7, "quarter": "Q3 2025", "quarter_start": "2025-07-01", "sprint_ids": ["1686", "1689", "1690", "1691", "1697", "1692", "1693"], "board_id": "459", "jira_base": "https://datamars.atlassian.net", "as_of": "2026-06-02T10:22:10Z", "time_logged_h": 8.0, "time_estimated_h": 2522.0, "estimate_accuracy_pct": 0, "estimate_variance_pct": -100, "no_estimate_count": 0, "no_estimate_pct": 0, "no_log_count": 95, "avg_cycle_days": 18.6, "med_cycle_days": 15, "rollover_count": 0, "rollover_pct": 0, "assignee_stats": [{"name": "Giuseppe Maffia", "account_id": "712020:a512d45c-21ac-4d70-89c1-a07c619c451c", "is_team": true, "total": 39, "completed": 39, "logged_h": 0.0, "estimated_h": 1114.0, "completion_rate": 100}, {"name": "Gianni Toniolo", "account_id": "712020:a62d6763-c735-4214-8ed5-550b0ee3e855", "is_team": true, "total": 25, "completed": 25, "logged_h": 8.0, "estimated_h": 404.0, "completion_rate": 100}, {"name": "Fabrizio De Marco", "account_id": "712020:ebc461d2-4d09-4523-b7df-4fa3c24811e9", "is_team": true, "total": 23, "completed": 23, "logged_h": 0.0, "estimated_h": 684.0, "completion_rate": 100}, {"name": "Nikola Mladenovic", "account_id": "63283dc7409249995ee61971", "is_team": true, "total": 8, "completed": 8, "logged_h": 0.0, "estimated_h": 280.0, "completion_rate": 100}, {"name": "Guido Mazzaro", "account_id": "712020:614524f8-7aee-4aae-8d6d-10909ffd9d00", "is_team": false, "total": 1, "completed": 1, "logged_h": 0.0, "estimated_h": 40.0, "completion_rate": 100}], "issues": {"all": [{"key": "NDA-219", "url": "https://datamars.atlassian.net/browse/NDA-219", "summary": "Add ability to search for sessions", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Nikola Mladenovic", "priority": "Medium", "fix_versions": ["1.0.6"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 18}, {"key": "NDA-217", "url": "https://datamars.atlassian.net/browse/NDA-217", "summary": "Create GraphQL Client for Energizer APIs", "type": "Task", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 10}, {"key": "NDA-216", "url": "https://datamars.atlassian.net/browse/NDA-216", "summary": "Update all translation labels", "type": "Task", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 3}, {"key": "NDA-215", "url": "https://datamars.atlassian.net/browse/NDA-215", "summary": "Remove delete session from device session page", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.4", "1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 6}, {"key": "NDA-214", "url": "https://datamars.atlassian.net/browse/NDA-214", "summary": "Eziweight7i delete session not working", "type": "Bug", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 8.0, "has_estimate": true, "has_log": false, "cycle_days": 5}, {"key": "NDA-213", "url": "https://datamars.atlassian.net/browse/NDA-213", "summary": "Handle large device session downloads (10k animals) with retry and FNn fallback", "type": "Bug", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 20}, {"key": "NDA-212", "url": "https://datamars.atlassian.net/browse/NDA-212", "summary": "Handle Eziweight7i RFID / EID column name like in Datalink", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 7}, {"key": "NDA-211", "url": "https://datamars.atlassian.net/browse/NDA-211", "summary": "Eziweight7i Wrong column order in export", "type": "Bug", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 8.0, "has_estimate": true, "has_log": false, "cycle_days": 7}, {"key": "NDA-210", "url": "https://datamars.atlassian.net/browse/NDA-210", "summary": "Energizer handle receiving push notification", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.7"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 4}, {"key": "NDA-209", "url": "https://datamars.atlassian.net/browse/NDA-209", "summary": "Refactor and Connect Energizer Bluetooth Commands with UI", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 24}, {"key": "NDA-208", "url": "https://datamars.atlassian.net/browse/NDA-208", "summary": "Update Energizer Detail Page UI to Match Figma Design", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Nikola Mladenovic", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 20}, {"key": "NDA-207", "url": "https://datamars.atlassian.net/browse/NDA-207", "summary": "In app navigation hidden behind phone navigation", "type": "Bug", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 11}, {"key": "NDA-205", "url": "https://datamars.atlassian.net/browse/NDA-205", "summary": "S3 - Phase 2", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 28}, {"key": "NDA-204", "url": "https://datamars.atlassian.net/browse/NDA-204", "summary": "S3 - Phase 1", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 27}, {"key": "NDA-202", "url": "https://datamars.atlassian.net/browse/NDA-202", "summary": "Enable multiple BLE device connections", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": [], "logged_h": 0.0, "estimated_h": 64.0, "has_estimate": true, "has_log": false, "cycle_days": 18}, {"key": "NDA-201", "url": "https://datamars.atlassian.net/browse/NDA-201", "summary": "XRS2i don't download sessions on reconnection", "type": "Bug", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 4.0, "has_estimate": true, "has_log": false, "cycle_days": 4}, {"key": "NDA-198", "url": "https://datamars.atlassian.net/browse/NDA-198", "summary": "Shuqi's UI feedback", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 13}, {"key": "NDA-197", "url": "https://datamars.atlassian.net/browse/NDA-197", "summary": "Clarify session cards labels and hide farm sessions card", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 12.0, "has_estimate": true, "has_log": false, "cycle_days": 12}, {"key": "NDA-188", "url": "https://datamars.atlassian.net/browse/NDA-188", "summary": "Create farm on sign up", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 64.0, "has_estimate": true, "has_log": false, "cycle_days": 12}, {"key": "NDA-187", "url": "https://datamars.atlassian.net/browse/NDA-187", "summary": "UI doesnt update for uploads", "type": "Bug", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 8.0, "has_estimate": true, "has_log": false, "cycle_days": 0}, {"key": "NDA-185", "url": "https://datamars.atlassian.net/browse/NDA-185", "summary": "Delete Session from app", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": [], "logged_h": 0.0, "estimated_h": 8.0, "has_estimate": true, "has_log": false, "cycle_days": 11}, {"key": "NDA-184", "url": "https://datamars.atlassian.net/browse/NDA-184", "summary": "Add Terms an Codition and Privacy to sign up", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 21}, {"key": "NDA-183", "url": "https://datamars.atlassian.net/browse/NDA-183", "summary": "Energizer BLE Connect", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Nikola Mladenovic", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 45}, {"key": "NDA-182", "url": "https://datamars.atlassian.net/browse/NDA-182", "summary": "Energizer Create Device card", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Nikola Mladenovic", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 41}, {"key": "NDA-181", "url": "https://datamars.atlassian.net/browse/NDA-181", "summary": "S3 Factory Reset", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 4}, {"key": "NDA-180", "url": "https://datamars.atlassian.net/browse/NDA-180", "summary": "S3 Span Calibration", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Nikola Mladenovic", "priority": "Medium", "fix_versions": ["1.0.11"], "labels": [], "logged_h": 0.0, "estimated_h": 120.0, "has_estimate": true, "has_log": false, "cycle_days": 61}, {"key": "NDA-179", "url": "https://datamars.atlassian.net/browse/NDA-179", "summary": "Session list empty message", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 4.0, "has_estimate": true, "has_log": false, "cycle_days": 4}, {"key": "NDA-176", "url": "https://datamars.atlassian.net/browse/NDA-176", "summary": "Touch target area", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 4.0, "has_estimate": true, "has_log": false, "cycle_days": 5}, {"key": "NDA-175", "url": "https://datamars.atlassian.net/browse/NDA-175", "summary": "Select Farm page remembers what I previously typed.  If it does this, it should present it in the search box when I go to search", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 4.0, "has_estimate": true, "has_log": false, "cycle_days": 5}, {"key": "NDA-173", "url": "https://datamars.atlassian.net/browse/NDA-173", "summary": "Add disconnect button when I am connected to a device", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 70}, {"key": "NDA-172", "url": "https://datamars.atlassian.net/browse/NDA-172", "summary": "Connection error related to permissions shown, even though I have granted permission", "type": "Bug", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["0.2"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 4.0, "has_estimate": true, "has_log": false, "cycle_days": 3}, {"key": "NDA-171", "url": "https://datamars.atlassian.net/browse/NDA-171", "summary": "Login flow feedback", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 4.0, "has_estimate": true, "has_log": false, "cycle_days": 4}, {"key": "NDA-170", "url": "https://datamars.atlassian.net/browse/NDA-170", "summary": "Dismiss Select Farm page", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 4.0, "has_estimate": true, "has_log": false, "cycle_days": 5}, {"key": "NDA-168", "url": "https://datamars.atlassian.net/browse/NDA-168", "summary": "VID not populating on session summary screen for an animal", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["0.2"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 4.0, "has_estimate": true, "has_log": false, "cycle_days": 5}, {"key": "NDA-167", "url": "https://datamars.atlassian.net/browse/NDA-167", "summary": "Order sessions by date recorded descending", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["0.2"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 8.0, "has_estimate": true, "has_log": false, "cycle_days": 3}, {"key": "NDA-166", "url": "https://datamars.atlassian.net/browse/NDA-166", "summary": "Refresh session list while connected to device", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Nikola Mladenovic", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 10}, {"key": "NDA-165", "url": "https://datamars.atlassian.net/browse/NDA-165", "summary": "Support for 0 animals in session list", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["0.2"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 8.0, "has_estimate": true, "has_log": false, "cycle_days": 5}, {"key": "NDA-164", "url": "https://datamars.atlassian.net/browse/NDA-164", "summary": "Add 'Coming Soon' message dialog to any items that are not expected to be functioning right now", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 26}, {"key": "NDA-163", "url": "https://datamars.atlassian.net/browse/NDA-163", "summary": "Device disconnects if I navigate around app", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["0.2"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 23}, {"key": "NDA-161", "url": "https://datamars.atlassian.net/browse/NDA-161", "summary": "Handle user role in api call", "type": "Task", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 4}, {"key": "NDA-154", "url": "https://datamars.atlassian.net/browse/NDA-154", "summary": "Energizer detail (graphql)", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 80}, {"key": "NDA-152", "url": "https://datamars.atlassian.net/browse/NDA-152", "summary": "Energizer commissioning to farm", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 56.0, "has_estimate": true, "has_log": false, "cycle_days": 80}, {"key": "NDA-151", "url": "https://datamars.atlassian.net/browse/NDA-151", "summary": "Energizer config BLE", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.6"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 25}, {"key": "NDA-150", "url": "https://datamars.atlassian.net/browse/NDA-150", "summary": "Energizer detail BLE", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 52}, {"key": "NDA-149", "url": "https://datamars.atlassian.net/browse/NDA-149", "summary": "Energizer list API (graphql)", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 7}, {"key": "NDA-148", "url": "https://datamars.atlassian.net/browse/NDA-148", "summary": "Energizer BLE list", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 14}, {"key": "NDA-147", "url": "https://datamars.atlassian.net/browse/NDA-147", "summary": "S3 download recorded session", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 7}, {"key": "NDA-146", "url": "https://datamars.atlassian.net/browse/NDA-146", "summary": "S3 recording session page", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.6"], "labels": [], "logged_h": 0.0, "estimated_h": 80.0, "has_estimate": true, "has_log": false, "cycle_days": 39}, {"key": "NDA-128", "url": "https://datamars.atlassian.net/browse/NDA-128", "summary": "S3 connect to device", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 41}, {"key": "NDA-127", "url": "https://datamars.atlassian.net/browse/NDA-127", "summary": "S3 settings page", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 56.0, "has_estimate": true, "has_log": false, "cycle_days": 38}, {"key": "NDA-99", "url": "https://datamars.atlassian.net/browse/NDA-99", "summary": "Bulk upload Session to DML", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 13}, {"key": "NDA-98", "url": "https://datamars.atlassian.net/browse/NDA-98", "summary": "Release 0.1.1", "type": "Task", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 2.0, "has_estimate": true, "has_log": false, "cycle_days": 10}, {"key": "NDA-97", "url": "https://datamars.atlassian.net/browse/NDA-97", "summary": "Add Firebase Crashlytics ", "type": "Task", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 8.0, "has_estimate": true, "has_log": false, "cycle_days": 4}, {"key": "NDA-96", "url": "https://datamars.atlassian.net/browse/NDA-96", "summary": "Remove New Relic integration", "type": "Task", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 12.0, "has_estimate": true, "has_log": false, "cycle_days": 14}, {"key": "NDA-95", "url": "https://datamars.atlassian.net/browse/NDA-95", "summary": "Create Settings page", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 8.0, "has_estimate": true, "has_log": false, "cycle_days": 14}, {"key": "NDA-94", "url": "https://datamars.atlassian.net/browse/NDA-94", "summary": "Ui refinement 2", "type": "Task", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 15}, {"key": "NDA-93", "url": "https://datamars.atlassian.net/browse/NDA-93", "summary": "UI refinement", "type": "Task", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 21}, {"key": "NDA-92", "url": "https://datamars.atlassian.net/browse/NDA-92", "summary": "check if app is online (connected to internet)", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 22}, {"key": "NDA-91", "url": "https://datamars.atlassian.net/browse/NDA-91", "summary": "Add Fontawesome integration", "type": "Task", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 8.0, "estimated_h": 24.0, "has_estimate": true, "has_log": true, "cycle_days": 23}, {"key": "NDA-90", "url": "https://datamars.atlassian.net/browse/NDA-90", "summary": "Sign in", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 9}, {"key": "NDA-82", "url": "https://datamars.atlassian.net/browse/NDA-82", "summary": "Rename and release 1.0.4", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": [], "logged_h": 0.0, "estimated_h": 32.0, "has_estimate": true, "has_log": false, "cycle_days": 93}, {"key": "NDA-80", "url": "https://datamars.atlassian.net/browse/NDA-80", "summary": "EziWeigh7i connect to device", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 26}, {"key": "NDA-78", "url": "https://datamars.atlassian.net/browse/NDA-78", "summary": "EziWeigh7i retrieve list of sessions", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": [], "logged_h": 0.0, "estimated_h": 32.0, "has_estimate": true, "has_log": false, "cycle_days": 19}, {"key": "NDA-76", "url": "https://datamars.atlassian.net/browse/NDA-76", "summary": "EziWeigh7i download sessions", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 19}, {"key": "NDA-75", "url": "https://datamars.atlassian.net/browse/NDA-75", "summary": "Session Summary Page", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 7}, {"key": "NDA-74", "url": "https://datamars.atlassian.net/browse/NDA-74", "summary": "Rename and  release 1.0.3 ", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 8.0, "has_estimate": true, "has_log": false, "cycle_days": 0}, {"key": "NDA-72", "url": "https://datamars.atlassian.net/browse/NDA-72", "summary": "Update Intercom Integration to Identify Logged-in Users", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 20}, {"key": "NDA-71", "url": "https://datamars.atlassian.net/browse/NDA-71", "summary": "Check Nat Reg availability", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 23}, {"key": "NDA-70", "url": "https://datamars.atlassian.net/browse/NDA-70", "summary": "Nat reg Get Config NAIT", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 17}, {"key": "NDA-69", "url": "https://datamars.atlassian.net/browse/NDA-69", "summary": "Nat reg Get Config NLIS", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 17}, {"key": "NDA-68", "url": "https://datamars.atlassian.net/browse/NDA-68", "summary": "NAIT update status to dead", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 15}, {"key": "NDA-67", "url": "https://datamars.atlassian.net/browse/NDA-67", "summary": "NAIT register animals", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 15}, {"key": "NDA-66", "url": "https://datamars.atlassian.net/browse/NDA-66", "summary": "NAIT receiving movement", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 32.0, "has_estimate": true, "has_log": false, "cycle_days": 15}, {"key": "NDA-65", "url": "https://datamars.atlassian.net/browse/NDA-65", "summary": "NAIT Sending movement", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 56.0, "has_estimate": true, "has_log": false, "cycle_days": 15}, {"key": "NDA-64", "url": "https://datamars.atlassian.net/browse/NDA-64", "summary": "NAIT Set Config", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 32.0, "has_estimate": true, "has_log": false, "cycle_days": 22}, {"key": "NDA-63", "url": "https://datamars.atlassian.net/browse/NDA-63", "summary": "National Registry upload Error handling", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 64.0, "has_estimate": true, "has_log": false, "cycle_days": 32}, {"key": "NDA-62", "url": "https://datamars.atlassian.net/browse/NDA-62", "summary": "NLIS update status to dead", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 15}, {"key": "NDA-61", "url": "https://datamars.atlassian.net/browse/NDA-61", "summary": "NLIS receiving transfer", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 15}, {"key": "NDA-60", "url": "https://datamars.atlassian.net/browse/NDA-60", "summary": "NLIS Set Config", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 32.0, "has_estimate": true, "has_log": false, "cycle_days": 22}, {"key": "NDA-59", "url": "https://datamars.atlassian.net/browse/NDA-59", "summary": "Nat Reg SNIG Export", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Guido Mazzaro", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 23}, {"key": "NDA-58", "url": "https://datamars.atlassian.net/browse/NDA-58", "summary": "Nat Reg NAIT send session", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 56.0, "has_estimate": true, "has_log": false, "cycle_days": 15}, {"key": "NDA-56", "url": "https://datamars.atlassian.net/browse/NDA-56", "summary": "Nat Reg NLIS send session", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 96.0, "has_estimate": true, "has_log": false, "cycle_days": 15}, {"key": "NDA-53", "url": "https://datamars.atlassian.net/browse/NDA-53", "summary": "Release 0.2", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 32.0, "has_estimate": true, "has_log": false, "cycle_days": 23}, {"key": "NDA-51", "url": "https://datamars.atlassian.net/browse/NDA-51", "summary": "Account page", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Nikola Mladenovic", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 24}, {"key": "NDA-47", "url": "https://datamars.atlassian.net/browse/NDA-47", "summary": "Switch farms", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 18}, {"key": "NDA-46", "url": "https://datamars.atlassian.net/browse/NDA-46", "summary": "Send sessions to DML once logged in", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 18}, {"key": "NDA-43", "url": "https://datamars.atlassian.net/browse/NDA-43", "summary": "Create “Sessions” widget on the app homepage", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Nikola Mladenovic", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 42}, {"key": "NDA-41", "url": "https://datamars.atlassian.net/browse/NDA-41", "summary": "New Transaction type for NLIS - Sighted Livestock", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 83}, {"key": "NDA-40", "url": "https://datamars.atlassian.net/browse/NDA-40", "summary": "Delete account", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 17}, {"key": "NDA-39", "url": "https://datamars.atlassian.net/browse/NDA-39", "summary": "Logout", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 22}, {"key": "NDA-38", "url": "https://datamars.atlassian.net/browse/NDA-38", "summary": "Login", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 23}, {"key": "NDA-36", "url": "https://datamars.atlassian.net/browse/NDA-36", "summary": "Prompt user to migrate data from Mihub at first login", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 10}, {"key": "NDA-29", "url": "https://datamars.atlassian.net/browse/NDA-29", "summary": "Send Log to AWS", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 6}, {"key": "NDA-28", "url": "https://datamars.atlassian.net/browse/NDA-28", "summary": " Integrate Intercom into the app (Anonymous Support + Future Identification)", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 16}, {"key": "NDA-23", "url": "https://datamars.atlassian.net/browse/NDA-23", "summary": "Share session features", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 24}, {"key": "NDA-1", "url": "https://datamars.atlassian.net/browse/NDA-1", "summary": "UI Setup", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 67}], "oos_all": [], "oos_open": [], "released": [{"key": "NDA-180", "url": "https://datamars.atlassian.net/browse/NDA-180", "summary": "S3 Span Calibration", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Nikola Mladenovic", "priority": "Medium", "fix_versions": ["1.0.11"], "labels": [], "logged_h": 0.0, "estimated_h": 120.0, "has_estimate": true, "has_log": false, "cycle_days": 61}, {"key": "NDA-210", "url": "https://datamars.atlassian.net/browse/NDA-210", "summary": "Energizer handle receiving push notification", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.7"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 4}, {"key": "NDA-219", "url": "https://datamars.atlassian.net/browse/NDA-219", "summary": "Add ability to search for sessions", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Nikola Mladenovic", "priority": "Medium", "fix_versions": ["1.0.6"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 18}, {"key": "NDA-151", "url": "https://datamars.atlassian.net/browse/NDA-151", "summary": "Energizer config BLE", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.6"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 25}, {"key": "NDA-146", "url": "https://datamars.atlassian.net/browse/NDA-146", "summary": "S3 recording session page", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.6"], "labels": [], "logged_h": 0.0, "estimated_h": 80.0, "has_estimate": true, "has_log": false, "cycle_days": 39}, {"key": "NDA-217", "url": "https://datamars.atlassian.net/browse/NDA-217", "summary": "Create GraphQL Client for Energizer APIs", "type": "Task", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 10}, {"key": "NDA-215", "url": "https://datamars.atlassian.net/browse/NDA-215", "summary": "Remove delete session from device session page", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.4", "1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 6}, {"key": "NDA-213", "url": "https://datamars.atlassian.net/browse/NDA-213", "summary": "Handle large device session downloads (10k animals) with retry and FNn fallback", "type": "Bug", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 20}, {"key": "NDA-209", "url": "https://datamars.atlassian.net/browse/NDA-209", "summary": "Refactor and Connect Energizer Bluetooth Commands with UI", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 24}, {"key": "NDA-208", "url": "https://datamars.atlassian.net/browse/NDA-208", "summary": "Update Energizer Detail Page UI to Match Figma Design", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Nikola Mladenovic", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 20}, {"key": "NDA-205", "url": "https://datamars.atlassian.net/browse/NDA-205", "summary": "S3 - Phase 2", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 28}, {"key": "NDA-204", "url": "https://datamars.atlassian.net/browse/NDA-204", "summary": "S3 - Phase 1", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 27}, {"key": "NDA-173", "url": "https://datamars.atlassian.net/browse/NDA-173", "summary": "Add disconnect button when I am connected to a device", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 70}, {"key": "NDA-166", "url": "https://datamars.atlassian.net/browse/NDA-166", "summary": "Refresh session list while connected to device", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Nikola Mladenovic", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 10}, {"key": "NDA-154", "url": "https://datamars.atlassian.net/browse/NDA-154", "summary": "Energizer detail (graphql)", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 80}, {"key": "NDA-152", "url": "https://datamars.atlassian.net/browse/NDA-152", "summary": "Energizer commissioning to farm", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 56.0, "has_estimate": true, "has_log": false, "cycle_days": 80}, {"key": "NDA-150", "url": "https://datamars.atlassian.net/browse/NDA-150", "summary": "Energizer detail BLE", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 52}, {"key": "NDA-149", "url": "https://datamars.atlassian.net/browse/NDA-149", "summary": "Energizer list API (graphql)", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 7}, {"key": "NDA-148", "url": "https://datamars.atlassian.net/browse/NDA-148", "summary": "Energizer BLE list", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 14}, {"key": "NDA-147", "url": "https://datamars.atlassian.net/browse/NDA-147", "summary": "S3 download recorded session", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 7}, {"key": "NDA-75", "url": "https://datamars.atlassian.net/browse/NDA-75", "summary": "Session Summary Page", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 7}, {"key": "NDA-216", "url": "https://datamars.atlassian.net/browse/NDA-216", "summary": "Update all translation labels", "type": "Task", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 3}, {"key": "NDA-214", "url": "https://datamars.atlassian.net/browse/NDA-214", "summary": "Eziweight7i delete session not working", "type": "Bug", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 8.0, "has_estimate": true, "has_log": false, "cycle_days": 5}, {"key": "NDA-212", "url": "https://datamars.atlassian.net/browse/NDA-212", "summary": "Handle Eziweight7i RFID / EID column name like in Datalink", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 7}, {"key": "NDA-211", "url": "https://datamars.atlassian.net/browse/NDA-211", "summary": "Eziweight7i Wrong column order in export", "type": "Bug", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 8.0, "has_estimate": true, "has_log": false, "cycle_days": 7}, {"key": "NDA-207", "url": "https://datamars.atlassian.net/browse/NDA-207", "summary": "In app navigation hidden behind phone navigation", "type": "Bug", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 11}, {"key": "NDA-202", "url": "https://datamars.atlassian.net/browse/NDA-202", "summary": "Enable multiple BLE device connections", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": [], "logged_h": 0.0, "estimated_h": 64.0, "has_estimate": true, "has_log": false, "cycle_days": 18}, {"key": "NDA-185", "url": "https://datamars.atlassian.net/browse/NDA-185", "summary": "Delete Session from app", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": [], "logged_h": 0.0, "estimated_h": 8.0, "has_estimate": true, "has_log": false, "cycle_days": 11}, {"key": "NDA-183", "url": "https://datamars.atlassian.net/browse/NDA-183", "summary": "Energizer BLE Connect", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Nikola Mladenovic", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 45}, {"key": "NDA-82", "url": "https://datamars.atlassian.net/browse/NDA-82", "summary": "Rename and release 1.0.4", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": [], "logged_h": 0.0, "estimated_h": 32.0, "has_estimate": true, "has_log": false, "cycle_days": 93}, {"key": "NDA-80", "url": "https://datamars.atlassian.net/browse/NDA-80", "summary": "EziWeigh7i connect to device", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 26}, {"key": "NDA-78", "url": "https://datamars.atlassian.net/browse/NDA-78", "summary": "EziWeigh7i retrieve list of sessions", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": [], "logged_h": 0.0, "estimated_h": 32.0, "has_estimate": true, "has_log": false, "cycle_days": 19}, {"key": "NDA-76", "url": "https://datamars.atlassian.net/browse/NDA-76", "summary": "EziWeigh7i download sessions", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.4"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 19}, {"key": "NDA-201", "url": "https://datamars.atlassian.net/browse/NDA-201", "summary": "XRS2i don't download sessions on reconnection", "type": "Bug", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 4.0, "has_estimate": true, "has_log": false, "cycle_days": 4}, {"key": "NDA-198", "url": "https://datamars.atlassian.net/browse/NDA-198", "summary": "Shuqi's UI feedback", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 13}, {"key": "NDA-197", "url": "https://datamars.atlassian.net/browse/NDA-197", "summary": "Clarify session cards labels and hide farm sessions card", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 12.0, "has_estimate": true, "has_log": false, "cycle_days": 12}, {"key": "NDA-188", "url": "https://datamars.atlassian.net/browse/NDA-188", "summary": "Create farm on sign up", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 64.0, "has_estimate": true, "has_log": false, "cycle_days": 12}, {"key": "NDA-187", "url": "https://datamars.atlassian.net/browse/NDA-187", "summary": "UI doesnt update for uploads", "type": "Bug", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 8.0, "has_estimate": true, "has_log": false, "cycle_days": 0}, {"key": "NDA-184", "url": "https://datamars.atlassian.net/browse/NDA-184", "summary": "Add Terms an Codition and Privacy to sign up", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 21}, {"key": "NDA-182", "url": "https://datamars.atlassian.net/browse/NDA-182", "summary": "Energizer Create Device card", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Nikola Mladenovic", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 41}, {"key": "NDA-181", "url": "https://datamars.atlassian.net/browse/NDA-181", "summary": "S3 Factory Reset", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 4}, {"key": "NDA-128", "url": "https://datamars.atlassian.net/browse/NDA-128", "summary": "S3 connect to device", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 41}, {"key": "NDA-127", "url": "https://datamars.atlassian.net/browse/NDA-127", "summary": "S3 settings page", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 56.0, "has_estimate": true, "has_log": false, "cycle_days": 38}, {"key": "NDA-74", "url": "https://datamars.atlassian.net/browse/NDA-74", "summary": "Rename and  release 1.0.3 ", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 8.0, "has_estimate": true, "has_log": false, "cycle_days": 0}, {"key": "NDA-72", "url": "https://datamars.atlassian.net/browse/NDA-72", "summary": "Update Intercom Integration to Identify Logged-in Users", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 20}, {"key": "NDA-63", "url": "https://datamars.atlassian.net/browse/NDA-63", "summary": "National Registry upload Error handling", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 64.0, "has_estimate": true, "has_log": false, "cycle_days": 32}, {"key": "NDA-41", "url": "https://datamars.atlassian.net/browse/NDA-41", "summary": "New Transaction type for NLIS - Sighted Livestock", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 83}, {"key": "NDA-29", "url": "https://datamars.atlassian.net/browse/NDA-29", "summary": "Send Log to AWS", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 6}, {"key": "NDA-179", "url": "https://datamars.atlassian.net/browse/NDA-179", "summary": "Session list empty message", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 4.0, "has_estimate": true, "has_log": false, "cycle_days": 4}, {"key": "NDA-176", "url": "https://datamars.atlassian.net/browse/NDA-176", "summary": "Touch target area", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 4.0, "has_estimate": true, "has_log": false, "cycle_days": 5}, {"key": "NDA-175", "url": "https://datamars.atlassian.net/browse/NDA-175", "summary": "Select Farm page remembers what I previously typed.  If it does this, it should present it in the search box when I go to search", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 4.0, "has_estimate": true, "has_log": false, "cycle_days": 5}, {"key": "NDA-172", "url": "https://datamars.atlassian.net/browse/NDA-172", "summary": "Connection error related to permissions shown, even though I have granted permission", "type": "Bug", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["0.2"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 4.0, "has_estimate": true, "has_log": false, "cycle_days": 3}, {"key": "NDA-171", "url": "https://datamars.atlassian.net/browse/NDA-171", "summary": "Login flow feedback", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 4.0, "has_estimate": true, "has_log": false, "cycle_days": 4}, {"key": "NDA-170", "url": "https://datamars.atlassian.net/browse/NDA-170", "summary": "Dismiss Select Farm page", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 4.0, "has_estimate": true, "has_log": false, "cycle_days": 5}, {"key": "NDA-168", "url": "https://datamars.atlassian.net/browse/NDA-168", "summary": "VID not populating on session summary screen for an animal", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["0.2"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 4.0, "has_estimate": true, "has_log": false, "cycle_days": 5}, {"key": "NDA-167", "url": "https://datamars.atlassian.net/browse/NDA-167", "summary": "Order sessions by date recorded descending", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["0.2"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 8.0, "has_estimate": true, "has_log": false, "cycle_days": 3}, {"key": "NDA-165", "url": "https://datamars.atlassian.net/browse/NDA-165", "summary": "Support for 0 animals in session list", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["0.2"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 8.0, "has_estimate": true, "has_log": false, "cycle_days": 5}, {"key": "NDA-164", "url": "https://datamars.atlassian.net/browse/NDA-164", "summary": "Add 'Coming Soon' message dialog to any items that are not expected to be functioning right now", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 26}, {"key": "NDA-163", "url": "https://datamars.atlassian.net/browse/NDA-163", "summary": "Device disconnects if I navigate around app", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["0.2"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 23}, {"key": "NDA-161", "url": "https://datamars.atlassian.net/browse/NDA-161", "summary": "Handle user role in api call", "type": "Task", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 4}, {"key": "NDA-99", "url": "https://datamars.atlassian.net/browse/NDA-99", "summary": "Bulk upload Session to DML", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 13}, {"key": "NDA-98", "url": "https://datamars.atlassian.net/browse/NDA-98", "summary": "Release 0.1.1", "type": "Task", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 2.0, "has_estimate": true, "has_log": false, "cycle_days": 10}, {"key": "NDA-97", "url": "https://datamars.atlassian.net/browse/NDA-97", "summary": "Add Firebase Crashlytics ", "type": "Task", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 8.0, "has_estimate": true, "has_log": false, "cycle_days": 4}, {"key": "NDA-96", "url": "https://datamars.atlassian.net/browse/NDA-96", "summary": "Remove New Relic integration", "type": "Task", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 12.0, "has_estimate": true, "has_log": false, "cycle_days": 14}, {"key": "NDA-95", "url": "https://datamars.atlassian.net/browse/NDA-95", "summary": "Create Settings page", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 8.0, "has_estimate": true, "has_log": false, "cycle_days": 14}, {"key": "NDA-94", "url": "https://datamars.atlassian.net/browse/NDA-94", "summary": "Ui refinement 2", "type": "Task", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 15}, {"key": "NDA-93", "url": "https://datamars.atlassian.net/browse/NDA-93", "summary": "UI refinement", "type": "Task", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 21}, {"key": "NDA-92", "url": "https://datamars.atlassian.net/browse/NDA-92", "summary": "check if app is online (connected to internet)", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 22}, {"key": "NDA-91", "url": "https://datamars.atlassian.net/browse/NDA-91", "summary": "Add Fontawesome integration", "type": "Task", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 8.0, "estimated_h": 24.0, "has_estimate": true, "has_log": true, "cycle_days": 23}, {"key": "NDA-90", "url": "https://datamars.atlassian.net/browse/NDA-90", "summary": "Sign in", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 9}, {"key": "NDA-71", "url": "https://datamars.atlassian.net/browse/NDA-71", "summary": "Check Nat Reg availability", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 23}, {"key": "NDA-70", "url": "https://datamars.atlassian.net/browse/NDA-70", "summary": "Nat reg Get Config NAIT", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 17}, {"key": "NDA-69", "url": "https://datamars.atlassian.net/browse/NDA-69", "summary": "Nat reg Get Config NLIS", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 17}, {"key": "NDA-68", "url": "https://datamars.atlassian.net/browse/NDA-68", "summary": "NAIT update status to dead", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 15}, {"key": "NDA-67", "url": "https://datamars.atlassian.net/browse/NDA-67", "summary": "NAIT register animals", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 15}, {"key": "NDA-66", "url": "https://datamars.atlassian.net/browse/NDA-66", "summary": "NAIT receiving movement", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 32.0, "has_estimate": true, "has_log": false, "cycle_days": 15}, {"key": "NDA-65", "url": "https://datamars.atlassian.net/browse/NDA-65", "summary": "NAIT Sending movement", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 56.0, "has_estimate": true, "has_log": false, "cycle_days": 15}, {"key": "NDA-64", "url": "https://datamars.atlassian.net/browse/NDA-64", "summary": "NAIT Set Config", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 32.0, "has_estimate": true, "has_log": false, "cycle_days": 22}, {"key": "NDA-62", "url": "https://datamars.atlassian.net/browse/NDA-62", "summary": "NLIS update status to dead", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 15}, {"key": "NDA-61", "url": "https://datamars.atlassian.net/browse/NDA-61", "summary": "NLIS receiving transfer", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 15}, {"key": "NDA-60", "url": "https://datamars.atlassian.net/browse/NDA-60", "summary": "NLIS Set Config", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 32.0, "has_estimate": true, "has_log": false, "cycle_days": 22}, {"key": "NDA-59", "url": "https://datamars.atlassian.net/browse/NDA-59", "summary": "Nat Reg SNIG Export", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Guido Mazzaro", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 23}, {"key": "NDA-58", "url": "https://datamars.atlassian.net/browse/NDA-58", "summary": "Nat Reg NAIT send session", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 56.0, "has_estimate": true, "has_log": false, "cycle_days": 15}, {"key": "NDA-56", "url": "https://datamars.atlassian.net/browse/NDA-56", "summary": "Nat Reg NLIS send session", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 96.0, "has_estimate": true, "has_log": false, "cycle_days": 15}, {"key": "NDA-53", "url": "https://datamars.atlassian.net/browse/NDA-53", "summary": "Release 0.2", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 32.0, "has_estimate": true, "has_log": false, "cycle_days": 23}, {"key": "NDA-51", "url": "https://datamars.atlassian.net/browse/NDA-51", "summary": "Account page", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Nikola Mladenovic", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 24}, {"key": "NDA-47", "url": "https://datamars.atlassian.net/browse/NDA-47", "summary": "Switch farms", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 18}, {"key": "NDA-46", "url": "https://datamars.atlassian.net/browse/NDA-46", "summary": "Send sessions to DML once logged in", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 18}, {"key": "NDA-43", "url": "https://datamars.atlassian.net/browse/NDA-43", "summary": "Create “Sessions” widget on the app homepage", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Nikola Mladenovic", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 42}, {"key": "NDA-40", "url": "https://datamars.atlassian.net/browse/NDA-40", "summary": "Delete account", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 17}, {"key": "NDA-39", "url": "https://datamars.atlassian.net/browse/NDA-39", "summary": "Logout", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 22}, {"key": "NDA-38", "url": "https://datamars.atlassian.net/browse/NDA-38", "summary": "Login", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 23}, {"key": "NDA-36", "url": "https://datamars.atlassian.net/browse/NDA-36", "summary": "Prompt user to migrate data from Mihub at first login", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 10}, {"key": "NDA-28", "url": "https://datamars.atlassian.net/browse/NDA-28", "summary": " Integrate Intercom into the app (Anonymous Support + Future Identification)", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Gianni Toniolo", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 16}, {"key": "NDA-23", "url": "https://datamars.atlassian.net/browse/NDA-23", "summary": "Share session features", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 24}, {"key": "NDA-1", "url": "https://datamars.atlassian.net/browse/NDA-1", "summary": "UI Setup", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["0.2"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 67}], "in_progress": [{"key": "NDA-219", "url": "https://datamars.atlassian.net/browse/NDA-219", "summary": "Add ability to search for sessions", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Nikola Mladenovic", "priority": "Medium", "fix_versions": ["1.0.6"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 16.0, "has_estimate": true, "has_log": false, "cycle_days": 18, "resolved_date": "2025-10-13", "resolved_quarter": "Q4 2025", "resolved_sprint": "NDA Sprint 12", "_rowCls": "resolved-carried"}, {"key": "NDA-205", "url": "https://datamars.atlassian.net/browse/NDA-205", "summary": "S3 - Phase 2", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Fabrizio De Marco", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": [], "logged_h": 0.0, "estimated_h": 40.0, "has_estimate": true, "has_log": false, "cycle_days": 28, "resolved_date": "2025-10-02", "resolved_quarter": "Q4 2025", "resolved_sprint": "NDA Sprint 12", "_rowCls": "resolved-carried"}, {"key": "NDA-166", "url": "https://datamars.atlassian.net/browse/NDA-166", "summary": "Refresh session list while connected to device", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Nikola Mladenovic", "priority": "Medium", "fix_versions": ["1.0.5"], "labels": ["LPM"], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 10, "resolved_date": "2025-10-02", "resolved_quarter": "Q4 2025", "resolved_sprint": "NDA Sprint 12", "_rowCls": "resolved-carried"}, {"key": "NDA-151", "url": "https://datamars.atlassian.net/browse/NDA-151", "summary": "Energizer config BLE", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.6"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 25, "resolved_date": "2025-10-13", "resolved_quarter": "Q4 2025", "resolved_sprint": "NDA Sprint 12", "_rowCls": "resolved-carried"}, {"key": "NDA-41", "url": "https://datamars.atlassian.net/browse/NDA-41", "summary": "New Transaction type for NLIS - Sighted Livestock", "type": "Story", "status": "Closed", "status_cat": "done", "assignee": "Giuseppe Maffia", "priority": "Medium", "fix_versions": ["1.0.3"], "labels": [], "logged_h": 0.0, "estimated_h": 24.0, "has_estimate": true, "has_log": false, "cycle_days": 83, "resolved_date": "2025-10-06", "resolved_quarter": "Q4 2025", "resolved_sprint": "NDA Sprint 12", "_rowCls": "resolved-carried"}], "no_estimate": []}}, "notes": {}, "sprints": [{"id": 1686, "name": "NDA Sprint 5", "state": "closed", "start_date": "2025-07-07", "end_date": "2025-07-20", "status_label": "Closed", "status_color": "neutral"}, {"id": 1689, "name": "NDA Sprint 6", "state": "closed", "start_date": "2025-07-21", "end_date": "2025-08-04", "status_label": "Closed", "status_color": "neutral"}, {"id": 1690, "name": "NDA Sprint 7", "state": "closed", "start_date": "2025-08-04", "end_date": "2025-08-18", "status_label": "Closed", "status_color": "neutral"}, {"id": 1691, "name": "NDA Sprint 8", "state": "closed", "start_date": "2025-08-18", "end_date": "2025-09-01", "status_label": "Closed", "status_color": "neutral"}, {"id": 1697, "name": "NDA Sprint 9", "state": "closed", "start_date": "2025-08-18", "end_date": "2025-09-01", "status_label": "Closed", "status_color": "neutral"}, {"id": 1692, "name": "NDA Sprint 10", "state": "closed", "start_date": "2025-09-01", "end_date": "2025-09-15", "status_label": "Closed", "status_color": "neutral"}, {"id": 1693, "name": "NDA Sprint 11", "state": "closed", "start_date": "2025-09-15", "end_date": "2025-09-29", "status_label": "Closed", "status_color": "neutral"}], "saved_at": "2026-06-02T10:22:11.058292+00:00"}}, "proj_key": "NDA", "board_id": "459", "display": "NDA"}};
+const REFRESH_WEBHOOK="https://hugh.casa/api/webhook/dlk-refresh";
+const PROJ_KEYS=Object.keys(ALL_DATA);
+
+// Active project state — updated by switchProject()
+let AP=PROJ_KEYS[0];
+let QS={}, PROJ_KEY="", PROJ_DISPLAY="", BOARD_ID="";
+let ordered=[];
+let cur="";
+let curTab="overview";
+let trendWindow=4; // rolling quarters shown in trend charts
+
+function switchProject(p){
+  AP=p;
+  const pd=ALL_DATA[p];
+  QS=pd.qs||{};
+  PROJ_KEY=pd.proj_key||p;
+  PROJ_DISPLAY=pd.display||p;
+  BOARD_ID=pd.board_id||"";
+  ordered=Object.keys(QS).sort((a,b)=>{
+    const[qa,ya]=a.split(" ");const[qb,yb]=b.split(" ");
+    return(+yb-+ya)||(+qb[1]-+qa[1]);
+  });
+  cur=ordered[0]||"";
+  // Update project tab UI
+  document.querySelectorAll(".proj-tab").forEach(t=>t.classList.toggle("active",t.dataset.proj===p));
+  // Update logo text
+  const ln=document.getElementById("proj-name");if(ln)ln.textContent=PROJ_DISPLAY;
+  // Rebuild quarter dropdown and re-render
+  document.getElementById("q-input").value=cur;
+  buildOpts("");
+  if(cur)render(cur,"overview");
+}
+
+/* ---- Escape ---- */
+function e(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+
+/* ---- Date formatting ---- */
+function fmtDate(s,short){
+  if(!s)return"";
+  const d=new Date(s+"T12:00:00");
+  return short
+    ?d.toLocaleDateString("en-GB",{day:"numeric",month:"short"})
+    :d.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
+}
+
+/* ---- Badge helpers ---- */
+function scls(cat){return cat==="done"?"bd":cat==="indeterminate"?"bi":"bt"}
+function tcls(t){return t==="Bug"?"bbug":t==="Story"?"bstory":t==="Task"?"btask":"bt"}
+function pcls(p){if(!p)return"bt";p=p.toLowerCase();return(p==="highest"||p==="high")?"bhi":p==="medium"?"bmed":"blo"}
+
+/* ---- Quarter dropdown ---- */
+// Track which year groups have been manually toggled open/closed
+const _yrOpen={};
+function _curYr(){return cur?(cur.split(" ")[1]||""):""}
+
+function buildOpts(filter){
+  const lc=(filter||"").toLowerCase();
+  const el=document.getElementById("q-opts");
+  const filtered=ordered.filter(q=>q.toLowerCase().includes(lc));
+  if(!filtered.length){el.innerHTML=`<div class="q-opt" style="color:var(--muted);cursor:default">No results</div>`;return;}
+
+  // When searching, collapse into a flat list (no accordion — results could span years)
+  if(lc){
+    el.innerHTML=filtered.map(q=>{
+      const d=QS[q];const sc=q===cur?" sel":"";const n=(d.sprints||[]).length;
+      return`<div class="q-opt${sc}" data-q="${e(q)}">${e(q)}<span class="q-badge">${n} sprint${n!==1?"s":""}</span></div>`;
+    }).join("");
+    el.querySelectorAll(".q-opt[data-q]").forEach(o=>{
+      o.addEventListener("click",()=>{const t=curTab;cur=o.dataset.q;closeDd();render(cur,t);});
+    });
+    return;
+  }
+
+  // Group by year — current year open by default, older years collapsed
+  const byYr={};
+  filtered.forEach(q=>{const yr=q.split(" ")[1]||"?";(byYr[yr]=byYr[yr]||[]).push(q);});
+  const curYr=_curYr();
+  el.innerHTML=Object.keys(byYr).sort((a,b)=>b-a).map(yr=>{
+    // Open if current year, or previously toggled open
+    const open=(_yrOpen[yr]!==undefined)?_yrOpen[yr]:(yr===curYr);
+    const arrow=open?"▾":"▸";
+    const opts=byYr[yr].sort((a,b)=>+b[1]-+a[1]).map(q=>{
+      const d=QS[q];const sc=q===cur?" sel":"";const n=(d.sprints||[]).length;
+      return`<div class="q-opt${sc}" data-q="${e(q)}">${e(q)}<span class="q-badge">${n} sprint${n!==1?"s":""}</span></div>`;
+    }).join("");
+    return`<div class="q-yr-hdr" data-yr="${yr}"><span>${yr}</span><span class="q-yr-arrow">${arrow}</span></div>`
+          +`<div class="q-yr-group${open?"":" collapsed"}" data-yrg="${yr}">${opts}</div>`;
+  }).join("");
+
+  // Year header toggle
+  el.querySelectorAll(".q-yr-hdr").forEach(h=>{
+    h.addEventListener("click",ev=>{
+      ev.stopPropagation();
+      const yr=h.dataset.yr;
+      const grp=el.querySelector(`.q-yr-group[data-yrg="${yr}"]`);
+      const nowOpen=grp.classList.toggle("collapsed");
+      _yrOpen[yr]=!nowOpen;
+      h.querySelector(".q-yr-arrow").textContent=nowOpen?"▸":"▾";
+    });
+  });
+
+  el.querySelectorAll(".q-opt[data-q]").forEach(o=>{
+    o.addEventListener("click",()=>{const t=curTab;cur=o.dataset.q;closeDd();render(cur,t);});
+  });
+}
+function openDd(){document.getElementById("q-dd").classList.add("open");buildOpts("");document.getElementById("q-search").value="";document.getElementById("q-search").focus();}
+function closeDd(){document.getElementById("q-dd").classList.remove("open");document.getElementById("q-input").value=cur;}
+document.getElementById("q-input").addEventListener("click",()=>{document.getElementById("q-dd").classList.contains("open")?closeDd():openDd();});
+document.getElementById("q-search").addEventListener("input",function(){buildOpts(this.value);});
+document.addEventListener("click",ev=>{if(!ev.target.closest(".qs"))closeDd();});
+
+/* ---- Project tabs — built from ALL_DATA keys ---- */
+(function(){
+  const container=document.getElementById("proj-tabs");
+  PROJ_KEYS.forEach(p=>{
+    const btn=document.createElement("button");
+    btn.className="proj-tab";
+    btn.dataset.proj=p;
+    btn.textContent=ALL_DATA[p].display||p;
+    btn.addEventListener("click",()=>switchProject(p));
+    container.appendChild(btn);
+  });
+  // Hide tab row if only one project
+  if(PROJ_KEYS.length<2)container.style.display="none";
+  // Initialise with first project
+  switchProject(PROJ_KEYS[0]);
+})();
+
+/* ---- Current sprint label (always live quarter of active project) ---- */
+(function(){
+  const now=new Date();
+  const liveLabel=`Q${Math.floor(now.getMonth()/3)+1} ${now.getFullYear()}`;
+  const liveData=QS[liveLabel];
+  const activeSprint=liveData?(liveData.sprints||[]).find(s=>s.state==="active"):null;
+  document.getElementById("hdr-sprint").textContent=activeSprint?activeSprint.name:"";
+})();
+
+/* ---- Refresh button ---- */
+(function(){
+  const btn=document.getElementById("refresh-btn");
+  if(!REFRESH_WEBHOOK){return;}
+  btn.style.display="";
+  const COOLDOWN_MS=60*60*1000;
+  const SK="dlk_last_manual_refresh";
+
+  function fmtTime(ts){
+    const d=new Date(ts);
+    return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+  }
+  function showModal(title,msg){
+    document.getElementById("refresh-modal-title").textContent=title;
+    document.getElementById("refresh-modal-msg").textContent=msg;
+    document.getElementById("refresh-modal").classList.add("open");
+  }
+
+  // Fetch last refresh time from HA-written file (cross-browser source of truth).
+  // Falls back to localStorage if file not yet created.
+  async function getLastRefresh(){
+    try{
+      const r=await fetch("./data/last_refresh.json?_="+Date.now());
+      if(r.ok){
+        const d=await r.json();
+        if(d.timestamp){
+          const fileTs=new Date(d.timestamp).getTime();
+          const localTs=+localStorage.getItem(SK)||0;
+          return Math.max(fileTs,localTs);
+        }
+      }
+    }catch(_){}
+    return +localStorage.getItem(SK)||0;
+  }
+
+  btn.addEventListener("click",async()=>{
+    const last=await getLastRefresh();
+    const now=Date.now();
+    if(now-last<COOLDOWN_MS){
+      showModal(
+        "Too soon to refresh",
+        `The dashboard was last refreshed at ${fmtTime(last)}. Manual refreshes are limited to once per hour — try again at ${fmtTime(last+COOLDOWN_MS)}.`
+      );
+      return;
+    }
+    localStorage.setItem(SK,String(now));
+    btn.disabled=true;
+    btn.textContent="↻ Refreshing…";
+    fetch(REFRESH_WEBHOOK,{method:"POST",mode:"no-cors"})
+      .then(()=>{
+        btn.textContent="↻ Done — reload shortly";
+      })
+      .catch(err=>{
+        localStorage.removeItem(SK);
+        showModal(
+          "Refresh failed",
+          `Could not reach Home Assistant${err.message?` (${err.message})`:""}. Check that HA is running and the webhook is configured. You can try again now.`
+        );
+        btn.textContent="↻ Refresh";
+        btn.disabled=false;
+      })
+      .finally(()=>{
+        if(!btn.disabled)return;
+        setTimeout(()=>{btn.disabled=false;btn.textContent="↻ Refresh";},8000);
+      });
+  });
+})();
+
+/* ---- Header height sync ---- */
+function _syncHdr(){
+  const h=document.getElementById("site-header")?.offsetHeight;
+  if(h)document.documentElement.style.setProperty("--hdr",h+"px");
+}
+new ResizeObserver(_syncHdr).observe(document.getElementById("site-header"));
+
+/* ---- Back to top ---- */
+window.addEventListener("scroll",()=>{document.getElementById("btt").classList.toggle("vis",window.scrollY>300);},{passive:true});
+
+/* ---- Tab switching ---- */
+function showTab(id){
+  curTab=id;
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab===id));
+  document.querySelectorAll(".tab-pane").forEach(p=>p.classList.toggle("active",p.dataset.pane===id));
+  window.scrollTo({top:0,behavior:"instant"});
+}
+
+/* ---- Table builder ---- */
+let _tid=0;
+function mkTable(cols,rows,jiraUrl){
+  const fid="f"+(_tid++);const bid="b"+_tid;const cid="c"+_tid;
+  const toolbar=`<div class="ttb">
+    <input class="tf" id="${fid}" placeholder="Filter…">
+    <span class="tc" id="${cid}">${rows.length} item${rows.length!==1?"s":""}</span>
+    ${jiraUrl?`<a class="jl" href="${e(jiraUrl)}" target="_blank">Open in Jira ↗</a>`:""}
+  </div>`;
+  const head=cols.map((c,i)=>`<th data-i="${i}">${e(c.h)}<span class="si"></span></th>`).join("");
+  const body=rows.length
+    ?rows.map(r=>`<tr class="${r._rowCls||''}">${cols.map(c=>`<td>${c.r(r)}</td>`).join("")}</tr>`).join("")
+    :`<tr class="er"><td colspan="${cols.length}">No items</td></tr>`;
+  const html=`<div class="tw">${toolbar}<div class="tw-body"><table><thead><tr>${head}</tr></thead><tbody id="${bid}">${body}</tbody></table></div></div>`;
+  setTimeout(()=>{
+    const fi=document.getElementById(fid);const tb=document.getElementById(bid);const ct=document.getElementById(cid);
+    if(!fi||!tb)return;
+    fi.addEventListener("input",()=>{
+      const lc=fi.value.toLowerCase();let vis=0;
+      tb.querySelectorAll("tr:not(.er)").forEach(r=>{const show=r.textContent.toLowerCase().includes(lc);r.style.display=show?"":"none";if(show)vis++;});
+      if(ct)ct.textContent=fi.value?`${vis} of ${rows.length}`:`${rows.length} item${rows.length!==1?"s":""}`;
+    });
+    let ss={};
+    tb.closest("table").querySelectorAll("thead th").forEach(th=>{
+      th.addEventListener("click",()=>{
+        const i=+th.dataset.i;const asc=ss[i]!==true;ss={};ss[i]=asc;
+        tb.closest("table").querySelectorAll(".si").forEach(s=>s.textContent="");
+        th.querySelector(".si").textContent=asc?" ▲":" ▼";
+        const rs=Array.from(tb.querySelectorAll("tr:not(.er)"));
+        rs.sort((a,b)=>{const av=a.cells[i]?.textContent.trim()??"";const bv=b.cells[i]?.textContent.trim()??"";return asc?av.localeCompare(bv,undefined,{numeric:true}):bv.localeCompare(av,undefined,{numeric:true});});
+        rs.forEach(r=>tb.appendChild(r));
+      });
+    });
+  },0);
+  return html;
+}
+
+/* ---- Column helpers ---- */
+function issueCols(extra){
+  return[
+    {h:"Key",     r:r=>`<a class="ik" href="${e(r.url)}" target="_blank">${e(r.key)}</a>`},
+    {h:"Type",    r:r=>`<span class="b ${tcls(r.type)}">${e(r.type)}</span>`},
+    {h:"Summary", r:r=>`<div class="is" title="${e(r.summary)}">${e(r.summary)}</div>`},
+    {h:"Assignee",r:r=>e(r.assignee)},
+    ...(extra||[]),
+    {h:"Status",  r:r=>`<span class="b ${scls(r.status_cat)}">${e(r.status)}</span>`},
+  ];
+}
+const priCol={h:"Priority",r:r=>r.priority?`<span class="b ${pcls(r.priority)}">${e(r.priority)}</span>`:"—"};
+const lblCol={h:"Labels",  r:r=>(r.labels||[]).filter(l=>l!=="Out_Of_Sprint").map(l=>`<span class="b bt">${e(l)}</span>`).join(" ")||"—"};
+
+/* ---- Pane wrapper ---- */
+function pane(id,content){
+  return`<div class="tab-pane" data-pane="${id}">${content}</div>`;
+}
+
+/* ---- Main render ---- */
+function render(qk,activeTab){
+  const D=QS[qk];cur=qk;
+  document.getElementById("q-input").value=qk;
+  document.title=PROJ_DISPLAY+" Quarter Dashboard — "+qk;
+
+  if(!D){document.getElementById("dash").innerHTML=`<div class="nodata">No data for ${e(qk)}</div>`;return;}
+  const {kpis,notes,sprints}=D;
+  const iss=kpis.issues||{};
+  const jb=kpis.jira_base||"";
+  const verIds=kpis.version_ids||{};
+  const oa=kpis.oos_open;
+  const ids=(kpis.sprint_ids||[]).join(", ");
+  const base=`project = ${PROJ_KEY} AND sprint in (${ids})`;
+
+  (function(){
+    const raw=kpis.as_of||"";
+    let display=raw;
+    if(raw){
+      const d=new Date(raw);
+      if(!isNaN(d.getTime()))
+        display=d.toLocaleString([],{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"});
+    }
+    document.getElementById("as-of").textContent="Updated: "+display;
+  })();
+
+  /* Version column — needs jb and verIds closure */
+  const verCol={h:"Fix Ver.",r:r=>{
+    if(!(r.fix_versions||[]).length)return"—";
+    return`<div class="vv">${r.fix_versions.map(v=>{
+      const vid=verIds[v];
+      if(vid&&jb){const url=`${jb}/projects/${PROJ_KEY}/versions/${vid}/tab/release-report-all-issues`;return`<a class="b bstory vlink" href="${e(url)}" target="_blank">${e(v)}</a>`;}
+      return`<span class="b bstory">${e(v)}</span>`;
+    }).join("")}</div>`;
+  }};
+
+  /* Column sets */
+  const allCols =issueCols([priCol,verCol,lblCol]);
+  const oosCols =issueCols([priCol,lblCol]);
+  const relCols =issueCols([verCol,lblCol]);
+  /* In Progress columns — Key cell includes ⓘ icon for cross-quarter carry-overs */
+  const ipCols=[
+    {h:"Key",r:r=>{
+      const lnk=`<a class="ik" href="${e(r.url)}" target="_blank">${e(r.key)}</a>`;
+      if(r.resolved_quarter){
+        const sprint=r.resolved_sprint?` · ${r.resolved_sprint}`:"";
+        const tip=`Completed in ${r.resolved_quarter}${sprint} · ${r.resolved_date||''}`;
+        return lnk+`<span class="ri" data-tip="${e(tip)}">&#x2139;</span>`;
+      }
+      if(r.origin_quarter&&isCurrentQ){
+        const qc=r.quarters_carried||1;
+        const cls=qc>=2?"ci-red":"ci";
+        const tip=`Carry-over from ${r.origin_quarter} · in progress since ${r.ip_date||''} (${qc} quarter${qc>1?"s":""})`
+        return lnk+`<span class="${cls}" data-tip="${e(tip)}">&#x2139;</span>`;
+      }
+      return lnk;
+    }},
+    {h:"Type",    r:r=>`<span class="b ${tcls(r.type)}">${e(r.type)}</span>`},
+    {h:"Summary", r:r=>`<div class="is" title="${e(r.summary)}">${e(r.summary)}</div>`},
+    {h:"Assignee",r:r=>e(r.assignee)},
+    priCol,
+    {h:"Status",  r:r=>`<span class="b ${scls(r.status_cat)}">${e(r.status)}</span>`},
+  ];
+
+  /* Jira URLs per section */
+  function jUrl(jql){return jb?`${jb}/issues/?jql=${encodeURIComponent(jql)}`:null;}
+
+  /* OOS alert (reused in multiple panes) */
+  let alertLinks="";
+  if(oa>0&&kpis.oos_open_detail){
+    const shown=kpis.oos_open_detail.slice(0,3);
+    alertLinks=" — "+shown.map(i=>`<a href="${e(jb+"/browse/"+i.key)}" target="_blank">${e(i.key)}</a>`).join(", ");
+    if(kpis.oos_open_detail.length>3)alertLinks+=` +${kpis.oos_open_detail.length-3} more`;
+  }
+  const isCurrentQ=!!(sprints||[]).find(s=>s.state==="active");
+  const oosAlert=!isCurrentQ&&oa===0?""
+    :oa>2?`<div class="alert alert-red">⚠ ${oa} open out-of-sprint items need attention${alertLinks}.</div>`
+    :oa>0?`<div class="alert alert-yellow">⚠ ${oa} open out-of-sprint item${oa>1?"s":""} pending${alertLinks}.</div>`
+    :isCurrentQ?`<div class="alert alert-green">✓ All out-of-sprint items resolved.</div>`
+    :"";
+
+  /* KPI cards */
+  const cr=kpis.completion_rate;
+  const crC=cr>=80?"green":cr>=60?"yellow":"red";
+  const oosC=oa===0?"green":oa>2?"red":"yellow";
+  const rollPct=kpis.rollover_pct||0;
+  const rollC=rollPct===0?"green":rollPct<20?"yellow":"red";
+  const cycleC=kpis.avg_cycle_days>0?"blue":"blue";
+  const cards=[
+    {l:"Total Items",           v:kpis.total,                                        n:notes.total,            c:"blue"},
+    {l:"Completed / Released",  v:kpis.completed,                                    n:notes.completed,        c:"green"},
+    {l:"Completion Rate",       v:cr+"%",                                            n:notes.completion_rate,  c:crC,   bar:cr},
+    {l:"Releases Shipped",      v:kpis.releases_shipped,                             n:notes.releases_shipped, c:"blue"},
+    {l:"Out-of-Sprint (total)", v:kpis.oos_total,                                    n:notes.oos_total,        c:"yellow"},
+    {l:"Open OOS Items",        v:oa,                                                n:notes.oos_open,         c:oosC},
+    {l:"Bug / Story / Task",    v:`${kpis.bugs} / ${kpis.stories} / ${kpis.tasks}`, n:notes.type_split,       c:"blue"},
+    {l:"Avg Releases / Sprint", v:kpis.avg_releases_per_sprint,                      n:notes.avg_releases,     c:"blue"},
+    {l:"Sprint Rollover",       v:kpis.rollover_count+" items ("+rollPct+"%)",       n:notes.rollover,         c:rollC},
+    {l:"Avg Cycle Time",        v:(kpis.avg_cycle_days||0)+"d",                      n:notes.cycle_time,       c:cycleC},
+  ];
+  const kpiHtml=`<div class="kpi-grid">${cards.map(c=>`
+    <div class="kpi-card ${c.c}">
+      <div class="kl">${e(c.l)}</div>
+      <div class="kv">${e(String(c.v))}</div>
+      ${c.bar!==undefined?`<div class="kpi-bar"><div class="kpi-bar-fill" style="width:${Math.min(c.bar,100)}%"></div></div>`:""}
+      <div class="kn">${e(c.n||"")}</div>
+    </div>`).join("")}</div>`;
+
+  /* Sprint table */
+  const sRows=(sprints||[]).slice().reverse().map(s=>{
+    const start=fmtDate(s.start_date,true);const end=fmtDate(s.end_date,false);
+    const dates=start&&end?`${start} – ${end}`:start?`From ${start}`:"";
+    const chip=`<span class="chip chip-${e(s.status_color)}">${e(s.status_label)}</span>`;
+    const surl=(jb&&s.state==="active")?`${jb}/jira/software/projects/${PROJ_KEY}/boards/${e(kpis.board_id||"")}?sprint=${e(String(s.id))}`:null;
+    const nm=surl?`<a class="ik" href="${e(surl)}" target="_blank">${e(s.name)}</a>`:e(s.name);
+    return`<tr><td>${nm}</td><td style="white-space:nowrap">${e(dates)}</td><td>${chip}</td><td>${e((s.state||"").charAt(0).toUpperCase()+(s.state||"").slice(1))}</td></tr>`;
+  }).join("")||`<tr class="er"><td colspan="4">No sprints</td></tr>`;
+  const sprintTable=`<div class="tw"><div class="tw-body"><table>
+    <thead><tr><th>Sprint</th><th>Dates</th><th>Status</th><th>State</th></tr></thead>
+    <tbody>${sRows}</tbody>
+  </table></div></div>`;
+
+  /* Build all tab panes */
+  const ipRows      =iss.in_progress||[];
+  const ipUnresolved=ipRows.filter(r=>!r.resolved_quarter);
+  const ipCarried   =ipRows.filter(r=>!!r.resolved_quarter);
+  const ipCarriedIn =ipRows.filter(r=>!!r.origin_quarter);
+  const oosOpenRows=iss.oos_open||[];
+  const oosAllRows=iss.oos_all||[];
+  const relRows=iss.released||[];
+  const allRows=iss.all||[];
+
+  /* Release breakdown table */
+  const verDets=(kpis.version_details||[]).slice().sort((a,b)=>(b.release_date||"").localeCompare(a.release_date||""));
+  const relBreakdown=verDets.length?`
+    <div class="section-label">Release Breakdown</div>
+    <div class="tw"><div class="tw-body"><table class="rel-table">
+      <thead><tr><th>Release</th><th>Date</th><th>Tickets</th></tr></thead>
+      <tbody>${verDets.map(v=>{
+        const url=(v.version_id&&jb)?`${jb}/projects/${PROJ_KEY}/versions/${e(v.version_id)}/tab/release-report-all-issues`:null;
+        const nm=url?`<a class="ik" href="${e(url)}" target="_blank">${e(v.name)}</a>`:e(v.name);
+        return`<tr><td>${nm}</td><td style="white-space:nowrap">${e(v.release_date||'—')}</td><td>${v.ticket_count}</td></tr>`;
+      }).join('')}</tbody>
+    </table></div></div>`:'';
+
+  const dashHtml=[
+    pane("overview",`
+      ${oosAlert}
+      <div class="pane-title">Quarter at a Glance</div>
+      <div class="pane-desc">KPIs and sprint summary for ${e(qk)}.</div>
+      ${kpiHtml}
+      <div class="section-label">Sprints</div>
+      ${sprintTable}
+    `),
+    pane("inprogress",`
+      <div class="pane-title">In Progress <span class="tab-cnt ${!isCurrentQ&&ipUnresolved.length>0?"warn":""}">${ipRows.length}</span></div>
+      ${!isCurrentQ&&ipUnresolved.length>0?`<div class="alert alert-yellow">⚠ ${ipUnresolved.length} item${ipUnresolved.length>1?"s are":" is"} still in progress after quarter close — may need follow-up.</div>`:""}
+      ${!isCurrentQ&&ipCarried.length>0?`<div class="alert alert-green">✓ ${ipCarried.length} item${ipCarried.length>1?"s were":" was"} resolved in a later quarter — hover &#x2139; for details.</div>`:""}
+      ${isCurrentQ?`<div class="pane-desc">Items currently being worked on across all sprints this quarter.${ipCarriedIn.length>0?` Coloured &#x2139; marks ${ipCarriedIn.length} item${ipCarriedIn.length>1?"s":""}  carried over from a previous quarter.`:""}</div>`:""}
+      ${mkTable(ipCols,isCurrentQ?ipRows:ipRows.map(r=>r._rowCls==='resolved-carried'?r:{...r,_rowCls:''}),jUrl(base+" AND statusCategory != Done ORDER BY status ASC, assignee ASC"))}
+    `),
+    pane("oosopen",`
+      ${oosAlert}
+      <div class="pane-title">Open OOS Items <span class="tab-cnt ${isCurrentQ?(oa>2?"urgent":oa>0?"warn":"clear"):""}">${oa}</span></div>
+      <div class="pane-desc">Out-of-sprint items that are still open and need resolution.</div>
+      ${mkTable(oosCols,oosOpenRows,jUrl(base+" AND labels = Out_Of_Sprint AND statusCategory != Done ORDER BY priority ASC"))}
+    `),
+    pane("oos",`
+      <div class="pane-title">Out-of-Sprint Items <span class="tab-cnt">${oosAllRows.length}</span></div>
+      <div class="pane-desc">All items flagged Out_Of_Sprint this quarter, including resolved ones.</div>
+      ${mkTable(oosCols,oosAllRows,jUrl(base+" AND labels = Out_Of_Sprint ORDER BY status ASC"))}
+    `),
+    pane("released",`
+      <div class="pane-title">Released <span class="tab-cnt">${relRows.length}</span></div>
+      <div class="pane-desc">Items with status Released, Closed, or Merged that have a fix version attached.</div>
+      ${relBreakdown}
+      ${mkTable(relCols,relRows,jUrl(base+" AND status in (Released,Closed,Merged) AND fixVersion is not EMPTY ORDER BY fixVersions ASC"))}
+    `),
+    pane("all",`
+      <div class="pane-title">All Items <span class="tab-cnt">${allRows.length}</span></div>
+      <div class="pane-desc">Every issue in scope across all ${e(qk)} sprints.</div>
+      ${mkTable(allCols,allRows,jUrl(base+" ORDER BY sprint ASC, status ASC"))}
+    `),
+    pane("time",`
+      <div class="pane-title">Time Tracking</div>
+      <div class="pane-desc">Logged vs estimated hours across all sprint items. Items without estimates affect accuracy reporting.</div>
+      ${(()=>{
+        const tl=kpis.time_logged_h||0, te=kpis.time_estimated_h||0;
+        const acc=kpis.estimate_accuracy_pct||0, vari=kpis.estimate_variance_pct||0;
+        const ne=kpis.no_estimate_count||0, nePct=kpis.no_estimate_pct||0;
+        const nl=kpis.no_log_count||0;
+        const diffH=Math.round((tl-te)*10)/10;
+        const diffStr=te===0?'—':(diffH>0?'+'+diffH+'h over':diffH<0?Math.abs(diffH)+'h under':'exact');
+        const diffC=Math.abs(vari)<10?'green':Math.abs(vari)<25?'yellow':'red';
+        const neC=nePct===0?'green':nePct<20?'yellow':'red';
+        const timeCards=[
+          {l:'Hours Logged',       v:tl+'h',      n:(notes.time_logged||''),    c:'blue'},
+          {l:'Hours Estimated',    v:te+'h',       n:te?'':'No estimates set.',   c:'blue'},
+          {l:'Estimate Accuracy',  v:acc+'%',      n:'Logged vs estimated. 100% = exact.',c:diffC},
+          {l:'Over / Under',       v:diffStr,      n:'Difference between logged and estimated hours.', c:diffC},
+          {l:'No Estimate',        v:ne,           n:notes.no_estimate||(nePct+'% of items lack an estimate.'),c:neC},
+          {l:'No Time Logged',     v:nl,           n:'Items with zero time recorded.',    c:nl===0?'green':'yellow'},
+        ];
+        const timeKpiHtml='<div class="kpi-grid">'+timeCards.map(c=>`
+          <div class="kpi-card ${c.c}">
+            <div class="kl">${e(c.l)}</div>
+            <div class="kv">${e(String(c.v))}</div>
+            <div class="kn">${e(c.n)}</div>
+          </div>`).join('')+'</div>';
+
+        // Estimate vs actual bar comparison
+        const maxH=Math.max(tl,te,1);
+        const barW=v=>Math.round((v/maxH)*100);
+        const compBar=te?`<div class="section-label" style="margin-bottom:8px">Logged vs Estimated</div>
+          <div style="display:flex;flex-direction:column;gap:6px;max-width:480px;margin-bottom:24px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="width:90px;font-size:12px;color:var(--muted);text-align:right">Estimated</span>
+              <div style="flex:1;background:var(--border);border-radius:3px;height:16px;overflow:hidden">
+                <div style="width:${barW(te)}%;height:100%;background:var(--accent);border-radius:3px"></div>
+              </div>
+              <span style="width:50px;font-size:12px;font-weight:600">${e(te+'h')}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="width:90px;font-size:12px;color:var(--muted);text-align:right">Logged</span>
+              <div style="flex:1;background:var(--border);border-radius:3px;height:16px;overflow:hidden">
+                <div style="width:${barW(tl)}%;height:100%;background:${vari>25?'var(--red)':vari>0?'var(--yellow)':'var(--green)'};border-radius:3px"></div>
+              </div>
+              <span style="width:50px;font-size:12px;font-weight:600">${e(tl+'h')}</span>
+            </div>
+          </div>`:'';
+
+        const neRows=iss.no_estimate||[];
+        const neAlert=nePct>20
+          ?`<div class="alert alert-red">⚠ ${ne} items (${nePct}%) have no time estimate — accuracy reporting is skewed.</div>`
+          :nePct>0
+          ?`<div class="alert alert-yellow">⚠ ${ne} items (${nePct}%) have no time estimate.</div>`
+          :`<div class="alert alert-green">✓ All items have time estimates.</div>`;
+
+        const neCols=issueCols([priCol,{h:'Logged',r:r=>r.logged_h?r.logged_h+'h':'—'}]);
+        return timeKpiHtml+compBar+neAlert
+          +'<div class="section-label" style="margin-bottom:10px">Items Without Estimates</div>'
+          +mkTable(neCols,neRows,jUrl(base+' AND originalEstimate is EMPTY ORDER BY status ASC'));
+      })()}
+    `),
+    pane("team",`
+      <div class="pane-title">Team</div>
+      <div class="pane-desc">Workload breakdown by assignee for ${e(qk)}. ${e(notes.assignee_workload||"")}</div>
+      ${(()=>{
+        const as=kpis.assignee_stats||[];
+        if(!as.length)return'<div class="nodata">No assignee data.</div>';
+        const team=as.filter(a=>a.is_team), others=as.filter(a=>!a.is_team);
+        const maxLog=Math.max(...as.map(a=>a.logged_h),1);
+        function mkRow(a){
+          const ratC=a.completion_rate>=80?'green':a.completion_rate>=60?'yellow':'red';
+          const bar=`<div style="display:flex;align-items:center;gap:6px">
+            <div style="flex:1;min-width:60px;background:var(--border);border-radius:3px;height:8px;overflow:hidden">
+              <div style="width:${Math.round((a.logged_h/maxLog)*100)}%;height:100%;background:var(--accent);border-radius:3px"></div>
+            </div>
+            <span style="font-size:12px;font-weight:600;white-space:nowrap">${e(a.logged_h+'h')}</span>
+          </div>`;
+          const jql=a.account_id
+            ?`project = ${PROJ_KEY} AND sprint in (${ids}) AND assignee = "${e(a.account_id)}" ORDER BY status ASC`
+            :`project = ${PROJ_KEY} AND sprint in (${ids}) AND assignee is EMPTY ORDER BY status ASC`;
+          const nameCell=jb
+            ?`<a class="assignee-link" href="${e(jb+'/issues/?jql='+encodeURIComponent(jql))}" target="_blank">${e(a.name)}</a>`
+            :`<span style="font-weight:500">${e(a.name)}</span>`;
+          const accVal=(a.logged_h>0&&a.estimated_h>0)
+            ?Math.round(Math.min(a.logged_h,a.estimated_h)/Math.max(a.logged_h,a.estimated_h)*100)
+            :null;
+          const accInner=accVal===null
+            ?`<span style="color:var(--muted)">—</span>`
+            :isCurrentQ
+              ?`<span style="color:var(--muted)">${accVal}%</span>`
+              :`<span class="b ${accVal>=80?'bd':accVal>=60?'bmed':'bbug'}">${accVal}%</span>`;
+          return`<tr><td>${nameCell}</td><td style="text-align:center">${e(String(a.total))}</td><td style="text-align:center">${e(String(a.completed))}</td><td style="text-align:center"><span class="b ${ratC==="green"?"bd":ratC==="yellow"?"bmed":"bbug"}">${e(a.completion_rate+"%")}</span></td><td style="min-width:140px">${bar}</td><td style="text-align:center;color:var(--muted)">${e(a.estimated_h>0?a.estimated_h+'h':'—')}</td><td style="text-align:center">${accInner}</td></tr>`;
+        }
+        const thead=`<thead><tr>
+          <th>Assignee</th><th style="text-align:center">Items</th>
+          <th style="text-align:center">Done</th><th style="text-align:center">Rate</th>
+          <th>Hours Logged</th><th style="text-align:center">Estimated</th>
+          <th style="text-align:center">Accuracy${isCurrentQ?'<span class="trend-info" data-tip="Partial quarter — accuracy will change as more time is logged" style="margin-left:4px">&#x2139;</span>':''}</th>
+        </tr></thead>`;
+        let html=`<div class="section-label">Features Team</div>
+          <div class="tw"><div class="tw-body"><table>${thead}<tbody>${team.map(mkRow).join("")||'<tr class="er"><td colspan="7">No team member data</td></tr>'}</tbody></table></div></div>`;
+        if(others.length){
+          html+=`<div class="section-label" style="margin-top:20px">Other Assignees</div>
+          <div class="tw"><div class="tw-body"><table>${thead}<tbody>${others.map(mkRow).join("")}</tbody></table></div></div>`;
+        }
+        return html;
+      })()}
+    `),
+    pane("trends",renderTrends()),
+  ].join("");
+
+  document.getElementById("dash").innerHTML=dashHtml;
+
+  /* Tab bar with counts */
+  const tabDefs=[
+    {id:"overview",   label:"Overview"},
+    {id:"inprogress", label:"In Progress",   cnt:ipRows.length,    cls:!isCurrentQ&&ipUnresolved.length>0?"warn":""},
+    {id:"oosopen",    label:"Open OOS",      cnt:oa,               cls:isCurrentQ?(oa>2?"urgent":oa>0?"warn":"clear"):""},
+    {id:"oos",        label:"Out-of-Sprint", cnt:oosAllRows.length,cls:""},
+    {id:"released",   label:"Released",      cnt:relRows.length,   cls:""},
+    {id:"all",        label:"All Items",     cnt:allRows.length,   cls:""},
+    {id:"time",       label:"Time"},
+    {id:"team",       label:"Team"},
+    {id:"trends",     label:"Trends"},
+  ];
+  document.getElementById("tabs-bar").innerHTML=tabDefs.map(t=>{
+    const badge=t.cnt!==undefined?`<span class="tab-cnt ${t.cls}">${t.cnt}</span>`:"";
+    return`<button class="tab" data-tab="${t.id}">${e(t.label)}${badge}</button>`;
+  }).join("");
+  document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>showTab(t.dataset.tab)));
+
+  /* Sync --hdr with actual header height so toolbar sticky offset is correct */
+  _syncHdr();
+
+  showTab(activeTab||"overview");
+}
+
+/* ---- Trend charts ---- */
+function mkLineChart(values,labels,higherIsBetter,lastIsWip,tipVals){
+  const n=values.length;
+  if(n<2)return'<p style="text-align:center;color:var(--muted);font-size:12px;padding:20px 0">Not enough data</p>';
+  const W=300,H=90,pL=36,pR=12,pT=10,pB=22;
+  const cW=W-pL-pR,cH=H-pT-pB;
+  const min=Math.min(...values),max=Math.max(...values),span=max-min||1;
+  const cx=i=>pL+(n<2?cW/2:(i/(n-1))*cW);
+  const cy=v=>pT+cH-((v-min)/span)*cH;
+  // Per-segment colour: each segment coloured by its own direction
+  function segCol(delta){
+    if(higherIsBetter===null||delta===0)return'#94a3b8';
+    return(higherIsBetter?delta>0:delta<0)?'#22c55e':'#ef4444';
+  }
+  const fmt=v=>Number.isInteger(v)?v:v.toFixed(1);
+  const midY=(pT+(pT+cH))/2;
+  const grid=`<line x1="${pL}" y1="${midY.toFixed(1)}" x2="${W-pR}" y2="${midY.toFixed(1)}" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3"/>`;
+  const yLbls=`<text x="${pL-4}" y="${(pT+6).toFixed(0)}" text-anchor="end" font-size="9" fill="#94a3b8">${fmt(max)}</text>`
+             +`<text x="${pL-4}" y="${(pT+cH).toFixed(0)}" text-anchor="end" font-size="9" fill="#94a3b8">${fmt(min)}</text>`;
+  const xLbls=labels.map((l,i)=>{
+    if(n>=6&&i>0&&i<n-1&&i%2!==0)return''; // skip odd intermediates when crowded
+    const lbl=l.replace('·20',"'"); // "Q1·2026"→"Q1'26" always
+    const anchor=i===0?'start':i===n-1?'end':'middle';
+    return`<text x="${cx(i).toFixed(1)}" y="${H-3}" text-anchor="${anchor}" font-size="9" fill="#94a3b8">${e(lbl)}</text>`;
+  }).join('');
+  // Area fill uses neutral tint — segments carry the colour story
+  const solidPts=values.map((v,i)=>`${cx(i).toFixed(1)},${cy(v).toFixed(1)}`);
+  // Per-segment fills (trapezoid under each segment) + coloured lines
+  const bot=(pT+cH).toFixed(1);
+  function segFill(sc){return sc==='#22c55e'?'rgba(34,197,94,.15)':sc==='#ef4444'?'rgba(239,68,68,.15)':'rgba(148,163,184,.08)';}
+  const fills=[],segs=[];
+  for(let i=0;i<n-1;i++){
+    const x1=cx(i).toFixed(1),y1=cy(values[i]).toFixed(1);
+    const x2=cx(i+1).toFixed(1),y2=cy(values[i+1]).toFixed(1);
+    const isWipSeg=lastIsWip&&i===n-2;
+    if(isWipSeg){
+      fills.push(`<polygon points="${x1},${bot} ${x1},${y1} ${x2},${y2} ${x2},${bot}" fill="rgba(148,163,184,.06)"/>`);
+      segs.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>`);
+    }else{
+      const sc=segCol(values[i+1]-values[i]);
+      fills.push(`<polygon points="${x1},${bot} ${x1},${y1} ${x2},${y2} ${x2},${bot}" fill="${segFill(sc)}"/>`);
+      segs.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${sc}" stroke-width="2" stroke-linecap="round"/>`);
+    }
+  }
+  // Dots coloured by incoming segment direction
+  const dots=values.map((v,i)=>{
+    const isLast=i===n-1,isWip=isLast&&lastIsWip;
+    const tip=tipVals?tipVals[i]:'';
+    const tipAttr=tip?` data-tip="${tip}"`:'';
+    const hit=`<circle cx="${cx(i).toFixed(1)}" cy="${cy(v).toFixed(1)}" r="10" fill="transparent"${tipAttr}/>`;
+    const dc=i>0&&!isWip?segCol(values[i]-values[i-1]):'#94a3b8';
+    let dot;
+    if(isWip)dot=`<circle cx="${cx(i).toFixed(1)}" cy="${cy(v).toFixed(1)}" r="4" fill="var(--surface)" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="2,2"/>`;
+    else dot=`<circle cx="${cx(i).toFixed(1)}" cy="${cy(v).toFixed(1)}" r="${isLast?4:2.5}" fill="${isLast?dc:'var(--surface)'}" stroke="${dc}" stroke-width="1.5"/>`;
+    return hit+dot;
+  }).join('');
+  return`<svg viewBox="0 0 ${W} ${H}" style="width:100%;display:block" xmlns="http://www.w3.org/2000/svg">`
+    +grid+yLbls
+    +fills.join('')
+    +segs.join('')
+    +dots+xLbls+`</svg>`;
+}
+
+function trendNote(compVals,fmt,hi,lastIsWip){
+  if(compVals.length<2)return'';
+  const first=compVals[0],last=compVals[compVals.length-1];
+  const d=last-first;
+  const nq=compVals.length;
+  const span=nq+' quarter'+(nq!==1?'s':'');
+  const fv=fmt(typeof first==='number'&&!Number.isInteger(first)?+first.toFixed(1):first);
+  const lv=fmt(typeof last==='number'&&!Number.isInteger(last)?+last.toFixed(1):last);
+  if(Math.abs(d)<0.05)return`Held steady at ${lv} across ${span}.`;
+  const improving=hi===null?null:(hi?d>=0:d<=0);
+  const dir=d>0?'Up':'Down';
+  const suffix=hi===null?'':(improving?' — trending well.':' — needs attention.');
+  return`${dir} from ${fv} to ${lv} across ${span}.${suffix}`;
+}
+
+function renderTrends(){
+  const now=new Date();
+  const curLabel=`Q${Math.floor(now.getMonth()/3)+1} ${now.getFullYear()}`;
+  // All quarters oldest→newest; keep last trendWindow, always append current if present
+  const allOldestFirst=Object.keys(QS).slice().reverse();
+  const completed=allOldestFirst.filter(q=>q!==curLabel);
+  const hasCurrent=QS[curLabel]!==undefined;
+  const windowed=completed.slice(-trendWindow);
+  // If current quarter exists, append it (marked WIP) but only if we have room or it's the only one
+  const qs=hasCurrent?[...windowed,curLabel]:windowed;
+  const lastIsWip=hasCurrent;
+  if(qs.length<2)return'<div class="nodata">At least 2 quarters of data needed for trend charts.</div>';
+  const M=[
+    {k:'completion_rate',       lbl:'Completion Rate',    fmt:v=>v+'%', hi:true,
+     desc:'% of sprint items that reached Done. Core measure of delivery against commitment.'},
+    {k:'completed',             lbl:'Items Completed',    fmt:v=>v,     hi:true,
+     desc:'Total issues moved to Done across all sprints in the quarter.'},
+    {k:'total',                 lbl:'Total Items',        fmt:v=>v,     hi:true,
+     desc:'All issues across the quarter\'s sprints, regardless of status.'},
+    {k:'releases_shipped',      lbl:'Releases Shipped',   fmt:v=>v,     hi:true,
+     desc:'Number of fix versions marked as released — proxy for customer-facing delivery.'},
+    {k:'oos_pct',               lbl:'OOS Rate',           fmt:v=>v+'%', hi:false,
+     since:'Q2 2025', sinceNote:'Out-of-Sprint tracking introduced',
+     desc:'% of items added to a sprint after it started (Out Of Sprint label). High values indicate scope creep or poor planning.'},
+    {k:'bug_pct',               lbl:'Bug %',              fmt:v=>v+'%', hi:false,
+     desc:'Bugs as a % of all sprint items. Rising trend signals quality or tech-debt concerns.'},
+    {k:'time_logged_h',         lbl:'Hours Logged',       fmt:v=>v+'h', hi:true,
+     autoSince:true, sinceNote:'Time logging adopted',
+     desc:'Total hours logged against sprint items. Low values may indicate poor time-tracking discipline.'},
+    {k:'estimate_accuracy_pct', lbl:'Estimate Accuracy',  fmt:v=>v+'%', hi:true,
+     autoSince:true, sinceNote:'Time tracking adopted',
+     desc:'How closely logged hours matched estimates (100% = exact). Measures planning discipline, not effort.'},
+    {k:'no_estimate_pct',       lbl:'Missing Estimates',  fmt:v=>v+'%', hi:false,
+     autoSince:true, autoSinceKey:'time_logged_h', sinceNote:'Time tracking adopted',
+     desc:'% of items with no time estimate set. High values undermine sprint planning and capacity tracking.'},
+    {k:'rollover_pct',          lbl:'Rollover Rate',      fmt:v=>v+'%', hi:false,
+     desc:'% of items from closed sprints still not completed. High values suggest over-commitment or items abandoned without resolution.'},
+    {k:'avg_cycle_days',        lbl:'Avg Cycle Time',     fmt:v=>v+'d', hi:false,
+     desc:'Average days from "In Progress" to Done for completed items. Excludes items closed without being worked on.'},
+    {k:'tickets_per_day',       lbl:'Tickets / Day',      fmt:v=>v,     hi:true,
+     desc:'Completed items divided by calendar days elapsed in the quarter. Normalises velocity across quarters of different lengths.'},
+  ];
+  const wipNote=hasCurrent?`<p style="font-size:12px;color:var(--muted);margin-bottom:16px">` +
+    `<span style="display:inline-flex;align-items:center;gap:6px">` +
+    `<svg width="24" height="10" viewBox="0 0 24 10"><line x1="0" y1="5" x2="24" y2="5" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"/></svg>` +
+    `${e(curLabel)} is in progress — shown dashed, excluded from trend direction.</span></p>`:'';
+  const winOpts=[{w:4,l:'4Q'},{w:6,l:'6Q'},{w:8,l:'8Q'},{w:9999,l:'All'}];
+  const winCtrl='<div class="trend-controls"><span>Show:</span>'
+    +winOpts.map(o=>`<button class="twb${trendWindow===o.w?' active':''}" data-w="${o.w}">${o.l}</button>`).join('')
+    +'</div>';
+  function qOrd(q){const[qn,yr]=q.split(' ');return+yr*4+(+qn[1]);}
+  function firstNonZero(allQs,k){for(const q of allQs){if(+(QS[q]?.kpis[k]??0)>0)return q;}return null;}
+  return '<div class="pane-title">Trends</div>'
+    +'<div class="pane-desc">Quarter-on-quarter movement across key metrics. Green = improving, red = declining.</div>'
+    +winCtrl+wipNote+'<div class="trend-grid">'+M.map(m=>{
+    // Per-metric since filtering — exclude quarters before this metric was tracked
+    const mSince=m.since||(m.autoSince?firstNonZero(qs,m.autoSinceKey||m.k):null);
+    const sinceOrd=mSince?qOrd(mSince):0;
+    const mQs=sinceOrd?qs.filter(q=>qOrd(q)>=sinceOrd):qs;
+    const mLbls=mQs.map(q=>q.replace(' ','·'));
+    const mLastIsWip=lastIsWip&&mQs[mQs.length-1]===curLabel;
+    const trimmed=mQs.length<qs.length;
+    const vals=mQs.map(q=>+(QS[q]?.kpis[m.k]??0));
+    // Delta uses last 2 completed points only
+    const compVals=mLastIsWip?vals.slice(0,-1):vals;
+    const cur=compVals[compVals.length-1]??vals[vals.length-1];
+    const prev=compVals[compVals.length-2]??cur;
+    const d=cur-prev;
+    const improving=m.hi===null?null:(m.hi?d>=0:d<=0);
+    let dcls='flat',dstr='—';
+    if(d!==0){
+      dcls=m.hi===null?'flat':improving?'pos':'neg';
+      dstr=(d>0?'+':'')+(Number.isInteger(d)?d:d.toFixed(1));
+    }
+    const dispVal=mLastIsWip?vals[vals.length-1]:cur;
+    const wipSub=mLastIsWip?`<div class="trend-val-sub">${e(mQs[mQs.length-1])} · in progress</div>`:'';
+    // For the releases card, show the last release date of the displayed quarter
+    let extraSub='';
+    if(m.k==='releases_shipped'){
+      const dispQ=mLastIsWip?mQs[mQs.length-1]:(mQs[compVals.length-1]||mQs[mQs.length-1]);
+      const lrd=(QS[dispQ]?.kpis?.last_release_date)||'';
+      if(lrd)extraSub=`<div class="trend-val-sub">last: ${e(lrd)}</div>`;
+    }
+    const prevQ=compVals.length>=2?mQs[compVals.length-2]:null;
+    const curQ =compVals.length>=1?mQs[compVals.length-1]:null;
+    const deltaLbl=prevQ&&curQ?`<div class="delta-lbl">${e(prevQ)} → ${e(curQ)}</div>`:'';
+    const note=trendNote(compVals,m.fmt,m.hi,mLastIsWip);
+    const tipVals=mQs.map((q,i)=>q+': '+m.fmt(vals[i]));
+    const infoIcon=m.desc?`<span class="trend-info" data-tip="${e(m.desc)}">&#x2139;</span>`:'';
+    const sinceNote=trimmed?`<div class="trend-note" style="opacity:.7">&#x2139; ${e(m.sinceNote)} — data from ${e(mSince||'')} onwards.</div>`:'';
+    if(mQs.length<2)return`<div class="trend-card"><div class="trend-lbl">${e(m.lbl)}${infoIcon}</div>`
+      +`<p style="font-size:12px;color:var(--muted);padding:12px 0">Not enough data</p>${sinceNote}</div>`;
+    return`<div class="trend-card">`
+      +`<div class="trend-hdr"><div><div class="trend-lbl">${e(m.lbl)}${infoIcon}</div>`
+      +`<div class="trend-val">${e(String(m.fmt(dispVal)))}</div>`
+      +wipSub+extraSub
+      +`</div><div style="text-align:right;flex-shrink:0">${deltaLbl}<span class="trend-delta ${dcls}">${e(dstr)}</span></div></div>`
+      +mkLineChart(vals,mLbls,m.hi,mLastIsWip,tipVals)
+      +(note?`<div class="trend-note">${e(note)}</div>`:'')
+      +sinceNote
+      +`</div>`;
+  }).join('')+'</div>';
+}
+
+/* ---- Init ---- */
+if(!ordered.length){
+  document.getElementById("dash").innerHTML=`<div class="nodata">No quarter data available.</div>`;
+}else{render(ordered[0]);}
+
+/* ---- Trend window selector ---- */
+document.body.addEventListener('click',ev=>{
+  const btn=ev.target.closest('.twb');
+  if(!btn)return;
+  trendWindow=+btn.dataset.w;
+  const pane=document.querySelector('[data-pane="trends"]');
+  if(pane)pane.innerHTML=renderTrends();
+});
+
+/* ---- Hover tooltip for chart data points ---- */
+document.body.addEventListener('mousemove',ev=>{
+  const t=ev.target.closest('[data-tip]');
+  const tt=document.getElementById('tt');
+  if(t){
+    tt.textContent=t.dataset.tip;
+    tt.classList.add('vis');
+    // Position above cursor, clamped so it never bleeds off screen edges
+    const pad=8,vw=window.innerWidth,vh=window.innerHeight;
+    const tw=tt.offsetWidth,th=tt.offsetHeight;
+    let x=ev.clientX-tw/2;
+    let y=ev.clientY-th-12;
+    if(x<pad)x=pad;
+    if(x+tw>vw-pad)x=vw-tw-pad;
+    if(y<pad)y=ev.clientY+18; // flip below cursor if too close to top
+    tt.style.left=x+'px';
+    tt.style.top=y+'px';
+  }else{
+    tt.classList.remove('vis');
+  }
+});
+</script>
+<div id="tt"></div>
+</body>
+</html>
