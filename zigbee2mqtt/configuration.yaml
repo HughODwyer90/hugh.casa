@@ -1,0 +1,153 @@
+homeassistant:
+  enabled: true
+  legacy_action_sensor: true
+  experimental_event_entities: true
+serial:
+  adapter: ember
+  port: /dev/ttyACM0
+  baudrate: 460800
+  rtscts: false
+advanced:
+  network_key:
+    - 226
+    - 249
+    - 156
+    - 238
+    - 247
+    - 245
+    - 224
+    - 248
+    - 10
+    - 190
+    - 198
+    - 30
+    - 95
+    - 58
+    - 147
+    - 194
+  pan_id: 29851
+  ext_pan_id:
+    - 182
+    - 228
+    - 171
+    - 75
+    - 163
+    - 79
+    - 235
+    - 87
+  log_syslog:
+    app_name: Zigbee2MQTT
+    eol: /n
+    host: localhost
+    localhost: localhost
+    path: /dev/log
+    pid: process.pid
+    port: 514
+    protocol: udp4
+    type: '5424'
+  channel: 25
+frontend:
+  enabled: true
+  port: 8099
+device_options: {}
+mqtt:
+  server: mqtt://core-mosquitto:1883
+  user: addons
+  password: Bofaht2waiwoorohniemees3thiBeequa6uPheCi3uSh6fieraeNgiukiki5thuu
+devices:
+  '0x001788010b72e620':
+    friendly_name: Hugh Room Phillips Switch
+    icon: device_icons/19d8d502f0acd3ff56e59fc2c6d7ccb9.jpeg
+  '0x0017880109a49868':
+    friendly_name: Living Room Phillips Switch
+    icon: device_icons/19d8d502f0acd3ff56e59fc2c6d7ccb9.jpeg
+  '0x001788010cd9b70d':
+    friendly_name: Hall Motion
+    icon: device_icons/f272a01b5398049e96547b57907588da.jpeg
+  '0x001788010cd9b7c9':
+    friendly_name: Bathroom Motion
+    temperature_calibration: -1
+  '0x70b3d52b60050eec':
+    friendly_name: Hugh Room Plug Fan Desk
+  '0x70b3d52b60050a0d':
+    friendly_name: PC Plug
+    measurement_poll_interval: 30
+  '0x001788010bab926f':
+    friendly_name: Bathroom Ceiling
+  '0x00158d000ad941df':
+    friendly_name: Living Room Aqara Button
+  '0x00158d000ad94230':
+    friendly_name: Hugh Room Aqara Bed Button
+  '0x00158d000ad92bda':
+    friendly_name: Hugh Room Aqara Door Button
+  '0x00158d000ae47813':
+    friendly_name: Bathroom Vibration Sensor
+    vibration_timeout: 10
+  '0x00158d000ad94234':
+    friendly_name: Hugh Room Desk Aqara Button
+  '0x70b3d52b60050a8e':
+    friendly_name: Hugh Room Plug Blanket
+  '0x70b3d52b60050a91':
+    friendly_name: Hugh Room Plug Fan Bed
+  '0x00158d000adc03df':
+    friendly_name: Bathroom Aqara
+    temperature_calibration: -0.8
+    temperature_precision: 1
+    humidity_precision: 1
+  '0x980c33fffeffc9ac':
+    friendly_name: Living Room Bookshelf
+  '0x001788010cd40ea2':
+    friendly_name: Hall Wall 1
+  '0x001788010cd40ac4':
+    friendly_name: Hall Wall 3
+  '0x001788010d2d0c87':
+    friendly_name: Hall Wall 2
+  '0x001788010d05b5c8':
+    friendly_name: Hall Ceiling 1
+  '0x001788010cd4286f':
+    friendly_name: Hall Ceiling 2
+  '0x001788010ba96029':
+    friendly_name: Hugh Room Lamp
+  '0xa4c138e45e2b3cf5':
+    friendly_name: Kitchen Ceiling 2
+  '0xa4c13815024a2c97':
+    friendly_name: Kitchen Ceiling 3
+  '0xa4c13835a461c353':
+    friendly_name: Kitchen Ceiling 4
+  '0x00158d008c7eb195':
+    friendly_name: Coffee Table
+    device_temperature_calibration: -3.8
+  '0x980c33fffef16332':
+    friendly_name: Living Room Floor lamp
+  '0x001788010e67fbf4':
+    friendly_name: Hall Console
+  '0x00158d008c7c3b77':
+    friendly_name: Dining table vibration
+  '0xa4c13868fb7bcf5d':
+    friendly_name: Utility Motion
+  '0xa4c1386d83900c6b':
+    friendly_name: Master Blind
+  '0x001788010ba9511c':
+    friendly_name: Dining Room Table
+  '0x0017880106a161da':
+    friendly_name: Living Room Coffee Table
+  '0xa4c138b296bcde6c':
+    friendly_name: Kitchen Ceiling 1
+  '0x001788010e67f355':
+    friendly_name: Utility Ceiling
+  '0xa4c138b9c6cdb353':
+    friendly_name: Kitchen Cabinet
+version: 5
+groups:
+  '1':
+    friendly_name: Kitchen Lights
+    homeassistant:
+      name: Kitchen Lights
+  '2':
+    friendly_name: Living Room Lights
+    homeassistant:
+      name: Living Room Lights
+  '3':
+    friendly_name: Dimmers
+  '4':
+    friendly_name: Hallway
