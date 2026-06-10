@@ -13,6 +13,7 @@ HA_BASE_URL = "http://homeassistant.local:8123"
 EXCLUDED_DIRS = {
     ".storage",
     ".cache",
+    ".cloud",
     ".vscode",
     "blueprints",
     "custom_components"
