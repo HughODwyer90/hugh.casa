@@ -4809,6 +4809,8 @@
       total: '{{ lights | count }}'
       on_lights: '{{ lights | select(''is_state'', ''on'') | list }}'
       off_lights: '{{ lights | select(''is_state'', ''off'') | list }}'
+  - condition: template
+    value_template: '{{ lights | count > 1 }}'
   - choose:
     - conditions:
       - condition: template
