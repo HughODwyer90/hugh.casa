@@ -734,6 +734,7 @@ function render(qk,activeTab){
             ?`project = ${PROJ_KEY} AND sprint in (${ids}) AND assignee = "${e(a.account_id)}" ORDER BY status ASC`
             :`project = ${PROJ_KEY} AND sprint in (${ids}) AND assignee is EMPTY ORDER BY status ASC`;
           let nameCell;
+          const partialTag=a.team_period?`<span class="trend-info" data-tip="${e(a.team_period)}" style="margin-left:5px">&#x2139;</span>`:'';
           if(jb){
             nameCell=`<a class="assignee-link" href="${e(jb+'/issues/?jql='+encodeURIComponent(jql))}" target="_blank">${e(a.name)}</a>`;
           } else {
@@ -758,7 +759,7 @@ function render(qk,activeTab){
           if(useSp){
             const spt=a.sp_total||0;
             const expandRow=hasPersonWlog?`<tr id="${rowId}" style="display:none"><td colspan="6" style="padding:12px 16px;background:var(--surface)">${(()=>{const sprintDates=(()=>{if(!activeSprint)return null;const s=(sprints||[]).find(s=>String(s.id)===activeSprint);return s?{start:s.start_date,end:s.end_date||String(new Date().toISOString().slice(0,10))}:null;})();return renderWorklogChart(wlog[a.account_id],jb,sprintDates);})()}</td></tr>`:'';
-            return`<tr><td>${nameCell}${chevron}</td><td style="text-align:center">${e(String(a.total))}</td><td style="text-align:center">${e(String(a.completed))}</td><td style="text-align:center"><span class="b ${ratC==="green"?"bd":ratC==="yellow"?"bmed":"bbug"}">${e(a.completion_rate+"%")}</span></td><td style="min-width:140px">${bar}</td><td style="text-align:center;color:var(--muted)">${e(spt>0?String(spt):'—')}</td></tr>${expandRow}`;
+            return`<tr><td>${nameCell}${chevron}${partialTag}</td><td style="text-align:center">${e(String(a.total))}</td><td style="text-align:center">${e(String(a.completed))}</td><td style="text-align:center"><span class="b ${ratC==="green"?"bd":ratC==="yellow"?"bmed":"bbug"}">${e(a.completion_rate+"%")}</span></td><td style="min-width:140px">${bar}</td><td style="text-align:center;color:var(--muted)">${e(spt>0?String(spt):'—')}</td></tr>${expandRow}`;
           }
           const accVal=(a.logged_h>0&&a.estimated_h>0)
             ?Math.round(Math.min(a.logged_h,a.estimated_h)/Math.max(a.logged_h,a.estimated_h)*100)
@@ -769,7 +770,7 @@ function render(qk,activeTab){
               ?`<span style="color:var(--muted)">${accVal}%</span>`
               :`<span class="b ${accVal>=80?'bd':accVal>=60?'bmed':'bbug'}">${accVal}%</span>`;
           const expandRow=hasPersonWlog?`<tr id="${rowId}" style="display:none"><td colspan="7" style="padding:12px 16px;background:var(--surface)">${(()=>{const sprintDates=(()=>{if(!activeSprint)return null;const s=(sprints||[]).find(s=>String(s.id)===activeSprint);return s?{start:s.start_date,end:s.end_date||String(new Date().toISOString().slice(0,10))}:null;})();return renderWorklogChart(wlog[a.account_id],jb,sprintDates);})()}</td></tr>`:'';
-          return`<tr><td>${nameCell}${chevron}</td><td style="text-align:center">${e(String(a.total))}</td><td style="text-align:center">${e(String(a.completed))}</td><td style="text-align:center"><span class="b ${ratC==="green"?"bd":ratC==="yellow"?"bmed":"bbug"}">${e(a.completion_rate+"%")}</span></td><td style="min-width:140px">${bar}</td><td style="text-align:center;color:var(--muted)">${e(a.estimated_h>0?a.estimated_h+'h':'—')}</td><td style="text-align:center">${accInner}</td></tr>${expandRow}`;
+          return`<tr><td>${nameCell}${chevron}${partialTag}</td><td style="text-align:center">${e(String(a.total))}</td><td style="text-align:center">${e(String(a.completed))}</td><td style="text-align:center"><span class="b ${ratC==="green"?"bd":ratC==="yellow"?"bmed":"bbug"}">${e(a.completion_rate+"%")}</span></td><td style="min-width:140px">${bar}</td><td style="text-align:center;color:var(--muted)">${e(a.estimated_h>0?a.estimated_h+'h':'—')}</td><td style="text-align:center">${accInner}</td></tr>${expandRow}`;
         }
         const thead=useSp
           ?`<thead><tr>
