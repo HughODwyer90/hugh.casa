@@ -1,5 +1,20 @@
 const PROJ_KEYS=Object.keys(ALL_DATA);
 
+// Cloudflare Access — decode CF_Authorization JWT to get current user's email
+// JWT payload is the second base64url segment; no signature verification needed client-side
+(function(){
+  try{
+    const jwt=(document.cookie.split(';').map(c=>c.trim()).find(c=>c.startsWith('CF_Authorization='))||'').replace('CF_Authorization=','');
+    if(!jwt)return;
+    const payload=JSON.parse(atob(jwt.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+    const email=(payload.email||'').toLowerCase();
+    if(!email.endsWith('@datamars.com'))return;
+    window._cfUserEmail=email;
+    // Admin check deferred to render time — wlog_admins comes from per-project data
+    window._cfUserSlug=email.replace('@datamars.com','').replace('.',' ');
+  }catch(ex){}
+})();
+
 // Persisted state via URL hash — format: #PROJ:tab  e.g. #DLK:trends
 // Hash survives refresh automatically; no storage API required.
 const _OOS_ONLY_TABS=["oosopen","oos"];
@@ -725,10 +740,20 @@ function render(qk,activeTab){
             nameCell=`<span style="font-weight:500">${e(a.name)}</span>`;
           }
           // Chevron toggle for inline worklog chart
+          // Cloudflare user slug: "hugh odwyer" — matched against display name case-insensitively
           const hasPersonWlog=hasWlog&&a.account_id&&wlog[a.account_id];
           const rowId=`wlog-row-${e(a.account_id||a.name).replace(/[^a-z0-9]/gi,'_')}`;
+          const cfEmail=window._cfUserEmail||null;
+          const cfSlug=window._cfUserSlug||null;
+          const isAdmin=!WLOG_ADMINS||WLOG_ADMINS.length===0||(cfEmail&&WLOG_ADMINS.map(e=>e.toLowerCase()).includes(cfEmail));
+          const nameSlug=a.name?a.name.toLowerCase():null;
+          const isOwnRow=!cfSlug||!nameSlug||isAdmin||nameSlug===cfSlug;
+          const chevronSvgDown=`<svg width='10' height='10' viewBox='0 0 10 10'><path d='M1 3 L5 7 L9 3' stroke='currentColor' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>`;
+          const chevronSvgUp=`<svg width='10' height='10' viewBox='0 0 10 10'><path d='M1 7 L5 3 L9 7' stroke='currentColor' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>`;
           const chevron=hasPersonWlog
-            ?`<button onclick="(function(){var r=document.getElementById('${rowId}');var c=r.previousSibling.querySelector('.wlog-chev');var open=r.style.display==='none';r.style.display=open?'table-row':'none';c.setAttribute('data-open',open?'1':'');c.innerHTML=open?'<svg width=\\'10\\' height=\\'10\\' viewBox=\\'0 0 10 10\\'><path d=\\'M1 3 L5 7 L9 3\\' stroke=\\'currentColor\\' stroke-width=\\'1.5\\' fill=\\'none\\' stroke-linecap=\\'round\\'/></svg>':'<svg width=\\'10\\' height=\\'10\\' viewBox=\\'0 0 10 10\\'><path d=\\'M1 7 L5 3 L9 7\\' stroke=\\'currentColor\\' stroke-width=\\'1.5\\' fill=\\'none\\' stroke-linecap=\\'round\\'/></svg>';})()" style="background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--muted);padding:2px 4px;margin-left:6px;vertical-align:middle;line-height:0;display:inline-flex;align-items:center" class="wlog-chev"><svg width='10' height='10' viewBox='0 0 10 10'><path d='M1 7 L5 3 L9 7' stroke='currentColor' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg></button>`
+            ?(isOwnRow
+              ?`<button onclick="(function(){var r=document.getElementById('${rowId}');var c=r.previousSibling.querySelector('.wlog-chev');var open=r.style.display==='none';r.style.display=open?'table-row':'none';c.setAttribute('data-open',open?'1':'');c.innerHTML=open?'${chevronSvgDown.replace(/'/g,"\\'")}':'${chevronSvgUp.replace(/'/g,"\\'")}\';})()" style="background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--muted);padding:2px 4px;margin-left:6px;vertical-align:middle;line-height:0;display:inline-flex;align-items:center" class="wlog-chev">${chevronSvgUp}</button>`
+              :`<button onclick="(function(){var tt=document.getElementById('cf-access-notice');tt.style.display='flex';setTimeout(function(){tt.style.display='none';},3000);})()" style="background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--border);padding:2px 4px;margin-left:6px;vertical-align:middle;line-height:0;display:inline-flex;align-items:center" title="You can only view your own time log" class="wlog-chev">${chevronSvgUp}</button>`)
             :'';
           if(useSp){
             const spt=a.sp_total||0;
