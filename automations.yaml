@@ -1294,19 +1294,11 @@
       entity_id: scene.hugh_room_all_lights_off
     data:
       transition: 1
-  - action: script.set_purifier_speed
-    data:
-      level: high
-  - action: input_select.select_option
-    target:
-      entity_id: input_select.hugh_room_blinds_mode
-    data:
-      option: Open
   - action: switch.turn_off
     target:
       entity_id:
       - switch.hugh_room_plug_fan_bed
-      - switch.hugh_room_plug_fan_desk
+    data: {}
   - action: media_player.media_stop
     metadata: {}
     data: {}
@@ -3236,57 +3228,33 @@
     action: input_datetime.set_datetime
   mode: single
 - id: '1759692786195'
-  alias: Auto Unoccupy Room
-  description: 'Marks room unoccupied when all sensors are off and phone is gone for
-    5 min (RSSI ignored if battery ≤ 10%).
+  alias: Hugh Room Occupied Off
+  description: 'Turns off all lights, sets purifier to High, opens blinds, and powers
+    off fans when the room becomes unoccupied.
 
     '
   triggers:
   - trigger: state
-    entity_id:
-    - binary_sensor.pc_status
-    - binary_sensor.master_bedroom_tv_state
-    - binary_sensor.bed_sensor
-    - sensor.phone_ble_rssi
-    enabled: false
-  - trigger: time_pattern
-    minutes: /1
-  conditions:
-  - condition: state
     entity_id: input_boolean.hugh_room_occupied
-    state: 'on'
-  - condition: state
-    entity_id: input_boolean.wake_up_alarm_running
-    state: 'off'
-  - condition: template
-    value_template: "{% set ents = expand([\n  'binary_sensor.pc_status',\n  'binary_sensor.master_bedroom_tv_state',\n
-      \ 'binary_sensor.bed_sensor'\n])  | rejectattr('state','in',['unknown','unavailable','None'])
-      \ | list %}\n{% set all_off = (ents | selectattr('state','eq','off') | list
-      | count)\n                 == (ents | count) %}\n\n{# battery + charging #}
-      {% set batt = states('sensor.hugh_phone_battery_level') | float(default=0) %}
-      {% set batt_threshold = 2 %} {% set charger = states('sensor.hugh_phone_charger_type')
-      %} {% set is_charging = charger == 'ac' %}\n{# PHONE GONE LOGIC #} {% if is_charging
-      %}\n  {% set phone_gone = false %}\n{% else %}\n  {% if batt <= batt_threshold
-      %}\n    {% set phone_gone = true %}\n  {% else %}\n    {% set phone_state =
-      states('sensor.phone_ble_rssi') %}\n    {% set phone_rssi  = phone_state | float(default=-200)
-      %}\n    {% set phone_gone  = phone_state in ['unknown','unavailable'] or phone_rssi
-      < -105 %}\n  {% endif %}\n{% endif %}\n{# 5-MINUTE CHECKS #} {% set five = 5
-      * 60 %}\n{% set all_bins_5m =\n   (ents | selectattr('last_changed','<=', now()
-      - timedelta(seconds=five))\n         | list | count)\n   == (ents | count) %}\n\n{%
-      if is_charging %}\n  {% set phone_5m = false %}\n{% elif batt <= batt_threshold
-      %}\n  {% set phone_5m = true %}\n{% else %}\n  {% set phone_5m =\n     (states.sensor.phone_ble_rssi.last_changed
-      is defined)\n     and\n     (states.sensor.phone_ble_rssi.last_changed\n      <=
-      now() - timedelta(seconds=five)) %}\n{% endif %}\n{{ all_off and phone_gone
-      and all_bins_5m and phone_5m }}\n"
-  - condition: not
-    conditions:
-    - condition: state
-      entity_id: sensor.hugh_phone_charger_type
-      state: ac
+    to: 'off'
+    for:
+      seconds: 5
   actions:
-  - action: input_boolean.turn_off
+  - action: scene.turn_on
     target:
-      entity_id: input_boolean.hugh_room_occupied
+      entity_id: scene.hugh_room_all_lights_off
+    data:
+      transition: 1
+  - action: switch.turn_off
+    target:
+      entity_id:
+      - switch.hugh_room_plug_fan_bed
+    data: {}
+  - action: media_player.media_stop
+    metadata: {}
+    data: {}
+    target:
+      entity_id: media_player.master_bedroom_display_g
   mode: single
 - id: '1760189837022'
   alias: Hugh Room Occupancy Control
