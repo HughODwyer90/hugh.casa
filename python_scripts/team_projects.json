@@ -7,10 +7,11 @@
         "reports_dir":                "/config/www/dlk",
         "use_story_points":           false,
         "use_oos":                    true,
+        "fetch_worklogs":             true,
         "story_points_field":         "",
         "excluded_done_statuses":     [],
         "excluded_done_labels":       ["Archive"],
-        "excluded_summary_contains":  ["buffer work"],
+        "excluded_summary_contains":  [],
         "notes_context":              "Web platform team. Multiple releases per sprint is normal and healthy. Done items labelled Archive are excluded from completion counts as they represent rejected or archived scope."
     },
     {
@@ -21,6 +22,7 @@
         "reports_dir":                "/config/www/nda",
         "use_story_points":           false,
         "use_oos":                    true,
+        "fetch_worklogs":             true,
         "story_points_field":         "",
         "excluded_done_statuses":     [],
         "excluded_done_labels":       [],
@@ -35,10 +37,11 @@
         "reports_dir":                "/config/www/pem",
         "use_story_points":           true,
         "use_oos":                    false,
+        "fetch_worklogs":             true,
         "story_points_field":         "customfield_13202",
         "excluded_done_statuses":     ["Rejected"],
         "excluded_done_labels":       [],
-        "excluded_summary_contains":  [],
+        "excluded_summary_contains":  ["buffer work"],
         "notes_context":              "PEM (PetLink Everywhere) mobile app team. Uses story points (not time estimates). Rejected items are excluded from completion counts — they represent cancelled or rejected scope, not delivered work. Buffer work tasks are excluded from all KPIs and reports."
     }
 ]
