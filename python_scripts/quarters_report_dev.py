@@ -87,8 +87,9 @@ def _load_team(filename):
             result[aid] = entry
     return result
 
-def _is_team_member(team_map, account_id, quarter_start_str):
-    """Return True if account_id is a team member as of the given quarter start date.
+def _is_team_member(team_map, account_id, quarter_start_str, quarter_end_str=None):
+    """Return True if account_id is a team member during the given quarter.
+    A person is a team member if their membership period overlaps the quarter at all.
     Supports three formats:
       - no since/periods: always a member
       - since (+ optional until): single period
@@ -97,20 +98,20 @@ def _is_team_member(team_map, account_id, quarter_start_str):
     entry = team_map.get(account_id)
     if not entry:
         return False
+    q_end = quarter_end_str or "9999-12-31"
     periods = entry.get("periods")
     if periods:
         for p in periods:
             s = p.get("since") or ""
             u = p.get("until") or "9999-12-31"
-            if (not s or s <= quarter_start_str) and quarter_start_str <= u:
+            # Overlap: membership starts before quarter ends AND ends after quarter starts
+            if (not s or s <= q_end) and u >= quarter_start_str:
                 return True
         return False
     # Simple since/until format
     since = entry.get("since") or ""
     until = entry.get("until") or "9999-12-31"
-    if since and since > quarter_start_str:
-        return False
-    return quarter_start_str <= until
+    return (not since or since <= q_end) and until >= quarter_start_str
 
 def _load_projects(filename="team_projects.json"):
     """Load project configuration from a JSON file beside this script.
@@ -668,7 +669,7 @@ def _compute_per_sprint(sprints, all_issues, in_progress_statuses, proj,
         s_assignee_stats = sorted([{
             "name":            a,
             "account_id":      v["account_id"],
-            "is_team":         _is_team_member(proj["team_map"], v["account_id"], quarter_start_str or ""),
+            "is_team":         _is_team_member(proj["team_map"], v["account_id"], quarter_start_str or "", sprint.get("end_date") or quarter_start_str or ""),
             "total":           v["total"],
             "completed":       v["completed"],
             "logged_h":        round(v["logged_s"] / 3600, 1),
@@ -960,11 +961,38 @@ def fetch_kpis(sprints, proj, ref=None, prev_sprint_id=None, prev_sprint_end=Non
             assignee_map[a]["sp_completed"] += sp_val
         assignee_map[a]["logged_s"]    += i["fields"].get("timespent") or 0
         assignee_map[a]["estimated_s"] += i["fields"].get("timeoriginalestimate") or 0
+    def _team_period_label(team_map, account_id, qs, qe):
+        """Return a short label like 'from May 25' / 'until Jun 12' / 'partial' if the
+        member was not on the team for the full quarter, else None."""
+        entry = team_map.get(account_id)
+        if not entry:
+            return None
+        def fmt(d):
+            import datetime
+            try: return datetime.date.fromisoformat(d).strftime("%-d %b") if d else None
+            except Exception: return None
+        periods = entry.get("periods")
+        if periods:
+            # Multiple stints — always partial
+            parts = []
+            for p in periods:
+                s, u = p.get("since"), p.get("until")
+                if s and s > str(qs): parts.append(f"from {fmt(s) or s}")
+                if u and u < str(qe): parts.append(f"until {fmt(u) or u}")
+            return ", ".join(parts) if parts else "partial"
+        since = entry.get("since")
+        until = entry.get("until")
+        parts = []
+        if since and since > str(qs): parts.append(f"since {fmt(since) or since}")
+        if until and until < str(qe): parts.append(f"until {fmt(until) or until}")
+        return ", ".join(parts) if parts else None
+
     assignee_stats = sorted([
         {
             "name":            a,
             "account_id":      v["account_id"],
-            "is_team":         _is_team_member(proj["team_map"], v["account_id"], str(qs_date)),
+            "is_team":         _is_team_member(proj["team_map"], v["account_id"], str(qs_date), str(qe_date)),
+            "team_period":     _team_period_label(proj["team_map"], v["account_id"], qs_date, qe_date),
             "total":           v["total"],
             "completed":       v["completed"],
             "logged_h":        round(v["logged_s"] / 3600, 1),
@@ -1492,6 +1520,7 @@ __PREVIEW_BANNER__
       <div class="proj-tabs" id="proj-tabs"></div>
       <div class="as-of" id="as-of"></div>
       <button id="refresh-btn" title="Regenerate dashboard data" style="display:none">↻ Refresh</button>
+      <a href="mailto:hugh.odwyer@datamars.com?subject=Dashboard%20Feedback&body=Page%3A%20__DASHBOARD_TITLE__%0A%0AFeedback%3A%0A" title="Send feedback" id="feedback-btn">&#x2709; Feedback</a>
     </div>
   </div>
   <div class="tabs-bar" id="tabs-bar"></div>
