@@ -65,11 +65,52 @@ BACKFILL_QUARTERS = []
 #            Missing file = no team-member flagging for that project.
 
 def _load_team(filename):
+    """Load team members file. Supports both legacy flat format {id: name}
+    and new object format {id: {name, since?}}.
+    Returns {id: {name, since}} where since is a date string or None."""
     p = pathlib.Path(__file__).with_name(filename)
-    if p.exists():
-        return json.loads(p.read_text(encoding="utf-8"))
-    print(f"WARNING: {p} not found — no team members will be flagged.")
-    return {}
+    if not p.exists():
+        print(f"WARNING: {p} not found — no team members will be flagged.")
+        return {}
+    raw = json.loads(p.read_text(encoding="utf-8"))
+    result = {}
+    for aid, val in raw.items():
+        if isinstance(val, str):
+            result[aid] = {"name": val}
+        else:
+            entry = {"name": val.get("name", "")}
+            if "periods" in val:
+                entry["periods"] = val["periods"]
+            else:
+                if "since" in val: entry["since"] = val["since"]
+                if "until" in val: entry["until"] = val["until"]
+            result[aid] = entry
+    return result
+
+def _is_team_member(team_map, account_id, quarter_start_str):
+    """Return True if account_id is a team member as of the given quarter start date.
+    Supports three formats:
+      - no since/periods: always a member
+      - since (+ optional until): single period
+      - periods: [{since, until?}, ...] list of membership periods
+    """
+    entry = team_map.get(account_id)
+    if not entry:
+        return False
+    periods = entry.get("periods")
+    if periods:
+        for p in periods:
+            s = p.get("since") or ""
+            u = p.get("until") or "9999-12-31"
+            if (not s or s <= quarter_start_str) and quarter_start_str <= u:
+                return True
+        return False
+    # Simple since/until format
+    since = entry.get("since") or ""
+    until = entry.get("until") or "9999-12-31"
+    if since and since > quarter_start_str:
+        return False
+    return quarter_start_str <= until
 
 def _load_projects(filename="team_projects.json"):
     """Load project configuration from a JSON file beside this script.
@@ -85,12 +126,17 @@ def _load_projects(filename="team_projects.json"):
 
 PROJECTS = _load_projects("team_projects_test.json" if PREVIEW_MODE else "team_projects.json")
 
+def _load_admins(filename="team_admins.json"):
+    p = pathlib.Path(__file__).with_name(filename)
+    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else []
+
+WLOG_ADMINS = _load_admins()
+
 # Resolve derived paths and load team members for each project
 for _p in PROJECTS:
     _p["data_dir"]    = os.path.join(_p["reports_dir"], "data")
     _p["archive_dir"] = os.path.join(_p["reports_dir"], "archive")
     _p["team_map"]    = _load_team(_p["team_file"])
-    _p["team_ids"]    = set(_p["team_map"].keys())
 
 # Where the combined HTML is written. Defaults to the first project's reports_dir
 # if not set in secrets. Set "dashboard_output_dir" in secrets to use a dedicated folder
@@ -528,7 +574,8 @@ def _issue_row(issue):
 
 def _compute_per_sprint(sprints, all_issues, in_progress_statuses, proj,
                         version_release_dates, issue_sprint_ids_fn,
-                        prev_q_sprint_id=None, prev_q_sprint_end=None):
+                        prev_q_sprint_id=None, prev_q_sprint_end=None,
+                        quarter_start_str=None):
     """Compute per-sprint KPIs and assignee stats for sprint-level filtering and trends."""
     _excl_done_sp_st  = set(proj.get("excluded_done_statuses", []))
     _excl_done_sp_lbl = set(proj.get("excluded_done_labels",   []))
@@ -621,7 +668,7 @@ def _compute_per_sprint(sprints, all_issues, in_progress_statuses, proj,
         s_assignee_stats = sorted([{
             "name":            a,
             "account_id":      v["account_id"],
-            "is_team":         v["account_id"] in proj["team_ids"],
+            "is_team":         _is_team_member(proj["team_map"], v["account_id"], quarter_start_str or ""),
             "total":           v["total"],
             "completed":       v["completed"],
             "logged_h":        round(v["logged_s"] / 3600, 1),
@@ -917,7 +964,7 @@ def fetch_kpis(sprints, proj, ref=None, prev_sprint_id=None, prev_sprint_end=Non
         {
             "name":            a,
             "account_id":      v["account_id"],
-            "is_team":         v["account_id"] in proj["team_ids"],
+            "is_team":         _is_team_member(proj["team_map"], v["account_id"], str(qs_date)),
             "total":           v["total"],
             "completed":       v["completed"],
             "logged_h":        round(v["logged_s"] / 3600, 1),
@@ -1020,7 +1067,8 @@ def fetch_kpis(sprints, proj, ref=None, prev_sprint_id=None, prev_sprint_end=Non
                                       proj, version_release_dates,
                                       _issue_sprint_ids,
                                       prev_q_sprint_id=prev_sid_str,
-                                      prev_q_sprint_end=prev_sprint_end)
+                                      prev_q_sprint_end=prev_sprint_end,
+                                      quarter_start_str=str(qs_date))
     _sp_velocity_avg = 0
     if use_sp:
         _closed_sps = [v["sp_completed"] for v in _per_sprint.values()
@@ -1100,6 +1148,11 @@ def generate_notes(kpis, sprints, existing_notes=None, existing_kpis=None, proj_
         "board_id", "jira_base", "as_of",
     }
     kpis_for_prompt = {k: v for k, v in kpis.items() if k not in _prompt_exclude}
+    # Filter assignee_stats to team members only so Claude doesn't call out non-team assignees
+    if "assignee_stats" in kpis_for_prompt:
+        kpis_for_prompt["assignee_stats"] = [
+            a for a in kpis_for_prompt["assignee_stats"] if a.get("is_team")
+        ]
 
     if TESTING_MODE:
         print("      TESTING MODE — skipping Claude API call, preserving existing notes.")
@@ -1459,10 +1512,15 @@ __PREVIEW_BANNER__
 
 <script>
 const ALL_DATA=__ALL_DATA_JSON__;
+const WLOG_ADMINS=__WLOG_ADMINS_JSON__;
 const REFRESH_WEBHOOK=__REFRESH_WEBHOOK_URL__;
 </script>
 <script src="assets/quarters_script.js?v=__ASSET_VERSION__"></script>
 <div id="tt"></div>
+<div id="cf-access-notice" style="display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:#f8fafc;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;align-items:center;gap:10px;box-shadow:0 4px 12px rgba(0,0,0,.3);z-index:9999">
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#f59e0b" stroke-width="1.5"/><path d="M8 5v4M8 11v.5" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"/></svg>
+  You can only view your own time log
+</div>
 </body>
 </html>"""
 
@@ -1490,6 +1548,7 @@ def _render_html(all_projects_data, preview=False):
     return (
         _HTML_TEMPLATE
         .replace("__ALL_DATA_JSON__",      all_data_json)
+        .replace("__WLOG_ADMINS_JSON__",   json.dumps(WLOG_ADMINS, ensure_ascii=True))
         .replace("__REFRESH_WEBHOOK_URL__", webhook_json)
         .replace("__PREVIEW_BANNER__",     preview_banner)
         .replace("__DASHBOARD_TITLE__",    DASHBOARD_TITLE)
