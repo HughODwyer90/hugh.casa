@@ -83,7 +83,7 @@ def _load_projects(filename="team_projects.json"):
         )
     return json.loads(p.read_text(encoding="utf-8"))
 
-PROJECTS = _load_projects()
+PROJECTS = _load_projects("team_projects_test.json" if PREVIEW_MODE else "team_projects.json")
 
 # Resolve derived paths and load team members for each project
 for _p in PROJECTS:
@@ -658,6 +658,53 @@ def _compute_per_sprint(sprints, all_issues, in_progress_statuses, proj,
     return per_sprint
 
 
+def fetch_worklogs_for_quarter(issues, qs_date, qe_date):
+    """Fetch per-day worklog breakdowns for issues that have time logged.
+    Returns {accountId: {name, days: {date_str: {issue_key: {s: seconds, t: summary}}}}}
+    Only hits the API for issues with timespent > 0 to minimise call count."""
+    headers  = _auth_header()
+    logged   = [i for i in issues if (i["fields"].get("timespent") or 0) > 0]
+    qs_str, qe_str = str(qs_date), str(qe_date)
+    print(f"      Fetching worklogs for {len(logged)} issues "
+          f"({len(issues) - len(logged)} skipped — no time logged)...")
+    by_person: dict = {}
+    for issue in logged:
+        key     = issue["key"]
+        summary = issue["fields"]["summary"][:80]
+        try:
+            start_at, worklogs = 0, []
+            while True:
+                url  = (f"{JIRA_BASE_URL}/rest/api/3/issue/{key}/worklog"
+                        f"?maxResults=100&startAt={start_at}")
+                data = http_get(url, headers)
+                page = data.get("worklogs", data.get("values", []))
+                worklogs.extend(page)
+                total = data.get("total", 0)
+                if not page or (start_at + len(page)) >= total:
+                    break
+                start_at += len(page)
+        except Exception as exc:
+            print(f"      WARNING: worklog fetch failed for {key}: {exc}")
+            continue
+        for wl in worklogs:
+            started = (wl.get("started") or "")[:10]
+            if not (qs_str <= started <= qe_str):
+                continue
+            author = wl.get("author") or {}
+            aid    = author.get("accountId", "")
+            name   = author.get("displayName", "Unknown")
+            secs   = wl.get("timeSpentSeconds", 0)
+            if not aid or not secs:
+                continue
+            by_person.setdefault(aid, {"name": name, "days": {}})
+            days = by_person[aid]["days"]
+            days.setdefault(started, {})
+            entry = days[started].setdefault(key, {"s": 0, "t": summary})
+            entry["s"] += secs
+    print(f"      Worklog data: {len(by_person)} people with logged time")
+    return by_person
+
+
 def fetch_kpis(sprints, proj, ref=None, prev_sprint_id=None, prev_sprint_end=None):
     project_key   = proj["key"]
     use_sp        = proj.get("use_story_points", False)
@@ -985,6 +1032,12 @@ def fetch_kpis(sprints, proj, ref=None, prev_sprint_id=None, prev_sprint_end=Non
     _result["sp_total"]         = sp_total
     _result["sp_completed"]     = sp_completed
     _result["sp_velocity_avg"]  = _sp_velocity_avg
+    # Worklog data — only fetched when "fetch_worklogs": true in project config.
+    # Adds one API call per issue that has timespent > 0.
+    if proj.get("fetch_worklogs", False):
+        _result["worklog_by_person"] = fetch_worklogs_for_quarter(all_issues, qs_date, qe_date)
+    else:
+        _result["worklog_by_person"] = {}
     return _result
 
 
