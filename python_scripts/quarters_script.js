@@ -8,10 +8,10 @@ const PROJ_KEYS=Object.keys(ALL_DATA);
     if(!jwt)return;
     const payload=JSON.parse(atob(jwt.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
     const email=(payload.email||'').toLowerCase();
-    if(!email.endsWith('@datamars.com'))return;
+    if(!email)return;
     window._cfUserEmail=email;
-    // Admin check deferred to render time — wlog_admins comes from per-project data
-    window._cfUserSlug=email.replace('@datamars.com','').replace('.',' ');
+    // Derive slug from email local part: "hugh.odwyer@datamars.com" → "hugh odwyer"
+    window._cfUserSlug=email.split('@')[0].replace('.',' ');
   }catch(ex){}
 })();
 
@@ -778,7 +778,7 @@ function render(qk,activeTab){
               <th>SP Completed</th><th style="text-align:center">SP Planned</th>
             </tr></thead>`
           :`<thead><tr>
-              <th>Assignee${hasWlog?'<span class="trend-info" data-tip="Click ▶ to expand daily time log" style="margin-left:4px">&#x2139;</span>':''}</th><th style="text-align:center">Items</th>
+              <th>Assignee${hasWlog?'<span class="trend-info" data-tip="Click the chevron next to a name to expand their daily time log" style="margin-left:4px">&#x2139;</span>':''}</th><th style="text-align:center">Items</th>
               <th style="text-align:center">Done</th><th style="text-align:center">Rate</th>
               <th>Hours Logged</th><th style="text-align:center">Estimated</th>
               <th style="text-align:center">Accuracy${isCurrentQ?'<span class="trend-info" data-tip="Partial quarter — accuracy will change as more time is logged" style="margin-left:4px">&#x2139;</span>':''}</th>
