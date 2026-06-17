@@ -1,10 +1,10 @@
 {
   "quarter": "Q2 2026",
   "kpis": {
-    "total": 101,
-    "completed": 93,
-    "in_progress": 7,
-    "completion_rate": 92,
+    "total": 105,
+    "completed": 99,
+    "in_progress": 6,
+    "completion_rate": 94,
     "releases_shipped": 3,
     "last_release_date": "2026-05-28",
     "version_details": [
@@ -27,16 +27,16 @@
         "version_id": "18370"
       }
     ],
-    "tickets_per_day": 1.31,
+    "tickets_per_day": 1.27,
     "avg_releases_per_sprint": 0.6,
     "med_releases_per_sprint": 1,
     "oos_total": 1,
     "oos_open": 0,
     "oos_pct": 1,
     "oos_open_detail": [],
-    "bugs": 42,
-    "stories": 37,
-    "tasks": 22,
+    "bugs": 44,
+    "stories": 38,
+    "tasks": 23,
     "bug_pct": 42,
     "versions": {
       "1.6.0": 30,
@@ -62,59 +62,63 @@
     ],
     "board_id": "459",
     "jira_base": "https://datamars.atlassian.net",
-    "as_of": "2026-06-10T08:02:46Z",
-    "time_logged_h": 574.0,
-    "time_estimated_h": 1272.0,
-    "estimate_accuracy_pct": 45,
-    "estimate_variance_pct": -55,
-    "no_estimate_count": 26,
+    "as_of": "2026-06-17T12:22:07Z",
+    "time_logged_h": 675.0,
+    "time_estimated_h": 1332.0,
+    "estimate_accuracy_pct": 51,
+    "estimate_variance_pct": -49,
+    "no_estimate_count": 27,
     "no_estimate_pct": 26,
-    "no_log_count": 56,
-    "avg_cycle_days": 15.3,
-    "med_cycle_days": 10,
-    "rollover_count": 3,
-    "rollover_pct": 3,
+    "no_log_count": 53,
+    "avg_cycle_days": 14.5,
+    "med_cycle_days": 9,
+    "rollover_count": 2,
+    "rollover_pct": 2,
     "assignee_stats": [
       {
         "name": "Giuseppe Maffia",
         "account_id": "712020:a512d45c-21ac-4d70-89c1-a07c619c451c",
         "is_team": true,
+        "team_period": null,
         "total": 54,
-        "completed": 49,
-        "logged_h": 123.0,
+        "completed": 52,
+        "logged_h": 187.0,
         "estimated_h": 530.0,
         "sp_total": 0,
         "sp_completed": 0,
-        "completion_rate": 91
+        "completion_rate": 96
       },
       {
         "name": "Fabrizio De Marco",
         "account_id": "712020:ebc461d2-4d09-4523-b7df-4fa3c24811e9",
         "is_team": true,
-        "total": 26,
-        "completed": 24,
-        "logged_h": 375.0,
-        "estimated_h": 554.0,
+        "team_period": null,
+        "total": 30,
+        "completed": 26,
+        "logged_h": 412.0,
+        "estimated_h": 614.0,
         "sp_total": 0,
         "sp_completed": 0,
-        "completion_rate": 92
+        "completion_rate": 87
       },
       {
         "name": "Gianni Toniolo",
         "account_id": "712020:a62d6763-c735-4214-8ed5-550b0ee3e855",
         "is_team": true,
+        "team_period": null,
         "total": 12,
-        "completed": 11,
+        "completed": 12,
         "logged_h": 8.0,
         "estimated_h": 90.0,
         "sp_total": 0,
         "sp_completed": 0,
-        "completion_rate": 92
+        "completion_rate": 100
       },
       {
         "name": "Nikola Mladenovic",
         "account_id": "63283dc7409249995ee61971",
         "is_team": true,
+        "team_period": null,
         "total": 8,
         "completed": 8,
         "logged_h": 68.0,
@@ -127,6 +131,7 @@
         "name": "Unassigned",
         "account_id": "",
         "is_team": false,
+        "team_period": null,
         "total": 1,
         "completed": 1,
         "logged_h": 0.0,
@@ -139,22 +144,68 @@
     "issues": {
       "all": [
         {
+          "key": "NDA-572",
+          "url": "https://datamars.atlassian.net/browse/NDA-572",
+          "summary": "Parse RunMode from BLE Manufacturer Data",
+          "type": "Task",
+          "status": "Done",
+          "status_cat": "indeterminate",
+          "assignee": "Fabrizio De Marco",
+          "priority": "Medium",
+          "fix_versions": [],
+          "labels": [],
+          "logged_h": 10.5,
+          "estimated_h": 28.0,
+          "has_estimate": true,
+          "has_log": true,
+          "story_points": 0,
+          "cycle_days": null,
+          "sprint_ids": [
+            "5518"
+          ]
+        },
+        {
           "key": "NDA-560",
           "url": "https://datamars.atlassian.net/browse/NDA-560",
           "summary": "Use Platform.localeName instead of locale from Get.context to create CSV separator",
           "type": "Bug",
-          "status": "Done",
-          "status_cat": "indeterminate",
+          "status": "Closed",
+          "status_cat": "done",
           "assignee": "Gianni Toniolo",
           "priority": "Medium",
-          "fix_versions": [],
+          "fix_versions": [
+            "1.7.1"
+          ],
           "labels": [],
           "logged_h": 0.0,
           "estimated_h": 0.0,
           "has_estimate": false,
           "has_log": false,
           "story_points": 0,
-          "cycle_days": null,
+          "cycle_days": 2,
+          "sprint_ids": [
+            "5518"
+          ]
+        },
+        {
+          "key": "NDA-558",
+          "url": "https://datamars.atlassian.net/browse/NDA-558",
+          "summary": "Pairing active tag page keeps displaying an active tag error, but havent actually attempted to pair a tag yet",
+          "type": "Bug",
+          "status": "Closed",
+          "status_cat": "done",
+          "assignee": "Fabrizio De Marco",
+          "priority": "Medium",
+          "fix_versions": [
+            "1.7.1"
+          ],
+          "labels": [],
+          "logged_h": 0.0,
+          "estimated_h": 0.0,
+          "has_estimate": false,
+          "has_log": false,
+          "story_points": 0,
+          "cycle_days": 4,
           "sprint_ids": [
             "5518"
           ]
@@ -185,18 +236,20 @@
           "url": "https://datamars.atlassian.net/browse/NDA-555",
           "summary": "heat intensity and health index do not show values in overlay on animals activity graph",
           "type": "Bug",
-          "status": "To Do",
-          "status_cat": "new",
+          "status": "Closed",
+          "status_cat": "done",
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
-          "fix_versions": [],
+          "fix_versions": [
+            "1.7.1"
+          ],
           "labels": [],
-          "logged_h": 0.0,
+          "logged_h": 8.0,
           "estimated_h": 0.0,
           "has_estimate": false,
-          "has_log": false,
+          "has_log": true,
           "story_points": 0,
-          "cycle_days": null,
+          "cycle_days": 1,
           "sprint_ids": [
             "5518"
           ]
@@ -211,7 +264,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -229,15 +282,38 @@
           "url": "https://datamars.atlassian.net/browse/NDA-552",
           "summary": "Mark has inseminated keep old note and may fail with no error message",
           "type": "Bug",
-          "status": "Done",
-          "status_cat": "indeterminate",
+          "status": "Closed",
+          "status_cat": "done",
           "assignee": "Giuseppe Maffia",
+          "priority": "Medium",
+          "fix_versions": [
+            "1.7.1"
+          ],
+          "labels": [],
+          "logged_h": 4.0,
+          "estimated_h": 0.0,
+          "has_estimate": false,
+          "has_log": true,
+          "story_points": 0,
+          "cycle_days": 2,
+          "sprint_ids": [
+            "5518"
+          ]
+        },
+        {
+          "key": "NDA-551",
+          "url": "https://datamars.atlassian.net/browse/NDA-551",
+          "summary": "Allow multiple filter (repro status) selection",
+          "type": "Bug",
+          "status": "In Progress",
+          "status_cat": "indeterminate",
+          "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [],
           "labels": [],
           "logged_h": 0.0,
-          "estimated_h": 0.0,
-          "has_estimate": false,
+          "estimated_h": 8.0,
+          "has_estimate": true,
           "has_log": false,
           "story_points": 0,
           "cycle_days": null,
@@ -255,7 +331,7 @@
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -278,7 +354,7 @@
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -301,7 +377,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -324,7 +400,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -347,7 +423,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -386,18 +462,20 @@
           "url": "https://datamars.atlassian.net/browse/NDA-543",
           "summary": "My herd page for non logged in user",
           "type": "Task",
-          "status": "Done",
-          "status_cat": "indeterminate",
+          "status": "Closed",
+          "status_cat": "done",
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
-          "fix_versions": [],
+          "fix_versions": [
+            "1.7.1"
+          ],
           "labels": [],
-          "logged_h": 0.0,
+          "logged_h": 4.0,
           "estimated_h": 4.0,
           "has_estimate": true,
-          "has_log": false,
+          "has_log": true,
           "story_points": 0,
-          "cycle_days": null,
+          "cycle_days": 2,
           "sprint_ids": [
             "5518"
           ]
@@ -433,18 +511,20 @@
           "url": "https://datamars.atlassian.net/browse/NDA-538",
           "summary": "Currently displayed session gets overwritten by background download/upload operations, causing UI flashing",
           "type": "Bug",
-          "status": "Done",
-          "status_cat": "indeterminate",
+          "status": "Closed",
+          "status_cat": "done",
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
-          "fix_versions": [],
+          "fix_versions": [
+            "1.7.1"
+          ],
           "labels": [],
           "logged_h": 8.0,
           "estimated_h": 24.0,
           "has_estimate": true,
           "has_log": true,
           "story_points": 0,
-          "cycle_days": null,
+          "cycle_days": 8,
           "sprint_ids": [
             "5349",
             "5518"
@@ -460,7 +540,7 @@
           "assignee": "Gianni Toniolo",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -479,13 +559,13 @@
           "url": "https://datamars.atlassian.net/browse/NDA-536",
           "summary": "Add treatment handling for sessions",
           "type": "Task",
-          "status": "In Progress",
+          "status": "Done",
           "status_cat": "indeterminate",
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [],
           "labels": [],
-          "logged_h": 2.0,
+          "logged_h": 18.0,
           "estimated_h": 48.0,
           "has_estimate": true,
           "has_log": true,
@@ -505,7 +585,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -529,7 +609,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -554,10 +634,10 @@
           "priority": "Medium",
           "fix_versions": [],
           "labels": [],
-          "logged_h": 0.0,
+          "logged_h": 16.0,
           "estimated_h": 0.0,
           "has_estimate": false,
-          "has_log": false,
+          "has_log": true,
           "story_points": 0,
           "cycle_days": null,
           "sprint_ids": [
@@ -576,7 +656,7 @@
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 8.0,
@@ -600,7 +680,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -615,6 +695,27 @@
           ]
         },
         {
+          "key": "NDA-519",
+          "url": "https://datamars.atlassian.net/browse/NDA-519",
+          "summary": "Prompt user to upload downloaded sessions on reconnect to the internet",
+          "type": "Story",
+          "status": "Done",
+          "status_cat": "indeterminate",
+          "assignee": "Fabrizio De Marco",
+          "priority": "Medium",
+          "fix_versions": [],
+          "labels": [],
+          "logged_h": 10.5,
+          "estimated_h": 24.0,
+          "has_estimate": true,
+          "has_log": true,
+          "story_points": 0,
+          "cycle_days": null,
+          "sprint_ids": [
+            "5518"
+          ]
+        },
+        {
           "key": "NDA-518",
           "url": "https://datamars.atlassian.net/browse/NDA-518",
           "summary": "Show active tag gateway widget",
@@ -624,7 +725,7 @@
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 16.0,
@@ -649,7 +750,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -675,10 +776,10 @@
           "priority": "Medium",
           "fix_versions": [],
           "labels": [],
-          "logged_h": 0.0,
+          "logged_h": 32.0,
           "estimated_h": 64.0,
           "has_estimate": true,
-          "has_log": false,
+          "has_log": true,
           "story_points": 0,
           "cycle_days": null,
           "sprint_ids": [
@@ -695,7 +796,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -1097,7 +1198,7 @@
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [
             "LCM",
@@ -1194,7 +1295,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -1264,7 +1365,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [
             "ActiveTag",
@@ -1338,7 +1439,7 @@
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [
             "Product"
@@ -1413,7 +1514,7 @@
           "assignee": "Gianni Toniolo",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -1580,7 +1681,7 @@
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 40.0,
@@ -2291,7 +2392,7 @@
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [
             "LCM"
@@ -2318,7 +2419,7 @@
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [
             "Events",
@@ -2373,7 +2474,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [
             "ActiveTag",
@@ -2400,7 +2501,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 1.0,
@@ -2543,7 +2644,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [
             "Intercom"
@@ -4020,6 +4121,75 @@
           ]
         },
         {
+          "key": "NDA-560",
+          "url": "https://datamars.atlassian.net/browse/NDA-560",
+          "summary": "Use Platform.localeName instead of locale from Get.context to create CSV separator",
+          "type": "Bug",
+          "status": "Closed",
+          "status_cat": "done",
+          "assignee": "Gianni Toniolo",
+          "priority": "Medium",
+          "fix_versions": [
+            "1.7.1"
+          ],
+          "labels": [],
+          "logged_h": 0.0,
+          "estimated_h": 0.0,
+          "has_estimate": false,
+          "has_log": false,
+          "story_points": 0,
+          "cycle_days": 2,
+          "sprint_ids": [
+            "5518"
+          ]
+        },
+        {
+          "key": "NDA-558",
+          "url": "https://datamars.atlassian.net/browse/NDA-558",
+          "summary": "Pairing active tag page keeps displaying an active tag error, but havent actually attempted to pair a tag yet",
+          "type": "Bug",
+          "status": "Closed",
+          "status_cat": "done",
+          "assignee": "Fabrizio De Marco",
+          "priority": "Medium",
+          "fix_versions": [
+            "1.7.1"
+          ],
+          "labels": [],
+          "logged_h": 0.0,
+          "estimated_h": 0.0,
+          "has_estimate": false,
+          "has_log": false,
+          "story_points": 0,
+          "cycle_days": 4,
+          "sprint_ids": [
+            "5518"
+          ]
+        },
+        {
+          "key": "NDA-555",
+          "url": "https://datamars.atlassian.net/browse/NDA-555",
+          "summary": "heat intensity and health index do not show values in overlay on animals activity graph",
+          "type": "Bug",
+          "status": "Closed",
+          "status_cat": "done",
+          "assignee": "Giuseppe Maffia",
+          "priority": "Medium",
+          "fix_versions": [
+            "1.7.1"
+          ],
+          "labels": [],
+          "logged_h": 8.0,
+          "estimated_h": 0.0,
+          "has_estimate": false,
+          "has_log": true,
+          "story_points": 0,
+          "cycle_days": 1,
+          "sprint_ids": [
+            "5518"
+          ]
+        },
+        {
           "key": "NDA-554",
           "url": "https://datamars.atlassian.net/browse/NDA-554",
           "summary": "HIDE sexed semen the the app (ALL ENV)",
@@ -4029,7 +4199,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -4043,6 +4213,29 @@
           ]
         },
         {
+          "key": "NDA-552",
+          "url": "https://datamars.atlassian.net/browse/NDA-552",
+          "summary": "Mark has inseminated keep old note and may fail with no error message",
+          "type": "Bug",
+          "status": "Closed",
+          "status_cat": "done",
+          "assignee": "Giuseppe Maffia",
+          "priority": "Medium",
+          "fix_versions": [
+            "1.7.1"
+          ],
+          "labels": [],
+          "logged_h": 4.0,
+          "estimated_h": 0.0,
+          "has_estimate": false,
+          "has_log": true,
+          "story_points": 0,
+          "cycle_days": 2,
+          "sprint_ids": [
+            "5518"
+          ]
+        },
+        {
           "key": "NDA-550",
           "url": "https://datamars.atlassian.net/browse/NDA-550",
           "summary": "Remove migration warning banner for now",
@@ -4052,7 +4245,7 @@
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -4075,7 +4268,7 @@
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -4098,7 +4291,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -4121,7 +4314,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -4144,7 +4337,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -4158,6 +4351,53 @@
           ]
         },
         {
+          "key": "NDA-543",
+          "url": "https://datamars.atlassian.net/browse/NDA-543",
+          "summary": "My herd page for non logged in user",
+          "type": "Task",
+          "status": "Closed",
+          "status_cat": "done",
+          "assignee": "Giuseppe Maffia",
+          "priority": "Medium",
+          "fix_versions": [
+            "1.7.1"
+          ],
+          "labels": [],
+          "logged_h": 4.0,
+          "estimated_h": 4.0,
+          "has_estimate": true,
+          "has_log": true,
+          "story_points": 0,
+          "cycle_days": 2,
+          "sprint_ids": [
+            "5518"
+          ]
+        },
+        {
+          "key": "NDA-538",
+          "url": "https://datamars.atlassian.net/browse/NDA-538",
+          "summary": "Currently displayed session gets overwritten by background download/upload operations, causing UI flashing",
+          "type": "Bug",
+          "status": "Closed",
+          "status_cat": "done",
+          "assignee": "Fabrizio De Marco",
+          "priority": "Medium",
+          "fix_versions": [
+            "1.7.1"
+          ],
+          "labels": [],
+          "logged_h": 8.0,
+          "estimated_h": 24.0,
+          "has_estimate": true,
+          "has_log": true,
+          "story_points": 0,
+          "cycle_days": 8,
+          "sprint_ids": [
+            "5349",
+            "5518"
+          ]
+        },
+        {
           "key": "NDA-537",
           "url": "https://datamars.atlassian.net/browse/NDA-537",
           "summary": "Optimize to handle large amount of sessions phase 2",
@@ -4167,7 +4407,7 @@
           "assignee": "Gianni Toniolo",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -4191,7 +4431,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -4215,7 +4455,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -4239,7 +4479,7 @@
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 8.0,
@@ -4263,7 +4503,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -4287,7 +4527,7 @@
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 16.0,
@@ -4312,7 +4552,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -4337,7 +4577,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -4362,7 +4602,7 @@
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [
             "LCM",
@@ -4388,7 +4628,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -4412,7 +4652,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [
             "ActiveTag",
@@ -4440,7 +4680,7 @@
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [
             "Product"
@@ -4467,7 +4707,7 @@
           "assignee": "Gianni Toniolo",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -4493,7 +4733,7 @@
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 40.0,
@@ -4517,7 +4757,7 @@
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [
             "LCM"
@@ -4544,7 +4784,7 @@
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [
             "Events",
@@ -4572,7 +4812,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [
             "ActiveTag",
@@ -4599,7 +4839,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 1.0,
@@ -4622,7 +4862,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [
             "Intercom"
@@ -4641,87 +4881,44 @@
       ],
       "in_progress": [
         {
-          "key": "NDA-560",
-          "url": "https://datamars.atlassian.net/browse/NDA-560",
-          "summary": "Use Platform.localeName instead of locale from Get.context to create CSV separator",
-          "type": "Bug",
-          "status": "Done",
-          "status_cat": "indeterminate",
-          "assignee": "Gianni Toniolo",
-          "priority": "Medium",
-          "fix_versions": [],
-          "labels": [],
-          "logged_h": 0.0,
-          "estimated_h": 0.0,
-          "has_estimate": false,
-          "has_log": false,
-          "story_points": 0,
-          "cycle_days": null,
-          "sprint_ids": [
-            "5518"
-          ]
-        },
-        {
-          "key": "NDA-552",
-          "url": "https://datamars.atlassian.net/browse/NDA-552",
-          "summary": "Mark has inseminated keep old note and may fail with no error message",
-          "type": "Bug",
-          "status": "Done",
-          "status_cat": "indeterminate",
-          "assignee": "Giuseppe Maffia",
-          "priority": "Medium",
-          "fix_versions": [],
-          "labels": [],
-          "logged_h": 0.0,
-          "estimated_h": 0.0,
-          "has_estimate": false,
-          "has_log": false,
-          "story_points": 0,
-          "cycle_days": null,
-          "sprint_ids": [
-            "5518"
-          ]
-        },
-        {
-          "key": "NDA-543",
-          "url": "https://datamars.atlassian.net/browse/NDA-543",
-          "summary": "My herd page for non logged in user",
+          "key": "NDA-572",
+          "url": "https://datamars.atlassian.net/browse/NDA-572",
+          "summary": "Parse RunMode from BLE Manufacturer Data",
           "type": "Task",
-          "status": "Done",
-          "status_cat": "indeterminate",
-          "assignee": "Giuseppe Maffia",
-          "priority": "Medium",
-          "fix_versions": [],
-          "labels": [],
-          "logged_h": 0.0,
-          "estimated_h": 4.0,
-          "has_estimate": true,
-          "has_log": false,
-          "story_points": 0,
-          "cycle_days": null,
-          "sprint_ids": [
-            "5518"
-          ]
-        },
-        {
-          "key": "NDA-538",
-          "url": "https://datamars.atlassian.net/browse/NDA-538",
-          "summary": "Currently displayed session gets overwritten by background download/upload operations, causing UI flashing",
-          "type": "Bug",
           "status": "Done",
           "status_cat": "indeterminate",
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [],
           "labels": [],
-          "logged_h": 8.0,
-          "estimated_h": 24.0,
+          "logged_h": 10.5,
+          "estimated_h": 28.0,
           "has_estimate": true,
           "has_log": true,
           "story_points": 0,
           "cycle_days": null,
           "sprint_ids": [
-            "5349",
+            "5518"
+          ]
+        },
+        {
+          "key": "NDA-551",
+          "url": "https://datamars.atlassian.net/browse/NDA-551",
+          "summary": "Allow multiple filter (repro status) selection",
+          "type": "Bug",
+          "status": "In Progress",
+          "status_cat": "indeterminate",
+          "assignee": "Fabrizio De Marco",
+          "priority": "Medium",
+          "fix_versions": [],
+          "labels": [],
+          "logged_h": 0.0,
+          "estimated_h": 8.0,
+          "has_estimate": true,
+          "has_log": false,
+          "story_points": 0,
+          "cycle_days": null,
+          "sprint_ids": [
             "5518"
           ]
         },
@@ -4730,13 +4927,13 @@
           "url": "https://datamars.atlassian.net/browse/NDA-536",
           "summary": "Add treatment handling for sessions",
           "type": "Task",
-          "status": "In Progress",
+          "status": "Done",
           "status_cat": "indeterminate",
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [],
           "labels": [],
-          "logged_h": 2.0,
+          "logged_h": 18.0,
           "estimated_h": 48.0,
           "has_estimate": true,
           "has_log": true,
@@ -4757,15 +4954,36 @@
           "priority": "Medium",
           "fix_versions": [],
           "labels": [],
-          "logged_h": 0.0,
+          "logged_h": 16.0,
           "estimated_h": 0.0,
           "has_estimate": false,
-          "has_log": false,
+          "has_log": true,
           "story_points": 0,
           "cycle_days": null,
           "sprint_ids": [
             "4882",
             "5349",
+            "5518"
+          ]
+        },
+        {
+          "key": "NDA-519",
+          "url": "https://datamars.atlassian.net/browse/NDA-519",
+          "summary": "Prompt user to upload downloaded sessions on reconnect to the internet",
+          "type": "Story",
+          "status": "Done",
+          "status_cat": "indeterminate",
+          "assignee": "Fabrizio De Marco",
+          "priority": "Medium",
+          "fix_versions": [],
+          "labels": [],
+          "logged_h": 10.5,
+          "estimated_h": 24.0,
+          "has_estimate": true,
+          "has_log": true,
+          "story_points": 0,
+          "cycle_days": null,
+          "sprint_ids": [
             "5518"
           ]
         },
@@ -4780,10 +4998,10 @@
           "priority": "Medium",
           "fix_versions": [],
           "labels": [],
-          "logged_h": 0.0,
+          "logged_h": 32.0,
           "estimated_h": 64.0,
           "has_estimate": true,
-          "has_log": false,
+          "has_log": true,
           "story_points": 0,
           "cycle_days": null,
           "sprint_ids": [
@@ -4797,18 +5015,43 @@
           "url": "https://datamars.atlassian.net/browse/NDA-560",
           "summary": "Use Platform.localeName instead of locale from Get.context to create CSV separator",
           "type": "Bug",
-          "status": "Done",
-          "status_cat": "indeterminate",
+          "status": "Closed",
+          "status_cat": "done",
           "assignee": "Gianni Toniolo",
           "priority": "Medium",
-          "fix_versions": [],
+          "fix_versions": [
+            "1.7.1"
+          ],
           "labels": [],
           "logged_h": 0.0,
           "estimated_h": 0.0,
           "has_estimate": false,
           "has_log": false,
           "story_points": 0,
-          "cycle_days": null,
+          "cycle_days": 2,
+          "sprint_ids": [
+            "5518"
+          ]
+        },
+        {
+          "key": "NDA-558",
+          "url": "https://datamars.atlassian.net/browse/NDA-558",
+          "summary": "Pairing active tag page keeps displaying an active tag error, but havent actually attempted to pair a tag yet",
+          "type": "Bug",
+          "status": "Closed",
+          "status_cat": "done",
+          "assignee": "Fabrizio De Marco",
+          "priority": "Medium",
+          "fix_versions": [
+            "1.7.1"
+          ],
+          "labels": [],
+          "logged_h": 0.0,
+          "estimated_h": 0.0,
+          "has_estimate": false,
+          "has_log": false,
+          "story_points": 0,
+          "cycle_days": 4,
           "sprint_ids": [
             "5518"
           ]
@@ -4839,18 +5082,20 @@
           "url": "https://datamars.atlassian.net/browse/NDA-555",
           "summary": "heat intensity and health index do not show values in overlay on animals activity graph",
           "type": "Bug",
-          "status": "To Do",
-          "status_cat": "new",
+          "status": "Closed",
+          "status_cat": "done",
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
-          "fix_versions": [],
+          "fix_versions": [
+            "1.7.1"
+          ],
           "labels": [],
-          "logged_h": 0.0,
+          "logged_h": 8.0,
           "estimated_h": 0.0,
           "has_estimate": false,
-          "has_log": false,
+          "has_log": true,
           "story_points": 0,
-          "cycle_days": null,
+          "cycle_days": 1,
           "sprint_ids": [
             "5518"
           ]
@@ -4865,7 +5110,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -4883,18 +5128,20 @@
           "url": "https://datamars.atlassian.net/browse/NDA-552",
           "summary": "Mark has inseminated keep old note and may fail with no error message",
           "type": "Bug",
-          "status": "Done",
-          "status_cat": "indeterminate",
+          "status": "Closed",
+          "status_cat": "done",
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
-          "fix_versions": [],
+          "fix_versions": [
+            "1.7.1"
+          ],
           "labels": [],
-          "logged_h": 0.0,
+          "logged_h": 4.0,
           "estimated_h": 0.0,
           "has_estimate": false,
-          "has_log": false,
+          "has_log": true,
           "story_points": 0,
-          "cycle_days": null,
+          "cycle_days": 2,
           "sprint_ids": [
             "5518"
           ]
@@ -4909,7 +5156,7 @@
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -4932,7 +5179,7 @@
           "assignee": "Fabrizio De Marco",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -4955,7 +5202,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -4978,7 +5225,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -5001,7 +5248,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -5071,7 +5318,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -5095,7 +5342,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -5120,10 +5367,10 @@
           "priority": "Medium",
           "fix_versions": [],
           "labels": [],
-          "logged_h": 0.0,
+          "logged_h": 16.0,
           "estimated_h": 0.0,
           "has_estimate": false,
-          "has_log": false,
+          "has_log": true,
           "story_points": 0,
           "cycle_days": null,
           "sprint_ids": [
@@ -5142,7 +5389,7 @@
           "assignee": "Giuseppe Maffia",
           "priority": "Medium",
           "fix_versions": [
-            "1.7.0"
+            "1.7.1"
           ],
           "labels": [],
           "logged_h": 0.0,
@@ -5622,9 +5869,9 @@
         "rollover_pct": 29,
         "avg_cycle_days": 29.5,
         "med_cycle_days": 27,
-        "time_logged_h": 145.0,
+        "time_logged_h": 161.0,
         "time_estimated_h": 288.0,
-        "estimate_accuracy_pct": 50,
+        "estimate_accuracy_pct": 56,
         "oos_total": 1,
         "oos_open": 0,
         "releases_shipped": 1,
@@ -5637,7 +5884,7 @@
             "is_team": true,
             "total": 11,
             "completed": 10,
-            "logged_h": 0.0,
+            "logged_h": 16.0,
             "estimated_h": 80.0,
             "sp_total": 0,
             "sp_completed": 0,
@@ -5680,19 +5927,19 @@
         "sprint_name": "NDA Sprint 31",
         "sprint_state": "closed",
         "total": 29,
-        "completed": 27,
-        "completion_rate": 93,
+        "completed": 28,
+        "completion_rate": 97,
         "bugs": 7,
         "stories": 14,
         "tasks": 8,
         "bug_pct": 24,
         "rollover_count": 19,
         "rollover_pct": 66,
-        "avg_cycle_days": 25.0,
+        "avg_cycle_days": 24.4,
         "med_cycle_days": 24,
-        "time_logged_h": 154.0,
+        "time_logged_h": 170.0,
         "time_estimated_h": 308.0,
-        "estimate_accuracy_pct": 50,
+        "estimate_accuracy_pct": 55,
         "oos_total": 1,
         "oos_open": 0,
         "releases_shipped": 1,
@@ -5705,7 +5952,7 @@
             "is_team": true,
             "total": 15,
             "completed": 14,
-            "logged_h": 1.0,
+            "logged_h": 17.0,
             "estimated_h": 84.0,
             "sp_total": 0,
             "sp_completed": 0,
@@ -5716,12 +5963,12 @@
             "account_id": "712020:ebc461d2-4d09-4523-b7df-4fa3c24811e9",
             "is_team": true,
             "total": 10,
-            "completed": 9,
+            "completed": 10,
             "logged_h": 153.0,
             "estimated_h": 192.0,
             "sp_total": 0,
             "sp_completed": 0,
-            "completion_rate": 90
+            "completion_rate": 100
           },
           {
             "name": "Gianni Toniolo",
@@ -5759,20 +6006,20 @@
       "5518": {
         "sprint_name": "NDA Sprint 32",
         "sprint_state": "active",
-        "total": 9,
-        "completed": 1,
-        "completion_rate": 11,
-        "bugs": 5,
-        "stories": 1,
-        "tasks": 3,
-        "bug_pct": 56,
+        "total": 13,
+        "completed": 7,
+        "completion_rate": 54,
+        "bugs": 7,
+        "stories": 2,
+        "tasks": 4,
+        "bug_pct": 54,
         "rollover_count": 3,
-        "rollover_pct": 33,
-        "avg_cycle_days": 22.0,
-        "med_cycle_days": 22,
-        "time_logged_h": 10.0,
-        "time_estimated_h": 140.0,
-        "estimate_accuracy_pct": 7,
+        "rollover_pct": 23,
+        "avg_cycle_days": 5.9,
+        "med_cycle_days": 2,
+        "time_logged_h": 111.0,
+        "time_estimated_h": 200.0,
+        "estimate_accuracy_pct": 56,
         "oos_total": 1,
         "oos_open": 0,
         "releases_shipped": 0,
@@ -5780,48 +6027,48 @@
         "sp_completed": 0,
         "assignee_stats": [
           {
+            "name": "Fabrizio De Marco",
+            "account_id": "712020:ebc461d2-4d09-4523-b7df-4fa3c24811e9",
+            "is_team": true,
+            "total": 6,
+            "completed": 2,
+            "logged_h": 47.0,
+            "estimated_h": 132.0,
+            "sp_total": 0,
+            "sp_completed": 0,
+            "completion_rate": 33
+          },
+          {
             "name": "Giuseppe Maffia",
             "account_id": "712020:a512d45c-21ac-4d70-89c1-a07c619c451c",
             "is_team": true,
             "total": 5,
-            "completed": 0,
-            "logged_h": 0.0,
+            "completed": 3,
+            "logged_h": 64.0,
             "estimated_h": 68.0,
             "sp_total": 0,
             "sp_completed": 0,
-            "completion_rate": 0
+            "completion_rate": 60
           },
           {
             "name": "Gianni Toniolo",
             "account_id": "712020:a62d6763-c735-4214-8ed5-550b0ee3e855",
             "is_team": true,
             "total": 2,
-            "completed": 1,
+            "completed": 2,
             "logged_h": 0.0,
             "estimated_h": 0.0,
             "sp_total": 0,
             "sp_completed": 0,
-            "completion_rate": 50
-          },
-          {
-            "name": "Fabrizio De Marco",
-            "account_id": "712020:ebc461d2-4d09-4523-b7df-4fa3c24811e9",
-            "is_team": true,
-            "total": 2,
-            "completed": 0,
-            "logged_h": 10.0,
-            "estimated_h": 72.0,
-            "sp_total": 0,
-            "sp_completed": 0,
-            "completion_rate": 0
+            "completion_rate": 100
           }
         ],
         "notes": {
-          "completion_rate": "Only 11% complete mid-sprint with 3 items carried over from prior sprint\u2014trajectory suggests significant carryover risk into Sprint 33.",
-          "oos_total": "1 item added after sprint start\u2014planning discipline holding.",
-          "rollover": "3 items rolled over (33% of sprint)\u2014investigate blockers and sizing accuracy.",
-          "cycle_time": "22d median cycle time is severely elevated\u2014items stuck in progress, needs immediate review.",
-          "type_split": "56% bugs signals reactive work dominating sprint\u2014root cause analysis needed to reduce defect rate."
+          "completion_rate": "Mid-sprint at 54% complete \u2014 on track if remaining 6 items close this week, otherwise risk missing sprint goal.",
+          "oos_total": "1 item added post-planning shows good sprint discipline.",
+          "rollover": "3 items (23%) carried from prior sprint \u2014 monitor for blockers preventing closure.",
+          "cycle_time": "2d median is excellent; 5.9d average suggests a few outliers worth investigating.",
+          "type_split": "Bugs dominate at 54% of sprint (7/13 items) \u2014 assess root causes and consider technical debt investment."
         }
       }
     },
@@ -5829,23 +6076,360 @@
     "use_oos": true,
     "sp_total": 0,
     "sp_completed": 0,
-    "sp_velocity_avg": 0
+    "sp_velocity_avg": 0,
+    "worklog_by_person": {
+      "712020:ebc461d2-4d09-4523-b7df-4fa3c24811e9": {
+        "name": "Fabrizio De Marco",
+        "days": {
+          "2026-06-15": {
+            "NDA-572": {
+              "s": 28800,
+              "t": "Parse RunMode from BLE Manufacturer Data"
+            },
+            "NDA-519": {
+              "s": 7200,
+              "t": "Prompt user to upload downloaded sessions on reconnect to the internet"
+            }
+          },
+          "2026-06-16": {
+            "NDA-572": {
+              "s": 9000,
+              "t": "Parse RunMode from BLE Manufacturer Data"
+            },
+            "NDA-519": {
+              "s": 19800,
+              "t": "Prompt user to upload downloaded sessions on reconnect to the internet"
+            }
+          },
+          "2026-06-04": {
+            "NDA-538": {
+              "s": 28800,
+              "t": "Currently displayed session gets overwritten by background download/upload opera"
+            }
+          },
+          "2026-06-09": {
+            "NDA-536": {
+              "s": 7200,
+              "t": "Add treatment handling for sessions"
+            }
+          },
+          "2026-06-10": {
+            "NDA-536": {
+              "s": 28800,
+              "t": "Add treatment handling for sessions"
+            }
+          },
+          "2026-06-12": {
+            "NDA-536": {
+              "s": 28800,
+              "t": "Add treatment handling for sessions"
+            }
+          },
+          "2026-05-22": {
+            "NDA-523": {
+              "s": 28800,
+              "t": "Sessions download from s6000 (BLE)"
+            }
+          },
+          "2026-06-17": {
+            "NDA-519": {
+              "s": 10800,
+              "t": "Prompt user to upload downloaded sessions on reconnect to the internet"
+            }
+          },
+          "2026-05-12": {
+            "NDA-518": {
+              "s": 57600,
+              "t": "Show active tag gateway widget"
+            }
+          },
+          "2026-04-24": {
+            "NDA-502": {
+              "s": 3600,
+              "t": "Devices: \"Add Active Tag\" option visible without Gateway"
+            },
+            "NDA-501": {
+              "s": 3600,
+              "t": "iOS: Stick Reader connection status not updated in AT Pairing UI"
+            },
+            "NDA-500": {
+              "s": 3600,
+              "t": "AT Pairing: UI not fully updating after rescanning RFID tags"
+            },
+            "NDA-499": {
+              "s": 3600,
+              "t": "AT Pairing: Incorrect animal identifier shown in search results"
+            },
+            "NDA-493": {
+              "s": 14400,
+              "t": "Enforce Pre-Pairing Validation for Active Tags"
+            }
+          },
+          "2026-04-28": {
+            "NDA-493": {
+              "s": 14400,
+              "t": "Enforce Pre-Pairing Validation for Active Tags"
+            }
+          },
+          "2026-04-29": {
+            "NDA-493": {
+              "s": 43200,
+              "t": "Enforce Pre-Pairing Validation for Active Tags"
+            }
+          },
+          "2026-04-23": {
+            "NDA-492": {
+              "s": 14400,
+              "t": "DML Pro resyncs all sessions every time Ezi7 is connected to phone"
+            },
+            "NDA-468": {
+              "s": 28800,
+              "t": "Optimize Sessions Handling to Support High-Volume Data phase 1"
+            }
+          },
+          "2026-04-10": {
+            "NDA-489": {
+              "s": 28800,
+              "t": "XML parser for s5000 is not getting value"
+            },
+            "NDA-488": {
+              "s": 14400,
+              "t": "Wrong s5000 serial retrieval"
+            },
+            "NDA-468": {
+              "s": 14400,
+              "t": "Optimize Sessions Handling to Support High-Volume Data phase 1"
+            }
+          },
+          "2026-05-04": {
+            "NDA-484": {
+              "s": 28800,
+              "t": "DML Pro: Gateway and Active Tag status should appear on the app home page"
+            }
+          },
+          "2026-05-05": {
+            "NDA-484": {
+              "s": 14400,
+              "t": "DML Pro: Gateway and Active Tag status should appear on the app home page"
+            },
+            "NDA-323": {
+              "s": 14400,
+              "t": "Show event details when tapped"
+            }
+          },
+          "2026-05-26": {
+            "NDA-471": {
+              "s": 57600,
+              "t": "Upload sessions from 6000 series to DM Pro"
+            }
+          },
+          "2026-05-27": {
+            "NDA-471": {
+              "s": 28800,
+              "t": "Upload sessions from 6000 series to DM Pro"
+            }
+          },
+          "2026-06-01": {
+            "NDA-471": {
+              "s": 57600,
+              "t": "Upload sessions from 6000 series to DM Pro"
+            }
+          },
+          "2026-04-14": {
+            "NDA-468": {
+              "s": 28800,
+              "t": "Optimize Sessions Handling to Support High-Volume Data phase 1"
+            }
+          },
+          "2026-04-16": {
+            "NDA-468": {
+              "s": 28800,
+              "t": "Optimize Sessions Handling to Support High-Volume Data phase 1"
+            }
+          },
+          "2026-04-17": {
+            "NDA-468": {
+              "s": 57600,
+              "t": "Optimize Sessions Handling to Support High-Volume Data phase 1"
+            }
+          },
+          "2026-04-20": {
+            "NDA-468": {
+              "s": 28800,
+              "t": "Optimize Sessions Handling to Support High-Volume Data phase 1"
+            }
+          },
+          "2026-04-21": {
+            "NDA-468": {
+              "s": 28800,
+              "t": "Optimize Sessions Handling to Support High-Volume Data phase 1"
+            }
+          },
+          "2026-05-06": {
+            "NDA-323": {
+              "s": 28800,
+              "t": "Show event details when tapped"
+            }
+          },
+          "2026-05-08": {
+            "NDA-323": {
+              "s": 28800,
+              "t": "Show event details when tapped"
+            }
+          },
+          "2026-05-11": {
+            "NDA-323": {
+              "s": 14400,
+              "t": "Show event details when tapped"
+            }
+          },
+          "2026-05-15": {
+            "NDA-322": {
+              "s": 28800,
+              "t": "Add ability to edit/delete events on DML app"
+            }
+          },
+          "2026-05-18": {
+            "NDA-322": {
+              "s": 57600,
+              "t": "Add ability to edit/delete events on DML app"
+            }
+          },
+          "2026-05-20": {
+            "NDA-322": {
+              "s": 28800,
+              "t": "Add ability to edit/delete events on DML app"
+            }
+          },
+          "2026-05-21": {
+            "NDA-322": {
+              "s": 28800,
+              "t": "Add ability to edit/delete events on DML app"
+            }
+          },
+          "2026-04-02": {
+            "NDA-100": {
+              "s": 57600,
+              "t": "Event recording on an individual animal"
+            }
+          },
+          "2026-04-03": {
+            "NDA-100": {
+              "s": 28800,
+              "t": "Event recording on an individual animal"
+            }
+          },
+          "2026-04-07": {
+            "NDA-100": {
+              "s": 28800,
+              "t": "Event recording on an individual animal"
+            }
+          },
+          "2026-04-08": {
+            "NDA-100": {
+              "s": 28800,
+              "t": "Event recording on an individual animal"
+            }
+          }
+        }
+      },
+      "712020:a512d45c-21ac-4d70-89c1-a07c619c451c": {
+        "name": "Giuseppe Maffia",
+        "days": {
+          "2026-06-16": {
+            "NDA-555": {
+              "s": 28800,
+              "t": "heat intensity and health index do not show values in overlay on animals activit"
+            },
+            "NDA-552": {
+              "s": 14400,
+              "t": "Mark has inseminated keep old note and may fail with no error message"
+            },
+            "NDA-543": {
+              "s": 14400,
+              "t": "My herd page for non logged in user"
+            }
+          },
+          "2026-06-15": {
+            "NDA-524": {
+              "s": 57600,
+              "t": "Analyse crashlitics"
+            },
+            "NDA-516": {
+              "s": 115200,
+              "t": "Regionalisation"
+            }
+          }
+        }
+      },
+      "63283dc7409249995ee61971": {
+        "name": "Nikola Mladenovic",
+        "days": {
+          "2026-04-06": {
+            "NDA-473": {
+              "s": 25200,
+              "t": "Wi-Fi Credentials Not Cleared After Device Removal from Farm"
+            },
+            "NDA-469": {
+              "s": 14400,
+              "t": "Incorrect Status Display for Fence Monitoring Gateway on Devices List"
+            },
+            "NDA-321": {
+              "s": 3600,
+              "t": "Display unpair button for animals regardless of Active Tag state"
+            }
+          },
+          "2026-04-01": {
+            "NDA-455": {
+              "s": 14400,
+              "t": "Add card for sessions in Web"
+            },
+            "NDA-323": {
+              "s": 18000,
+              "t": "Show event details when tapped"
+            },
+            "NDA-305": {
+              "s": 3600,
+              "t": "Add sexed semen window"
+            }
+          },
+          "2026-04-14": {
+            "NDA-408": {
+              "s": 21600,
+              "t": "IOS Energizer target voltage shows 0v in settings"
+            }
+          },
+          "2026-04-08": {
+            "NDA-321": {
+              "s": 46800,
+              "t": "Display unpair button for animals regardless of Active Tag state"
+            }
+          },
+          "2026-04-09": {
+            "NDA-321": {
+              "s": 10800,
+              "t": "Display unpair button for animals regardless of Active Tag state"
+            }
+          }
+        }
+      }
+    }
   },
   "notes": {
-    "total": "101 tickets scoped across 6 sprints is a healthy pipeline for the quarter. With 77% of the quarter elapsed and 92% completion rate, the team is on track to close the quarter strong.",
-    "completed": "93 of 101 tickets completed with 21 days remaining positions the team well to finish the remaining 7 in-progress items before quarter end. Velocity of 1.33 tickets/day is consistent and sustainable.",
-    "completion_rate": "92% completion rate with 76% of quarter elapsed indicates strong on-track delivery; 8 tickets remain in progress or open, manageable for final sprint.",
+    "total": "105 tickets in scope across 6 sprints is a healthy pipeline with 6 in-flight and 13 days remaining. Team is tracking to deliver 99-105 tickets by quarter end, consistent with recent velocity.",
+    "completed": "99 tickets completed with 6 in progress \u2014 on track to finish the quarter strong. Five closed sprints maintained 95-100% completion rates; active sprint (NDA Sprint 32) is mid-flight at 54% with time to finish.",
+    "completion_rate": "94% completion rate is excellent at this stage of the quarter. With 13 days and 6 tickets remaining, team is positioned to close at 95-100%.",
     "releases_shipped": "3 releases shipped this quarter with the most recent on May 28th aligns with healthy mobile app cadence. Final release window is available before June 30th if needed for remaining work.",
     "oos_total": "Only 1 out-of-sprint ticket (1% of total) reflects disciplined sprint planning. Excellent hygiene.",
     "oos_open": "Zero open out-of-sprint items \u2014 all OOS work has been resolved. Only 1 OOS ticket all quarter (1%) demonstrates disciplined sprint planning and minimal reactive interrupt work.",
-    "type_split": "Bug ratio at 42% (42 of 101 tickets) is elevated and signals quality debt requiring attention. Sprints 28 and 29 ran at 50% and 48% bugs respectively; Sprint 32 is currently 56% bugs, suggesting the pattern is worsening rather than improving.",
+    "type_split": "Bug ratio is elevated at 42% overall \u2014 Sprint 28 (50%) and Sprint 29 (48%) saw a bug surge mid-quarter. Sprint 30-31 improved to 10-24%, but Sprint 32 is back at 54%. Quality concerns warrant attention; consider root cause analysis.",
     "avg_releases": "Median of 1 release per sprint is appropriate for mobile app deployment cycles constrained by app store review. 3 releases across 5 sprints demonstrates consistent delivery rhythm.",
-    "time_logged": "574 hours logged against 1,272 hours estimated represents 45% utilisation, which is concerningly low. Giuseppe Maffia logged only 123h against 530h estimated; Gianni Toniolo logged 8h against 90h estimated. Either time tracking discipline has collapsed or estimates are systematically inflated by 2-3x \u2014 both scenarios undermine planning reliability.",
-    "estimate_accuracy": "Team consistently logs ~45% of estimated hours with -55% variance \u2014 estimates are systematically too high, suggesting poor calibration or tracking gaps rather than scope creep.",
-    "no_estimate": "26% of tickets (26 of 101) have no time estimate, making capacity planning unreliable. Combined with the 55% estimate variance and severe under-logging, the team's estimation and tracking hygiene needs immediate attention to restore forecasting accuracy.",
-    "rollover": "3 rollovers (3%) is minimal and healthy overall. However, Sprint 31 carried a 66% rollover rate (19 of 29 tickets), which compressed the sprint and inflated completion metrics \u2014 this warrants review of sprint 31 planning assumptions.",
-    "cycle_time": "Median cycle time of 10 days is reasonable for mobile development. Mean of 15.3 days indicates some longer-running tickets are skewing the average; recent sprints show increasing cycle times (Sprint 31: 26 days median) worth monitoring.",
-    "assignee_workload": "Giuseppe Maffia carries 53% of all quarter tickets (54 of 101), which is disproportionately high and a burnout risk; Fabrizio De Marco (26 tickets, 26%) and other team members are handling significantly lighter loads, suggesting workload rebalancing is needed."
+    "time_logged": "675 hours logged against 1332 hours estimated represents 51% of planned effort. Team consistently under-logs \u2014 Sprint 28 (33%), Sprint 29 (38%), Sprint 30 (56%) \u2014 but delivers tickets on time. Logging discipline is poor but not blocking delivery; consider whether estimates are inflated or tracking is incomplete.",
+    "estimate_accuracy": "51% accuracy with -49% variance means team is significantly over-estimating work. Consistent pattern across all sprints (33-64% accuracy). 26% of tickets have no estimate, compounding unreliability. Recommend calibration exercise to improve planning data quality.",
+    "no_estimate": "26% of tickets (27/102) have no time estimate \u2014 poor estimation hygiene reduces sprint predictability and makes it difficult to assess whether scope is achievable with remaining capacity.",
+    "rollover": "Only 2 tickets (2%) rolled over across the quarter. Sprint planning discipline is strong, though Sprint 27 and 31 had higher rollover (59% and 66% respectively) due to carrying forward work from prior quarters.",
+    "cycle_time": "Median cycle time of 9 days is healthy; mean of 14.5 days reflects a handful of longer-running stories (Sprint 30-31 saw 24-29 day medians). Flow is good overall but watch for blockers on complex work.",
+    "assignee_workload": "Giuseppe carries 51% of tickets (54 total), Fabrizio 29% (30 total). Both are high performers (96% and 87% completion rates) but Giuseppe's load is disproportionate. Gianni (12 tickets) and Nikola (8 tickets, Sprint 27 only) contribute less; consider rebalancing if workload concentration risks delivery."
   },
   "sprints": [
     {
@@ -5903,5 +6487,5 @@
       "status_color": "blue"
     }
   ],
-  "saved_at": "2026-06-10T08:02:55.309002+00:00"
+  "saved_at": "2026-06-17T12:22:48.537419+00:00"
 }
