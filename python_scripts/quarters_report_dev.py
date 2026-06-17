@@ -576,7 +576,7 @@ def _issue_row(issue):
 def _compute_per_sprint(sprints, all_issues, in_progress_statuses, proj,
                         version_release_dates, issue_sprint_ids_fn,
                         prev_q_sprint_id=None, prev_q_sprint_end=None,
-                        quarter_start_str=None):
+                        quarter_start_str=None, excl_issues=None):
     """Compute per-sprint KPIs and assignee stats for sprint-level filtering and trends."""
     _excl_done_sp_st  = set(proj.get("excluded_done_statuses", []))
     _excl_done_sp_lbl = set(proj.get("excluded_done_labels",   []))
@@ -678,6 +678,29 @@ def _compute_per_sprint(sprints, all_issues, in_progress_statuses, proj,
             "sp_completed":    v["sp_completed"],
             "completion_rate": round(v["completed"] / v["total"] * 100) if v["total"] else 0,
         } for a, v in s_amap.items()], key=lambda x: (x["is_team"], x["total"]), reverse=True)
+        # Per-sprint stats for excluded-summary issues so the dashboard
+        # can adjust sprint-level KPIs when the "show excluded" checkbox is on.
+        se_issues = [i for i in (excl_issues or []) if sid in issue_sprint_ids_fn(i)]
+        se_logged_s    = sum(i["fields"].get("timespent")            or 0 for i in se_issues)
+        se_estimated_s = sum(i["fields"].get("timeoriginalestimate") or 0 for i in se_issues)
+        se_by_dev = {}
+        for _i in se_issues:
+            _af = _i["fields"].get("assignee") or {}
+            _a  = _af.get("displayName", "Unassigned")
+            if _a not in se_by_dev:
+                se_by_dev[_a] = {"logged_h": 0.0, "estimated_h": 0.0, "total": 0}
+            se_by_dev[_a]["total"]       += 1
+            se_by_dev[_a]["logged_h"]    += round((_i["fields"].get("timespent")            or 0) / 3600, 2)
+            se_by_dev[_a]["estimated_h"] += round((_i["fields"].get("timeoriginalestimate") or 0) / 3600, 2)
+        s_excl_stats = {
+            "item_count":        len(se_issues),
+            "logged_h":          round(se_logged_s    / 3600, 1),
+            "estimated_h":       round(se_estimated_s / 3600, 1),
+            "no_estimate_count": sum(1 for i in se_issues if not i["fields"].get("timeoriginalestimate")),
+            "no_log_count":      sum(1 for i in se_issues if not i["fields"].get("timespent")),
+            "by_dev":            se_by_dev,
+        } if se_issues else {}
+
         per_sprint[sid] = {
             "sprint_name":           sprint["name"],
             "sprint_state":          sprint["state"],
@@ -702,6 +725,7 @@ def _compute_per_sprint(sprints, all_issues, in_progress_statuses, proj,
             "sp_total":              s_sp_total,
             "sp_completed":          s_sp_completed,
             "assignee_stats":        s_assignee_stats,
+            "excl_summary_stats":    s_excl_stats,
         }
     return per_sprint
 
@@ -774,9 +798,35 @@ def fetch_kpis(sprints, proj, ref=None, prev_sprint_id=None, prev_sprint_end=Non
     )
 
     # Exclude issues whose summary contains any of the configured strings (case-insensitive)
+    # Keep a separate list so the dashboard can optionally show them.
+    excl_summ_issues = []
     if excl_summ:
+        excl_summ_issues = [i for i in all_issues
+                            if any(x in i["fields"]["summary"].lower() for x in excl_summ)]
         all_issues = [i for i in all_issues
                       if not any(x in i["fields"]["summary"].lower() for x in excl_summ)]
+
+    # Time/assignee stats for excluded-summary issues, stored so the dashboard
+    # can add them back in when the "show excluded" checkbox is on.
+    _es_logged_s    = sum(i["fields"].get("timespent")            or 0 for i in excl_summ_issues)
+    _es_estimated_s = sum(i["fields"].get("timeoriginalestimate") or 0 for i in excl_summ_issues)
+    _es_by_dev = {}
+    for _i in excl_summ_issues:
+        _af  = _i["fields"].get("assignee") or {}
+        _a   = _af.get("displayName", "Unassigned")
+        if _a not in _es_by_dev:
+            _es_by_dev[_a] = {"logged_h": 0.0, "estimated_h": 0.0, "total": 0}
+        _es_by_dev[_a]["total"]       += 1
+        _es_by_dev[_a]["logged_h"]    += round((_i["fields"].get("timespent")            or 0) / 3600, 2)
+        _es_by_dev[_a]["estimated_h"] += round((_i["fields"].get("timeoriginalestimate") or 0) / 3600, 2)
+    excl_summary_stats = {
+        "item_count":       len(excl_summ_issues),
+        "logged_h":         round(_es_logged_s    / 3600, 1),
+        "estimated_h":      round(_es_estimated_s / 3600, 1),
+        "no_estimate_count": sum(1 for i in excl_summ_issues if not i["fields"].get("timeoriginalestimate")),
+        "no_log_count":      sum(1 for i in excl_summ_issues if not i["fields"].get("timespent")),
+        "by_dev":           _es_by_dev,
+    } if excl_summ_issues else {}
 
     # Key set used to filter raw JQL results (e.g. rollover) against the exclusion list above
     _filtered_keys = {i["key"] for i in all_issues}
@@ -1087,16 +1137,19 @@ def fetch_kpis(sprints, proj, ref=None, prev_sprint_id=None, prev_sprint_end=Non
             "in_progress": [dict(r, sprint_ids=_issue_sprint_ids(
                                 next((i for i in all_issues if i["key"] == r["key"]), {})))
                             for r in _build_inprogress_rows(in_progress, all_issues, qe_date, in_progress_statuses)],
-            "no_estimate": [_row_with_sprints(i) for i in no_estimate],
+            "no_estimate":       [_row_with_sprints(i) for i in no_estimate],
+            "excluded_summary":  [_row_with_sprints(i) for i in excl_summ_issues],
         },
-        "per_sprint": "__PLACEHOLDER__",
+        "per_sprint":          "__PLACEHOLDER__",
+        "excl_summary_stats":  excl_summary_stats,
     }
     _per_sprint = _compute_per_sprint(sprints, all_issues, in_progress_statuses,
                                       proj, version_release_dates,
                                       _issue_sprint_ids,
                                       prev_q_sprint_id=prev_sid_str,
                                       prev_q_sprint_end=prev_sprint_end,
-                                      quarter_start_str=str(qs_date))
+                                      quarter_start_str=str(qs_date),
+                                      excl_issues=excl_summ_issues)
     _sp_velocity_avg = 0
     if use_sp:
         _closed_sps = [v["sp_completed"] for v in _per_sprint.values()
@@ -1111,7 +1164,7 @@ def fetch_kpis(sprints, proj, ref=None, prev_sprint_id=None, prev_sprint_end=Non
     # Worklog data — only fetched when "fetch_worklogs": true in project config.
     # Adds one API call per issue that has timespent > 0.
     if proj.get("fetch_worklogs", False):
-        _result["worklog_by_person"] = fetch_worklogs_for_quarter(all_issues, qs_date, qe_date)
+        _result["worklog_by_person"] = fetch_worklogs_for_quarter(all_issues + excl_summ_issues, qs_date, qe_date)
     else:
         _result["worklog_by_person"] = {}
     return _result
@@ -1495,7 +1548,7 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>__DASHBOARD_TITLE__</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
-<link rel="stylesheet" href="assets/quarters_style.css?v=__ASSET_VERSION__">
+<link rel="stylesheet" href="assets/quarters_style__ASSET_SUFFIX__.css?v=__ASSET_VERSION__">
 </head>
 <body>
 __PREVIEW_BANNER__
@@ -1535,7 +1588,7 @@ __PREVIEW_BANNER__
   </div>
 </div>
 
-<div id="sprint-sel-bar"></div>
+<div id="sprint-sel-bar"><label id="excl-toggle-hdr" class="excl-toggle" style="display:none"><input type="checkbox" id="exclCb"> Show excluded</label></div>
 <main id="dash"><div class="nodata">Loading…</div></main>
 <button id="btt" title="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
@@ -1544,7 +1597,7 @@ const ALL_DATA=__ALL_DATA_JSON__;
 const WLOG_ADMINS=__WLOG_ADMINS_JSON__;
 const REFRESH_WEBHOOK=__REFRESH_WEBHOOK_URL__;
 </script>
-<script src="assets/quarters_script.js?v=__ASSET_VERSION__"></script>
+<script src="assets/quarters_script__ASSET_SUFFIX__.js?v=__ASSET_VERSION__"></script>
 <div id="tt"></div>
 <div id="cf-access-notice" style="display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:#f8fafc;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;align-items:center;gap:10px;box-shadow:0 4px 12px rgba(0,0,0,.3);z-index:9999">
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#f59e0b" stroke-width="1.5"/><path d="M8 5v4M8 11v.5" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -1583,6 +1636,7 @@ def _render_html(all_projects_data, preview=False):
         .replace("__DASHBOARD_TITLE__",    DASHBOARD_TITLE)
         .replace("__LOGO_ALT__",           LOGO_ALT)
         .replace("__ASSET_VERSION__",      asset_version)
+        .replace("__ASSET_SUFFIX__",       "_dev" if preview else "")
     )
 
 
@@ -1591,10 +1645,16 @@ def generate_html_dashboard(all_projects_data):
     _here    = pathlib.Path(__file__).parent
     _out_dir = pathlib.Path(DASHBOARD_OUTPUT_DIR)
 
-    # Copy CSS and JS into assets/ subfolder
+    # Copy CSS and JS into assets/ subfolder.
+    # Dev assets (quarters_script_dev.js / quarters_style_dev.css) are kept separate
+    # from live assets so test builds never overwrite what the live dashboard serves.
     _assets_dir = _out_dir / "assets"
     _assets_dir.mkdir(exist_ok=True)
-    for asset in ("quarters_style.css", "quarters_script.js", "logo.png"):
+    for asset in ("quarters_script.js", "quarters_style.css", "logo.png"):
+        src = _here / asset
+        if src.exists():
+            shutil.copy2(src, _assets_dir / asset)
+    for asset in ("quarters_script_dev.js", "quarters_style_dev.css"):
         src = _here / asset
         if src.exists():
             shutil.copy2(src, _assets_dir / asset)
