@@ -277,6 +277,8 @@ function showTab(id){
   document.querySelectorAll(".tab-pane").forEach(p=>p.classList.toggle("active",p.dataset.pane===id));
   const bar=document.getElementById("sprint-sel-bar");
   if(bar)bar.style.display=id==="trends"?"none":"";
+  const ttb=document.getElementById("trends-toolbar");
+  if(ttb)ttb.style.display=id==="trends"?"":"none";
   window.scrollTo({top:0,behavior:"instant"});
 }
 
@@ -336,6 +338,55 @@ function pane(id,content){
   return`<div class="tab-pane" data-pane="${id}">${content}</div>`;
 }
 
+/* ---- Excluded-summary KPI adjustment ---- */
+// Adds excluded-summary stats back into a KPI object when showOn is true.
+// Works for both quarter-level (pass kpis.excl_summary_stats) and sprint-level (pass sp.excl_summary_stats).
+function _adjKpis(base,exclStats,showOn){
+  if(!showOn||!exclStats||!exclStats.item_count)return base;
+  const newTotal    =(base.total||0)+(exclStats.item_count||0);
+  const newCompleted=(base.completed||0)+(exclStats.completed_count||0);
+  const newBugs     =(base.bugs||0)+(exclStats.bug_count||0);
+  const newStories  =(base.stories||0)+(exclStats.story_count||0);
+  const newTasks    =(base.tasks||0)+(exclStats.task_count||0);
+  const newOosTotal =(base.oos_total||0)+(exclStats.oos_count||0);
+  const newOosOpen  =(base.oos_open||0)+(exclStats.oos_open_count||0);
+  const bc=base.completed||0,ec=exclStats.completed_count||0;
+  const adjAvgCycle =(bc+ec)>0?Math.round(((base.avg_cycle_days||0)*bc+(exclStats.avg_cycle_days||0)*ec)/(bc+ec)*10)/10:(base.avg_cycle_days||0);
+  const adjMedCycle =(bc+ec)>0?Math.round(((base.med_cycle_days||0)*bc+(exclStats.med_cycle_days||0)*ec)/(bc+ec)*10)/10:(base.med_cycle_days||0);
+  const tl=Math.round(((base.time_logged_h||0)+(exclStats.logged_h||0))*10)/10;
+  const te=Math.round(((base.time_estimated_h||0)+(exclStats.estimated_h||0))*10)/10;
+  const acc=(tl>0&&te>0)?Math.round(Math.min(tl,te)/Math.max(tl,te)*100):0;
+  const vari=te>0?Math.round((tl-te)/te*100):0;
+  const adjAs=(base.assignee_stats||[]).map(a=>{
+    const d=exclStats.by_dev&&exclStats.by_dev[a.name];
+    if(!d)return a;
+    const nl=Math.round((a.logged_h+(d.logged_h||0))*10)/10;
+    const ne=Math.round((a.estimated_h+(d.estimated_h||0))*10)/10;
+    return{...a,logged_h:nl,estimated_h:ne,total:a.total+(d.total||0)};
+  });
+  const existingNames=new Set(adjAs.map(a=>a.name));
+  const extraDevs=Object.entries(exclStats.by_dev||{})
+    .filter(([n])=>!existingNames.has(n))
+    .map(([n,d])=>({name:n,account_id:'',is_team:false,team_period:null,
+      total:d.total,completed:0,logged_h:d.logged_h,estimated_h:d.estimated_h,
+      sp_total:0,sp_completed:0,completion_rate:0}));
+  return{...base,
+    total:newTotal,
+    completed:newCompleted,
+    completion_rate:newTotal?Math.round(newCompleted/newTotal*100):0,
+    bugs:newBugs,stories:newStories,tasks:newTasks,
+    bug_pct:newTotal?Math.round(newBugs/newTotal*100):0,
+    oos_total:newOosTotal,oos_open:newOosOpen,
+    avg_cycle_days:adjAvgCycle,med_cycle_days:adjMedCycle,
+    time_logged_h:tl,time_estimated_h:te,
+    estimate_accuracy_pct:acc,estimate_variance_pct:vari,
+    no_estimate_count:(base.no_estimate_count||0)+(exclStats.no_estimate_count||0),
+    no_estimate_pct:newTotal?(Math.round(((base.no_estimate_count||0)+(exclStats.no_estimate_count||0))/newTotal*100)):0,
+    no_log_count:(base.no_log_count||0)+(exclStats.no_log_count||0),
+    assignee_stats:[...adjAs,...extraDevs],
+  };
+}
+
 /* ---- Main render ---- */
 function render(qk,activeTab){
   const D=QS[qk];
@@ -351,7 +402,7 @@ function render(qk,activeTab){
   const iss=kpis.issues||{};
   const jb=kpis.jira_base||"";
   const verIds=kpis.version_ids||{};
-  const oa=activeSprint&&sp?(sp.oos_open||0):kpis.oos_open;
+  let oa=activeSprint&&sp?(sp.oos_open||0):kpis.oos_open;
   const ids=(kpis.sprint_ids||[]).join(", ");
   const base=`project = ${PROJ_KEY} AND sprint in (${ids})`;
 
@@ -409,8 +460,57 @@ function render(qk,activeTab){
 
   const isCurrentQ=!!(sprints||[]).find(s=>s.state==="active");
 
+  /* Sprint table */
+  const sRows=(sprints||[]).slice().reverse().map(s=>{
+    const start=fmtDate(s.start_date,true);const end=fmtDate(s.end_date,false);
+    const dates=start&&end?`${start} — ${end}`:start?`From ${start}`:"";
+    const chip=`<span class="chip chip-${e(s.status_color)}">${e(s.status_label)}</span>`;
+    const surl=(jb&&s.state==="active")?`${jb}/jira/software/projects/${PROJ_KEY}/boards/${e(kpis.board_id||"")}?sprint=${e(String(s.id))}`:null;
+    const nm=surl?`<a class="ik" href="${e(surl)}" target="_blank">${e(s.name)}</a>`:e(s.name);
+    return`<tr><td>${nm}</td><td style="white-space:nowrap">${e(dates)}</td><td>${chip}</td><td>${e((s.state||"").charAt(0).toUpperCase()+(s.state||"").slice(1))}</td></tr>`;
+  }).join("")||`<tr class="er"><td colspan="4">No sprints</td></tr>`;
+  const sprintTable=`<div class="tw"><div class="tw-body"><table>
+    <thead><tr><th>Sprint</th><th>Dates</th><th>Status</th><th>State</th></tr></thead>
+    <tbody>${sRows}</tbody>
+  </table></div></div>`;
+
+  /* Build all tab panes */
+  function spF(rows){return activeSprint?rows.filter(r=>(r.sprint_ids||[]).includes(activeSprint)):rows;}
+  const ipRows      =spF(iss.in_progress||[]);
+  const ipUnresolved=ipRows.filter(r=>!r.resolved_quarter);
+  const ipCarried   =ipRows.filter(r=>!!r.resolved_quarter);
+  const ipCarriedIn =ipRows.filter(r=>!!r.origin_quarter);
+  const oosOpenRows=spF(iss.oos_open||[]);
+  const oosAllRows =spF(iss.oos_all||[]);
+  const relRows    =spF(iss.released||[]);
+  const allRows    =spF(iss.all||[]);
+  const exclSummRows=spF((iss.excluded_summary||[]).map(r=>({...r,_rowCls:(r._rowCls?r._rowCls+' excl-summary':'excl-summary')})));
+  const exclKeys=new Set(exclSummRows.map(r=>r.key));
+
+  /* Excluded-summary adjustments — apply in both quarter and sprint view */
+  const showExclOn=exclSummRows.length>0&&localStorage.getItem(`showExcl_${PROJ_KEY}`)==='1';
+
+  /* Per-tab subsets of excluded rows — only merged in when showExclOn */
+  const exclIpRows  =showExclOn?exclSummRows.filter(r=>r.status_cat==='indeterminate'):[];
+  const exclRelRows =showExclOn?exclSummRows.filter(r=>(r.fix_versions||[]).length&&['Released','Closed','Merged'].includes(r.status)):[];
+  const exclOosAll  =showExclOn?exclSummRows.filter(r=>(r.labels||[]).includes('Out_Of_Sprint')):[];
+  const exclOosOpen =showExclOn?exclOosAll.filter(r=>r.status_cat!=='done'):[];
+  const exclNeRows  =showExclOn?exclSummRows.filter(r=>!r.has_estimate):[];
+  function _wlogFiltered(pd){
+    if(!pd||!exclKeys.size||showExclOn)return pd;
+    const days={};
+    for(const[dt,entries] of Object.entries(pd.days||{})){
+      const filtered=Object.fromEntries(Object.entries(entries).filter(([k])=>!exclKeys.has(k)));
+      if(Object.keys(filtered).length)days[dt]=filtered;
+    }
+    return{...pd,days};
+  }
+  const adjKpis=_adjKpis(kpis,kpis.excl_summary_stats||{},showExclOn);
+  const adjSp=sp?_adjKpis(sp,sp.excl_summary_stats||{},showExclOn):null;
+  oa=activeSprint&&adjSp?(adjSp.oos_open||0):(adjKpis.oos_open||0);
+
   /* KPI cards */
-  const K=sp||kpis;
+  const K=sp?adjSp:adjKpis;
   const cr=K.completion_rate;
   const crC=cr>=80?"green":cr>=60?"yellow":"red";
   const oosC=oa===0?"green":oa>2?"red":"yellow";
@@ -439,21 +539,21 @@ function render(qk,activeTab){
        tip:"How close logged hours were to estimates for this sprint."},
     ]),
   ]:[
-    {l:"Total Items",           v:kpis.total,                                        n:notes.total,            c:"blue",   tip:"All tickets in scope across every sprint this quarter, regardless of status or type."},
-    {l:"Completed / Released",  v:kpis.completed,                                    n:notes.completed,        c:"green",  tip:"Tickets moved to Done status this quarter. Compare against Total Items to gauge delivery."},
+    {l:"Total Items",           v:K.total,                                           n:notes.total,            c:"blue",   tip:"All tickets in scope across every sprint this quarter, regardless of status or type."},
+    {l:"Completed / Released",  v:K.completed,                                       n:notes.completed,        c:"green",  tip:"Tickets moved to Done status this quarter. Compare against Total Items to gauge delivery."},
     {l:"Completion Rate",       v:cr+"%",                                            n:notes.completion_rate,  c:crC,      tip:"Percentage of in-scope tickets completed. 80%+ is healthy; 60—79% warrants a look at blockers; below 60% is a concern.",  bar:cr},
     {l:"Releases Shipped",      v:kpis.releases_shipped,                             n:notes.releases_shipped, c:"blue",   tip:"Number of Jira fix versions released this quarter. Multiple releases indicate a healthy delivery cadence."},
     ...(PROJ_USE_OOS?[
-      {l:"Out-of-Sprint (total)", v:kpis.oos_total, n:notes.oos_total, c:"yellow", tip:"Tickets added to a sprint after it started — unplanned reactive work. High OOS (>20% of total) signals planning or scope issues."},
+      {l:"Out-of-Sprint (total)", v:K.oos_total, n:notes.oos_total, c:"yellow", tip:"Tickets added to a sprint after it started — unplanned reactive work. High OOS (>20% of total) signals planning or scope issues."},
       {l:"Open OOS Items",        v:oa,             n:notes.oos_open,  c:oosC,     tip:"Out-of-sprint tickets still unresolved. Any open OOS items are unplanned debt that should be closed or explicitly deferred."},
     ]:[]),
-    {l:"Bug / Story / Task",    v:`${kpis.bugs} / ${kpis.stories} / ${kpis.tasks} (${kpis.bug_pct}% bugs)`, n:notes.type_split, c:"blue", tip:"Breakdown of issue types in scope. A bug ratio above 40% signals quality concerns; a healthy quarter is mostly stories and tasks."},
+    {l:"Bug / Story / Task",    v:`${K.bugs} / ${K.stories} / ${K.tasks} (${K.bug_pct}% bugs)`, n:notes.type_split, c:"blue", tip:"Breakdown of issue types in scope. A bug ratio above 40% signals quality concerns; a healthy quarter is mostly stories and tasks."},
     {l:"Releases / Sprint",     v:`${kpis.med_releases_per_sprint} median (${kpis.avg_releases_per_sprint} avg)`, n:notes.avg_releases, c:"blue", tip:"Median releases per closed sprint — more reliable than the mean when one sprint has an unusually large batch. Healthy cadence varies by team type.",
      xn:(()=>{const med=kpis.med_releases_per_sprint||0,avg=kpis.avg_releases_per_sprint||0;return(avg>med*1.5&&avg-med>0.5)?`⚠ Average is skewed — at least one sprint had an unusually high release count (${avg} avg vs ${med} median).`:""})()},
-    {l:"Sprint Rollover",       v:kpis.rollover_count+" items ("+rollPct+"%)",       n:notes.rollover,         c:rollC,    tip:"Tickets carried from a closed sprint without completing. Note: an item rolling across multiple sprints within the quarter may be counted more than once.",
-     xn:kpis.rollover_count>0?"⚠ Count may include items that rolled across multiple sprints within this quarter — actual unique items could be lower.":""},
-    {l:"Cycle Time",            v:`${kpis.med_cycle_days||0}d median (${kpis.avg_cycle_days||0}d avg)`,         n:notes.cycle_time,   c:cycleC,   tip:"Median calendar days from In Progress to Done — more reliable than the mean when a small number of long-running tickets inflate the average. Under 3d excellent; 3—7d normal; over 7d investigate blockers.",
-     xn:(()=>{const med=kpis.med_cycle_days||0,avg=kpis.avg_cycle_days||0;return(avg>med*1.5&&avg-med>2)?`⚠ Average skewed by long-running outlier tickets (${avg}d avg vs ${med}d median) — median is the more representative figure.`:""})()},
+    {l:"Sprint Rollover",       v:K.rollover_count+" items ("+rollPct+"%)",       n:notes.rollover,         c:rollC,    tip:"Tickets carried from a closed sprint without completing. Note: an item rolling across multiple sprints within the quarter may be counted more than once.",
+     xn:K.rollover_count>0?"⚠ Count may include items that rolled across multiple sprints within this quarter — actual unique items could be lower.":""},
+    {l:"Cycle Time",            v:`${K.med_cycle_days||0}d median (${K.avg_cycle_days||0}d avg)`,         n:notes.cycle_time,   c:cycleC,   tip:"Median calendar days from In Progress to Done — more reliable than the mean when a small number of long-running tickets inflate the average. Under 3d excellent; 3—7d normal; over 7d investigate blockers.",
+     xn:(()=>{const med=K.med_cycle_days||0,avg=K.avg_cycle_days||0;return(avg>med*1.5&&avg-med>2)?`⚠ Average skewed by long-running outlier tickets (${avg}d avg vs ${med}d median) — median is the more representative figure.`:""})()},
     ...(PROJ_USE_SP?[
       {l:"SP Planned",   v:kpis.sp_total||0,        n:notes.sp_velocity||"",  c:"blue",   tip:"Total story points committed across all sprints this quarter."},
       {l:"SP Completed", v:kpis.sp_completed||0,
@@ -470,77 +570,6 @@ function render(qk,activeTab){
       <div class="kn">${e(c.n||"")}</div>
       ${c.xn?`<div class="kn" style="color:var(--yellow-text);margin-top:4px">${e(c.xn)}</div>`:""}
     </div>`).join("")}</div>`;
-
-  /* Sprint table */
-  const sRows=(sprints||[]).slice().reverse().map(s=>{
-    const start=fmtDate(s.start_date,true);const end=fmtDate(s.end_date,false);
-    const dates=start&&end?`${start} — ${end}`:start?`From ${start}`:"";
-    const chip=`<span class="chip chip-${e(s.status_color)}">${e(s.status_label)}</span>`;
-    const surl=(jb&&s.state==="active")?`${jb}/jira/software/projects/${PROJ_KEY}/boards/${e(kpis.board_id||"")}?sprint=${e(String(s.id))}`:null;
-    const nm=surl?`<a class="ik" href="${e(surl)}" target="_blank">${e(s.name)}</a>`:e(s.name);
-    return`<tr><td>${nm}</td><td style="white-space:nowrap">${e(dates)}</td><td>${chip}</td><td>${e((s.state||"").charAt(0).toUpperCase()+(s.state||"").slice(1))}</td></tr>`;
-  }).join("")||`<tr class="er"><td colspan="4">No sprints</td></tr>`;
-  const sprintTable=`<div class="tw"><div class="tw-body"><table>
-    <thead><tr><th>Sprint</th><th>Dates</th><th>Status</th><th>State</th></tr></thead>
-    <tbody>${sRows}</tbody>
-  </table></div></div>`;
-
-  /* Build all tab panes */
-  function spF(rows){return activeSprint?rows.filter(r=>(r.sprint_ids||[]).includes(activeSprint)):rows;}
-  const ipRows      =spF(iss.in_progress||[]);
-  const ipUnresolved=ipRows.filter(r=>!r.resolved_quarter);
-  const ipCarried   =ipRows.filter(r=>!!r.resolved_quarter);
-  const ipCarriedIn =ipRows.filter(r=>!!r.origin_quarter);
-  const oosOpenRows=spF(iss.oos_open||[]);
-  const oosAllRows =spF(iss.oos_all||[]);
-  const relRows    =spF(iss.released||[]);
-  const allRows    =spF(iss.all||[]);
-  const exclSummRows=(iss.excluded_summary||[]).map(r=>({...r,_rowCls:(r._rowCls?r._rowCls+' excl-summary':'excl-summary')}));
-  const exclKeys=new Set(exclSummRows.map(r=>r.key));
-  function _wlogFiltered(pd){
-    if(!pd||!exclKeys.size||showExclOn)return pd;
-    const days={};
-    for(const[dt,entries] of Object.entries(pd.days||{})){
-      const filtered=Object.fromEntries(Object.entries(entries).filter(([k])=>!exclKeys.has(k)));
-      if(Object.keys(filtered).length)days[dt]=filtered;
-    }
-    return{...pd,days};
-  }
-
-  /* Excluded-summary adjustments — apply in both quarter and sprint view */
-  const showExclOn=exclSummRows.length>0&&localStorage.getItem(`showExcl_${PROJ_KEY}`)==='1';
-  function _adjKpis(base,sprintExclStats){
-    const exclStats=sprintExclStats||kpis.excl_summary_stats||{};
-    if(!showExclOn||!exclStats.item_count)return base;
-    const tl=Math.round(((base.time_logged_h||0)+(exclStats.logged_h||0))*10)/10;
-    const te=Math.round(((base.time_estimated_h||0)+(exclStats.estimated_h||0))*10)/10;
-    const acc=(tl>0&&te>0)?Math.round(Math.min(tl,te)/Math.max(tl,te)*100):0;
-    const vari=te>0?Math.round((tl-te)/te*100):0;
-    const adjAs=(base.assignee_stats||[]).map(a=>{
-      const d=exclStats.by_dev&&exclStats.by_dev[a.name];
-      if(!d)return a;
-      const nl=Math.round((a.logged_h+(d.logged_h||0))*10)/10;
-      const ne=Math.round((a.estimated_h+(d.estimated_h||0))*10)/10;
-      return{...a,logged_h:nl,estimated_h:ne,total:a.total+(d.total||0)};
-    });
-    // Add any devs who only appear in excluded issues
-    const existingNames=new Set(adjAs.map(a=>a.name));
-    const extraDevs=Object.entries(exclStats.by_dev||{})
-      .filter(([n])=>!existingNames.has(n))
-      .map(([n,d])=>({name:n,account_id:'',is_team:false,team_period:null,
-        total:d.total,completed:0,logged_h:d.logged_h,estimated_h:d.estimated_h,
-        sp_total:0,sp_completed:0,completion_rate:0}));
-    return{...base,
-      time_logged_h:tl,time_estimated_h:te,
-      estimate_accuracy_pct:acc,estimate_variance_pct:vari,
-      no_estimate_count:(base.no_estimate_count||0)+(exclStats.no_estimate_count||0),
-      no_estimate_pct:base.total?(Math.round(((base.no_estimate_count||0)+(exclStats.no_estimate_count||0))/(base.total+(exclStats.item_count||0))*100)):0,
-      no_log_count:(base.no_log_count||0)+(exclStats.no_log_count||0),
-      assignee_stats:[...adjAs,...extraDevs],
-    };
-  }
-  const adjKpis=_adjKpis(kpis,null);
-  const adjSp=sp?_adjKpis(sp,sp.excl_summary_stats||{}):null;
 
   /* OOS alert (reused in multiple panes) — must be after oosOpenRows */
   let oosAlert="";
@@ -588,31 +617,34 @@ function render(qk,activeTab){
       <div class="section-label">Sprints</div>
       ${sprintTable}
     `),
-    pane("inprogress",`
-      <div class="pane-title">In Progress <span class="tab-cnt ${!isCurrentQ&&ipUnresolved.length>0?"warn":""}">${ipRows.length}</span></div>
-      ${!isCurrentQ&&ipUnresolved.length>0?`<div class="alert alert-yellow">⚠ ${ipUnresolved.length} item${ipUnresolved.length>1?"s are":" is"} still in progress after quarter close — may need follow-up.</div>`:""}
+    pane("inprogress",(()=>{
+      const ipAll=ipRows.concat(exclIpRows);
+      const ipUnresolvedAll=ipAll.filter(r=>!r.resolved_quarter);
+      return`
+      <div class="pane-title">In Progress <span class="tab-cnt ${!isCurrentQ&&ipUnresolvedAll.length>0?"warn":""}">${ipAll.length}</span></div>
+      ${!isCurrentQ&&ipUnresolvedAll.length>0?`<div class="alert alert-yellow">⚠ ${ipUnresolvedAll.length} item${ipUnresolvedAll.length>1?"s are":" is"} still in progress after quarter close — may need follow-up.</div>`:""}
       ${!isCurrentQ&&ipCarried.length>0?`<div class="alert alert-green">✓ ${ipCarried.length} item${ipCarried.length>1?"s were":" was"} resolved in a later quarter — hover &#x2139; for details.</div>`:""}
       ${isCurrentQ?`<div class="pane-desc">Items currently being worked on across all sprints this quarter.${ipCarriedIn.length>0?` Coloured &#x2139; marks ${ipCarriedIn.length} item${ipCarriedIn.length>1?"s":""}  carried over from a previous quarter.`:""}</div>`:""}
-      ${mkTable(ipCols,isCurrentQ?ipRows:ipRows.map(r=>r._rowCls==='resolved-carried'?r:{...r,_rowCls:''}),jUrl(base+" AND statusCategory != Done ORDER BY status ASC, assignee ASC"))}
-    `),
+      ${mkTable(ipCols,isCurrentQ?ipAll:ipAll.map(r=>r._rowCls==='resolved-carried'?r:{...r,_rowCls:r._rowCls||''}),jUrl(base+" AND statusCategory != Done ORDER BY status ASC, assignee ASC"))}
+    `;})()),
     ...(PROJ_USE_OOS?[
     pane("oosopen",`
       ${oosAlert}
-      <div class="pane-title">Open OOS Items <span class="tab-cnt ${isCurrentQ?(oa>2?"urgent":oa>0?"warn":"clear"):""}">${oa}</span></div>
+      <div class="pane-title">Open OOS Items <span class="tab-cnt ${isCurrentQ?(oa>2?"urgent":oa>0?"warn":"clear"):""}">${oosOpenRows.length+exclOosOpen.length}</span></div>
       <div class="pane-desc">Out-of-sprint items that are still open and need resolution.</div>
-      ${mkTable(oosCols,oosOpenRows,jUrl(base+" AND labels = Out_Of_Sprint AND statusCategory != Done ORDER BY priority ASC"))}
+      ${mkTable(oosCols,oosOpenRows.concat(exclOosOpen),jUrl(base+" AND labels = Out_Of_Sprint AND statusCategory != Done ORDER BY priority ASC"))}
     `),
     pane("oos",`
-      <div class="pane-title">Out-of-Sprint Items <span class="tab-cnt">${oosAllRows.length}</span></div>
+      <div class="pane-title">Out-of-Sprint Items <span class="tab-cnt">${oosAllRows.length+exclOosAll.length}</span></div>
       <div class="pane-desc">All items flagged Out_Of_Sprint this quarter, including resolved ones.</div>
-      ${mkTable(oosCols,oosAllRows,jUrl(base+" AND labels = Out_Of_Sprint ORDER BY status ASC"))}
+      ${mkTable(oosCols,oosAllRows.concat(exclOosAll),jUrl(base+" AND labels = Out_Of_Sprint ORDER BY status ASC"))}
     `),
     ]:[]),
     pane("released",`
-      <div class="pane-title">Released <span class="tab-cnt">${relRows.length}</span></div>
+      <div class="pane-title">Released <span class="tab-cnt">${relRows.length+exclRelRows.length}</span></div>
       <div class="pane-desc">Items with status Released, Closed, or Merged that have a fix version attached.</div>
       ${relBreakdown}
-      ${mkTable(relCols,relRows,jUrl(base+" AND status in (Released,Closed,Merged) AND fixVersion is not EMPTY ORDER BY fixVersions ASC"))}
+      ${mkTable(relCols,relRows.concat(exclRelRows),jUrl(base+" AND status in (Released,Closed,Merged) AND fixVersion is not EMPTY ORDER BY fixVersions ASC"))}
     `),
     pane("all",`
       <div class="pane-title">All Items <span class="tab-cnt">${allRows.length+(showExclOn?exclSummRows.length:0)}</span></div>
@@ -684,7 +716,7 @@ function render(qk,activeTab){
             +'<div class="pane-desc">'+(spSel?'Story points planned vs completed for '+e(sp.sprint_name)+'.':'Story points planned vs completed across all sprints. Items without story points affect velocity reporting.')+'</div>'
             +spKpiHtml+compBar+neAlert
             +'<div class="section-label" style="margin-bottom:10px">Items Without Story Points</div>'
-            +mkTable(neCols,neRows,jUrl(base+' AND "Story Points" is EMPTY ORDER BY status ASC'));
+            +mkTable(neCols,neRows.concat(exclNeRows),jUrl(base+' AND "Story Points" is EMPTY ORDER BY status ASC'));
         }
 
         // ---- Time / Hours mode ----
@@ -738,7 +770,7 @@ function render(qk,activeTab){
           +'<div class="pane-desc">Logged vs estimated hours across all sprint items. Items without estimates affect accuracy reporting.</div>'
           +timeKpiHtml+compBar+neAlert
           +'<div class="section-label" style="margin-bottom:10px">Items Without Estimates</div>'
-          +mkTable(neCols,neRows,jUrl(base+' AND originalEstimate is EMPTY ORDER BY status ASC'));
+          +mkTable(neCols,neRows.concat(exclNeRows),jUrl(base+' AND originalEstimate is EMPTY ORDER BY status ASC'));
       })()}
     `),
     pane("team",`
@@ -854,13 +886,13 @@ function render(qk,activeTab){
   /* Tab bar with counts */
   const tabDefs=[
     {id:"overview",   label:"Overview"},
-    {id:"inprogress", label:"In Progress",   cnt:ipRows.length,    cls:!isCurrentQ&&ipUnresolved.length>0?"warn":""},
+    {id:"inprogress", label:"In Progress",   cnt:ipRows.length+(showExclOn?exclIpRows.length:0),    cls:!isCurrentQ&&ipUnresolved.length>0?"warn":""},
     ...(PROJ_USE_OOS?[
-      {id:"oosopen",label:"Open OOS",      cnt:oa,               cls:isCurrentQ?(oa>2?"urgent":oa>0?"warn":"clear"):""},
-      {id:"oos",    label:"Out-of-Sprint", cnt:oosAllRows.length,cls:""},
+      {id:"oosopen",label:"Open OOS",      cnt:oa+(showExclOn?exclOosOpen.length:0),               cls:isCurrentQ?(oa>2?"urgent":oa>0?"warn":"clear"):""},
+      {id:"oos",    label:"Out-of-Sprint", cnt:oosAllRows.length+(showExclOn?exclOosAll.length:0),cls:""},
     ]:[]),
-    {id:"released",   label:"Released",      cnt:relRows.length,   cls:""},
-    {id:"all",        label:"All Items",     cnt:allRows.length,   cls:""},
+    {id:"released",   label:"Released",      cnt:relRows.length+(showExclOn?exclRelRows.length:0),   cls:""},
+    {id:"all",        label:"All Items",     cnt:allRows.length+(showExclOn?exclSummRows.length:0),   cls:""},
     {id:"time",       label:PROJ_USE_SP?"Points":"Time"},
     {id:"team",       label:"Team"},
     {id:"trends",     label:"Trends"},
@@ -876,19 +908,23 @@ function render(qk,activeTab){
 
   showTab(activeTab||"overview");
 
-  /* Excluded-summary toggle — lives in the header, shown only when relevant */
-  const exclHdr=document.getElementById("excl-toggle-hdr");
-  const exclCb=document.getElementById("exclCb");
-  if(exclHdr){
-    exclHdr.style.display=exclSummRows.length>0?'':'none';
-    if(exclCb){
-      exclCb.checked=showExclOn;
-      exclCb.onchange=()=>{
-        localStorage.setItem(`showExcl_${PROJ_KEY}`,exclCb.checked?'1':'0');
+  /* Excluded-summary toggles — sprint bar (all tabs) + trends toolbar (trends only) */
+  const hasExcl=exclSummRows.length>0;
+  const _exclLabel=(()=>{const lbl=D.kpis.excl_summary_label||"";return lbl?"Show "+lbl:"Show excluded";})();
+  const _wireExclToggle=(lbl,cb)=>{
+    if(!lbl)return;
+    lbl.style.display=hasExcl?'':'none';
+    lbl.lastChild.textContent=" "+_exclLabel;
+    if(cb){
+      cb.checked=showExclOn;
+      cb.onchange=()=>{
+        localStorage.setItem(`showExcl_${PROJ_KEY}`,cb.checked?'1':'0');
         render(qk,curTab);
       };
     }
-  }
+  };
+  _wireExclToggle(document.getElementById("excl-toggle-hdr"),   document.getElementById("exclCb"));
+  _wireExclToggle(document.getElementById("excl-toggle-trends"), document.getElementById("exclCbTrends"));
 }
 
 /* ---- Worklog (Clockify-style) chart ---- */
@@ -1109,6 +1145,7 @@ function trendNote(compVals,fmt,hi,lastIsWip,unit){
 function renderTrends(){
   const now=new Date();
   const curLabel=`Q${Math.floor(now.getMonth()/3)+1} ${now.getFullYear()}`;
+  const showExclOn=localStorage.getItem(`showExcl_${PROJ_KEY}`)==='1';
   // All quarters oldest→newest; keep last trendWindow, always append current if present
   const allOldestFirst=Object.keys(QS).slice().reverse();
   const completed=allOldestFirst.filter(q=>q!==curLabel);
@@ -1212,9 +1249,9 @@ function renderTrends(){
     return '<div class="pane-title">Trends</div>'
       +'<div class="pane-desc">Sprint-on-sprint movement within '+e(cur)+'.'+spNote+'</div>'
       +modeToggle+'<br><div class="trend-grid">'+SM.map(function(m){
-        const vals=sIds.map(function(sid){return+(perSprint[sid]?perSprint[sid][m.k]||0:0);});
+        const vals=sIds.map(function(sid){const sp=perSprint[sid]||{};return+(_adjKpis(sp,sp.excl_summary_stats||{},showExclOn)[m.k]||0);});
         const compVals=vals.filter(function(_,i){return closed[i];});
-        const tipVals=sIds.map(function(sid,i){return sLbls[i]+": "+m.fmt(+(perSprint[sid]?perSprint[sid][m.k]||0:0));});
+        const tipVals=sIds.map(function(sid,i){const sp=perSprint[sid]||{};return sLbls[i]+": "+m.fmt(+(_adjKpis(sp,sp.excl_summary_stats||{},showExclOn)[m.k]||0));});
         // Delta between last two closed sprints
         const cv=compVals[compVals.length-1]??vals[vals.length-1];
         const pv=compVals[compVals.length-2]??cv;
@@ -1259,7 +1296,7 @@ function renderTrends(){
     const mLbls=mQs.map(q=>q.replace(' ','·'));
     const mLastIsWip=lastIsWip&&mQs[mQs.length-1]===curLabel;
     const trimmed=mQs.length<qs.length;
-    const vals=mQs.map(q=>+(QS[q]?.kpis[m.k]??0));
+    const vals=mQs.map(q=>{const qk=QS[q]?.kpis||{};return+(_adjKpis(qk,qk.excl_summary_stats||{},showExclOn)[m.k]??0);});
     // Delta uses last 2 completed points only
     const compVals=mLastIsWip?vals.slice(0,-1):vals;
     const cur=compVals[compVals.length-1]??vals[vals.length-1];
