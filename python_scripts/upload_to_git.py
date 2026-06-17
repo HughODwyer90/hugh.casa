@@ -263,5 +263,5 @@ if __name__ == "__main__":
     upload_entities()
     upload_integrations()
     upload_config_files()
-    cleanup_removed_files(dry_run=True)
+    cleanup_removed_files(dry_run=False)
     print(f"✅ Backup complete. Total files uploaded: {len(uploaded_files)}")
