@@ -14,7 +14,7 @@ HERE = pathlib.Path(__file__).parent
 PROMOTIONS = [
     ("quarters_script_dev.js",    "quarters_script.js"),
     ("quarters_style_dev.css",    "quarters_style.css"),
-    ("dlk_quarter_report_dev.py", "dlk_quarter_report.py"),
+    ("quarters_report_dev.py", "quarters_report.py"),
 ]
 
 for src_name, dst_name in PROMOTIONS:
@@ -27,7 +27,7 @@ for src_name, dst_name in PROMOTIONS:
     print(f"  OK    {src_name} -> {dst_name}")
 
 # Ensure the promoted report script runs in live mode
-report = HERE / "dlk_quarter_report.py"
+report = HERE / "quarters_report.py"
 if report.exists():
     text = report.read_text(encoding="utf-8")
     patched = text.replace(
@@ -36,8 +36,8 @@ if report.exists():
     )
     if patched != text:
         report.write_text(patched, encoding="utf-8")
-        print("  OK    PREVIEW_MODE set to False in dlk_quarter_report.py")
+        print("  OK    PREVIEW_MODE set to False in quarters_report.py")
     else:
         print("  WARN  Could not find PREVIEW_MODE line to patch — check manually")
 
-print("\nDone. Run dlk_quarter_report.py to redeploy.")
+print("\nDone. Run quarters_report.py to redeploy.")
