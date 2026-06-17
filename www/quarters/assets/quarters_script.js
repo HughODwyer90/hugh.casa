@@ -1,5 +1,20 @@
 const PROJ_KEYS=Object.keys(ALL_DATA);
 
+// Cloudflare Access — decode CF_Authorization JWT to get current user's email
+// JWT payload is the second base64url segment; no signature verification needed client-side
+(function(){
+  try{
+    const jwt=(document.cookie.split(';').map(c=>c.trim()).find(c=>c.startsWith('CF_Authorization='))||'').replace('CF_Authorization=','');
+    if(!jwt)return;
+    const payload=JSON.parse(atob(jwt.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+    const email=(payload.email||'').toLowerCase();
+    if(!email)return;
+    window._cfUserEmail=email;
+    // Derive slug from email local part: "hugh.odwyer@datamars.com" → "hugh odwyer"
+    window._cfUserSlug=email.split('@')[0].replace('.',' ');
+  }catch(ex){}
+})();
+
 // Persisted state via URL hash — format: #PROJ:tab  e.g. #DLK:trends
 // Hash survives refresh automatically; no storage API required.
 const _OOS_ONLY_TABS=["oosopen","oos"];
@@ -29,6 +44,7 @@ function switchProject(p,skipRender){
   PROJ_DISPLAY=pd.display||p;
   BOARD_ID=pd.board_id||"";
   activeSprint=null;  // reset to "All sprints" whenever the project changes
+
   // Prefer project-level flag (set by Python main()); fall back to first available
   // quarter's kpis.use_story_points for HTMLs generated before that field existed.
   const _firstKpis=Object.values(pd.qs||{})[0]?.kpis||{};
@@ -171,6 +187,7 @@ function buildSprintSelector(sprints){
   }).join("")+"</div>";
 }
 function setActiveSprint(id){activeSprint=id;render(cur,curTab);}
+
 
 /* ---- Refresh button ---- */
 (function(){
@@ -677,12 +694,14 @@ function render(qk,activeTab){
     `),
     pane("team",`
       <div class="pane-title">Team</div>
-      <div class="pane-desc">Workload breakdown by assignee for ${activeSprint&&sp?e(sp.sprint_name):e(qk)+'. '+e(notes.assignee_workload||'')}.</div>
       ${(()=>{
         const useSp=PROJ_USE_SP||false;
         const as=(sp?sp.assignee_stats:null)||kpis.assignee_stats||[];
-        if(!as.length)return'<div class="nodata">No assignee data.</div>';
-        const team=as.filter(a=>a.is_team), others=as.filter(a=>!a.is_team);
+        const wlog=kpis.worklog_by_person||{};
+        const wlogIds=Object.keys(wlog);
+        const hasWlog=wlogIds.length>0;
+
+        // ---- Assignee summary table (always built; shown in overview mode) ----
         function mkRow(a){
           const ratC=a.completion_rate>=80?'green':a.completion_rate>=60?'yellow':'red';
           let bar;
@@ -710,15 +729,37 @@ function render(qk,activeTab){
               <span style="font-size:12px;font-weight:600;white-space:nowrap">${e(a.logged_h+'h')}${a.estimated_h&&a.logged_h>a.estimated_h?`<span style="font-size:10px;color:#ef4444;margin-left:3px">+${Math.round((a.logged_h/a.estimated_h-1)*100)}%</span>`:''}</span>
             </div>`;
           }
+          // Name cell — Jira link as before
           const jql=a.account_id
             ?`project = ${PROJ_KEY} AND sprint in (${ids}) AND assignee = "${e(a.account_id)}" ORDER BY status ASC`
             :`project = ${PROJ_KEY} AND sprint in (${ids}) AND assignee is EMPTY ORDER BY status ASC`;
-          const nameCell=jb
-            ?`<a class="assignee-link" href="${e(jb+'/issues/?jql='+encodeURIComponent(jql))}" target="_blank">${e(a.name)}</a>`
-            :`<span style="font-weight:500">${e(a.name)}</span>`;
+          let nameCell;
+          const partialTag=a.team_period?`<span class="trend-info" data-tip="${e(a.team_period)}" style="margin-left:5px">&#x2139;</span>`:'';
+          if(jb){
+            nameCell=`<a class="assignee-link" href="${e(jb+'/issues/?jql='+encodeURIComponent(jql))}" target="_blank">${e(a.name)}</a>`;
+          } else {
+            nameCell=`<span style="font-weight:500">${e(a.name)}</span>`;
+          }
+          // Chevron toggle for inline worklog chart
+          // Cloudflare user slug: "hugh odwyer" — matched against display name case-insensitively
+          const hasPersonWlog=hasWlog&&a.account_id&&wlog[a.account_id];
+          const rowId=`wlog-row-${e(a.account_id||a.name).replace(/[^a-z0-9]/gi,'_')}`;
+          const cfEmail=window._cfUserEmail||null;
+          const cfSlug=window._cfUserSlug||null;
+          const isAdmin=!WLOG_ADMINS||WLOG_ADMINS.length===0||(cfEmail&&WLOG_ADMINS.map(e=>e.toLowerCase()).includes(cfEmail));
+          const nameSlug=a.name?a.name.toLowerCase():null;
+          const isOwnRow=!cfSlug||!nameSlug||isAdmin||nameSlug===cfSlug;
+          const chevronSvgDown=`<svg width='10' height='10' viewBox='0 0 10 10'><path d='M1 3 L5 7 L9 3' stroke='currentColor' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>`;
+          const chevronSvgUp=`<svg width='10' height='10' viewBox='0 0 10 10'><path d='M1 7 L5 3 L9 7' stroke='currentColor' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>`;
+          const chevron=hasPersonWlog
+            ?(isOwnRow
+              ?`<button onclick="(function(){var r=document.getElementById('${rowId}');var c=r.previousSibling.querySelector('.wlog-chev');var open=r.style.display==='none';r.style.display=open?'table-row':'none';c.setAttribute('data-open',open?'1':'');c.innerHTML=open?'${chevronSvgDown.replace(/'/g,"\\'")}':'${chevronSvgUp.replace(/'/g,"\\'")}\';})()" style="background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--muted);padding:2px 4px;margin-left:6px;vertical-align:middle;line-height:0;display:inline-flex;align-items:center" class="wlog-chev">${chevronSvgUp}</button>`
+              :`<button onclick="(function(){var tt=document.getElementById('cf-access-notice');tt.style.display='flex';setTimeout(function(){tt.style.display='none';},3000);})()" style="background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--border);padding:2px 4px;margin-left:6px;vertical-align:middle;line-height:0;display:inline-flex;align-items:center" title="You can only view your own time log" class="wlog-chev">${chevronSvgUp}</button>`)
+            :'';
           if(useSp){
             const spt=a.sp_total||0;
-            return`<tr><td>${nameCell}</td><td style="text-align:center">${e(String(a.total))}</td><td style="text-align:center">${e(String(a.completed))}</td><td style="text-align:center"><span class="b ${ratC==="green"?"bd":ratC==="yellow"?"bmed":"bbug"}">${e(a.completion_rate+"%")}</span></td><td style="min-width:140px">${bar}</td><td style="text-align:center;color:var(--muted)">${e(spt>0?String(spt):'—')}</td></tr>`;
+            const expandRow=hasPersonWlog?`<tr id="${rowId}" style="display:none"><td colspan="6" style="padding:12px 16px;background:var(--surface)">${(()=>{const sprintDates=(()=>{if(!activeSprint)return null;const s=(sprints||[]).find(s=>String(s.id)===activeSprint);return s?{start:s.start_date,end:s.end_date||String(new Date().toISOString().slice(0,10))}:null;})();return renderWorklogChart(wlog[a.account_id],jb,sprintDates);})()}</td></tr>`:'';
+            return`<tr><td>${nameCell}${chevron}${partialTag}</td><td style="text-align:center">${e(String(a.total))}</td><td style="text-align:center">${e(String(a.completed))}</td><td style="text-align:center"><span class="b ${ratC==="green"?"bd":ratC==="yellow"?"bmed":"bbug"}">${e(a.completion_rate+"%")}</span></td><td style="min-width:140px">${bar}</td><td style="text-align:center;color:var(--muted)">${e(spt>0?String(spt):'—')}</td></tr>${expandRow}`;
           }
           const accVal=(a.logged_h>0&&a.estimated_h>0)
             ?Math.round(Math.min(a.logged_h,a.estimated_h)/Math.max(a.logged_h,a.estimated_h)*100)
@@ -728,7 +769,8 @@ function render(qk,activeTab){
             :isCurrentQ
               ?`<span style="color:var(--muted)">${accVal}%</span>`
               :`<span class="b ${accVal>=80?'bd':accVal>=60?'bmed':'bbug'}">${accVal}%</span>`;
-          return`<tr><td>${nameCell}</td><td style="text-align:center">${e(String(a.total))}</td><td style="text-align:center">${e(String(a.completed))}</td><td style="text-align:center"><span class="b ${ratC==="green"?"bd":ratC==="yellow"?"bmed":"bbug"}">${e(a.completion_rate+"%")}</span></td><td style="min-width:140px">${bar}</td><td style="text-align:center;color:var(--muted)">${e(a.estimated_h>0?a.estimated_h+'h':'—')}</td><td style="text-align:center">${accInner}</td></tr>`;
+          const expandRow=hasPersonWlog?`<tr id="${rowId}" style="display:none"><td colspan="7" style="padding:12px 16px;background:var(--surface)">${(()=>{const sprintDates=(()=>{if(!activeSprint)return null;const s=(sprints||[]).find(s=>String(s.id)===activeSprint);return s?{start:s.start_date,end:s.end_date||String(new Date().toISOString().slice(0,10))}:null;})();return renderWorklogChart(wlog[a.account_id],jb,sprintDates);})()}</td></tr>`:'';
+          return`<tr><td>${nameCell}${chevron}${partialTag}</td><td style="text-align:center">${e(String(a.total))}</td><td style="text-align:center">${e(String(a.completed))}</td><td style="text-align:center"><span class="b ${ratC==="green"?"bd":ratC==="yellow"?"bmed":"bbug"}">${e(a.completion_rate+"%")}</span></td><td style="min-width:140px">${bar}</td><td style="text-align:center;color:var(--muted)">${e(a.estimated_h>0?a.estimated_h+'h':'—')}</td><td style="text-align:center">${accInner}</td></tr>${expandRow}`;
         }
         const thead=useSp
           ?`<thead><tr>
@@ -737,19 +779,22 @@ function render(qk,activeTab){
               <th>SP Completed</th><th style="text-align:center">SP Planned</th>
             </tr></thead>`
           :`<thead><tr>
-              <th>Assignee</th><th style="text-align:center">Items</th>
+              <th>Assignee${hasWlog?'<span class="trend-info" data-tip="Click the chevron next to a name to expand their daily time log" style="margin-left:4px">&#x2139;</span>':''}</th><th style="text-align:center">Items</th>
               <th style="text-align:center">Done</th><th style="text-align:center">Rate</th>
               <th>Hours Logged</th><th style="text-align:center">Estimated</th>
               <th style="text-align:center">Accuracy${isCurrentQ?'<span class="trend-info" data-tip="Partial quarter — accuracy will change as more time is logged" style="margin-left:4px">&#x2139;</span>':''}</th>
             </tr></thead>`;
         const colSpan=useSp?6:7;
-        let html=`<div class="section-label">Features Team</div>
-          <div class="tw"><div class="tw-body"><table>${thead}<tbody>${team.map(mkRow).join("")||`<tr class="er"><td colspan="${colSpan}">No team member data</td></tr>`}</tbody></table></div></div>`;
-        if(others.length){
-          html+=`<div class="section-label" style="margin-top:20px">Other Assignees</div>
-          <div class="tw"><div class="tw-body"><table>${thead}<tbody>${others.map(mkRow).join("")}</tbody></table></div></div>`;
-        }
-        return html;
+        const team=as.filter(a=>a.is_team), others=as.filter(a=>!a.is_team);
+        let tableHtml=as.length
+          ?`<div class="section-label">Features Team</div>
+            <div class="tw"><div class="tw-body"><table>${thead}<tbody>${team.map(mkRow).join("")||`<tr class="er"><td colspan="${colSpan}">No team member data</td></tr>`}</tbody></table></div></div>`
+          :'<div class="nodata">No assignee data.</div>';
+        if(others.length)
+          tableHtml+=`<div class="section-label" style="margin-top:20px">Other Assignees</div>
+            <div class="tw"><div class="tw-body"><table>${thead}<tbody>${others.map(mkRow).join("")}</tbody></table></div></div>`;
+
+        return`<div class="pane-desc">Workload breakdown by assignee for ${activeSprint&&sp?e(sp.sprint_name):e(qk)+'. '+e(notes.assignee_workload||'')}.</div>${tableHtml}`;
       })()}
     `),
     pane("trends",renderTrends()),
@@ -781,6 +826,139 @@ function render(qk,activeTab){
   _syncHdr();
 
   showTab(activeTab||"overview");
+}
+
+/* ---- Worklog (Clockify-style) chart ---- */
+const WLOG_COLORS=['#2563eb','#16a34a','#d97706','#7c3aed','#db2777','#0891b2','#65a30d','#ea580c','#0d9488','#4f46e5','#be123c','#0284c7','#854d0e','#166534'];
+
+function renderWorklogChart(pd, jb, sprintDates){
+  // pd = {name, days:{date:{issueKey:{s:seconds,t:summary}}}}
+  // sprintDates = {start,end} or null — filters days to sprint range when set
+  const allDays=pd.days||{};
+  let dates=Object.keys(allDays).sort();
+  if(sprintDates&&sprintDates.start&&sprintDates.end)
+    dates=dates.filter(d=>d>=sprintDates.start&&d<=sprintDates.end);
+  if(!dates.length)return'<div class="nodata" style="margin:16px 0">No time logged'+(sprintDates?' in this sprint':'')+'.</div>';
+
+  // Unique issue keys → assign stable colors
+  const keySet=new Set();
+  dates.forEach(d=>Object.keys(allDays[d]).forEach(k=>keySet.add(k)));
+  const keys=[...keySet];
+  const keyCol={};keys.forEach((k,i)=>keyCol[k]=WLOG_COLORS[i%WLOG_COLORS.length]);
+
+  // Day totals (hours)
+  const dayTotals=dates.map(d=>Object.values(allDays[d]).reduce((s,v)=>s+v.s,0)/3600);
+  // Cap Y axis at 10h — bars exceeding this get a clipped render + overflow marker
+  const Y_CAP=10;
+  const yTop=Y_CAP;
+
+  // SVG layout — fixed chart width, bars sized to fit
+  const PL=40,PT=28,PB=38,PR=12;
+  const CHART_W=900;
+  const BG=4;
+  const BW=Math.min(32,Math.max(8,Math.floor((CHART_W-PL-PR)/dates.length)-BG));
+  const svgH=168;const plotH=svgH-PT-PB;
+  const svgW=Math.max(CHART_W,PL+(BW+BG)*dates.length-BG+PR);
+  const yS=v=>PT+plotH-(Math.min(v,yTop)/yTop)*plotH;
+
+  // Gridlines + y labels
+  const ySteps=[0,4,8,10];
+  let grid='';
+  ySteps.forEach(v=>{
+    grid+=`<line x1="${PL}" y1="${yS(v).toFixed(1)}" x2="${svgW-PR}" y2="${yS(v).toFixed(1)}" stroke="#e2e8f0" stroke-width="1"/>`;
+    grid+=`<text x="${PL-5}" y="${(yS(v)+4).toFixed(1)}" text-anchor="end" font-size="9" fill="#94a3b8">${v}h</text>`;
+  });
+
+  // Bars + x-axis labels
+  let bars='',xlbls='';
+  let prevTopKey=null;
+  dates.forEach((date,i)=>{
+    const x=PL+i*(BW+BG);
+    const d=new Date(date+'T12:00:00');
+    const dow=['Su','Mo','Tu','We','Th','Fr','Sa'][d.getDay()];
+    const mon=d.toLocaleDateString('en-GB',{month:'short'});
+    const total=dayTotals[i];
+    const capped=total>yTop;
+    // Stack segments bottom-up, capped at yTop
+    // Reorder segments so no two adjacent ones share the same colour (handles palette repeats)
+    // Also ensure top segment colour doesn't match bottom of previous bar
+    let y=svgH-PB;
+    let rendered=0;
+    const dayData=allDays[date];
+    let dayKeys=Object.keys(dayData);
+    // Greedy reorder: build stack bottom-up, each time pick next key whose colour differs from the last placed
+    if(dayKeys.length>1){
+      const reordered=[];
+      const remaining=[...dayKeys];
+      let lastCol=prevTopKey?keyCol[prevTopKey]:null;
+      while(remaining.length){
+        // prefer a key whose colour differs from lastCol; fall back to first if no choice
+        const idx=remaining.findIndex(k=>keyCol[k]!==lastCol);
+        const pick=remaining.splice(idx===-1?0:idx,1)[0];
+        reordered.push(pick);
+        lastCol=keyCol[pick];
+      }
+      dayKeys=reordered;
+    }
+    prevTopKey=dayKeys[dayKeys.length-1]||null;
+    dayKeys.forEach(key=>{
+      const h=dayData[key].s/3600;
+      const hCapped=Math.min(h, yTop-rendered);
+      if(hCapped<=0)return;
+      const bh=(hCapped/yTop)*plotH;
+      if(bh<0.5)return;
+      const tip=`${key}: ${Math.round(h*10)/10}h — ${dayData[key].t}`;
+      bars+=`<rect x="${x}" y="${(y-bh).toFixed(1)}" width="${BW}" height="${bh.toFixed(1)}" fill="${keyCol[key]}" rx="2" data-tip="${e(tip)}"/>`;
+      y-=bh;
+      rendered+=hCapped;
+    });
+    // Overflow indicator — hatched top strip + label showing real total
+    if(capped){
+      bars+=`<rect x="${x}" y="${PT}" width="${BW}" height="5" fill="url(#overflow-hatch)" opacity="0.7"/>`;
+      const capLblY=i%2===0?PT-3:PT-11;
+      const capLine=i%2===1?`<line x1="${(x+BW/2).toFixed(1)}" y1="${PT-3}" x2="${(x+BW/2).toFixed(1)}" y2="${PT-8}" stroke="#ef4444" stroke-width="1" opacity="0.5"/>`:'';
+      bars+=capLine+`<text x="${(x+BW/2).toFixed(1)}" y="${capLblY.toFixed(1)}" text-anchor="middle" font-size="8" fill="#ef4444" font-weight="700">${Math.round(total*10)/10}h↑</text>`;
+    } else if(total>=1){
+      // Only show label if bar is tall enough to avoid cramping (at least 10px height)
+      const barTopY=yS(total);
+      const barH=svgH-PB-barTopY;
+      if(barH>=14){
+        const label=total>=10?Math.round(total)+'h':Math.round(total*10)/10+'h';
+        bars+=`<text x="${(x+BW/2).toFixed(1)}" y="${(barTopY-4).toFixed(1)}" text-anchor="middle" font-size="9" fill="#475569" font-weight="600">${label}</text>`;
+      }
+    }
+    // X labels: day-of-week + date + month on first of month
+    xlbls+=`<text x="${(x+BW/2).toFixed(1)}" y="${svgH-PB+13}" text-anchor="middle" font-size="9" fill="#94a3b8">${dow}</text>`;
+    xlbls+=`<text x="${(x+BW/2).toFixed(1)}" y="${svgH-PB+24}" text-anchor="middle" font-size="9" fill="${d.getDate()===1?'#475569':'#94a3b8'}">${d.getDate()===1?`${d.getDate()} ${mon}`:d.getDate()}</text>`;
+  });
+
+  const totalH=dayTotals.reduce((s,v)=>s+v,0);
+
+  // Legend — sorted by total hours desc, compact two-column grid
+  const legendItems=keys.map(k=>{
+    const kTot=dates.reduce((s,d)=>s+(allDays[d][k]?.s||0),0)/3600;
+    const summ=(allDays[dates.find(d=>allDays[d][k])]?.[k]?.t)||'';
+    const href=jb?`${jb}/browse/${k}`:'#';
+    return{k,kTot,summ,href};
+  }).sort((a,b)=>b.kTot-a.kTot);
+  const legend=legendItems.map(({k,kTot,summ,href})=>
+    `<div style="display:flex;align-items:center;gap:5px;min-width:160px" title="${e(summ)}">
+      <span style="width:10px;height:10px;border-radius:2px;background:${keyCol[k]};flex-shrink:0;display:inline-block"></span>
+      <a href="${e(href)}" target="_blank" style="font-size:11px;font-weight:500;color:var(--text);text-decoration:none;white-space:nowrap">${e(k)}</a>
+      <span style="font-size:11px;color:var(--muted);white-space:nowrap">${Math.round(kTot*10)/10}h</span>
+    </div>`
+  ).join('');
+
+  // Hatch pattern def for overflow bars
+  const defs=`<defs><pattern id="overflow-hatch" patternUnits="userSpaceOnUse" width="4" height="4" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="4" stroke="#ef4444" stroke-width="2"/></pattern></defs>`;
+
+  return`<div style="font-size:13px;color:var(--muted);margin-bottom:12px">Total: <strong style="color:var(--text)">${Math.round(totalH*10)/10}h</strong> across <strong style="color:var(--text)">${dates.length}</strong> day${dates.length!==1?'s':''} <span class="trend-info" data-tip="Hours shown here are filtered by worklog start date within the quarter. The Hours Logged column in the table uses the issue's total time spent, which may include time logged outside this quarter — so totals can differ.">&#x2139;</span></div>
+    <div style="overflow-x:auto;max-width:100%">
+      <svg viewBox="0 0 ${svgW} ${svgH}" style="min-width:${Math.min(svgW,640)}px;width:${svgW>640?'100%':'auto'};display:block" xmlns="http://www.w3.org/2000/svg">
+        ${defs}${grid}${bars}${xlbls}
+      </svg>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px 16px;margin-top:12px">${legend}</div>`;
 }
 
 /* ---- Trend charts ---- */
