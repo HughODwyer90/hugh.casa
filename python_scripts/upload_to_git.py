@@ -18,6 +18,7 @@ EXCLUDED_DIRS = {
     "deps",
     "tts",
     "blueprints",
+    "zigbee2mqtt",
     "custom_components",
 }
 
@@ -204,8 +205,63 @@ def upload_integrations():
     uploaded_files.append("integrations.json")
 
 
+def cleanup_removed_files(dry_run=True):
+    """Delete files from GitHub that are no longer produced by this backup run.
+
+    Compares the set of paths uploaded this run (uploaded_files) against everything
+    currently in the repo, and removes anything remote-only. This handles cases like
+    moving a file to a new folder in HA: the old path would otherwise be left behind
+    forever, since upload_file/upload_content only ever create or update, never delete.
+
+    SAFETY: defaults to dry_run=True, which only prints what would be deleted.
+    Files that are intentionally excluded (excluded_files.txt, EXCLUDED_DIRS) but
+    still exist on GitHub from before those exclusions existed will show up here too,
+    review the list carefully before setting dry_run=False, since this script has
+    no way to distinguish "stale because moved/deleted locally" from "stale because
+    newly excluded."
+    """
+    remote_files = uploader.list_repo_files()
+    if not remote_files:
+        print("⚠️ Could not retrieve remote file list, skipping cleanup to be safe.")
+        return
+
+    # Files that exist on GitHub for reasons outside this script's control
+    # (README, repo metadata, etc.) are protected from deletion.
+    protected = {"README.md"}
+
+    uploaded_set = set(uploaded_files)
+    stale = [
+        path for path in remote_files
+        if path not in uploaded_set
+        and path not in protected
+        and not path.startswith(".git")
+    ]
+
+    if not stale:
+        print("✅ No stale files found, nothing to clean up.")
+        return
+
+    if dry_run:
+        print(f"🔍 DRY RUN: {len(stale)} file(s) would be removed (no changes made):")
+        for path in stale:
+            print(f"   - {path}")
+        print("Review this list. Re-run with dry_run=False once you've confirmed "
+              "every path above is actually gone locally and not just newly excluded.")
+        return
+
+    print(f"🧹 Removing {len(stale)} stale file(s):")
+    for path in stale:
+        print(f"   - {path}")
+
+    for path in stale:
+        uploader.delete_file(path, commit_message=f"cleanup: remove stale {path}")
+
+    print(f"✅ Cleanup complete. Removed {len(stale)} stale file(s).")
+
+
 if __name__ == "__main__":
     upload_entities()
     upload_integrations()
     upload_config_files()
+    cleanup_removed_files(dry_run=True)
     print(f"✅ Backup complete. Total files uploaded: {len(uploaded_files)}")
