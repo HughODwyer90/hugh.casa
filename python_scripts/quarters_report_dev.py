@@ -683,6 +683,8 @@ def _compute_per_sprint(sprints, all_issues, in_progress_statuses, proj,
         se_issues = [i for i in (excl_issues or []) if sid in issue_sprint_ids_fn(i)]
         se_logged_s    = sum(i["fields"].get("timespent")            or 0 for i in se_issues)
         se_estimated_s = sum(i["fields"].get("timeoriginalestimate") or 0 for i in se_issues)
+        se_rows  = [_issue_row(i) for i in se_issues]
+        se_cycle = [r["cycle_days"] for r in se_rows if r.get("cycle_days") is not None]
         se_by_dev = {}
         for _i in se_issues:
             _af = _i["fields"].get("assignee") or {}
@@ -694,6 +696,21 @@ def _compute_per_sprint(sprints, all_issues, in_progress_statuses, proj,
             se_by_dev[_a]["estimated_h"] += round((_i["fields"].get("timeoriginalestimate") or 0) / 3600, 2)
         s_excl_stats = {
             "item_count":        len(se_issues),
+            "completed_count":   sum(1 for i in se_issues
+                                     if i["fields"]["status"]["statusCategory"]["key"] == "done"),
+            "bug_count":         sum(1 for i in se_issues
+                                     if i["fields"]["issuetype"]["name"] == "Bug"),
+            "story_count":       sum(1 for i in se_issues
+                                     if i["fields"]["issuetype"]["name"] == "Story"),
+            "task_count":        sum(1 for i in se_issues
+                                     if i["fields"]["issuetype"]["name"] == "Task"),
+            "oos_count":         sum(1 for i in se_issues
+                                     if "Out_Of_Sprint" in i["fields"].get("labels", [])),
+            "oos_open_count":    sum(1 for i in se_issues
+                                     if "Out_Of_Sprint" in i["fields"].get("labels", [])
+                                     and i["fields"]["status"]["statusCategory"]["key"] != "done"),
+            "avg_cycle_days":    round(sum(se_cycle) / len(se_cycle), 1) if se_cycle else 0,
+            "med_cycle_days":    round(sorted(se_cycle)[len(se_cycle) // 2], 1) if se_cycle else 0,
             "logged_h":          round(se_logged_s    / 3600, 1),
             "estimated_h":       round(se_estimated_s / 3600, 1),
             "no_estimate_count": sum(1 for i in se_issues if not i["fields"].get("timeoriginalestimate")),
@@ -810,6 +827,8 @@ def fetch_kpis(sprints, proj, ref=None, prev_sprint_id=None, prev_sprint_end=Non
     # can add them back in when the "show excluded" checkbox is on.
     _es_logged_s    = sum(i["fields"].get("timespent")            or 0 for i in excl_summ_issues)
     _es_estimated_s = sum(i["fields"].get("timeoriginalestimate") or 0 for i in excl_summ_issues)
+    _es_rows  = [_issue_row(i) for i in excl_summ_issues]
+    _es_cycle = [r["cycle_days"] for r in _es_rows if r.get("cycle_days") is not None]
     _es_by_dev = {}
     for _i in excl_summ_issues:
         _af  = _i["fields"].get("assignee") or {}
@@ -820,12 +839,27 @@ def fetch_kpis(sprints, proj, ref=None, prev_sprint_id=None, prev_sprint_end=Non
         _es_by_dev[_a]["logged_h"]    += round((_i["fields"].get("timespent")            or 0) / 3600, 2)
         _es_by_dev[_a]["estimated_h"] += round((_i["fields"].get("timeoriginalestimate") or 0) / 3600, 2)
     excl_summary_stats = {
-        "item_count":       len(excl_summ_issues),
-        "logged_h":         round(_es_logged_s    / 3600, 1),
-        "estimated_h":      round(_es_estimated_s / 3600, 1),
+        "item_count":        len(excl_summ_issues),
+        "completed_count":   sum(1 for i in excl_summ_issues
+                                 if i["fields"]["status"]["statusCategory"]["key"] == "done"),
+        "bug_count":         sum(1 for i in excl_summ_issues
+                                 if i["fields"]["issuetype"]["name"] == "Bug"),
+        "story_count":       sum(1 for i in excl_summ_issues
+                                 if i["fields"]["issuetype"]["name"] == "Story"),
+        "task_count":        sum(1 for i in excl_summ_issues
+                                 if i["fields"]["issuetype"]["name"] == "Task"),
+        "oos_count":         sum(1 for i in excl_summ_issues
+                                 if "Out_Of_Sprint" in i["fields"].get("labels", [])),
+        "oos_open_count":    sum(1 for i in excl_summ_issues
+                                 if "Out_Of_Sprint" in i["fields"].get("labels", [])
+                                 and i["fields"]["status"]["statusCategory"]["key"] != "done"),
+        "avg_cycle_days":    round(sum(_es_cycle) / len(_es_cycle), 1) if _es_cycle else 0,
+        "med_cycle_days":    round(sorted(_es_cycle)[len(_es_cycle) // 2], 1) if _es_cycle else 0,
+        "logged_h":          round(_es_logged_s    / 3600, 1),
+        "estimated_h":       round(_es_estimated_s / 3600, 1),
         "no_estimate_count": sum(1 for i in excl_summ_issues if not i["fields"].get("timeoriginalestimate")),
         "no_log_count":      sum(1 for i in excl_summ_issues if not i["fields"].get("timespent")),
-        "by_dev":           _es_by_dev,
+        "by_dev":            _es_by_dev,
     } if excl_summ_issues else {}
 
     # Key set used to filter raw JQL results (e.g. rollover) against the exclusion list above
@@ -1156,8 +1190,10 @@ def fetch_kpis(sprints, proj, ref=None, prev_sprint_id=None, prev_sprint_end=Non
                        if v["sprint_state"].lower() == "closed"]
         _sp_velocity_avg = round(sum(_closed_sps) / len(_closed_sps), 1) if _closed_sps else 0
     _result["per_sprint"]      = _per_sprint
-    _result["use_story_points"] = use_sp
-    _result["use_oos"]          = use_oos
+    _result["use_story_points"]   = use_sp
+    _result["use_oos"]            = use_oos
+    _excl_terms = proj.get("excluded_summary_contains", [])
+    _result["excl_summary_label"] = _excl_terms[0] if len(_excl_terms) == 1 else ""
     _result["sp_total"]         = sp_total
     _result["sp_completed"]     = sp_completed
     _result["sp_velocity_avg"]  = _sp_velocity_avg
@@ -1589,6 +1625,7 @@ __PREVIEW_BANNER__
 </div>
 
 <div id="sprint-sel-bar"><label id="excl-toggle-hdr" class="excl-toggle" style="display:none"><input type="checkbox" id="exclCb"> Show excluded</label></div>
+<div id="trends-toolbar" style="display:none"><label id="excl-toggle-trends" class="excl-toggle" style="display:none"><input type="checkbox" id="exclCbTrends"> Show excluded</label></div>
 <main id="dash"><div class="nodata">Loading…</div></main>
 <button id="btt" title="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
