@@ -82,6 +82,80 @@ class GitHubUploader:
                 else:
                     print(f"❌ All attempts failed for {github_file_path}. Skipping.")
 
+    def list_repo_files(self, path=""):
+        """Recursively list every file path currently in the repo (under `path`, or the whole repo if omitted).
+
+        Uses the Git Trees API with recursive=1, which returns the entire tree in one request
+        rather than walking directories one call at a time.
+        """
+        try:
+            ref_response = requests.get(
+                f"https://api.github.com/repos/{self.repo_name}/git/refs/heads/{self.branch}",
+                headers=self.headers
+            )
+            ref_response.raise_for_status()
+            commit_sha = ref_response.json()["object"]["sha"]
+
+            tree_response = requests.get(
+                f"https://api.github.com/repos/{self.repo_name}/git/trees/{commit_sha}",
+                headers=self.headers,
+                params={"recursive": "1"}
+            )
+            tree_response.raise_for_status()
+            tree_data = tree_response.json()
+
+            if tree_data.get("truncated"):
+                print("⚠️ Warning: repo tree listing was truncated by the GitHub API; "
+                      "some files may be missing from the comparison.")
+
+            all_paths = [
+                item["path"] for item in tree_data.get("tree", [])
+                if item["type"] == "blob"
+            ]
+
+            if path:
+                normalized = path.rstrip("/") + "/"
+                return [p for p in all_paths if p.startswith(normalized)]
+            return all_paths
+
+        except requests.RequestException as e:
+            print(f"❌ Failed to list repo files: {e}")
+            return []
+
+    def delete_file(self, github_file_path, commit_message=None):
+        """Delete a file from the repository, if it exists."""
+        sha = self._get_file_sha(github_file_path)
+        if not sha:
+            print(f"ℹ️ Skipping delete, {github_file_path} not found in repo.")
+            return False
+
+        for attempt in range(self.max_retries):
+            try:
+                data = {
+                    "message": commit_message or f"Remove {github_file_path} (no longer present locally)",
+                    "sha": sha,
+                    "branch": self.branch,
+                }
+                response = requests.delete(
+                    f"{self.base_api_url}/{github_file_path}",
+                    headers=self.headers,
+                    json=data
+                )
+                response.raise_for_status()
+                print(f"🗑️ Deleted: {github_file_path}")
+                return True
+
+            except requests.RequestException as e:
+                print(f"❌ Attempt {attempt + 1} failed deleting {github_file_path}: {e}")
+                if hasattr(e, 'response') and e.response is not None:
+                    print(f"Response body: {e.response.text}")
+                if attempt < self.max_retries - 1:
+                    print("Retrying in 5 seconds...")
+                    time.sleep(5)
+                else:
+                    print(f"❌ All attempts failed deleting {github_file_path}. Skipping.")
+        return False
+
     def upload_content(self, github_file_path, content, commit_message=None, is_binary=False):
         for attempt in range(self.max_retries):
             try:
