@@ -734,3 +734,9 @@ occupancy_lights_with_scene_fallback:
         target:
           entity_id: '{{ off_scene }}'
   mode: single
+jira_quarter_update:
+  sequence:
+  - action: shell_command.jira_quarter
+    data: {}
+  alias: Jira Quarter Update
+  description: ''
