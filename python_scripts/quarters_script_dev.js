@@ -239,22 +239,69 @@ function setActiveSprint(id){activeSprint=id;render(cur,curTab);}
     localStorage.setItem(SK,String(now));
     btn.disabled=true;
     btn.textContent="↻ Refreshing…";
+
+    let banner=document.getElementById("refresh-banner");
+    if(!banner){
+      banner=document.createElement("div");
+      banner.id="refresh-banner";
+      document.getElementById("site-header").insertAdjacentElement("afterend",banner);
+    }
+    const triggerTs=now;
+    let elapsed=0;
+    let pollTimer=null;
+    let notFoundCount=0;
+    function fmtElapsed(s){return s<60?s+"s":Math.floor(s/60)+"m "+String(s%60).padStart(2,"0")+"s";}
+    function setBanner(cls,html){
+      banner.className=cls;banner.innerHTML=html;banner.style.display="";
+    }
+    function startElapsedTick(){
+      return setInterval(()=>{
+        elapsed++;
+        setBanner("",`↻ Refreshing… ${fmtElapsed(elapsed)} elapsed`);
+      },1000);
+    }
+    async function pollForComplete(){
+      try{
+        const r=await fetch("./data/last_refresh.json?_="+Date.now());
+        if(r.status===404){notFoundCount++;if(notFoundCount>=3)clearInterval(pollTimer);return;}
+        notFoundCount=0;
+        if(r.ok){
+          const d=await r.json();
+          if(d.timestamp&&new Date(d.timestamp).getTime()>triggerTs){
+            clearInterval(elapsedTimer);clearInterval(pollTimer);
+            setBanner("done",'✓ Data updated — <a class="rb-reload" onclick="location.reload()">Reload page</a>');
+            btn.textContent="↻ Refresh";btn.disabled=false;
+            return;
+          }
+        }
+      }catch(_){}
+    }
+    const elapsedTimer=startElapsedTick();
+    setBanner("","↻ Refreshing… 0s elapsed");
+    pollTimer=setInterval(pollForComplete,10000);
+    setTimeout(()=>{
+      clearInterval(pollTimer);
+      if(banner.className!=="done"){
+        setBanner("","↻ Still working… reload in a moment to check");
+        btn.textContent="↻ Refresh";btn.disabled=false;
+      }
+    },5*60*1000);
+
     fetch(REFRESH_WEBHOOK,{method:"POST",mode:"no-cors"})
       .then(()=>{
-        btn.textContent="↻ Done — reload shortly";
+        btn.textContent="↻ Refresh";
+        btn.disabled=false;
       })
       .catch(err=>{
+        clearInterval(elapsedTimer);clearInterval(pollTimer);
         localStorage.removeItem(SK);
+        if(banner)banner.style.display="none";
         showModal(
           "Refresh failed",
           `Could not reach Home Assistant${err.message?` (${err.message})`:""}. Check that HA is running and the webhook is configured. You can try again now.`
         );
         btn.textContent="↻ Refresh";
         btn.disabled=false;
-      })
-      .finally(()=>{
-        if(!btn.disabled)return;
-        setTimeout(()=>{btn.disabled=false;btn.textContent="↻ Refresh";},8000);
       });
   });
 })();
