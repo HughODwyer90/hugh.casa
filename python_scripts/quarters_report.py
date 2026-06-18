@@ -1615,6 +1615,8 @@ __PREVIEW_BANNER__
   <div class="tabs-bar" id="tabs-bar"></div>
 </header>
 
+<div id="refresh-banner"></div>
+
 <!-- Refresh modal -->
 <div class="modal-backdrop" id="refresh-modal">
   <div class="modal-box">
