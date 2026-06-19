@@ -1439,15 +1439,27 @@ KPI data:
     except Exception as exc:
         print(f"      WARNING: AI notes unavailable ({exc}) — continuing without notes.")
         return existing_notes
+_SPRINT_NOTE_DEPS = [
+    "total", "completed", "completion_rate",
+    "bugs", "stories", "tasks", "bug_pct",
+    "rollover_count", "rollover_pct", "oos_total",
+    "med_cycle_days", "avg_cycle_days", "releases_shipped",
+]
+
 def generate_sprint_notes(sprint_name, sprint_state, sp_kpis, existing_notes=None,
-                          proj_context="", use_oos=True):
+                          existing_sp_kpis=None, proj_context="", use_oos=True):
     """Generate AI narrative notes for a single sprint.
-    Closed sprints with existing notes are returned unchanged (locked permanently).
-    Active sprints are regenerated each run."""
-    existing_notes = existing_notes or {}
+    Closed sprints with existing notes are locked permanently.
+    Active sprints are only regenerated when the underlying KPI values change."""
+    existing_notes    = existing_notes    or {}
+    existing_sp_kpis  = existing_sp_kpis  or {}
 
     # Lock once closed and notes exist
     if sprint_state.lower() == "closed" and existing_notes:
+        return existing_notes
+
+    # Skip if notes exist and none of the input fields changed
+    if existing_notes and all(sp_kpis.get(f) == existing_sp_kpis.get(f) for f in _SPRINT_NOTE_DEPS):
         return existing_notes
 
     note_keys = ["completion_rate", *( ["oos_total"] if use_oos else [] ),
@@ -1876,22 +1888,33 @@ def _run_quarter(proj, ref=None, skip_notes=False):
             existing_kpis  = existing_saved.get("kpis",  {})
         notes = generate_notes(kpis, sprints, existing_notes, existing_kpis,
                                proj_context=proj.get("notes_context", ""))
+        quarter_notes_generated = (notes != existing_notes)
         print(f"      Notes populated: {', '.join(notes.keys()) if notes else 'none (skipped)'}")
 
-        # Sprint notes — active sprint regenerated each run; closed sprints locked once written
+        # Sprint notes — only regenerated when KPI values change; closed sprints locked permanently
         print("      Generating sprint notes...")
-        existing_per_sprint = {}
+        existing_per_sprint_notes = {}
+        existing_per_sprint_kpis  = {}
         if not FORCE_NOTES:
             for sid, spd in existing_saved.get("kpis", {}).get("per_sprint", {}).items():
-                existing_per_sprint[sid] = spd.get("notes", {})
+                existing_per_sprint_notes[sid] = spd.get("notes", {})
+                existing_per_sprint_kpis[sid]  = spd
+        any_sprint_generated = False
         for sid, spd in kpis["per_sprint"].items():
-            prev = existing_per_sprint.get(sid, {})
-            spd["notes"] = generate_sprint_notes(spd["sprint_name"], spd["sprint_state"], spd, prev,
-                                                 proj_context=proj.get("notes_context", ""),
-                                                 use_oos=proj.get("use_oos", True))
-            locked = spd["sprint_state"].lower() == "closed" and bool(prev)
-            print(f"        {spd['sprint_name']}: {'locked' if locked else 'generated'}")
-        notes_generated_at = datetime.now(timezone.utc).isoformat()
+            prev_notes = existing_per_sprint_notes.get(sid, {})
+            prev_kpis  = existing_per_sprint_kpis.get(sid, {})
+            new_notes  = generate_sprint_notes(spd["sprint_name"], spd["sprint_state"], spd,
+                                               prev_notes, prev_kpis,
+                                               proj_context=proj.get("notes_context", ""),
+                                               use_oos=proj.get("use_oos", True))
+            spd["notes"] = new_notes
+            locked    = spd["sprint_state"].lower() == "closed" and bool(prev_notes)
+            unchanged = (not locked) and (new_notes is prev_notes or new_notes == prev_notes)
+            if not locked and not unchanged:
+                any_sprint_generated = True
+            print(f"        {spd['sprint_name']}: {'locked' if locked else ('unchanged' if unchanged else 'generated')}")
+        anything_generated = quarter_notes_generated or any_sprint_generated
+        notes_generated_at = datetime.now(timezone.utc).isoformat() if anything_generated else existing_saved.get("notes_generated_at")
 
     print("\n[4/4] Saving quarter data...")
     save_quarter_data(kpis, notes, sprints, proj, notes_generated_at=notes_generated_at)
@@ -1909,12 +1932,24 @@ def main():
         "--data-only", action="store_true",
         help="Refresh Jira data only — skip Claude API calls and reuse existing notes."
     )
+    parser.add_argument(
+        "--force-notes", action="store_true",
+        help="Force regeneration of all Claude notes even if KPI values are unchanged."
+    )
     args = parser.parse_args()
-    skip_notes = args.data_only
+    skip_notes  = args.data_only
+    force_notes = args.force_notes
+
+    # CLI --force-notes overrides the module-level constant
+    global FORCE_NOTES
+    if force_notes:
+        FORCE_NOTES = True
 
     print("=== Quarter Dashboard — Multi-Project ===")
     if skip_notes:
         print("Mode: DATA-ONLY (Claude notes unchanged)")
+    elif FORCE_NOTES:
+        print("Mode: FORCE-NOTES (all Claude notes will be regenerated)")
     for proj in PROJECTS:
         print(f"\n{'#'*52}")
         print(f"# Project: {proj['display']} (board {proj['board_id']})")
