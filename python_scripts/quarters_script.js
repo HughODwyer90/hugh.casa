@@ -80,7 +80,7 @@ function notesStaleNotice(notesGeneratedAt, dataAsOf){
   // Only show the notice if the board data is newer than notes by >1 minute
   if(dat-nts<60000)return"";
   const fmtTs=d=>d.toLocaleString(undefined,{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",timeZoneName:"short"});
-  let msg=`AI notes last updated: ${fmtTs(nts)}. Board data is from: ${fmtTs(dat)}.`;
+  let msg=`AI notes last updated: ${fmtTs(nts)}.`;
   // Compute next scheduled run time in viewer's local timezone
   if(NOTES_REFRESH_TIME&&NOTES_REFRESH_TIME.tz){
     try{
@@ -239,10 +239,21 @@ function setActiveSprint(id){activeSprint=id;render(cur,curTab);}
     const d=new Date(ts);
     return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
   }
-  function showModal(title,msg){
+  function showModal(title,msg,extraBtn){
     document.getElementById("refresh-modal-title").textContent=title;
     document.getElementById("refresh-modal-msg").textContent=msg;
-    document.getElementById("refresh-modal").classList.add("open");
+    const modal=document.getElementById("refresh-modal");
+    const existing=modal.querySelector(".modal-extra-btn");
+    if(existing)existing.remove();
+    if(extraBtn){
+      const b=document.createElement("button");
+      b.className="modal-close modal-extra-btn";
+      b.style.cssText="margin-right:8px;background:var(--blue-bg,#eff6ff);color:var(--blue-text,#1d4ed8);border:1px solid #bfdbfe";
+      b.textContent=extraBtn.label;
+      b.onclick=()=>{modal.classList.remove("open");extraBtn.action();};
+      modal.querySelector(".modal-close").insertAdjacentElement("beforebegin",b);
+    }
+    modal.classList.add("open");
   }
 
   // Fetch last refresh time from HA-written file (cross-browser source of truth).
@@ -266,9 +277,14 @@ function setActiveSprint(id){activeSprint=id;render(cur,curTab);}
     const last=await getLastRefresh();
     const now=Date.now();
     if(now-last<COOLDOWN_MS){
+      const dataBtn=REFRESH_DATA_WEBHOOK?{
+        label:"Refresh data only",
+        action:()=>fetch(REFRESH_DATA_WEBHOOK,{method:"POST",mode:"no-cors"})
+      }:null;
       showModal(
-        "Too soon to refresh",
-        `The dashboard was last refreshed at ${fmtTime(last)}. Manual refreshes are limited to once per hour — try again at ${fmtTime(last+COOLDOWN_MS)}.`
+        "Too soon for a full refresh",
+        `The dashboard was last fully refreshed (data + AI notes) at ${fmtTime(last)}. Full refreshes are limited to once per hour — try again at ${fmtTime(last+COOLDOWN_MS)}. Board data updates automatically every 10 minutes.`,
+        dataBtn
       );
       return;
     }
@@ -305,8 +321,8 @@ function setActiveSprint(id){activeSprint=id;render(cur,curTab);}
           const d=await r.json();
           if(d.timestamp&&new Date(d.timestamp).getTime()>triggerTs){
             clearInterval(elapsedTimer);clearInterval(pollTimer);
-            setBanner("done",'✓ Data updated — <a class="rb-reload" onclick="location.reload()">Reload page</a>');
-            btn.textContent="↻ Refresh";btn.disabled=false;
+            setBanner("done","✓ Done — reloading…");
+            setTimeout(()=>location.reload(),1500);
             return;
           }
         }
@@ -317,6 +333,7 @@ function setActiveSprint(id){activeSprint=id;render(cur,curTab);}
     pollTimer=setInterval(pollForComplete,10000);
     setTimeout(()=>{
       clearInterval(pollTimer);
+      clearInterval(elapsedTimer);
       if(banner.className!=="done"){
         setBanner("","↻ Still working… reload in a moment to check");
         btn.textContent="↻ Refresh";btn.disabled=false;
@@ -445,7 +462,8 @@ function _adjKpis(base,exclStats,showOn){
     if(!d)return a;
     const nl=Math.round((a.logged_h+(d.logged_h||0))*10)/10;
     const ne=Math.round((a.estimated_h+(d.estimated_h||0))*10)/10;
-    return{...a,logged_h:nl,estimated_h:ne,total:a.total+(d.total||0)};
+    const nc=a.completed+(d.completed||0);
+    return{...a,logged_h:nl,estimated_h:ne,total:a.total+(d.total||0),completed:nc,completion_rate:(a.total+(d.total||0))?Math.round(nc/(a.total+(d.total||0))*100):0};
   });
   const existingNames=new Set(adjAs.map(a=>a.name));
   const extraDevs=Object.entries(exclStats.by_dev||{})
@@ -694,10 +712,10 @@ function render(qk,activeTab){
   const dashHtml=[
     pane("overview",`
       ${oosAlert}
+      ${notesStaleNotice(D.notes_generated_at, kpis.as_of)}
       <div class="pane-title">Quarter at a Glance</div>
       <div class="pane-desc">KPIs and sprint summary for ${e(qk)}.</div>
       ${kpiHtml}
-      ${notesStaleNotice(D.notes_generated_at, kpis.as_of)}
       <div class="section-label">Sprints</div>
       ${sprintTable}
     `),
