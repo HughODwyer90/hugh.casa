@@ -72,6 +72,42 @@ function switchProject(p,skipRender){
 /* ---- Escape ---- */
 function e(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
 
+/* ---- Notes staleness notice ---- */
+function notesStaleNotice(notesGeneratedAt, dataAsOf){
+  if(!notesGeneratedAt||!dataAsOf)return"";
+  const nts=new Date(notesGeneratedAt), dat=new Date(dataAsOf);
+  if(isNaN(nts.getTime())||isNaN(dat.getTime()))return"";
+  // Only show the notice if the board data is newer than notes by >1 minute
+  if(dat-nts<60000)return"";
+  const fmtTs=d=>d.toLocaleString(undefined,{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",timeZoneName:"short"});
+  let msg=`AI notes last updated: ${fmtTs(nts)}. Board data is from: ${fmtTs(dat)}.`;
+  // Compute next scheduled run time in viewer's local timezone
+  if(NOTES_REFRESH_TIME&&NOTES_REFRESH_TIME.tz){
+    try{
+      const {hour,minute,tz}=NOTES_REFRESH_TIME;
+      const min=minute||0;
+      const now=new Date();
+      // Find today's date string in the source timezone ("YYYY-MM-DD")
+      const todayInSrcTz=new Intl.DateTimeFormat("en-CA",{timeZone:tz}).format(now);
+      // Parse that as a local datetime string in the source timezone to get UTC via the offset trick:
+      // We use a dummy formatter to extract the UTC instant corresponding to HH:MM in src tz today.
+      // Intl doesn't expose "parse", so we use the fact that formatting a UTC Date in src tz gives
+      // us the wall-clock time there — iterate to find the right UTC instant.
+      // Simpler: construct an ISO string, let the browser parse as local, then correct for tz delta.
+      // Most reliable: use the offset between local and src tz at that moment.
+      const candidate=new Date(`${todayInSrcTz}T${String(hour).padStart(2,"0")}:${String(min).padStart(2,"0")}:00`);
+      // candidate is parsed as LOCAL time; compute what the src-tz wall clock reads at that UTC moment
+      const srcWall=new Intl.DateTimeFormat("en-CA",{timeZone:tz,hour:"2-digit",minute:"2-digit",hour12:false}).format(candidate);
+      const [srcH,srcM]=srcWall.split(":").map(Number);
+      const diffMs=((hour-srcH)*60+(min-srcM))*60000;
+      let runUtc=new Date(candidate.getTime()+diffMs);
+      if(runUtc<=now) runUtc=new Date(runUtc.getTime()+86400000);
+      msg+=` Next AI refresh: ${fmtTs(runUtc)}.`;
+    }catch(_){}
+  }
+  return`<div class="alert alert-info" style="font-size:12px;opacity:0.85">ℹ ${msg}</div>`;
+}
+
 /* ---- Date formatting ---- */
 function fmtDate(s,short){
   if(!s)return"";
@@ -661,6 +697,7 @@ function render(qk,activeTab){
       <div class="pane-title">Quarter at a Glance</div>
       <div class="pane-desc">KPIs and sprint summary for ${e(qk)}.</div>
       ${kpiHtml}
+      ${notesStaleNotice(D.notes_generated_at, kpis.as_of)}
       <div class="section-label">Sprints</div>
       ${sprintTable}
     `),
