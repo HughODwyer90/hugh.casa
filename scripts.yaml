@@ -737,10 +737,6 @@ occupancy_lights_with_scene_fallback:
 jira_quarter_update_data:
   alias: Jira Quarter Data Refresh
   sequence:
-  - action: shell_command.dlk_write_refresh_time
-    data: {}
-  - delay:
-      seconds: 2
   - action: shell_command.jira_quarter_data_only
     data: {}
 jira_quarter_update:
