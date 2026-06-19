@@ -77,6 +77,14 @@ header{background:var(--dm-blue);border-bottom:1px solid rgba(255,255,255,.12);
   border:1px solid rgba(255,255,255,.4);background:transparent;
   color:rgba(255,255,255,.8);cursor:pointer;transition:all .15s;font-family:inherit;text-decoration:none}
 #feedback-btn:hover{border-color:var(--dm-yellow);color:var(--dm-yellow)}
+/* ---- Refresh banner ---- */
+#refresh-banner{display:none;position:sticky;top:var(--hdr,56px);z-index:900;
+  padding:8px 16px;font-size:12px;font-weight:500;text-align:center;
+  background:#1e3a5f;color:#93c5fd;border-bottom:1px solid #2563eb;
+  transition:background .4s,color .4s}
+#refresh-banner.done{background:#14532d;color:#86efac;border-color:#16a34a}
+#refresh-banner a.rb-reload{margin-left:10px;color:inherit;font-weight:700;
+  text-decoration:underline;cursor:pointer}
 /* ---- Modal ---- */
 .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:5000;align-items:center;justify-content:center}
 .modal-backdrop.open{display:flex}
@@ -195,8 +203,9 @@ tr.resolved-carried>td:first-child{box-shadow:inset 3px 0 0 var(--green)}
   vertical-align:middle;flex-shrink:0}
 /* Carry-in — still in progress but started in a previous quarter */
 /* Excluded-summary tickets — hidden by default, shown via checkbox */
-tr.excl-summary>td{background:#f8f8f8;opacity:.6}
+tr.excl-summary>td{background:#f3f4f6;color:var(--muted)}
 tr.excl-summary>td:first-child{box-shadow:inset 3px 0 0 var(--muted)}
+tr.excl-summary>td:first-child::after{content:"excl";font-size:9px;font-weight:600;color:var(--muted);background:#e5e7eb;border-radius:3px;padding:1px 4px;margin-left:6px;vertical-align:middle;letter-spacing:.04em}
 .excl-toggle{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-bottom:8px;cursor:pointer;user-select:none}
 .excl-toggle input{cursor:pointer}
 tr.carried-in>td{background:#fffbeb}
