@@ -16,6 +16,7 @@ import base64
 import argparse
 import urllib.request
 import urllib.parse
+import concurrent.futures
 from datetime import datetime, timezone, date, timedelta
 from zoneinfo import ZoneInfo
 from secret_manager import SecretsManager
@@ -38,9 +39,11 @@ JIRA_API_TOKEN    = secrets["jira_api_token"]
 ANTHROPIC_API_KEY = secrets["anthropic_api_key"]
 JIRA_CLOUD_ID     = secrets["jira_cloud_id"]
 
-# Webhook URL that the dashboard's "Refresh" button will POST to.
+# Webhook URL that the dashboard's "Refresh" button will POST to (full data + notes run).
 # Store as "refresh_webhook_url" in your secrets manager. Leave absent to hide the button.
-REFRESH_WEBHOOK_URL = secrets.get("refresh_webhook_url", "")
+REFRESH_WEBHOOK_URL      = secrets.get("refresh_webhook_url", "")
+# Webhook URL for a data-only refresh (no Claude calls). No hourly rate limit applied.
+REFRESH_DATA_WEBHOOK_URL = secrets.get("refresh_data_webhook_url", "")
 
 # Dashboard branding — store in secrets or edit here directly.
 # dashboard_title : shown in the browser tab before JS loads (JS sets it per-quarter afterwards).
@@ -696,10 +699,12 @@ def _compute_per_sprint(sprints, all_issues, in_progress_statuses, proj,
             _af = _i["fields"].get("assignee") or {}
             _a  = _af.get("displayName", "Unassigned")
             if _a not in se_by_dev:
-                se_by_dev[_a] = {"logged_h": 0.0, "estimated_h": 0.0, "total": 0}
+                se_by_dev[_a] = {"logged_h": 0.0, "estimated_h": 0.0, "total": 0, "completed": 0}
             se_by_dev[_a]["total"]       += 1
             se_by_dev[_a]["logged_h"]    += round((_i["fields"].get("timespent")            or 0) / 3600, 2)
             se_by_dev[_a]["estimated_h"] += round((_i["fields"].get("timeoriginalestimate") or 0) / 3600, 2)
+            if _i["fields"]["status"]["statusCategory"]["key"] == "done":
+                se_by_dev[_a]["completed"] += 1
         s_excl_stats = {
             "item_count":        len(se_issues),
             "completed_count":   sum(1 for i in se_issues
@@ -762,10 +767,10 @@ def fetch_worklogs_for_quarter(issues, qs_date, qe_date):
     qs_str, qe_str = str(qs_date), str(qe_date)
     print(f"      Fetching worklogs for {len(logged)} issues "
           f"({len(issues) - len(logged)} skipped — no time logged)...")
-    by_person: dict = {}
-    for issue in logged:
+    def _fetch_issue_worklogs(issue):
         key     = issue["key"]
         summary = issue["fields"]["summary"][:80]
+        entries = []
         try:
             start_at, worklogs = 0, []
             while True:
@@ -780,7 +785,7 @@ def fetch_worklogs_for_quarter(issues, qs_date, qe_date):
                 start_at += len(page)
         except Exception as exc:
             print(f"      WARNING: worklog fetch failed for {key}: {exc}")
-            continue
+            return entries
         for wl in worklogs:
             started = (wl.get("started") or "")[:10]
             if not (qs_str <= started <= qe_str):
@@ -791,11 +796,18 @@ def fetch_worklogs_for_quarter(issues, qs_date, qe_date):
             secs   = wl.get("timeSpentSeconds", 0)
             if not aid or not secs:
                 continue
-            by_person.setdefault(aid, {"name": name, "days": {}})
-            days = by_person[aid]["days"]
-            days.setdefault(started, {})
-            entry = days[started].setdefault(key, {"s": 0, "t": summary})
-            entry["s"] += secs
+            entries.append((aid, name, started, key, summary, secs))
+        return entries
+
+    by_person: dict = {}
+    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as ex:
+        for entries in ex.map(_fetch_issue_worklogs, logged):
+            for aid, name, started, key, summary, secs in entries:
+                by_person.setdefault(aid, {"name": name, "days": {}})
+                days = by_person[aid]["days"]
+                days.setdefault(started, {})
+                entry = days[started].setdefault(key, {"s": 0, "t": summary})
+                entry["s"] += secs
     print(f"      Worklog data: {len(by_person)} people with logged time")
     return by_person
 
@@ -840,10 +852,12 @@ def fetch_kpis(sprints, proj, ref=None, prev_sprint_id=None, prev_sprint_end=Non
         _af  = _i["fields"].get("assignee") or {}
         _a   = _af.get("displayName", "Unassigned")
         if _a not in _es_by_dev:
-            _es_by_dev[_a] = {"logged_h": 0.0, "estimated_h": 0.0, "total": 0}
+            _es_by_dev[_a] = {"logged_h": 0.0, "estimated_h": 0.0, "total": 0, "completed": 0}
         _es_by_dev[_a]["total"]       += 1
         _es_by_dev[_a]["logged_h"]    += round((_i["fields"].get("timespent")            or 0) / 3600, 2)
         _es_by_dev[_a]["estimated_h"] += round((_i["fields"].get("timeoriginalestimate") or 0) / 3600, 2)
+        if _i["fields"]["status"]["statusCategory"]["key"] == "done":
+            _es_by_dev[_a]["completed"] += 1
     excl_summary_stats = {
         "item_count":        len(excl_summ_issues),
         "completed_count":   sum(1 for i in excl_summ_issues
@@ -873,31 +887,27 @@ def fetch_kpis(sprints, proj, ref=None, prev_sprint_id=None, prev_sprint_end=Non
 
     # Sprint membership — Jira Cloud REST v3 doesn't reliably return customfield_10020
     # so we fetch issue keys per sprint with a lightweight JQL call instead.
-    print(f"  Building sprint membership map ({len(sprints)} sprints)...")
+    print(f"  Building sprint membership map ({len(sprints)} sprints, parallel)...")
     _sprint_membership: dict[str, list[str]] = {}  # issue_key -> [sprint_id_str, ...]
-    for s in sprints:
-        sid = str(s["id"])
-        s_keys = {i["key"] for i in jira_search(
-            f"project = {project_key} AND sprint = {sid}",
-            fields="key",
-            max_results=2000,
-        )}
-        for k in s_keys:
-            _sprint_membership.setdefault(k, []).append(sid)
-        print(f"    Sprint {s['name']}: {len(s_keys)} issues")
+    prev_sid_str = str(prev_sprint_id) if prev_sprint_id else None
+    _membership_targets = [(str(s["id"]), s["name"]) for s in sprints]
+    if prev_sid_str:
+        _membership_targets.append((prev_sid_str, f"prev-quarter {prev_sprint_id}"))
 
-    # Also include the previous quarter's last sprint so the first sprint of this quarter
-    # can detect cross-quarter rollovers.
-    prev_sid_str = None
-    if prev_sprint_id:
-        prev_sid_str = str(prev_sprint_id)
-        prev_keys = {i["key"] for i in jira_search(
-            f"project = {project_key} AND sprint = {prev_sprint_id}",
+    def _fetch_sprint_keys(sid_name):
+        sid, name = sid_name
+        keys = {i["key"] for i in jira_search(
+            f"project = {project_key} AND sprint = {sid}",
             fields="key", max_results=2000,
         )}
-        for k in prev_keys:
-            _sprint_membership.setdefault(k, []).append(prev_sid_str)
-        print(f"    Prev-quarter sprint {prev_sprint_id}: {len(prev_keys)} issues (rollover check)")
+        return sid, name, keys
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as ex:
+        for sid, name, keys in ex.map(_fetch_sprint_keys, _membership_targets):
+            for k in keys:
+                _sprint_membership.setdefault(k, []).append(sid)
+            suffix = " (rollover check)" if sid == prev_sid_str else ""
+            print(f"    Sprint {name}: {len(keys)} issues{suffix}")
 
     def _issue_sprint_ids(issue):
         return _sprint_membership.get(issue.get("key", ""), [])
@@ -1096,14 +1106,17 @@ def fetch_kpis(sprints, proj, ref=None, prev_sprint_id=None, prev_sprint_end=Non
 
     # Sprint rollover: items in each closed sprint that were not completed
     # Filter against _filtered_keys so excluded issues (e.g. buffer work) are not counted
-    rollover_count = 0
-    for s in sprints:
-        if s["state"].lower() == "closed":
-            rolled = jira_search(
-                f"project = {project_key} AND sprint = {s['id']} AND statusCategory != Done",
-                fields="key",
-            )
-            rollover_count += sum(1 for r in rolled if r["key"] in _filtered_keys)
+    closed_sprints = [s for s in sprints if s["state"].lower() == "closed"]
+
+    def _fetch_rollover(s):
+        rolled = jira_search(
+            f"project = {project_key} AND sprint = {s['id']} AND statusCategory != Done",
+            fields="key",
+        )
+        return sum(1 for r in rolled if r["key"] in _filtered_keys)
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as ex:
+        rollover_count = sum(ex.map(_fetch_rollover, closed_sprints))
     rollover_pct = round(rollover_count / total * 100) if total else 0
 
     oos_open_detail = []
@@ -1655,6 +1668,7 @@ __PREVIEW_BANNER__
 const ALL_DATA=__ALL_DATA_JSON__;
 const WLOG_ADMINS=__WLOG_ADMINS_JSON__;
 const REFRESH_WEBHOOK=__REFRESH_WEBHOOK_URL__;
+const REFRESH_DATA_WEBHOOK=__REFRESH_DATA_WEBHOOK_URL__;
 const NOTES_REFRESH_TIME=__NOTES_REFRESH_TIME__;
 </script>
 <script src="assets/quarters_script__ASSET_SUFFIX__.js?v=__ASSET_VERSION__"></script>
@@ -1692,7 +1706,8 @@ def _render_html(all_projects_data, preview=False):
         _HTML_TEMPLATE
         .replace("__ALL_DATA_JSON__",      all_data_json)
         .replace("__WLOG_ADMINS_JSON__",   json.dumps(WLOG_ADMINS, ensure_ascii=True))
-        .replace("__REFRESH_WEBHOOK_URL__",    webhook_json)
+        .replace("__REFRESH_WEBHOOK_URL__",      webhook_json)
+        .replace("__REFRESH_DATA_WEBHOOK_URL__", json.dumps(REFRESH_DATA_WEBHOOK_URL))
         .replace("__NOTES_REFRESH_TIME__",     notes_refresh_time_json)
         .replace("__PREVIEW_BANNER__",     preview_banner)
         .replace("__DASHBOARD_TITLE__",    DASHBOARD_TITLE)
