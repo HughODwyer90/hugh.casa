@@ -5612,9 +5612,6 @@
 
         '
   actions:
-  - wait_template: '{{ not is_state(''script.jira_quarter_update_data'', ''on'') }}'
-    timeout: 00:03:00
-    continue_on_timeout: true
   - action: script.jira_quarter_update
     data: {}
   mode: single
@@ -5678,10 +5675,11 @@
   - trigger: time_pattern
     minutes: /10
   conditions:
-  - condition: template
-    value_template: '{{ not is_state(''script.jira_quarter_update'', ''on'') }}
-
-      '
+  - condition: not
+    conditions:
+    - condition: time
+      after: '16:55:00'
+      before: '17:05:00'
   actions:
   - action: script.jira_quarter_update_data
     data: {}
