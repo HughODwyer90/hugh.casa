@@ -5612,7 +5612,7 @@
 
         '
   actions:
-  - wait_template: '{{ not is_state(''script.jira_quarter_update_data'', ''on'') }}'
+  - wait_template: '{{ not is_state(''script.jira_quarter_update'', ''on'') }}'
     timeout: 00:03:00
     continue_on_timeout: true
   - action: script.jira_quarter_update
@@ -5684,6 +5684,6 @@
 
       '
   actions:
-  - action: script.jira_quarter_update_data
+  - action: script.jira_quarter_update
     data: {}
   mode: single
