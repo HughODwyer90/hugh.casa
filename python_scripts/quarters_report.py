@@ -13,6 +13,7 @@ import glob
 import pathlib
 import calendar
 import base64
+import argparse
 import urllib.request
 import urllib.parse
 from datetime import datetime, timezone, date, timedelta
@@ -50,6 +51,11 @@ LOGO_ALT               = secrets.get("logo_alt",               "")
 DASHBOARD_BASE_URL     = secrets.get("dashboard_base_url",     "")
 DASHBOARD_FILENAME     = secrets.get("dashboard_filename",     "index.html")
 DASHBOARD_PREVIEW_FILE = secrets.get("dashboard_preview_file", "test.html")
+
+# When the daily full Claude-notes run fires. Shown in the dashboard converted to each
+# viewer's local timezone. Use IANA timezone names (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+# Set to None to omit the "next AI refresh" line from the staleness notice.
+NOTES_REFRESH_TIME = {"hour": 17, "minute": 0, "tz": "Europe/Dublin"}
 
 # To backfill past quarters for ALL projects, uncomment the list below.
 # Comment it out again when done — the empty list above takes effect automatically.
@@ -1519,15 +1525,17 @@ def ensure_dirs(proj):
     os.makedirs(DASHBOARD_OUTPUT_DIR, exist_ok=True)
 
 
-def save_quarter_data(kpis, notes, sprints, proj):
+def save_quarter_data(kpis, notes, sprints, proj, notes_generated_at=None):
     key  = quarter_file_key(kpis["quarter"])
     path = os.path.join(proj["data_dir"], f"{key}.json")
+    now  = datetime.now(timezone.utc).isoformat()
     payload = {
-        "quarter":  kpis["quarter"],
-        "kpis":     kpis,
-        "notes":    notes,
-        "sprints":  sprints,
-        "saved_at": datetime.now(timezone.utc).isoformat(),
+        "quarter":            kpis["quarter"],
+        "kpis":               kpis,
+        "notes":              notes,
+        "sprints":            sprints,
+        "saved_at":           now,
+        "notes_generated_at": notes_generated_at or now,
     }
     with open(path, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2, default=str)
@@ -1635,6 +1643,7 @@ __PREVIEW_BANNER__
 const ALL_DATA=__ALL_DATA_JSON__;
 const WLOG_ADMINS=__WLOG_ADMINS_JSON__;
 const REFRESH_WEBHOOK=__REFRESH_WEBHOOK_URL__;
+const NOTES_REFRESH_TIME=__NOTES_REFRESH_TIME__;
 </script>
 <script src="assets/quarters_script__ASSET_SUFFIX__.js?v=__ASSET_VERSION__"></script>
 <div id="tt"></div>
@@ -1657,6 +1666,7 @@ def _render_html(all_projects_data, preview=False):
     # Escape </ so </script> in any value can't terminate the script tag early
     all_data_json = all_data_json.replace("</", "<\\/")
     webhook_json  = json.dumps(REFRESH_WEBHOOK_URL)
+    notes_refresh_time_json = json.dumps(NOTES_REFRESH_TIME)
     # Cache-busting version string — changes every run so browsers always fetch fresh assets
     asset_version = str(int(datetime.now().timestamp()))
     preview_banner = (
@@ -1670,7 +1680,8 @@ def _render_html(all_projects_data, preview=False):
         _HTML_TEMPLATE
         .replace("__ALL_DATA_JSON__",      all_data_json)
         .replace("__WLOG_ADMINS_JSON__",   json.dumps(WLOG_ADMINS, ensure_ascii=True))
-        .replace("__REFRESH_WEBHOOK_URL__", webhook_json)
+        .replace("__REFRESH_WEBHOOK_URL__",    webhook_json)
+        .replace("__NOTES_REFRESH_TIME__",     notes_refresh_time_json)
         .replace("__PREVIEW_BANNER__",     preview_banner)
         .replace("__DASHBOARD_TITLE__",    DASHBOARD_TITLE)
         .replace("__LOGO_ALT__",           LOGO_ALT)
@@ -1807,8 +1818,9 @@ def _get_prev_sprint_id(proj, current_sprints):
     return best_id, (best_end or None)
 
 
-def _run_quarter(proj, ref=None):
-    """Fetch, compute, and save data for one quarter of one project. ref=None = current quarter."""
+def _run_quarter(proj, ref=None, skip_notes=False):
+    """Fetch, compute, and save data for one quarter of one project. ref=None = current quarter.
+    skip_notes=True reuses existing Claude notes without making any API calls."""
     global _ACTIVE_PROJECT_KEY, _ACTIVE_SP_FIELD
     _ACTIVE_PROJECT_KEY = proj["key"]
     _ACTIVE_SP_FIELD    = proj.get("story_points_field") or "customfield_10016"
@@ -1840,44 +1852,49 @@ def _run_quarter(proj, ref=None):
               f"Logged: {kpis['time_logged_h']}h | No-estimate: {kpis['no_estimate_count']}")
     _update_developer_roster(kpis.get("assignee_stats", []))
 
-    print("\n[3/4] Generating notes via Claude...")
-    existing_notes = {}
-    existing_kpis  = {}
-    if not FORCE_NOTES:
-        existing_json_path = os.path.join(proj["data_dir"], f"{quarter_file_key(kpis['quarter'])}.json")
-        if os.path.exists(existing_json_path):
-            try:
-                saved = json.loads(open(existing_json_path, encoding="utf-8").read())
-                existing_notes = saved.get("notes", {})
-                existing_kpis  = saved.get("kpis",  {})
-            except Exception:
-                pass
-    notes = generate_notes(kpis, sprints, existing_notes, existing_kpis,
-                           proj_context=proj.get("notes_context", ""))
-    print(f"      Notes populated: {', '.join(notes.keys()) if notes else 'none (skipped)'}")
+    existing_json_path = os.path.join(proj["data_dir"], f"{quarter_file_key(kpis['quarter'])}.json")
+    existing_saved = {}
+    if os.path.exists(existing_json_path):
+        try:
+            existing_saved = json.loads(open(existing_json_path, encoding="utf-8").read())
+        except Exception:
+            pass
 
-    # Sprint notes — active sprint regenerated each run; closed sprints locked once written
-    print("      Generating sprint notes...")
-    existing_per_sprint = {}
-    if not FORCE_NOTES:
-        existing_json_path = os.path.join(proj["data_dir"], f"{quarter_file_key(kpis['quarter'])}.json")
-        if os.path.exists(existing_json_path):
-            try:
-                saved = json.loads(open(existing_json_path, encoding="utf-8").read())
-                for sid, spd in saved.get("kpis", {}).get("per_sprint", {}).items():
-                    existing_per_sprint[sid] = spd.get("notes", {})
-            except Exception:
-                pass
-    for sid, spd in kpis["per_sprint"].items():
-        prev = existing_per_sprint.get(sid, {})
-        spd["notes"] = generate_sprint_notes(spd["sprint_name"], spd["sprint_state"], spd, prev,
-                                             proj_context=proj.get("notes_context", ""),
-                                             use_oos=proj.get("use_oos", True))
-        locked = spd["sprint_state"].lower() == "closed" and bool(prev)
-        print(f"        {spd['sprint_name']}: {'locked' if locked else 'generated'}")
+    if skip_notes:
+        print("\n[3/4] Skipping Claude notes (data-only run) — reusing saved notes...")
+        notes = existing_saved.get("notes", {})
+        notes_generated_at = existing_saved.get("notes_generated_at")
+        for sid, spd in kpis["per_sprint"].items():
+            spd["notes"] = existing_saved.get("kpis", {}).get("per_sprint", {}).get(sid, {}).get("notes", {})
+        print(f"      Reused notes for {len(notes)} quarter key(s); sprint notes carried forward.")
+    else:
+        print("\n[3/4] Generating notes via Claude...")
+        existing_notes = {}
+        existing_kpis  = {}
+        if not FORCE_NOTES:
+            existing_notes = existing_saved.get("notes", {})
+            existing_kpis  = existing_saved.get("kpis",  {})
+        notes = generate_notes(kpis, sprints, existing_notes, existing_kpis,
+                               proj_context=proj.get("notes_context", ""))
+        print(f"      Notes populated: {', '.join(notes.keys()) if notes else 'none (skipped)'}")
+
+        # Sprint notes — active sprint regenerated each run; closed sprints locked once written
+        print("      Generating sprint notes...")
+        existing_per_sprint = {}
+        if not FORCE_NOTES:
+            for sid, spd in existing_saved.get("kpis", {}).get("per_sprint", {}).items():
+                existing_per_sprint[sid] = spd.get("notes", {})
+        for sid, spd in kpis["per_sprint"].items():
+            prev = existing_per_sprint.get(sid, {})
+            spd["notes"] = generate_sprint_notes(spd["sprint_name"], spd["sprint_state"], spd, prev,
+                                                 proj_context=proj.get("notes_context", ""),
+                                                 use_oos=proj.get("use_oos", True))
+            locked = spd["sprint_state"].lower() == "closed" and bool(prev)
+            print(f"        {spd['sprint_name']}: {'locked' if locked else 'generated'}")
+        notes_generated_at = datetime.now(timezone.utc).isoformat()
 
     print("\n[4/4] Saving quarter data...")
-    save_quarter_data(kpis, notes, sprints, proj)
+    save_quarter_data(kpis, notes, sprints, proj, notes_generated_at=notes_generated_at)
 
     all_quarters = load_all_quarters(proj)
     _enrich_past_quarters_with_carryovers(kpis, all_quarters, proj)
@@ -1887,7 +1904,17 @@ def _run_quarter(proj, ref=None):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Quarter Dashboard generator")
+    parser.add_argument(
+        "--data-only", action="store_true",
+        help="Refresh Jira data only — skip Claude API calls and reuse existing notes."
+    )
+    args = parser.parse_args()
+    skip_notes = args.data_only
+
     print("=== Quarter Dashboard — Multi-Project ===")
+    if skip_notes:
+        print("Mode: DATA-ONLY (Claude notes unchanged)")
     for proj in PROJECTS:
         print(f"\n{'#'*52}")
         print(f"# Project: {proj['display']} (board {proj['board_id']})")
@@ -1901,7 +1928,7 @@ def main():
         print(f"# Processing: {proj['display']}")
         proj_quarters = {}
         for ref in refs:
-            result = _run_quarter(proj, ref)
+            result = _run_quarter(proj, ref, skip_notes=skip_notes)
             if result:
                 proj_quarters = result  # load_all_quarters returns full set each time
         all_projects_data[proj["key"]] = {
