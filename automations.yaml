@@ -1077,27 +1077,41 @@
   actions:
   - choose:
     - conditions:
-      - condition: state
-        entity_id: input_select.hugh_room_blinds_mode
-        state: Closed
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: cover.master_blind
+          state:
+          - Closed
+          - closed
+        - condition: state
+          entity_id: cover.master_blind
+          state:
+          - Closed
+          - closing
       sequence:
-      - action: input_select.select_option
+      - action: cover.open_cover
+        metadata: {}
         target:
-          entity_id: input_select.hugh_room_blinds_mode
-        data:
-          option: Open
+          entity_id: cover.master_blind
+        data: {}
     - conditions:
-      - condition: template
-        value_template: '{{ states(''input_select.hugh_room_blinds_mode'') in [''Half'',
-          ''Open''] }}
-
-          '
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: cover.master_blind
+          state:
+          - open
+        - condition: state
+          entity_id: cover.master_blind
+          state:
+          - opening
       sequence:
-      - action: input_select.select_option
+      - action: cover.close_cover
+        metadata: {}
         target:
-          entity_id: input_select.hugh_room_blinds_mode
-        data:
-          option: Closed
+          entity_id: cover.master_blind
+        data: {}
   mode: single
 - id: '1709319124924'
   alias: Hugh Room Pressure Bed
@@ -1905,24 +1919,23 @@
       - condition: or
         conditions:
         - condition: state
-          entity_id: input_select.hugh_room_blinds_mode
-          state: Half
-        - condition: state
-          entity_id: input_select.hugh_room_blinds_mode
-          state: Closed
+          entity_id: cover.master_blind
+          state:
+          - Closed
+          - closing
       sequence:
-      - action: input_select.select_option
+      - action: cover.open_cover
+        metadata: {}
         target:
-          entity_id: input_select.hugh_room_blinds_mode
-        data:
-          option: Open
+          entity_id: cover.master_blind
+        data: {}
     - conditions: []
       sequence:
-      - action: input_select.select_option
+      - action: cover.close_cover
+        metadata: {}
         target:
-          entity_id: input_select.hugh_room_blinds_mode
-        data:
-          option: Closed
+          entity_id: cover.master_blind
+        data: {}
   mode: single
 - id: '1722191781948'
   alias: PC Turn On
