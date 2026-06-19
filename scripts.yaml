@@ -744,12 +744,12 @@ jira_quarter_update:
   - action: shell_command.jira_quarter_data_only
     data: {}
 jira_quarter_update_force_notes:
-  alias: Jira Quarter Update (Force Notes)
+  alias: Jira Quarter Update
   sequence:
   - action: shell_command.dlk_write_refresh_time
     data: {}
   - delay:
       seconds: 2
-  - action: shell_command.jira_quarter_force
+  - action: shell_command.jira_quarter
     data: {}
   description: ''
