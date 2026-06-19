@@ -5612,8 +5612,7 @@
 
         '
   actions:
-  - wait_template: '{{ not is_state(''script.jira_quarter_update_force_notes'', ''on'')
-      }}'
+  - wait_template: '{{ not is_state(''script.jira_quarter_update_data'', ''on'') }}'
     timeout: 00:03:00
     continue_on_timeout: true
   - action: script.jira_quarter_update_force_notes
@@ -5680,8 +5679,7 @@
     minutes: /5
   conditions:
   - condition: template
-    value_template: '{{ not is_state(''script.jira_quarter_update_force'', ''on'')
-      }}
+    value_template: '{{ not is_state(''script.jira_quarter_update'', ''on'') }}
 
       '
   actions:
