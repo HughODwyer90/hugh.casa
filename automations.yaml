@@ -1904,39 +1904,6 @@
       value: '{{ states(''sensor.car_mileage'') | float }}'
     action: input_number.set_value
   mode: single
-- id: '1722191648017'
-  alias: Hugh Room Desk Double
-  description: ''
-  triggers:
-  - entity_id:
-    - sensor.hugh_room_desk_aqara_button_action
-    to: double
-    trigger: state
-  conditions: []
-  actions:
-  - choose:
-    - conditions:
-      - condition: or
-        conditions:
-        - condition: state
-          entity_id: cover.master_blind
-          state:
-          - Closed
-          - closing
-      sequence:
-      - action: cover.open_cover
-        metadata: {}
-        target:
-          entity_id: cover.master_blind
-        data: {}
-    - conditions: []
-      sequence:
-      - action: cover.close_cover
-        metadata: {}
-        target:
-          entity_id: cover.master_blind
-        data: {}
-  mode: single
 - id: '1722191781948'
   alias: PC Turn On
   description: ''
@@ -3856,8 +3823,10 @@
         state: playing
       sequence:
       - target:
-          entity_id: button.hugh_speaker_group_favourite_current_song
+          entity_id:
+          - button.hugh_speaker_group_favourite_current_song_2
         action: button.press
+        data: {}
   - data:
       title: Liked Song
       message: "{% if song_title not in [none,'','unknown','unavailable'] %}\n  ❤️
@@ -4750,10 +4719,11 @@
           scene_id: coffee_table_pre_open_snapshot
           snapshot_entities:
           - light.living_room_ceiling_lights
-          - light.living_room_accents
+          - light.living_room_accent_lights
       - action: scene.turn_on
         target:
-          entity_id: scene.living_room_lights_3_accents
+          entity_id: scene.living_room_lights_5_living_room_accents_glow
+        data: {}
     - conditions:
       - condition: state
         entity_id: binary_sensor.coffee_table_contact
@@ -4762,6 +4732,7 @@
       - action: scene.turn_on
         target:
           entity_id: scene.coffee_table_pre_open_snapshot
+        data: {}
   mode: single
 - id: '1773959263569'
   alias: Kitchen Lights State Reconciliation
@@ -4947,7 +4918,7 @@
   actions:
   - variables:
       ceiling_lights:
-      - light.dining_table
+      - light.dining_room_table
       - light.living_room_coffee_table
       ceiling_on_lights: "{{\n  ceiling_lights\n  | select('is_state', 'on')\n  |
         list\n}}\n"
