@@ -252,7 +252,7 @@ function setActiveSprint(id){activeSprint=id;render(cur,curTab);}
     let notFoundCount=0;
     function fmtElapsed(s){return s<60?s+"s":Math.floor(s/60)+"m "+String(s%60).padStart(2,"0")+"s";}
     function setBanner(cls,html){
-      banner.className=cls;banner.innerHTML=html;banner.style.display="";
+      banner.className=cls;banner.innerHTML=html;banner.style.display="block";
     }
     function startElapsedTick(){
       return setInterval(()=>{
