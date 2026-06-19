@@ -359,6 +359,17 @@ function setActiveSprint(id){activeSprint=id;render(cur,curTab);}
   });
 })();
 
+/* ---- Dev force-refresh (Shift+Alt+R) ---- */
+if(REFRESH_REQUEST_WEBHOOK){
+  document.addEventListener("keydown",e=>{
+    if(e.shiftKey&&e.altKey&&e.key==="R"){
+      fetch(REFRESH_REQUEST_WEBHOOK,{method:"POST",mode:"no-cors"});
+      const btn=document.getElementById("refresh-btn");
+      if(btn){btn.textContent="↻ Sent…";setTimeout(()=>btn.textContent="↻ Refresh",3000);}
+    }
+  });
+}
+
 /* ---- Header height sync ---- */
 function _syncHdr(){
   const h=document.getElementById("site-header")?.offsetHeight;
