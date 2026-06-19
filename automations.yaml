@@ -5612,7 +5612,10 @@
 
         '
   actions:
-  - action: script.jira_quarter_update
+  - wait_template: '{{ not is_state(''script.jira_quarter_update_data'', ''on'') }}'
+    timeout: 00:03:00
+    continue_on_timeout: true
+  - action: script.jira_quarter_update_force
     data: {}
   mode: single
 - id: '1778701795657'
@@ -5668,3 +5671,19 @@
         payload: offline
         retain: true
   mode: parallel
+- id: '1781873324364'
+  alias: Jira Quarter Data Refresh
+  description: ''
+  triggers:
+  - trigger: time_pattern
+    minutes: /5
+  conditions:
+  - condition: template
+    value_template: '{{ not is_state(''script.jira_quarter_update_force'', ''on'')
+      }}
+
+      '
+  actions:
+  - action: script.jira_quarter_update_data
+    data: {}
+  mode: single
