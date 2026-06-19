@@ -3787,31 +3787,28 @@
         data: {}
   mode: restart
 - id: '1763119440312'
-  alias: IR Typhoon Center Down - Like Track (With Pink Flash)
+  alias: Favourite Currently Playing Song
+  description: Press input button to favourite the song playing on any speaker
   triggers:
-  - entity_id: binary_sensor.typhoon_center_down
-    to: 'on'
-    trigger: state
+  - trigger: state
+    entity_id: input_button.favourite_current_song
   actions:
   - variables:
-      meta_entity: "{% set ns = namespace(p='') %}\n{# 1) Prefer MA group metadata
-        #} {% if states('media_player.hugh_speaker_group_2') in ['playing','paused','buffering']\n
-        \     and state_attr('media_player.hugh_speaker_group_2','media_title') not
-        in [none,'','unknown','unavailable']\n      and state_attr('media_player.hugh_speaker_group_2','media_title')
+      meta_entity: "{% set ns = namespace(p='') %} {% if states('media_player.hugh_speaker_group_2')
+        in ['playing','paused','buffering']\n    and state_attr('media_player.hugh_speaker_group_2','media_title')
+        not in [none,'','unknown','unavailable']\n    and state_attr('media_player.hugh_speaker_group_2','media_title')
         != 'Music Assistant' %}\n  {% set ns.p = 'media_player.hugh_speaker_group_2'
-        %}\n{% endif %}\n{# 2) Else try Cast group (sometimes only shows \"Music Assistant\")
-        #} {% if ns.p == '' and states('media_player.hugh_speaker_group') in ['playing','paused','buffering']\n
-        \     and state_attr('media_player.hugh_speaker_group','media_title') not
-        in [none,'','unknown','unavailable']\n      and state_attr('media_player.hugh_speaker_group','media_title')
+        %}\n{% endif %} {% if ns.p == '' and states('media_player.hugh_speaker_group')
+        in ['playing','paused','buffering']\n    and state_attr('media_player.hugh_speaker_group','media_title')
+        not in [none,'','unknown','unavailable']\n    and state_attr('media_player.hugh_speaker_group','media_title')
         != 'Music Assistant' %}\n  {% set ns.p = 'media_player.hugh_speaker_group'
-        %}\n{% endif %}\n{# 3) Else fall back to any single device with a real title
-        #} {% if ns.p == '' %}\n  {% set singles = [\n    'media_player.master_bedroom_display_g',\n
+        %}\n{% endif %} {% if ns.p == '' %}\n  {% set singles = [\n    'media_player.master_bedroom_display_g',\n
         \   'media_player.hugh_room_speaker_g',\n    'media_player.hugh_room_speaker_2_g'\n
         \ ] %}\n  {% for e in singles %}\n    {% if states(e) in ['playing','paused','buffering']\n
-        \         and state_attr(e,'media_title') not in [none,'','unknown','unavailable']\n
-        \         and state_attr(e,'media_title') != 'Music Assistant' %}\n      {%
+        \       and state_attr(e,'media_title') not in [none,'','unknown','unavailable']\n
+        \       and state_attr(e,'media_title') != 'Music Assistant' %}\n      {%
         set ns.p = e %}\n      {% break %}\n    {% endif %}\n  {% endfor %}\n{% endif
-        %}\n{{ ns.p }}\n"
+        %} {{ ns.p }}\n"
       song_title: '{{ state_attr(meta_entity,''media_title'') if meta_entity else
         '''' }}'
       song_artist: '{{ state_attr(meta_entity,''media_artist'') if meta_entity else
@@ -3823,10 +3820,8 @@
         state: playing
       sequence:
       - target:
-          entity_id:
-          - button.hugh_speaker_group_favourite_current_song_2
+          entity_id: button.hugh_speaker_group_favourite_current_song
         action: button.press
-        data: {}
   - data:
       title: Liked Song
       message: "{% if song_title not in [none,'','unknown','unavailable'] %}\n  ❤️
@@ -3834,14 +3829,6 @@
         %} – {{ song_artist }}{% endif %}\n{% else %}\n  ❤️ Liked song (no metadata
         found)\n{% endif %}\n"
     action: notify.notifications
-  - data:
-      color:
-      - 255
-      - 105
-      - 180
-      brightness: 100
-      duration: 2
-    action: script.set_diffuser_color_flash
   mode: single
 - id: '1764055498061'
   alias: Enable Bed Pressure Toggle
