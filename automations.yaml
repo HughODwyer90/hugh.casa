@@ -5676,13 +5676,13 @@
   description: ''
   triggers:
   - trigger: time_pattern
-    minutes: /5
+    minutes: /10
   conditions:
   - condition: template
     value_template: '{{ not is_state(''script.jira_quarter_update'', ''on'') }}
 
       '
   actions:
-  - action: script.jira_quarter_update
+  - action: script.jira_quarter_update_data
     data: {}
   mode: single
