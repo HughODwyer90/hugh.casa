@@ -41,9 +41,9 @@ JIRA_CLOUD_ID     = secrets["jira_cloud_id"]
 
 # Webhook URL that the dashboard's "Refresh" button will POST to (full data + notes run).
 # Store as "refresh_webhook_url" in your secrets manager. Leave absent to hide the button.
-REFRESH_WEBHOOK_URL      = secrets.get("refresh_webhook_url", "")
-# Webhook URL for a data-only refresh (no Claude calls). No hourly rate limit applied.
-REFRESH_DATA_WEBHOOK_URL = secrets.get("refresh_data_webhook_url", "")
+REFRESH_WEBHOOK_URL         = secrets.get("refresh_webhook_url", "")
+REFRESH_DATA_WEBHOOK_URL    = secrets.get("refresh_data_webhook_url", "")
+REFRESH_REQUEST_WEBHOOK_URL = secrets.get("refresh_request_webhook_url", "")
 
 # Dashboard branding — store in secrets or edit here directly.
 # dashboard_title : shown in the browser tab before JS loads (JS sets it per-quarter afterwards).
@@ -1669,6 +1669,7 @@ const ALL_DATA=__ALL_DATA_JSON__;
 const WLOG_ADMINS=__WLOG_ADMINS_JSON__;
 const REFRESH_WEBHOOK=__REFRESH_WEBHOOK_URL__;
 const REFRESH_DATA_WEBHOOK=__REFRESH_DATA_WEBHOOK_URL__;
+const REFRESH_REQUEST_WEBHOOK=__REFRESH_REQUEST_WEBHOOK_URL__;
 const NOTES_REFRESH_TIME=__NOTES_REFRESH_TIME__;
 </script>
 <script src="assets/quarters_script__ASSET_SUFFIX__.js?v=__ASSET_VERSION__"></script>
@@ -1707,7 +1708,8 @@ def _render_html(all_projects_data, preview=False):
         .replace("__ALL_DATA_JSON__",      all_data_json)
         .replace("__WLOG_ADMINS_JSON__",   json.dumps(WLOG_ADMINS, ensure_ascii=True))
         .replace("__REFRESH_WEBHOOK_URL__",      webhook_json)
-        .replace("__REFRESH_DATA_WEBHOOK_URL__", json.dumps(REFRESH_DATA_WEBHOOK_URL))
+        .replace("__REFRESH_DATA_WEBHOOK_URL__",     json.dumps(REFRESH_DATA_WEBHOOK_URL))
+        .replace("__REFRESH_REQUEST_WEBHOOK_URL__",  json.dumps(REFRESH_REQUEST_WEBHOOK_URL))
         .replace("__NOTES_REFRESH_TIME__",     notes_refresh_time_json)
         .replace("__PREVIEW_BANNER__",     preview_banner)
         .replace("__DASHBOARD_TITLE__",    DASHBOARD_TITLE)
