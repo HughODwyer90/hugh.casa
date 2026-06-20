@@ -1671,6 +1671,7 @@ const REFRESH_WEBHOOK=__REFRESH_WEBHOOK_URL__;
 const REFRESH_DATA_WEBHOOK=__REFRESH_DATA_WEBHOOK_URL__;
 const REFRESH_REQUEST_WEBHOOK=__REFRESH_REQUEST_WEBHOOK_URL__;
 const NOTES_REFRESH_TIME=__NOTES_REFRESH_TIME__;
+const LAST_REFRESH_TS=__LAST_REFRESH_TS__;
 </script>
 <script src="assets/quarters_script__ASSET_SUFFIX__.js?v=__ASSET_VERSION__"></script>
 <div id="tt"></div>
@@ -1694,6 +1695,13 @@ def _render_html(all_projects_data, preview=False):
     all_data_json = all_data_json.replace("</", "<\\/")
     webhook_json  = json.dumps(REFRESH_WEBHOOK_URL)
     notes_refresh_time_json = json.dumps(NOTES_REFRESH_TIME)
+    # Read last_refresh.json to get the timestamp of the last full run
+    _last_refresh_path = os.path.join(DASHBOARD_OUTPUT_DIR, "data", "last_refresh.json")
+    try:
+        _last_refresh_ts = json.loads(open(_last_refresh_path, encoding="utf-8").read()).get("timestamp", "")
+    except Exception:
+        _last_refresh_ts = ""
+    last_refresh_ts_json = json.dumps(_last_refresh_ts)
     # Cache-busting version string — changes every run so browsers always fetch fresh assets
     asset_version = str(int(datetime.now().timestamp()))
     preview_banner = (
@@ -1711,6 +1719,7 @@ def _render_html(all_projects_data, preview=False):
         .replace("__REFRESH_DATA_WEBHOOK_URL__",     json.dumps(REFRESH_DATA_WEBHOOK_URL))
         .replace("__REFRESH_REQUEST_WEBHOOK_URL__",  json.dumps(REFRESH_REQUEST_WEBHOOK_URL))
         .replace("__NOTES_REFRESH_TIME__",     notes_refresh_time_json)
+        .replace("__LAST_REFRESH_TS__",        last_refresh_ts_json)
         .replace("__PREVIEW_BANNER__",     preview_banner)
         .replace("__DASHBOARD_TITLE__",    DASHBOARD_TITLE)
         .replace("__LOGO_ALT__",           LOGO_ALT)
