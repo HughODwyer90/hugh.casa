@@ -5619,20 +5619,8 @@
 
         '
   actions:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: phone_confirm
-      sequence:
-      - action: shell_command.jira_quarter
-        data: {}
-    default:
-    - wait_template: '{{ not is_state(''script.jira_quarter_update_data'', ''on'')
-        }}'
-      timeout: 00:03:00
-      continue_on_timeout: true
-    - action: script.jira_quarter_update
-      data: {}
+  - action: script.jira_quarter_update
+    data: {}
   mode: single
 - id: '1778701795657'
   alias: Living Room Curtains – Override Watchdog
