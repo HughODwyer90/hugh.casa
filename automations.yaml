@@ -2242,13 +2242,15 @@
 - id: '1727015409248'
   alias: Battery Low Notification
   description: Battery Low Notification for devices
-  trigger:
+  triggers:
   - trigger: event
     event_type: battery_notes_battery_threshold
     event_data:
       battery_low: true
-  condition: []
-  action:
+  conditions:
+  - condition: template
+    value_template: '{{ seconds_since > 86400 }}'
+  actions:
   - data:
       title: '{{ trigger.event.data.device_name }} Battery Low'
       message: 'The device has a battery level of {{ trigger.event.data.battery_level
@@ -2257,7 +2259,18 @@
 
         '
     action: notify.notifications
+  - action: shell_command.write_battery_log
+    data:
+      device_id: '{{ trigger.event.data.device_id }}'
+      timestamp: '{{ now().timestamp() | int }}'
   mode: queued
+  variables:
+    device_id: '{{ trigger.event.data.device_id }}'
+    last_sent: '{{ state_attr(''sensor.battery_notification_log'', device_id) | default(0)
+      | int }}
+
+      '
+    seconds_since: '{{ now().timestamp() | int - last_sent }}'
 - id: '1727963833872'
   alias: Auto Update ESPHome Devices
   description: Run the ESPHome update script daily at 6 AM or via button/manual run
