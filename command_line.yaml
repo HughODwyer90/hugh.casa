@@ -1,0 +1,7 @@
+- sensor:
+    name: "Battery Notification Log"
+    unique_id: battery_notification_log
+    command: "cat /config/battery_notification_log.json 2>/dev/null || echo '{}'"
+    scan_interval: 60
+    value_template: "OK"
+    json_attributes_template: "{{ value_json }}"
