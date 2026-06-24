@@ -21,3 +21,4 @@ ibkr_flex: "python3 /config/python_scripts/ibkr_flex.py"
 jira_quarter_data_only: "nohup python3 /config/python_scripts/quarters_report.py --data-only > /config/python_scripts/quarters_report.log 2>&1 &"
 jira_quarter:     "nohup python3 /config/python_scripts/quarters_report.py > /config/python_scripts/quarters_report.log 2>&1 &"
 dlk_write_refresh_time: 'printf ''{"timestamp":"%s"}'' $(date -u +%Y-%m-%dT%H:%M:%SZ) > /config/www/quarters/data/last_refresh.json'
+write_battery_log: "python3 /config/python_scripts/write_battery_log.py '{{ device_id }}' '{{ timestamp }}'"
