@@ -742,10 +742,8 @@ jira_quarter_update_data:
 jira_quarter_update:
   alias: Jira Quarter Update
   sequence:
-  - action: shell_command.dlk_write_refresh_time
-    data: {}
-  - delay:
-      seconds: 2
   - action: shell_command.jira_quarter
+    data: {}
+  - action: shell_command.all_write_refresh_time
     data: {}
   description: ''
