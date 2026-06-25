@@ -18,8 +18,17 @@ next_payday: "python3 /config/python_scripts/next_payday.py"
 update_dates: "python3 /config/python_scripts/update_dates.py {{target}} {{years}} {{months}}"
 patch_tuya_diffuser: "grep -q 'category: config' /config/custom_components/tuya_local/devices/ditua_dt1522yn_aromadiffuser.yaml && sed -i '/^  - entity: light$/,/^  - entity:/ {/category: config/d}' /config/custom_components/tuya_local/devices/ditua_dt1522yn_aromadiffuser.yaml || true"
 ibkr_flex: "python3 /config/python_scripts/ibkr_flex.py"
-jira_quarter_data_only: "nohup python3 /config/python_scripts/quarters_report.py --data-only > /config/python_scripts/quarters_report.log 2>&1 &"
-jira_quarter:     "nohup python3 /config/python_scripts/quarters_report.py > /config/python_scripts/quarters_report.log 2>&1 &"
+
 dlk_write_refresh_time: 'printf ''{"timestamp":"%s"}'' $(date -u +%Y-%m-%dT%H:%M:%SZ) > /config/www/quarters/data/last_refresh.json'
 write_battery_log: "python3 /config/python_scripts/write_battery_log.py '{{ device_id }}' '{{ timestamp }}'"
 check_battery_log: "python3 /config/python_scripts/check_battery_log.py '{{ device_id }}'"
+# Timer — runs all projects (throttled by notes_refresh_hours)
+jira_quarter: "nohup python3 /config/python_scripts/quarters_report.py > /config/python_scripts/quarters_report.log 2>&1 &"
+
+# Data-only refresh (all projects)
+jira_quarter_data_only: "nohup python3 /config/python_scripts/quarters_report.py --data-only > /config/python_scripts/quarters_report.log 2>&1 &"
+
+# Per-project refresh button webhooks — force-notes bypasses the time limit
+dlk_refresh: "nohup python3 /config/python_scripts/quarters_report.py --project dlk --force-notes > /config/python_scripts/quarters_report.log 2>&1 &"
+nda_refresh: "nohup python3 /config/python_scripts/quarters_report.py --project nda --force-notes > /config/python_scripts/quarters_report.log 2>&1 &"
+pem_refresh: "nohup python3 /config/python_scripts/quarters_report.py --project pem --force-notes > /config/python_scripts/quarters_report.log 2>&1 &"
