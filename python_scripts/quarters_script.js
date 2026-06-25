@@ -29,6 +29,8 @@ const _lsTab =window._hsTab;
 // Active project state — updated by switchProject()
 let AP=PROJ_KEYS[0];
 let QS={}, PROJ_KEY="", PROJ_DISPLAY="", BOARD_ID="", PROJ_USE_SP=false, PROJ_USE_OOS=true;
+let PROJ_REFRESH_WEBHOOK="", PROJ_REFRESH_DATA_WEBHOOK="", PROJ_REFRESH_REQUEST_WEBHOOK="";
+const _refreshBtn=document.getElementById("refresh-btn");
 let ordered=[];
 let cur="";
 let curTab="overview";
@@ -50,6 +52,10 @@ function switchProject(p,skipRender){
   const _firstKpis=Object.values(pd.qs||{})[0]?.kpis||{};
   PROJ_USE_SP=!!(pd.use_story_points??_firstKpis.use_story_points??false);
   PROJ_USE_OOS=!!(pd.use_oos??true);
+  PROJ_REFRESH_WEBHOOK=pd.refresh_webhook||"";
+  PROJ_REFRESH_DATA_WEBHOOK=pd.refresh_data_webhook||"";
+  PROJ_REFRESH_REQUEST_WEBHOOK=pd.refresh_request_webhook||"";
+  if(typeof updateRefreshBtn==="function")updateRefreshBtn();
   ordered=Object.keys(QS).sort((a,b)=>{
     const[qa,ya]=a.split(" ");const[qb,yb]=b.split(" ");
     return(+yb-+ya)||(+qb[1]-+qa[1]);
@@ -73,14 +79,28 @@ function switchProject(p,skipRender){
 function e(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
 
 /* ---- Notes staleness notice ---- */
-function _notesStaleHtml(notesGeneratedAt, dataAsOf){
-  if(!notesGeneratedAt||!dataAsOf)return"";
-  const nts=new Date(notesGeneratedAt), dat=new Date(dataAsOf);
+function notesStaleNotice(notesGeneratedAt, dataAsOf){
+  const liveTs=ALL_DATA[AP]?.last_run_at||notesGeneratedAt;
+  if(!liveTs||!dataAsOf)return"";
+  const nts=new Date(liveTs), dat=new Date(dataAsOf);
   if(isNaN(nts.getTime())||isNaN(dat.getTime()))return"";
   if(dat-nts<60000)return"";
   const fmtTs=d=>d.toLocaleString(undefined,{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",timeZoneName:"short"});
   let msg=`AI notes last updated: ${fmtTs(nts)}.`;
-  if(NOTES_REFRESH_TIME&&NOTES_REFRESH_TIME.tz){
+  const refreshHours=ALL_DATA[AP]?.notes_refresh_hours;
+  if(refreshHours){
+    const nextRun=new Date(nts.getTime()+refreshHours*3600000);
+    const now=new Date();
+    if(nextRun>now){
+      const diffMs=nextRun-now;
+      const diffH=Math.round(diffMs/3600000);
+      const diffD=Math.round(diffMs/86400000);
+      const label=diffH<24?`~${diffH}h`:`~${diffD}d`;
+      msg+=` Next AI refresh: in ${label} (${fmtTs(nextRun)}).`;
+    }else{
+      msg+=` Next AI refresh: due now.`;
+    }
+  }else if(NOTES_REFRESH_TIME&&NOTES_REFRESH_TIME.tz){
     try{
       const {hour,minute,tz}=NOTES_REFRESH_TIME;
       const min=minute||0;
@@ -96,10 +116,6 @@ function _notesStaleHtml(notesGeneratedAt, dataAsOf){
     }catch(_){}
   }
   return`<div class="alert alert-info" style="font-size:12px;opacity:0.85">ℹ ${msg}</div>`;
-}
-function notesStaleNotice(notesGeneratedAt, dataAsOf){
-  const liveTs=LAST_REFRESH_TS||notesGeneratedAt;
-  return _notesStaleHtml(liveTs, dataAsOf);
 }
 
 /* ---- Date formatting ---- */
@@ -222,13 +238,16 @@ function setActiveSprint(id){activeSprint=id;render(cur,curTab);}
 
 
 /* ---- Refresh button ---- */
-(function(){
-  const btn=document.getElementById("refresh-btn");
-  if(!REFRESH_WEBHOOK){return;}
-  btn.style.display="";
-  const COOLDOWN_MS=60*60*1000;
-  const SK="dlk_last_manual_refresh";
+function updateRefreshBtn(){
+  if(!_refreshBtn)return;
+  _refreshBtn.style.display=PROJ_REFRESH_WEBHOOK?"":"none";
+}
 
+(function(){
+  if(!_refreshBtn)return;
+  const COOLDOWN_MS=60*60*1000;
+
+  function sk(){return"last_manual_refresh_"+AP.toLowerCase();}
   function fmtTime(ts){
     const d=new Date(ts);
     return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
@@ -250,30 +269,30 @@ function setActiveSprint(id){activeSprint=id;render(cur,curTab);}
     modal.classList.add("open");
   }
 
-  // Fetch last refresh time from HA-written file (cross-browser source of truth).
-  // Falls back to localStorage if file not yet created.
   async function getLastRefresh(){
     try{
       const r=await fetch("./data/last_refresh.json?_="+Date.now());
       if(r.ok){
         const d=await r.json();
-        if(d.timestamp){
-          const fileTs=new Date(d.timestamp).getTime();
-          const localTs=+localStorage.getItem(SK)||0;
+        const ts=d[AP.toLowerCase()];
+        if(ts){
+          const fileTs=new Date(ts).getTime();
+          const localTs=+localStorage.getItem(sk())||0;
           return Math.max(fileTs,localTs);
         }
       }
     }catch(_){}
-    return +localStorage.getItem(SK)||0;
+    return +localStorage.getItem(sk())||0;
   }
 
-  btn.addEventListener("click",async()=>{
+  _refreshBtn.addEventListener("click",async()=>{
+    if(!PROJ_REFRESH_WEBHOOK)return;
     const last=await getLastRefresh();
     const now=Date.now();
     if(now-last<COOLDOWN_MS){
-      const dataBtn=REFRESH_DATA_WEBHOOK?{
+      const dataBtn=PROJ_REFRESH_DATA_WEBHOOK?{
         label:"Refresh data only",
-        action:()=>fetch(REFRESH_DATA_WEBHOOK,{method:"POST",mode:"no-cors"})
+        action:()=>fetch(PROJ_REFRESH_DATA_WEBHOOK,{method:"POST",mode:"no-cors"})
       }:null;
       showModal(
         "Too soon for a full refresh",
@@ -282,16 +301,11 @@ function setActiveSprint(id){activeSprint=id;render(cur,curTab);}
       );
       return;
     }
-    localStorage.setItem(SK,String(now));
-    btn.disabled=true;
-    btn.textContent="↻ Refreshing…";
+    localStorage.setItem(sk(),String(now));
+    _refreshBtn.disabled=true;
+    _refreshBtn.textContent="↻ Refreshing…";
 
-    let banner=document.getElementById("refresh-banner");
-    if(!banner){
-      banner=document.createElement("div");
-      banner.id="refresh-banner";
-      document.getElementById("site-header").insertAdjacentElement("afterend",banner);
-    }
+    const banner=document.getElementById("refresh-banner");
     const triggerTs=now;
     let elapsed=0;
     let pollTimer=null;
@@ -301,10 +315,7 @@ function setActiveSprint(id){activeSprint=id;render(cur,curTab);}
       banner.className=cls;banner.innerHTML=html;banner.style.display="block";
     }
     function startElapsedTick(){
-      return setInterval(()=>{
-        elapsed++;
-        setBanner("",`↻ Refreshing… ${fmtElapsed(elapsed)} elapsed`);
-      },1000);
+      return setInterval(()=>{elapsed++;setBanner("",`↻ Refreshing… ${fmtElapsed(elapsed)} elapsed`);},1000);
     }
     async function pollForComplete(){
       try{
@@ -313,7 +324,8 @@ function setActiveSprint(id){activeSprint=id;render(cur,curTab);}
         notFoundCount=0;
         if(r.ok){
           const d=await r.json();
-          if(d.timestamp&&new Date(d.timestamp).getTime()>triggerTs){
+          const ts=d[AP.toLowerCase()];
+          if(ts&&new Date(ts).getTime()>triggerTs){
             clearInterval(elapsedTimer);clearInterval(pollTimer);
             setBanner("done","✓ Done — reloading…");
             setTimeout(()=>location.reload(),1500);
@@ -326,43 +338,49 @@ function setActiveSprint(id){activeSprint=id;render(cur,curTab);}
     setBanner("","↻ Refreshing… 0s elapsed");
     pollTimer=setInterval(pollForComplete,10000);
     setTimeout(()=>{
-      clearInterval(pollTimer);
-      clearInterval(elapsedTimer);
+      clearInterval(pollTimer);clearInterval(elapsedTimer);
       if(banner.className!=="done"){
         setBanner("","↻ Still working… reload in a moment to check");
-        btn.textContent="↻ Refresh";btn.disabled=false;
+        _refreshBtn.textContent="↻ Refresh";_refreshBtn.disabled=false;
       }
     },5*60*1000);
 
-    fetch(REFRESH_WEBHOOK,{method:"POST",mode:"no-cors"})
-      .then(()=>{
-        btn.textContent="↻ Refresh";
-        btn.disabled=false;
-      })
+    fetch(PROJ_REFRESH_WEBHOOK,{method:"POST",mode:"no-cors"})
+      .then(()=>{_refreshBtn.textContent="↻ Refresh";_refreshBtn.disabled=false;})
       .catch(err=>{
         clearInterval(elapsedTimer);clearInterval(pollTimer);
-        localStorage.removeItem(SK);
+        localStorage.removeItem(sk());
         if(banner)banner.style.display="none";
         showModal(
           "Refresh failed",
           `Could not reach Home Assistant${err.message?` (${err.message})`:""}. Check that HA is running and the webhook is configured. You can try again now.`
         );
-        btn.textContent="↻ Refresh";
-        btn.disabled=false;
+        _refreshBtn.textContent="↻ Refresh";_refreshBtn.disabled=false;
       });
   });
 })();
 
-/* ---- Dev force-refresh (Shift+Alt+R) ---- */
-if(REFRESH_REQUEST_WEBHOOK){
-  document.addEventListener("keydown",e=>{
-    if(e.shiftKey&&e.altKey&&e.key==="R"){
-      fetch(REFRESH_REQUEST_WEBHOOK,{method:"POST",mode:"no-cors"});
-      const btn=document.getElementById("refresh-btn");
-      if(btn){btn.textContent="↻ Sent…";setTimeout(()=>btn.textContent="↻ Refresh",3000);}
+/* ---- Request refresh — 5 quick clicks on the "Updated" timestamp in the navbar ---- */
+(function(){
+  const el=document.getElementById("as-of");
+  if(!el)return;
+  let clicks=0,timer=null;
+  el.style.cursor="default";
+  el.addEventListener("click",()=>{
+    if(!PROJ_REFRESH_REQUEST_WEBHOOK)return;
+    clicks++;
+    clearTimeout(timer);
+    if(clicks>=5){
+      clicks=0;
+      fetch(PROJ_REFRESH_REQUEST_WEBHOOK,{method:"POST",mode:"no-cors"});
+      const prev=el.textContent;
+      el.textContent="↻ Request sent";
+      setTimeout(()=>el.textContent=prev,3000);
+    }else{
+      timer=setTimeout(()=>clicks=0,2000);
     }
   });
-}
+})();
 
 /* ---- Header height sync ---- */
 function _syncHdr(){
