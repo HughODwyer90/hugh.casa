@@ -40,10 +40,21 @@ ANTHROPIC_API_KEY = secrets["anthropic_api_key"]
 JIRA_CLOUD_ID     = secrets["jira_cloud_id"]
 
 # Webhook URL that the dashboard's "Refresh" button will POST to (full data + notes run).
-# Store as "refresh_webhook_url" in your secrets manager. Leave absent to hide the button.
-REFRESH_WEBHOOK_URL         = secrets.get("refresh_webhook_url", "")
-REFRESH_DATA_WEBHOOK_URL    = secrets.get("refresh_data_webhook_url", "")
-REFRESH_REQUEST_WEBHOOK_URL = secrets.get("refresh_request_webhook_url", "")
+# Per-project webhook maps — store as JSON objects in secrets, keyed by lowercase project key.
+# e.g. refresh_webhook_urls: {"dlk": "https://...", "nda": "https://..."}
+# Leave absent to hide the refresh button for all projects.
+def _load_webhook_map(secret_key):
+    raw = secrets.get(secret_key, "")
+    if not raw:
+        return {}
+    try:
+        return json.loads(raw) if isinstance(raw, str) else raw
+    except Exception:
+        return {}
+
+_REFRESH_WEBHOOKS         = _load_webhook_map("refresh_webhook_url")
+_REFRESH_DATA_WEBHOOKS    = _load_webhook_map("refresh_data_webhook_url")
+_REFRESH_REQUEST_WEBHOOKS = _load_webhook_map("refresh_request_webhook_url")
 
 # Dashboard branding — store in secrets or edit here directly.
 # dashboard_title : shown in the browser tab before JS loads (JS sets it per-quarter afterwards).
@@ -1667,11 +1678,7 @@ __PREVIEW_BANNER__
 <script>
 const ALL_DATA=__ALL_DATA_JSON__;
 const WLOG_ADMINS=__WLOG_ADMINS_JSON__;
-const REFRESH_WEBHOOK=__REFRESH_WEBHOOK_URL__;
-const REFRESH_DATA_WEBHOOK=__REFRESH_DATA_WEBHOOK_URL__;
-const REFRESH_REQUEST_WEBHOOK=__REFRESH_REQUEST_WEBHOOK_URL__;
 const NOTES_REFRESH_TIME=__NOTES_REFRESH_TIME__;
-const LAST_REFRESH_TS=__LAST_REFRESH_TS__;
 </script>
 <script src="assets/quarters_script__ASSET_SUFFIX__.js?v=__ASSET_VERSION__"></script>
 <div id="tt"></div>
@@ -1693,15 +1700,7 @@ def _render_html(all_projects_data, preview=False):
     all_data_json = json.dumps(all_projects_data, default=str, ensure_ascii=True)
     # Escape </ so </script> in any value can't terminate the script tag early
     all_data_json = all_data_json.replace("</", "<\\/")
-    webhook_json  = json.dumps(REFRESH_WEBHOOK_URL)
     notes_refresh_time_json = json.dumps(NOTES_REFRESH_TIME)
-    # Read last_refresh.json to get the timestamp of the last full run
-    _last_refresh_path = os.path.join(DASHBOARD_OUTPUT_DIR, "data", "last_refresh.json")
-    try:
-        _last_refresh_ts = json.loads(open(_last_refresh_path, encoding="utf-8").read()).get("timestamp", "")
-    except Exception:
-        _last_refresh_ts = ""
-    last_refresh_ts_json = json.dumps(_last_refresh_ts)
     # Cache-busting version string — changes every run so browsers always fetch fresh assets
     asset_version = str(int(datetime.now().timestamp()))
     preview_banner = (
@@ -1715,11 +1714,7 @@ def _render_html(all_projects_data, preview=False):
         _HTML_TEMPLATE
         .replace("__ALL_DATA_JSON__",      all_data_json)
         .replace("__WLOG_ADMINS_JSON__",   json.dumps(WLOG_ADMINS, ensure_ascii=True))
-        .replace("__REFRESH_WEBHOOK_URL__",      webhook_json)
-        .replace("__REFRESH_DATA_WEBHOOK_URL__",     json.dumps(REFRESH_DATA_WEBHOOK_URL))
-        .replace("__REFRESH_REQUEST_WEBHOOK_URL__",  json.dumps(REFRESH_REQUEST_WEBHOOK_URL))
-        .replace("__NOTES_REFRESH_TIME__",     notes_refresh_time_json)
-        .replace("__LAST_REFRESH_TS__",        last_refresh_ts_json)
+        .replace("__NOTES_REFRESH_TIME__", notes_refresh_time_json)
         .replace("__PREVIEW_BANNER__",     preview_banner)
         .replace("__DASHBOARD_TITLE__",    DASHBOARD_TITLE)
         .replace("__LOGO_ALT__",           LOGO_ALT)
@@ -1898,6 +1893,19 @@ def _run_quarter(proj, ref=None, skip_notes=False):
         except Exception:
             pass
 
+    # Per-project refresh interval: if notes were generated within the last
+    # notes_refresh_hours hours, treat this run as data-only (skip_notes).
+    _refresh_hours = proj.get("notes_refresh_hours")
+    if not skip_notes and _refresh_hours and existing_saved.get("notes_generated_at"):
+        try:
+            _last = datetime.fromisoformat(existing_saved["notes_generated_at"].replace("Z", "+00:00"))
+            _age_h = (datetime.now(timezone.utc) - _last).total_seconds() / 3600
+            if _age_h < _refresh_hours:
+                skip_notes = True
+                print(f"\n[3/4] Notes are {_age_h:.1f}h old (limit: {_refresh_hours}h) — reusing existing notes.")
+        except Exception:
+            pass
+
     if skip_notes:
         print("\n[3/4] Skipping Claude notes (data-only run) — reusing saved notes...")
         notes = existing_saved.get("notes", {})
@@ -1992,6 +2000,7 @@ def main():
             result = _run_quarter(proj, ref, skip_notes=skip_notes)
             if result:
                 proj_quarters = result  # load_all_quarters returns full set each time
+        _pkey = proj["key"].lower()
         all_projects_data[proj["key"]] = {
             "qs":              proj_quarters,
             "proj_key":        proj["key"],
@@ -1999,6 +2008,11 @@ def main():
             "display":         proj["display"],
             "use_story_points": proj.get("use_story_points", False),
             "use_oos":          proj.get("use_oos", True),
+            "refresh_webhook":         _REFRESH_WEBHOOKS.get(_pkey, ""),
+            "refresh_data_webhook":    _REFRESH_DATA_WEBHOOKS.get(_pkey, ""),
+            "refresh_request_webhook": _REFRESH_REQUEST_WEBHOOKS.get(_pkey, ""),
+            "notes_refresh_hours":     proj.get("notes_refresh_hours") or None,
+            "last_run_at":             datetime.now(timezone.utc).isoformat(),
         }
 
     print(f"\n{'='*52}")
