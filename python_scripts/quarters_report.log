@@ -1,4 +1,5 @@
 === Quarter Dashboard — Multi-Project ===
+Mode: DATA-ONLY (Claude notes unchanged)
 
 ####################################################
 # Project: DLK (board 136)
@@ -27,7 +28,7 @@ Project : DLK  |  Quarter: Q2 2026 (starts 2026-04-01)
 
 [2/4] Fetching KPIs from Jira (7 sprints)...
       Previous quarter last sprint: 3317 (ends 2026-03-16)
-  In-progress statuses (DLK): {'In Test', 'In Progress', 'PR Approved', 'Awaiting Review'}
+  In-progress statuses (DLK): {'In Progress', 'Awaiting Review', 'In Test', 'PR Approved'}
   Querying: project = DLK AND sprint in (3952, 4253, 4617, 4783, 4816, 5014, 5015)...
   Building sprint membership map (7 sprints, parallel)...
     Sprint DLK Sprint 94: 64 issues
@@ -39,30 +40,16 @@ Project : DLK  |  Quarter: Q2 2026 (starts 2026-04-01)
     Sprint DLK Sprint 100: 52 issues
     Sprint prev-quarter 3317: 42 issues (rollover check)
       Fetching worklogs for 204 issues (30 skipped — no time logged)...
-      WARNING: worklog fetch failed for DLK-5884: <urlopen error [Errno 104] Connection reset by peer>
-      WARNING: worklog fetch failed for DLK-5857: <urlopen error [Errno 104] Connection reset by peer>
-      WARNING: worklog fetch failed for DLK-5893: <urlopen error [Errno 104] Connection reset by peer>
-      WARNING: worklog fetch failed for DLK-5835: <urlopen error [Errno 104] Connection reset by peer>
-      WARNING: worklog fetch failed for DLK-5853: <urlopen error [Errno 104] Connection reset by peer>
       Worklog data: 11 people with logged time
-      Total: 189 | Done: 130 | Rollover: 44 | Cycle: 20.3d | Logged: 2123.6h | No-estimate: 14
+      Total: 189 | Done: 130 | Rollover: 44 | Cycle: 20.3d | Logged: 2125.6h | No-estimate: 14
       Developer roster unchanged (33 developers)
 
-[3/4] Generating notes via Claude...
-      Generating notes for 1 key(s): assignee_workload
-      Notes populated: total, completed, completion_rate, releases_shipped, oos_total, oos_open, type_split, avg_releases, time_logged, estimate_accuracy, no_estimate, rollover, cycle_time, assignee_workload
-      Generating sprint notes...
-        DLK Sprint 94: locked
-        DLK Sprint 95: locked
-        DLK Sprint 96: locked
-        DLK Sprint 97: locked
-        DLK Sprint 98: locked
-        DLK Sprint 99: locked
-        DLK Sprint 100: unchanged
+[3/4] Skipping Claude notes (data-only run) — reusing saved notes...
+      Reused notes for 14 quarter key(s); sprint notes carried forward.
 
 [4/4] Saving quarter data...
       Saved data: /config/www/dlk/data/Q2_2026.json
-      2026-06-25T15:25:08Z
+      2026-06-25T15:40:07Z
 
 ####################################################
 # Processing: NDA
@@ -98,21 +85,12 @@ Project : NDA  |  Quarter: Q2 2026 (starts 2026-04-01)
       Total: 118 | Done: 100 | Rollover: 9 | Cycle: 14.5d | Logged: 740.5h | No-estimate: 28
       Developer roster unchanged (33 developers)
 
-[3/4] Generating notes via Claude...
-      KPI values unchanged — skipping API call, reusing existing notes.
-      Notes populated: total, completed, completion_rate, releases_shipped, oos_total, oos_open, type_split, avg_releases, time_logged, estimate_accuracy, no_estimate, rollover, cycle_time, assignee_workload
-      Generating sprint notes...
-        NDA Sprint 27: locked
-        NDA Sprint 28: locked
-        NDA Sprint 29: locked
-        NDA Sprint 30: locked
-        NDA Sprint 31: locked
-        NDA Sprint 32: locked
-        NDA Sprint 33: unchanged
+[3/4] Skipping Claude notes (data-only run) — reusing saved notes...
+      Reused notes for 14 quarter key(s); sprint notes carried forward.
 
 [4/4] Saving quarter data...
       Saved data: /config/www/nda/data/Q2_2026.json
-      2026-06-25T15:25:28Z
+      2026-06-25T15:40:19Z
 
 ####################################################
 # Processing: PEM
@@ -129,7 +107,7 @@ Project : PEM  |  Quarter: Q2 2026 (starts 2026-04-01)
       PE Sprint 42 - v1.8  [Current]  2026-05-26 → 2026-06-09
 
 [2/4] Fetching KPIs from Jira (5 sprints)...
-  In-progress statuses (PEM): {'Ready for QA', 'QA', 'Ready for Deploy', 'In Progress'}
+  In-progress statuses (PEM): {'Ready for QA', 'Ready for Deploy', 'In Progress', 'QA'}
   Querying: project = PEM AND sprint in (4220, 4353, 4584, 4981, 5081)...
   Building sprint membership map (5 sprints, parallel)...
     Sprint PE Sprint 38: 268 issues
@@ -142,19 +120,12 @@ Project : PEM  |  Quarter: Q2 2026 (starts 2026-04-01)
       Total: 500 | Done: 213 | Rollover: 581 | Cycle: 18.9d | SP: 68/268 | No-SP-est: 334
       Developer roster unchanged (33 developers)
 
-[3/4] Generating notes via Claude...
-      KPI values unchanged — skipping API call, reusing existing notes.
-      Notes populated: total, completed, completion_rate, releases_shipped, oos_total, oos_open, type_split, avg_releases, time_logged, estimate_accuracy, no_estimate, rollover, cycle_time, assignee_workload, sp_velocity
-      Generating sprint notes...
-        PE Sprint 38: locked
-        PE Sprint 39: locked
-        PE Sprint 40: locked
-        PE Sprint 41: locked
-        PE Sprint 42 - v1.8: unchanged
+[3/4] Skipping Claude notes (data-only run) — reusing saved notes...
+      Reused notes for 15 quarter key(s); sprint notes carried forward.
 
 [4/4] Saving quarter data...
       Saved data: /config/www/pem/data/Q2_2026.json
-      2026-06-25T15:25:41Z
+      2026-06-25T15:40:31Z
 
 ====================================================
 Building combined HTML dashboard...
