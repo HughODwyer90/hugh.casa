@@ -5604,7 +5604,19 @@
     allowed_methods:
     - POST
     local_only: false
-    id: manual
+    id: dlk
+  - trigger: webhook
+    webhook_id: nda-refresh
+    allowed_methods:
+    - POST
+    local_only: false
+    id: nda
+  - trigger: webhook
+    webhook_id: pem-refresh
+    allowed_methods:
+    - POST
+    local_only: false
+    id: pem
   - trigger: event
     event_type: mobile_app_notification_action
     event_data:
@@ -5614,17 +5626,34 @@
   - condition: or
     conditions:
     - condition: trigger
-      id: scheduled
-    - condition: trigger
-      id: phone_confirm
+      id:
+      - scheduled
+      - phone_confirm
     - condition: template
       value_template: '{{ (now() - this.attributes.last_triggered).total_seconds()
         > 3600 }}
 
         '
   actions:
-  - action: script.jira_quarter_update
-    data: {}
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - dlk
+        - nda
+        - pem
+      sequence:
+      - action: shell_command.jira_quarter_project
+        data:
+          project: '{{ trigger.id }}'
+      - action: shell_command.write_refresh_time
+        data:
+          project: '{{ trigger.id }}'
+    default:
+    - action: shell_command.jira_quarter
+      data: {}
+    - action: shell_command.write_refresh_time_all
+      data: {}
   mode: single
 - id: '1778701795657'
   alias: Living Room Curtains – Override Watchdog
@@ -5681,15 +5710,28 @@
   mode: parallel
 - id: '1781873324364'
   alias: Jira Quarter Data Refresh
-  description: ''
   triggers:
   - trigger: time_pattern
     minutes: /10
+    id: scheduled
   - trigger: webhook
     webhook_id: dlk-refresh-data
     allowed_methods:
     - POST
     local_only: false
+    id: dlk
+  - trigger: webhook
+    webhook_id: nda-refresh-data
+    allowed_methods:
+    - POST
+    local_only: false
+    id: nda
+  - trigger: webhook
+    webhook_id: pem-refresh-data
+    allowed_methods:
+    - POST
+    local_only: false
+    id: pem
   conditions:
   - condition: not
     conditions:
@@ -5697,23 +5739,52 @@
       after: '16:55:00'
       before: '17:05:00'
   actions:
-  - action: script.jira_quarter_update_data
-    data: {}
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - dlk
+        - nda
+        - pem
+      sequence:
+      - action: shell_command.jira_quarter_data_project
+        data:
+          project: '{{ trigger.id }}'
+      - action: shell_command.write_refresh_time
+        data:
+          project: '{{ trigger.id }}'
+    default:
+    - action: shell_command.jira_quarter_data
+      data: {}
+    - action: shell_command.write_refresh_time_all
+      data: {}
   mode: single
 - id: '1781882216379'
   alias: Jira Quarter Refresh Request
-  description: ''
   triggers:
   - trigger: webhook
     webhook_id: dlk-refresh-request
     allowed_methods:
     - POST
     local_only: false
+    id: dlk
+  - trigger: webhook
+    webhook_id: nda-refresh-request
+    allowed_methods:
+    - POST
+    local_only: false
+    id: nda
+  - trigger: webhook
+    webhook_id: pem-refresh-request
+    allowed_methods:
+    - POST
+    local_only: false
+    id: pem
   actions:
   - action: notify.notifications
     data:
       title: Dashboard Refresh
-      message: Force refresh requested — tap to confirm.
+      message: '{{ trigger.id | upper }} refresh requested — tap to confirm.'
       data:
         actions:
         - action: REFRESH_DASHBOARD
