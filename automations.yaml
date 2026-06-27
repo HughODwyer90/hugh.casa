@@ -4185,8 +4185,9 @@
 - id: '1770563657139'
   alias: Solar-align Curtains (sun-elevation window)
   description: 'Periodically checks during the day and, when sun elevation is high
-    enough and any curtain battery is low, moves curtains to optimise solar panel
-    exposure. Restores position after sun drops or after a timeout.
+    enough, moves curtains to optimise solar panel exposure. When home, only triggers
+    if a battery is low and the TV is off. When away, charges regardless of battery
+    level. Restores position after sun drops or after a timeout.
 
     '
   triggers:
@@ -4198,26 +4199,33 @@
     - conditions:
       - condition: trigger
         id: check
-      - condition: or
-        conditions:
-        - condition: numeric_state
-          entity_id: sensor.left_window_battery
-          below: 45
-        - condition: numeric_state
-          entity_id: sensor.middle_window_battery
-          below: 45
-        - condition: numeric_state
-          entity_id: sensor.right_window_battery
-          below: 45
       - condition: numeric_state
         entity_id: sensor.sun_elevation
         above: 20
       - condition: state
-        entity_id: binary_sensor.living_room_tv_state
-        state: 'off'
-      - condition: state
         entity_id: input_boolean.charged_curtains_today
         state: 'off'
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: group.household
+          state: not_home
+        - condition: and
+          conditions:
+          - condition: or
+            conditions:
+            - condition: numeric_state
+              entity_id: sensor.left_window_battery
+              below: 45
+            - condition: numeric_state
+              entity_id: sensor.middle_window_battery
+              below: 45
+            - condition: numeric_state
+              entity_id: sensor.right_window_battery
+              below: 45
+          - condition: state
+            entity_id: binary_sensor.living_room_tv_state
+            state: 'off'
       sequence:
       - target:
           entity_id: scene.curtains_charging
