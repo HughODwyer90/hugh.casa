@@ -4290,7 +4290,7 @@
     id: tv_off
   conditions:
   - condition: state
-    entity_id: person.hughod90
+    entity_id: group.household
     state: home
   - condition: state
     entity_id: vacuum.vacuum
@@ -4393,7 +4393,7 @@
     id: wed_time
   - trigger: state
     entity_id:
-    - person.hughod90
+    - group.household
     from:
     - home
     to:
@@ -4414,7 +4414,7 @@
     entity_id: input_boolean.vacuum_ran_today
     state: 'off'
   - condition: state
-    entity_id: person.hughod90
+    entity_id: group.household
     state: not_home
   - condition: state
     entity_id: vacuum.vacuum
@@ -4427,7 +4427,7 @@
       sequence:
       - delay: 00:10:00
       - condition: state
-        entity_id: person.hughod90
+        entity_id: group.household
         state: not_home
   - if:
     - condition: template
@@ -4487,7 +4487,7 @@
   triggers:
   - trigger: state
     id: leave_home
-    entity_id: person.hughod90
+    entity_id: group.household
     from: home
   - trigger: time
     id: weekend_fallback
@@ -4500,7 +4500,7 @@
   - condition: template
     value_template: "{% if trigger.id == 'leave_home' %}\n  {{ trigger.to_state is
       not none and\n     trigger.to_state.state not in ['unknown', 'unavailable']
-      }}\n{% else %}\n  {{ states('person.hughod90') not in ['home', 'unknown', 'unavailable']
+      }}\n{% else %}\n  {{ states('group.household') not in ['home', 'unknown', 'unavailable']
       }}\n{% endif %}\n"
   - condition: state
     entity_id: input_boolean.vacuum_ran_today
@@ -4519,7 +4519,7 @@
       sequence:
       - delay: 00:10:00
   - condition: template
-    value_template: '{{ states(''person.hughod90'') not in [''home'', ''unknown'',
+    value_template: '{{ states(''group.household'') not in [''home'', ''unknown'',
       ''unavailable''] }}
 
       '
