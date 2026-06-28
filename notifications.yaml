@@ -14,3 +14,8 @@
   password: !secret ha_pass_backend
   recipient: !secret ha_email
   sender_name: "Home Assistant"
+  
+- platform: group
+  name: notifications
+  services:
+    - service: hugh_phone
