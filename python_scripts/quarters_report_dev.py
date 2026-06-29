@@ -26,9 +26,10 @@ from secret_manager import SecretsManager
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 TESTING_MODE  = False   # Skip Claude API calls; preserve any existing notes
-FORCE_NOTES   = False  # Force regeneration of ALL notes even for backfill quarters
+FORCE_NOTES   = True  # Force regeneration of ALL notes even for backfill quarters
 PREVIEW_MODE  = True   # DEV: always on. Set to False when copying to live. — live page untouched
-ANTHROPIC_MODEL     = "claude-sonnet-4-5"  # Update here when model is retired
+ANTHROPIC_QUARTER_MODEL = "claude-sonnet-4-5"       # Update here when model is retired
+ANTHROPIC_SPRINT_MODEL = "claude-haiku-4-5-20251001"  # Lighter model for sprint-level notes
 ANTHROPIC_API_URL   = "https://api.anthropic.com/v1/messages"
 
 secrets = SecretsManager()
@@ -1295,106 +1296,123 @@ def generate_notes(kpis, sprints, existing_notes=None, existing_kpis=None, proj_
         "board_id", "jira_base", "as_of",
     }
     kpis_for_prompt = {k: v for k, v in kpis.items() if k not in _prompt_exclude}
-    # Filter assignee_stats to team members only so Claude doesn't call out non-team assignees
+    # Pre-summarise assignee_stats to a compact string instead of a full JSON array
     if "assignee_stats" in kpis_for_prompt:
-        kpis_for_prompt["assignee_stats"] = [
-            a for a in kpis_for_prompt["assignee_stats"] if a.get("is_team")
-        ]
+        team = [a for a in kpis_for_prompt["assignee_stats"] if a.get("is_team")]
+        kpis_for_prompt["assignee_stats"] = ", ".join(
+            f"{a.get('assignee','?')} {a.get('total',0)} ({a.get('pct',0)}%)" for a in team
+        ) or "none"
 
     if TESTING_MODE:
         print("      TESTING MODE — skipping Claude API call, preserving existing notes.")
         return {**{k: "[test]" for k in all_keys}, **existing_notes}
 
-    system_text = """\
-You are a technical product owner writing concise, insightful notes for a management quarter dashboard.
-The audience is product and engineering leadership who want to quickly understand team health and delivery performance.
-Write 1-2 sentences per metric. Be direct, factual, and actionable. Flag risks clearly. Celebrate genuine wins briefly.
-Do not pad with filler phrases like "the team is working hard" or "good progress was made".
-IMPORTANT: If the quarter status says IN PROGRESS, the data is mid-quarter — do NOT write as if the quarter is finished.
-The active sprint is not necessarily the last sprint; more sprints will follow before quarter end. Frame notes accordingly (e.g. "on track to...", "at this point in the quarter...", "with X days remaining...").
-Respond ONLY with a valid JSON object — no markdown, no preamble, no backticks, no trailing commas.
+    _all_guidance = {
+        "total": (
+            "total: Total tickets in scope for the quarter across all sprints.\n"
+            "  - Flag if unusually high (scope creep risk) or low (team underutilised).\n"
+            "  - Note whether it reflects a healthy pipeline or signs of overloading."
+        ),
+        "completed": (
+            "completed: Tickets moved to Done status.\n"
+            "  - Compare against total to give context. Flag if significantly below total mid-quarter.\n"
+            "  - Note whether velocity is on track for quarter goals."
+        ),
+        "completion_rate": (
+            "completion_rate: Percentage of in-scope tickets completed.\n"
+            "  - 80%+ is healthy. 60-79% warrants a comment on blockers. Below 60% is a concern.\n"
+            "  - If quarter is still active, note how much time remains and whether rate is on track."
+        ),
+        "releases_shipped": (
+            "releases_shipped: Number of Jira fix versions released this quarter.\n"
+            "  - Flag if zero (nothing shipped). Multiple releases = good cadence.\n"
+            "  - Note if releases are frequent (good) or infrequent (potential bottleneck)."
+        ),
+        "oos_total": (
+            "oos_total: Out-of-sprint tickets — items added to a sprint after it started.\n"
+            "  - High OOS indicates poor sprint planning or reactive work. Flag if above 20% of total.\n"
+            "  - Low OOS = disciplined planning, worth noting positively."
+        ),
+        "oos_open": (
+            "oos_open: Out-of-sprint tickets still open/unresolved.\n"
+            "  - Any open OOS items are unplanned debt. Flag if non-zero and note the count.\n"
+            "  - Zero is the target — confirm if achieved."
+        ),
+        "type_split": (
+            "type_split: Breakdown of bugs vs stories vs tasks.\n"
+            "  - High bug ratio (>40%) signals quality issues needing attention.\n"
+            "  - Healthy mix is mostly stories/tasks with a small bug count.\n"
+            "  - Flag if bugs dominate the quarter."
+        ),
+        "avg_releases": (
+            "avg_releases: Median (and mean) releases per closed sprint.\n"
+            "  - Use the median as the headline — it is resistant to a single sprint with a large batch skewing the picture.\n"
+            "  - Use the TEAM CONTEXT to calibrate what is healthy — web teams can ship multiple times per sprint; mobile teams may ship once per quarter due to app store review. Do not flag low counts as a concern for mobile teams."
+        ),
+        "time_logged": (
+            "time_logged: Total hours logged by the team across the quarter.\n"
+            "  - Compare against expected capacity (team size x sprint days x hours/day).\n"
+            "  - Flag if significantly under-logged (may indicate tracking issues or underutilisation).\n"
+            "  - Flag if over-logged (potential burnout or scope issues)."
+        ),
+        "estimate_accuracy": (
+            "estimate_accuracy: How close actual time spent was to original estimates.\n"
+            "  - Within 20% variance is good. Over 50% variance indicates poor estimation.\n"
+            "  - Flag consistent over- or under-estimation patterns."
+        ),
+        "no_estimate": (
+            "no_estimate: Tickets with no estimate set (time estimate for time-tracking projects; story points for SP projects).\n"
+            "  - High percentage means planning data is unreliable. Flag if above 20%.\n"
+            "  - Zero or near-zero is excellent hygiene."
+        ),
+        "assignee_workload": (
+            "assignee_workload: Distribution of tickets across team members.\n"
+            "  - Flag if one person carries a disproportionate share (>40% of tickets).\n"
+            "  - Note if workload is well-balanced or concentrated on specific individuals.\n"
+            "  - Mention unassigned tickets if significant.\n"
+            "  - For SP projects, reference story points (sp_total/sp_completed) per person where available."
+        ),
+        "rollover": (
+            "rollover: Tickets carried over from a previous sprint without completion.\n"
+            "  - Any rollover reduces sprint predictability. Flag count and percentage.\n"
+            "  - Identify if rollover is a recurring pattern or a one-off."
+        ),
+        "cycle_time": (
+            "cycle_time: Median (and mean) days from \"In Progress\" to \"Done\".\n"
+            "  - Use median as the headline — it is resistant to a small number of long-running tickets inflating the average.\n"
+            "  - Under 3 days = excellent flow. 3-7 days = normal. Over 7 days = flag blockers.\n"
+            "  - If avg is significantly higher than median, note that outlier tickets are skewing the mean."
+        ),
+        "sp_velocity": (
+            "sp_velocity: Average story points completed per sprint (story-points projects only).\n"
+            "  - Comment on velocity consistency and trend. Flag if SP completed is significantly below SP planned.\n"
+            "  - Mention total SP completed vs planned (sp_completed vs sp_total) for the quarter.\n"
+            "  - If velocity is improving sprint-on-sprint, note that positively."
+        ),
+    }
 
-METRIC GUIDANCE — use this to interpret each KPI and decide what to flag:
+    guidance_lines = "\n\n".join(
+        _all_guidance[k] for k in missing_keys if k in _all_guidance
+    )
+    missing_keys_json = json.dumps({k: "<1-2 sentence note>" for k in missing_keys})
 
-total: Total tickets in scope for the quarter across all sprints.
-  - Flag if unusually high (scope creep risk) or low (team underutilised).
-  - Note whether it reflects a healthy pipeline or signs of overloading.
-
-completed: Tickets moved to Done status.
-  - Compare against total to give context. Flag if significantly below total mid-quarter.
-  - Note whether velocity is on track for quarter goals.
-
-completion_rate: Percentage of in-scope tickets completed.
-  - 80%+ is healthy. 60-79% warrants a comment on blockers. Below 60% is a concern.
-  - If quarter is still active, note how much time remains and whether rate is on track.
-
-releases_shipped: Number of Jira fix versions released this quarter.
-  - Flag if zero (nothing shipped). Multiple releases = good cadence.
-  - Note if releases are frequent (good) or infrequent (potential bottleneck).
-
-__OOS_GUIDANCE__type_split: Breakdown of bugs vs stories vs tasks.
-  - High bug ratio (>40%) signals quality issues needing attention.
-  - Healthy mix is mostly stories/tasks with a small bug count.
-  - Flag if bugs dominate the quarter.
-
-avg_releases: Median (and mean) releases per closed sprint.
-  - Use the median as the headline — it is resistant to a single sprint with a large batch skewing the picture.
-  - Use the TEAM CONTEXT to calibrate what is healthy — web teams can ship multiple times per sprint; mobile teams may ship once per quarter due to app store review. Do not flag low counts as a concern for mobile teams.
-
-time_logged: Total hours logged by the team across the quarter.
-  - Compare against expected capacity (team size x sprint days x hours/day).
-  - Flag if significantly under-logged (may indicate tracking issues or underutilisation).
-  - Flag if over-logged (potential burnout or scope issues).
-
-estimate_accuracy: How close actual time spent was to original estimates.
-  - Within 20% variance is good. Over 50% variance indicates poor estimation.
-  - Flag consistent over- or under-estimation patterns.
-
-no_estimate: Tickets with no estimate set (time estimate for time-tracking projects; story points for SP projects).
-  - High percentage means planning data is unreliable. Flag if above 20%.
-  - Zero or near-zero is excellent hygiene.
-
-assignee_workload: Distribution of tickets across team members.
-  - Flag if one person carries a disproportionate share (>40% of tickets).
-  - Note if workload is well-balanced or concentrated on specific individuals.
-  - Mention unassigned tickets if significant.
-  - For SP projects, reference story points (sp_total/sp_completed) per person where available.
-
-rollover: Tickets carried over from a previous sprint without completion.
-  - Any rollover reduces sprint predictability. Flag count and percentage.
-  - Identify if rollover is a recurring pattern or a one-off.
-
-cycle_time: Median (and mean) days from "In Progress" to "Done".
-  - Use median as the headline — it is resistant to a small number of long-running tickets inflating the average.
-  - Under 3 days = excellent flow. 3-7 days = normal. Over 7 days = flag blockers.
-  - If avg is significantly higher than median, note that outlier tickets are skewing the mean.
-
-sp_velocity: Average story points completed per sprint (story-points projects only).
-  - Comment on velocity consistency and trend. Flag if SP completed is significantly below SP planned.
-  - Mention total SP completed vs planned (sp_completed vs sp_total) for the quarter.
-  - If velocity is improving sprint-on-sprint, note that positively.
-
-Return ONLY the following keys that are needed (do not include any others):
-__MISSING_KEYS_JSON__"""
+    system_text = (
+        "You are a technical product owner writing concise, insightful notes for a management quarter dashboard.\n"
+        "The audience is product and engineering leadership who want to quickly understand team health and delivery performance.\n"
+        "Write 1-2 sentences per metric. Be direct, factual, and actionable. Flag risks clearly. Celebrate genuine wins briefly.\n"
+        "Do not pad with filler phrases like \"the team is working hard\" or \"good progress was made\".\n"
+        "IMPORTANT: If the quarter status says IN PROGRESS, the data is mid-quarter — do NOT write as if the quarter is finished.\n"
+        "The active sprint is not necessarily the last sprint; more sprints will follow before quarter end. "
+        "Frame notes accordingly (e.g. \"on track to...\", \"at this point in the quarter...\", \"with X days remaining...\").\n"
+        "Respond ONLY with a valid JSON object — no markdown, no preamble, no backticks, no trailing commas.\n"
+        f"\nMETRIC GUIDANCE — use this to interpret each KPI and decide what to flag:\n\n{guidance_lines}"
+        f"\n\nReturn ONLY the following keys that are needed (do not include any others):\n{missing_keys_json}"
+    )
     if use_sp:
         system_text += "\n\nSP MODE: This project tracks story points (not time). no_estimate = items missing a story point value. sp_velocity = avg story points completed per sprint."
     if proj_context:
         system_text += f"\n\nTEAM CONTEXT: {proj_context}"
-
-    missing_keys_json = json.dumps(
-        {k: "<1-2 sentence note>" for k in missing_keys}, indent=2
-    )
-    _oos_guidance = (
-        "oos_total: Out-of-sprint tickets — items added to a sprint after it started.\n"
-        "  - High OOS indicates poor sprint planning or reactive work. Flag if above 20% of total.\n"
-        "  - Low OOS = disciplined planning, worth noting positively.\n\n"
-        "oos_open: Out-of-sprint tickets still open/unresolved.\n"
-        "  - Any open OOS items are unplanned debt. Flag if non-zero and note the count.\n"
-        "  - Zero is the target — confirm if achieved.\n\n"
-    ) if use_oos else ""
-    filled_system = (system_text
-                     .replace("__OOS_GUIDANCE__", _oos_guidance)
-                     .replace("__MISSING_KEYS_JSON__", missing_keys_json))
+    filled_system = system_text
 
     # Quarter progress context
     qs_date   = date.fromisoformat(kpis['quarter_start'])
@@ -1422,10 +1440,10 @@ Quarter status: {quarter_status}
 {_oos_user_line}
 
 KPI data:
-{json.dumps(kpis_for_prompt, indent=2)}"""
+{json.dumps(kpis_for_prompt)}"""
 
     body = {
-        "model": ANTHROPIC_MODEL,
+        "model": ANTHROPIC_QUARTER_MODEL,
         "max_tokens": 1500,
         "system": [{"type": "text", "text": filled_system, "cache_control": {"type": "ephemeral"}}],
         "messages": [{"role": "user", "content": user_text}],
@@ -1458,7 +1476,7 @@ KPI data:
         except Exception:
             detail = body[:300] if body else str(exc)
         print(f"      WARNING: Claude API error {exc.code} — {detail}")
-        print(f"      Model in use: {ANTHROPIC_MODEL} — update ANTHROPIC_MODEL at top of script if retired.")
+        print(f"      Model in use: {ANTHROPIC_QUARTER_MODEL} — update ANTHROPIC_QUARTER_MODEL at top of script if retired.")
         return existing_notes
     except Exception as exc:
         print(f"      WARNING: AI notes unavailable ({exc}) — continuing without notes.")
@@ -1523,7 +1541,7 @@ Cycle time: {sp_kpis.get("med_cycle_days",0)}d median ({sp_kpis.get("avg_cycle_d
 Releases: {sp_kpis.get("releases_shipped",0)}"""
 
     body = {
-        "model":      ANTHROPIC_MODEL,
+        "model":      ANTHROPIC_SPRINT_MODEL,
         "max_tokens": 600,
         "system":     [{"type": "text", "text": system_text}],
         "messages":   [{"role": "user", "content": user_text}],
@@ -1571,7 +1589,7 @@ def save_quarter_data(kpis, notes, sprints, proj, notes_generated_at=None):
         "notes":              notes,
         "sprints":            sprints,
         "saved_at":           now,
-        "notes_generated_at": notes_generated_at or now,
+        "notes_generated_at": notes_generated_at,
     }
     with open(path, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2, default=str)
@@ -1896,7 +1914,7 @@ def _run_quarter(proj, ref=None, skip_notes=False):
     # Per-project refresh interval: if notes were generated within the last
     # notes_refresh_hours hours, treat this run as data-only (skip_notes).
     _refresh_hours = proj.get("notes_refresh_hours")
-    if not skip_notes and _refresh_hours and existing_saved.get("notes_generated_at"):
+    if not skip_notes and not FORCE_NOTES and _refresh_hours and existing_saved.get("notes_generated_at"):
         try:
             _last = datetime.fromisoformat(existing_saved["notes_generated_at"].replace("Z", "+00:00"))
             _age_h = (datetime.now(timezone.utc) - _last).total_seconds() / 3600
@@ -1970,9 +1988,14 @@ def main():
         "--force-notes", action="store_true",
         help="Force regeneration of all Claude notes even if KPI values are unchanged."
     )
+    parser.add_argument(
+        "--project", metavar="KEY",
+        help="Run for a single project only (e.g. --project dlk). Other projects load from saved data."
+    )
     args = parser.parse_args()
-    skip_notes  = args.data_only
-    force_notes = args.force_notes
+    skip_notes   = args.data_only
+    force_notes  = args.force_notes
+    only_project = args.project.upper() if args.project else None
 
     # CLI --force-notes overrides the module-level constant
     global FORCE_NOTES
@@ -1980,6 +2003,8 @@ def main():
         FORCE_NOTES = True
 
     print("=== Quarter Dashboard — Multi-Project ===")
+    if only_project:
+        print(f"Mode: SINGLE PROJECT ({only_project})")
     if skip_notes:
         print("Mode: DATA-ONLY (Claude notes unchanged)")
     elif FORCE_NOTES:
@@ -1996,10 +2021,15 @@ def main():
         print(f"\n{'#'*52}")
         print(f"# Processing: {proj['display']}")
         proj_quarters = {}
-        for ref in refs:
-            result = _run_quarter(proj, ref, skip_notes=skip_notes)
-            if result:
-                proj_quarters = result  # load_all_quarters returns full set each time
+        if only_project and proj["key"] != only_project:
+            # Not the target project — load saved data only, skip Jira/Claude calls
+            proj_quarters = load_all_quarters(proj)
+            print(f"  Skipped (not target project) — loaded {len(proj_quarters)} saved quarter(s).")
+        else:
+            for ref in refs:
+                result = _run_quarter(proj, ref, skip_notes=skip_notes)
+                if result:
+                    proj_quarters = result  # load_all_quarters returns full set each time
         _pkey = proj["key"].lower()
         all_projects_data[proj["key"]] = {
             "qs":              proj_quarters,
