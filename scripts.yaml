@@ -102,6 +102,15 @@ execute_alarm_actions:
             - action: SNOOZE_ALARM
               title: Snooze Alarm
             notification_icon: mdi:snowflake
+      - action: light.turn_on
+        target:
+          entity_id: light.hugh_room_ceiling
+        data:
+          rgb_color:
+          - 173
+          - 216
+          - 230
+          brightness_pct: 10
     - conditions:
       - condition: state
         entity_id: sensor.windscreen_freeze_risk
@@ -130,32 +139,17 @@ execute_alarm_actions:
           - action: SNOOZE_ALARM
             title: Snooze Alarm
           notification_icon: mdi:alarm
-  - condition: template
-    value_template: '{{ state_attr(''cover.master_blind'', ''current_position'') |
-      int(0) < 10 }}
-
-      '
+  - condition: device
+    device_id: dca746e9c202df41afab5511749cab7e
+    domain: cover
+    entity_id: 58cfa067197fc99bce6493ba99eed332
+    type: is_closed
   - action: cover.set_cover_position
     metadata: {}
     target:
       entity_id: cover.master_blind
     data:
       position: 10
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: sensor.windscreen_freeze_risk
-        state: Likely Frozen
-      sequence:
-      - action: light.turn_on
-        target:
-          entity_id: light.hugh_room_ceiling
-        data:
-          rgb_color:
-          - 173
-          - 216
-          - 230
-          brightness_pct: 10
   mode: single
   icon: mdi:alarm-bell
   description: ''
