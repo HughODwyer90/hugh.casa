@@ -80,12 +80,14 @@ function e(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").re
 
 /* ---- Notes staleness notice ---- */
 function notesStaleNotice(notesGeneratedAt, dataAsOf){
-  const liveTs=ALL_DATA[AP]?.last_run_at||notesGeneratedAt;
-  if(!liveTs||!dataAsOf)return"";
-  const nts=new Date(liveTs), dat=new Date(dataAsOf);
-  if(isNaN(nts.getTime())||isNaN(dat.getTime()))return"";
-  if(dat-nts<60000)return"";
+  if(!dataAsOf)return"";
+  const dat=new Date(dataAsOf);
+  if(isNaN(dat.getTime()))return"";
   const fmtTs=d=>d.toLocaleString(undefined,{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",timeZoneName:"short"});
+  if(!notesGeneratedAt)return`<div class="alert alert-info" style="font-size:12px;opacity:0.85">ℹ AI notes: last update unknown — will refresh on next full run.</div>`;
+  const nts=new Date(notesGeneratedAt);
+  if(isNaN(nts.getTime()))return"";
+  if(dat-nts<60000)return"";
   let msg=`AI notes last updated: ${fmtTs(nts)}.`;
   const refreshHours=ALL_DATA[AP]?.notes_refresh_hours;
   if(refreshHours){
@@ -735,7 +737,7 @@ function render(qk,activeTab){
   const dashHtml=[
     pane("overview",`
       ${oosAlert}
-      ${notesStaleNotice(D.notes_generated_at, kpis.as_of)}
+      ${notesStaleNotice(D.notes_generated_at, D.saved_at)}
       <div class="pane-title">Quarter at a Glance</div>
       <div class="pane-desc">KPIs and sprint summary for ${e(qk)}.</div>
       ${kpiHtml}
@@ -777,6 +779,7 @@ function render(qk,activeTab){
       ${mkTable(allCols,showExclOn?allRows.concat(exclSummRows):allRows,jUrl(base+" ORDER BY sprint ASC, status ASC"))}
     `),
     pane("time",`
+      ${notesStaleNotice(D.notes_generated_at, D.saved_at)}
       ${(()=>{
         const useSp=PROJ_USE_SP||false;
         const spSel=!!(activeSprint&&sp);
@@ -899,6 +902,7 @@ function render(qk,activeTab){
       })()}
     `),
     pane("team",`
+      ${notesStaleNotice(D.notes_generated_at, D.saved_at)}
       <div class="pane-title">Team</div>
       ${(()=>{
         const useSp=PROJ_USE_SP||false;
