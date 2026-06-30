@@ -2165,8 +2165,7 @@ def _run_quarter(proj, ref=None, skip_notes=False):
             if not locked and not unchanged:
                 any_sprint_generated = True
             print(f"        {spd['sprint_name']}: {'locked' if locked else ('unchanged' if unchanged else 'generated')}")
-        anything_generated = quarter_notes_generated or any_sprint_generated
-        notes_generated_at = datetime.now(timezone.utc).isoformat() if anything_generated else existing_saved.get("notes_generated_at")
+        notes_generated_at = datetime.now(timezone.utc).isoformat()
 
     print("\n[4/4] Saving quarter data...")
     save_quarter_data(kpis, notes, sprints, proj, notes_generated_at=notes_generated_at)
