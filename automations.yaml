@@ -5230,7 +5230,9 @@
     - If bed unoccupied for 20 mins during day → open if closed (after alarm time)\n
     - If I leave home during the day → open blind (if bed unoccupied)\n - If humidity
     stays very high (post-shower) → reopen blind (failsafe)\n - Cooldown flag (input_boolean.blind_humidity_cooldown)
-    blocks automation opens only\n - Manual open during cooldown clears the flag\n"
+    blocks automation opens only\n - Manual open during cooldown clears the flag\n
+    - switch.master_blind_plug mirrors blind state: on when open/opening, off when
+    closed/closing\n"
   triggers:
   - id: bed_occupied
     trigger: state
@@ -5273,6 +5275,10 @@
     trigger: state
     entity_id: cover.master_blind
     to: open
+  - id: blind_manually_closed
+    trigger: state
+    entity_id: cover.master_blind
+    to: closed
   actions:
   - choose:
     - conditions:
@@ -5290,6 +5296,9 @@
       - action: cover.close_cover
         target:
           entity_id: cover.master_blind
+      - action: switch.turn_off
+        target:
+          entity_id: switch.master_blind_plug
     - conditions:
       - condition: trigger
         id: tv_on
@@ -5297,6 +5306,9 @@
       - action: cover.close_cover
         target:
           entity_id: cover.master_blind
+      - action: switch.turn_off
+        target:
+          entity_id: switch.master_blind_plug
     - conditions:
       - condition: trigger
         id: shower_humidity_rise
@@ -5315,6 +5327,9 @@
       - action: cover.close_cover
         target:
           entity_id: cover.master_blind
+      - action: switch.turn_off
+        target:
+          entity_id: switch.master_blind_plug
       - action: input_boolean.turn_on
         target:
           entity_id: input_boolean.blind_humidity_cooldown
@@ -5332,6 +5347,26 @@
       - action: input_boolean.turn_off
         target:
           entity_id: input_boolean.blind_humidity_cooldown
+      - action: switch.turn_on
+        target:
+          entity_id: switch.master_blind_plug
+    - conditions:
+      - condition: trigger
+        id: blind_manually_opened
+      - condition: state
+        entity_id: input_boolean.blind_humidity_cooldown
+        state: 'off'
+      sequence:
+      - action: switch.turn_on
+        target:
+          entity_id: switch.master_blind_plug
+    - conditions:
+      - condition: trigger
+        id: blind_manually_closed
+      sequence:
+      - action: switch.turn_off
+        target:
+          entity_id: switch.master_blind_plug
     - conditions:
       - condition: trigger
         id: tv_off
@@ -5357,6 +5392,9 @@
       - action: cover.open_cover
         target:
           entity_id: cover.master_blind
+      - action: switch.turn_on
+        target:
+          entity_id: switch.master_blind_plug
     - conditions:
       - condition: trigger
         id: bed_cleared_long
@@ -5384,6 +5422,9 @@
       - action: cover.open_cover
         target:
           entity_id: cover.master_blind
+      - action: switch.turn_on
+        target:
+          entity_id: switch.master_blind_plug
     - conditions:
       - condition: trigger
         id: dark
@@ -5391,6 +5432,9 @@
       - action: cover.close_cover
         target:
           entity_id: cover.master_blind
+      - action: switch.turn_off
+        target:
+          entity_id: switch.master_blind_plug
     - conditions:
       - condition: trigger
         id: morning_open
@@ -5407,6 +5451,9 @@
       - action: cover.open_cover
         target:
           entity_id: cover.master_blind
+      - action: switch.turn_on
+        target:
+          entity_id: switch.master_blind_plug
     - conditions:
       - condition: trigger
         id: left_home
@@ -5428,6 +5475,9 @@
       - action: cover.open_cover
         target:
           entity_id: cover.master_blind
+      - action: switch.turn_on
+        target:
+          entity_id: switch.master_blind_plug
     - conditions:
       - condition: trigger
         id: humidity_stable_high
@@ -5449,6 +5499,9 @@
       - action: cover.open_cover
         target:
           entity_id: cover.master_blind
+      - action: switch.turn_on
+        target:
+          entity_id: switch.master_blind_plug
   mode: restart
 - id: '1777073053701'
   alias: Living Room Lights Watchdog - Off
