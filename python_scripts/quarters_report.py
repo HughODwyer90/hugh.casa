@@ -56,6 +56,7 @@ def _load_webhook_map(secret_key):
 _REFRESH_WEBHOOKS         = _load_webhook_map("refresh_webhook_url")
 _REFRESH_DATA_WEBHOOKS    = _load_webhook_map("refresh_data_webhook_url")
 _REFRESH_REQUEST_WEBHOOKS = _load_webhook_map("refresh_request_webhook_url")
+_CAPACITY_UPDATE_WEBHOOKS = _load_webhook_map("capacity_update_webhook_url")
 
 # Dashboard branding — store in secrets or edit here directly.
 # dashboard_title : shown in the browser tab before JS loads (JS sets it per-quarter afterwards).
@@ -107,6 +108,8 @@ def _load_team(filename):
             else:
                 if "since" in val: entry["since"] = val["since"]
                 if "until" in val: entry["until"] = val["until"]
+            if "capacity_h" in val:
+                entry["capacity_h"] = val["capacity_h"]
             result[aid] = entry
     return result
 
@@ -354,6 +357,147 @@ def classify_sprints(sprints):
             label, color = "Upcoming", "yellow"
         result.append({**sprint, "status_label": label, "status_color": color})
     return result
+
+
+# ---------------------------------------------------------------------------
+# Next sprint capacity
+# ---------------------------------------------------------------------------
+
+_DEFAULT_CAPACITY_H  = 80
+_CAPACITY_BUFFER_PCT = 0.70
+
+def fetch_next_sprint(proj):
+    """Fetch the earliest future sprint for proj and return capacity data, or None."""
+    headers     = _auth_header()
+    project_key = proj["key"]
+    use_sp      = proj.get("use_story_points", False)
+    sp_field    = proj.get("story_points_field") or "customfield_10016"
+    team_map    = _load_team(proj.get("team_file", "")) if proj.get("team_file") else {}
+
+    # Resolve board id
+    board_url  = f"{JIRA_BASE_URL}/rest/agile/1.0/board?projectKeyOrId={project_key}&maxResults=50"
+    boards     = http_get(board_url, headers).get("values", [])
+    if not boards:
+        return None
+    preferred  = next((b for b in boards if str(b["id"]) == str(proj["board_id"])), boards[0])
+    board_id   = preferred["id"]
+
+    # Fetch future sprints
+    params = urllib.parse.urlencode({"state": "future", "startAt": 0, "maxResults": 50})
+    url    = f"{JIRA_BASE_URL}/rest/agile/1.0/board/{board_id}/sprint?{params}"
+    try:
+        data = http_get(url, headers)
+    except Exception:
+        return None
+    future = data.get("values", [])
+    if not future:
+        return None
+
+    # Pick the earliest by startDate (fall back to first in list)
+    def _sprint_start(s):
+        raw = s.get("startDate", "")
+        try:
+            return datetime.fromisoformat(raw.replace("Z", "+00:00")).date()
+        except Exception:
+            return date.max
+
+    sprint = min(future, key=_sprint_start)
+    sid    = sprint["id"]
+    sname  = sprint["name"]
+    sstate = sprint["state"]
+    sstart = str(_sprint_start(sprint)) if sprint.get("startDate") else None
+    send_raw = sprint.get("endDate", "")
+    try:
+        send = str(datetime.fromisoformat(send_raw.replace("Z", "+00:00")).date())
+    except Exception:
+        send = None
+
+    # Fetch issues in that sprint
+    jql    = f"project = {project_key} AND sprint = {sid}"
+    fields = (f"key,summary,status,issuetype,assignee,priority,"
+              f"timespent,timeoriginalestimate,{sp_field}")
+    try:
+        issues = jira_search(jql, fields=fields)
+    except Exception:
+        issues = []
+
+    # Build per-assignee capacity
+    by_assignee = {}
+    issue_rows  = []
+    for issue in issues:
+        f          = issue["fields"]
+        assignee   = f.get("assignee") or {}
+        name       = assignee.get("displayName", "Unassigned")
+        account_id = assignee.get("accountId", "")
+        est_s      = f.get("timeoriginalestimate") or 0
+        sp_raw     = f.get(sp_field)
+        sp         = int(sp_raw) if sp_raw is not None else 0
+        itype      = f["issuetype"]["name"]
+        status     = f["status"]["name"]
+
+        key = account_id or name
+        if key not in by_assignee:
+            team_entry   = team_map.get(account_id, {})
+            capacity_h   = team_entry.get("capacity_h", _DEFAULT_CAPACITY_H)
+            target_h     = round(capacity_h * _CAPACITY_BUFFER_PCT, 1)
+            by_assignee[key] = {
+                "name":          name,
+                "account_id":    account_id,
+                "total":         0,
+                "estimated_h":   0.0,
+                "sp_total":      0,
+                "no_estimate":   0,
+                "bugs":          0,
+                "stories":       0,
+                "tasks":         0,
+                "capacity_h":    capacity_h,
+                "target_h":      target_h,
+            }
+        a = by_assignee[key]
+        a["total"]       += 1
+        a["estimated_h"] = round(a["estimated_h"] + est_s / 3600, 1)
+        a["sp_total"]    += sp
+        if use_sp:
+            if sp == 0:
+                a["no_estimate"] += 1
+        else:
+            if est_s == 0:
+                a["no_estimate"] += 1
+        ltype = itype.lower()
+        if "bug" in ltype:
+            a["bugs"]    += 1
+        elif "story" in ltype:
+            a["stories"] += 1
+        else:
+            a["tasks"]   += 1
+
+        issue_rows.append({
+            "key":          issue["key"],
+            "url":          f"{JIRA_BASE_URL}/browse/{issue['key']}",
+            "summary":      f["summary"],
+            "type":         itype,
+            "status":       status,
+            "assignee":     name,
+            "account_id":   account_id,
+            "priority":     (f.get("priority") or {}).get("name", ""),
+            "estimated_h":  round(est_s / 3600, 1),
+            "sp":           sp,
+            "has_estimate": (sp > 0) if use_sp else (est_s > 0),
+        })
+
+    assignee_stats = sorted(by_assignee.values(), key=lambda a: (-a["total"]))
+
+    return {
+        "sprint_id":      sid,
+        "sprint_name":    sname,
+        "sprint_state":   sstate,
+        "start_date":     sstart,
+        "end_date":       send,
+        "total_issues":   len(issues),
+        "assignee_stats": assignee_stats,
+        "issues":         issue_rows,
+        "use_story_points": use_sp,
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -2087,6 +2231,17 @@ def main():
                 if result:
                     proj_quarters = result  # load_all_quarters returns full set each time
         _pkey = proj["key"].lower()
+        # Fetch next sprint capacity (best-effort — None if no future sprint exists)
+        print(f"  Fetching next sprint for {proj['key']}...")
+        try:
+            _next_sprint = fetch_next_sprint(proj) if not (only_project and proj["key"] != only_project) else None
+            if _next_sprint:
+                print(f"      Next sprint: {_next_sprint['sprint_name']} ({_next_sprint['total_issues']} issues)")
+            else:
+                print(f"      No future sprint found.")
+        except Exception as _exc:
+            print(f"      Next sprint fetch failed: {_exc}")
+            _next_sprint = None
         all_projects_data[proj["key"]] = {
             "qs":              proj_quarters,
             "proj_key":        proj["key"],
@@ -2097,8 +2252,10 @@ def main():
             "refresh_webhook":         _REFRESH_WEBHOOKS.get(_pkey, ""),
             "refresh_data_webhook":    _REFRESH_DATA_WEBHOOKS.get(_pkey, ""),
             "refresh_request_webhook": _REFRESH_REQUEST_WEBHOOKS.get(_pkey, ""),
+            "capacity_update_webhook": _CAPACITY_UPDATE_WEBHOOKS.get(_pkey, ""),
             "notes_refresh_hours":     proj.get("notes_refresh_hours") or None,
             "last_run_at":             datetime.now(timezone.utc).isoformat(),
+            "next_sprint":             _next_sprint,
         }
 
     print(f"\n{'='*52}")
