@@ -5910,14 +5910,24 @@
       entity_id: switch.grill
   mode: single
 - id: '1782827289090'
-  alias: Jira - Update Dev Capacity
-  description: ''
+  alias: Dashboard - Update Dev Capacity
   triggers:
-  - webhook_id: your-capacity-webhook-id
+  - webhook_id: dlk-capacity-update
+    allowed_methods:
+    - POST
+    trigger: webhook
+  - webhook_id: nda-capacity-update
+    allowed_methods:
+    - POST
+    trigger: webhook
+  - webhook_id: pem-capacity-update
     allowed_methods:
     - POST
     trigger: webhook
   actions:
   - data:
-      payload_file: '{{ trigger.json | to_json }}'
+      project: '{{ trigger.json.project }}'
+      account_id: '{{ trigger.json.account_id }}'
+      name: '{{ trigger.json.name }}'
+      capacity_h: '{{ trigger.json.capacity_h }}'
     action: shell_command.update_dashboard_capacity
