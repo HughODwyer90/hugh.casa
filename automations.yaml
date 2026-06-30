@@ -5797,16 +5797,11 @@
         - nda
         - pem
       sequence:
-      - action: shell_command.jira_quarter_data_project
-        data:
-          project: '{{ trigger.id }}'
-      - action: shell_command.write_refresh_time
+      - action: script.jira_quarter_data_refresh
         data:
           project: '{{ trigger.id }}'
     default:
-    - action: shell_command.jira_quarter_data
-      data: {}
-    - action: shell_command.write_refresh_time_all
+    - action: script.jira_quarter_data_refresh
       data: {}
   mode: single
 - id: '1781882216379'
@@ -5916,18 +5911,21 @@
     allowed_methods:
     - POST
     trigger: webhook
+    local_only: true
   - webhook_id: nda-capacity-update
     allowed_methods:
     - POST
     trigger: webhook
+    local_only: true
   - webhook_id: pem-capacity-update
     allowed_methods:
     - POST
     trigger: webhook
+    local_only: true
   actions:
-  - data:
+  - action: script.dashboard_update_dev_capacity
+    data:
       project: '{{ trigger.json.project }}'
       account_id: '{{ trigger.json.account_id }}'
       name: '{{ trigger.json.name }}'
       capacity_h: '{{ trigger.json.capacity_h }}'
-    action: shell_command.update_dashboard_capacity
