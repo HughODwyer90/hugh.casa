@@ -56,6 +56,7 @@ function switchProject(p,skipRender){
   PROJ_REFRESH_DATA_WEBHOOK=pd.refresh_data_webhook||"";
   PROJ_REFRESH_REQUEST_WEBHOOK=pd.refresh_request_webhook||"";
   PROJ_CAPACITY_UPDATE_WEBHOOK=pd.capacity_update_webhook||"";
+  _nsMaybeClearOnLoad(p);
   if(typeof updateRefreshBtn==="function")updateRefreshBtn();
   ordered=Object.keys(QS).sort((a,b)=>{
     const[qa,ya]=a.split(" ");const[qb,yb]=b.split(" ");
@@ -213,6 +214,44 @@ document.addEventListener("click",ev=>{if(!ev.target.closest(".qs"))closeDd();})
   switchProject((ALL_DATA[_lsProj]?_lsProj:PROJ_KEYS[0]),true);
 })();
 
+/* ---- Shared refresh banner + poll logic ---- */
+function triggerRefreshWithBanner(webhookUrl,onFired,onError){
+  const banner=document.getElementById("refresh-banner");
+  const triggerTs=Date.now();
+  let elapsed=0,notFoundCount=0;
+  function fmtElapsed(s){return s<60?s+"s":Math.floor(s/60)+"m "+String(s%60).padStart(2,"0")+"s";}
+  function setBanner(cls,html){banner.className=cls;banner.innerHTML=html;banner.style.display="block";}
+  const elapsedTimer=setInterval(()=>{elapsed++;setBanner("",`↻ Refreshing… ${fmtElapsed(elapsed)} elapsed`);},1000);
+  setBanner("","↻ Refreshing… 0s elapsed");
+  const pollTimer=setInterval(async()=>{
+    try{
+      const r=await fetch("./data/last_refresh.json?_="+Date.now());
+      if(r.status===404){notFoundCount++;if(notFoundCount>=3)clearInterval(pollTimer);return;}
+      notFoundCount=0;
+      if(r.ok){
+        const d=await r.json();
+        const ts=d[AP.toLowerCase()];
+        if(ts&&new Date(ts).getTime()>triggerTs){
+          clearInterval(elapsedTimer);clearInterval(pollTimer);
+          setBanner("done","✓ Done — reloading…");
+          setTimeout(()=>location.reload(),1500);
+        }
+      }
+    }catch(_){}
+  },10000);
+  setTimeout(()=>{
+    clearInterval(pollTimer);clearInterval(elapsedTimer);
+    if(banner.className!=="done")setBanner("","↻ Still working… reload in a moment to check");
+  },5*60*1000);
+  fetch(webhookUrl,{method:"POST",mode:"no-cors"})
+    .then(()=>{if(onFired)onFired();})
+    .catch(err=>{
+      clearInterval(elapsedTimer);clearInterval(pollTimer);
+      if(banner)banner.style.display="none";
+      if(onError)onError(err);
+    });
+}
+
 /* ---- Current sprint label — updated on project switch ---- */
 function updateSprintLabel(){
   const now=new Date();
@@ -295,7 +334,7 @@ function updateRefreshBtn(){
     if(now-last<COOLDOWN_MS){
       const dataBtn=PROJ_REFRESH_DATA_WEBHOOK?{
         label:"Refresh data only",
-        action:()=>fetch(PROJ_REFRESH_DATA_WEBHOOK,{method:"POST",mode:"no-cors"})
+        action:()=>triggerRefreshWithBanner(PROJ_REFRESH_DATA_WEBHOOK,null,()=>showModal("Refresh failed","Could not reach Home Assistant."))
       }:null;
       showModal(
         "Too soon for a full refresh",
@@ -307,59 +346,13 @@ function updateRefreshBtn(){
     localStorage.setItem(sk(),String(now));
     _refreshBtn.disabled=true;
     _refreshBtn.textContent="↻ Refreshing…";
-
-    const banner=document.getElementById("refresh-banner");
-    const triggerTs=now;
-    let elapsed=0;
-    let pollTimer=null;
-    let notFoundCount=0;
-    function fmtElapsed(s){return s<60?s+"s":Math.floor(s/60)+"m "+String(s%60).padStart(2,"0")+"s";}
-    function setBanner(cls,html){
-      banner.className=cls;banner.innerHTML=html;banner.style.display="block";
-    }
-    function startElapsedTick(){
-      return setInterval(()=>{elapsed++;setBanner("",`↻ Refreshing… ${fmtElapsed(elapsed)} elapsed`);},1000);
-    }
-    async function pollForComplete(){
-      try{
-        const r=await fetch("./data/last_refresh.json?_="+Date.now());
-        if(r.status===404){notFoundCount++;if(notFoundCount>=3)clearInterval(pollTimer);return;}
-        notFoundCount=0;
-        if(r.ok){
-          const d=await r.json();
-          const ts=d[AP.toLowerCase()];
-          if(ts&&new Date(ts).getTime()>triggerTs){
-            clearInterval(elapsedTimer);clearInterval(pollTimer);
-            setBanner("done","✓ Done — reloading…");
-            setTimeout(()=>location.reload(),1500);
-            return;
-          }
-        }
-      }catch(_){}
-    }
-    const elapsedTimer=startElapsedTick();
-    setBanner("","↻ Refreshing… 0s elapsed");
-    pollTimer=setInterval(pollForComplete,10000);
-    setTimeout(()=>{
-      clearInterval(pollTimer);clearInterval(elapsedTimer);
-      if(banner.className!=="done"){
-        setBanner("","↻ Still working… reload in a moment to check");
-        _refreshBtn.textContent="↻ Refresh";_refreshBtn.disabled=false;
-      }
-    },5*60*1000);
-
-    fetch(PROJ_REFRESH_WEBHOOK,{method:"POST",mode:"no-cors"})
-      .then(()=>{_refreshBtn.textContent="↻ Refresh";_refreshBtn.disabled=false;})
-      .catch(err=>{
-        clearInterval(elapsedTimer);clearInterval(pollTimer);
-        localStorage.removeItem(sk());
-        if(banner)banner.style.display="none";
-        showModal(
-          "Refresh failed",
-          `Could not reach Home Assistant${err.message?` (${err.message})`:""}. Check that HA is running and the webhook is configured. You can try again now.`
-        );
-        _refreshBtn.textContent="↻ Refresh";_refreshBtn.disabled=false;
-      });
+    triggerRefreshWithBanner(PROJ_REFRESH_WEBHOOK,()=>{
+      _refreshBtn.textContent="↻ Refresh";_refreshBtn.disabled=false;
+    },()=>{
+      localStorage.removeItem(sk());
+      showModal("Refresh failed",`Could not reach Home Assistant. Check that HA is running and the webhook is configured.`);
+      _refreshBtn.textContent="↻ Refresh";_refreshBtn.disabled=false;
+    });
   });
 })();
 
@@ -1013,6 +1006,7 @@ function render(qk,activeTab){
   ].join("");
 
   document.getElementById("dash").innerHTML=dashHtml;
+  nsBindEditButtons();
 
   /* Tab bar with counts */
   const tabDefs=[
@@ -1275,11 +1269,28 @@ function trendNote(compVals,fmt,hi,lastIsWip,unit){
 }
 
 function _nsCapKey(projKey){return`ns_cap_${projKey}`;}
+function _nsSavedKey(projKey){return`ns_cap_saved_${projKey}`;}
 function _nsLoadOverrides(projKey){
   try{return JSON.parse(localStorage.getItem(_nsCapKey(projKey))||"{}");}catch(_){return{};}
 }
 function _nsSaveOverrides(projKey,overrides){
-  localStorage.setItem(_nsCapKey(projKey),JSON.stringify(overrides));
+  if(Object.keys(overrides).length===0){
+    localStorage.removeItem(_nsCapKey(projKey));
+  } else {
+    localStorage.setItem(_nsCapKey(projKey),JSON.stringify(overrides));
+  }
+}
+// On page load, clear overrides if webhook is configured (JSON was updated on last save)
+function _nsMaybeClearOnLoad(projKey){
+  if(!PROJ_CAPACITY_UPDATE_WEBHOOK)return;
+  const saved=localStorage.getItem(_nsSavedKey(projKey));
+  if(saved==='1'){
+    localStorage.removeItem(_nsCapKey(projKey));
+    localStorage.removeItem(_nsSavedKey(projKey));
+  }
+}
+function _nsMarkSaved(projKey){
+  localStorage.setItem(_nsSavedKey(projKey),'1');
 }
 
 function renderNextSprint(){
@@ -1325,7 +1336,8 @@ function renderNextSprint(){
     <th>Assignee</th>
     <th style="text-align:center">Assigned</th>
     <th style="text-align:center">Bugs / Stories / Tasks</th>
-    <th style="text-align:center">Availability</th>
+    <th style="text-align:center">Capacity</th>
+    <th style="text-align:center">Target (70%)</th>
     <th style="text-align:center">Estimated</th>
     <th style="text-align:center">No Estimate</th>
     <th style="text-align:right;width:32px"></th>
@@ -1343,31 +1355,36 @@ function renderNextSprint(){
     const noEstCell=a.no_estimate>0
       ?`<span style="color:#ef4444;font-weight:600">${a.no_estimate}</span>`
       :`<span style="color:var(--muted)">0</span>`;
-    const availCell=useSp?`<span style="color:var(--muted)">—</span>`
-      :`<span title="Target (70% of ${cap}h capacity)">${hd(tgt)}</span>`;
-    const col=!est?null:est>cap?"#ef4444":est>tgt?"#FCE300":"#22c55e";
+    const capCell=useSp?`<span style="color:var(--muted)">—</span>`:`${hd(cap)}`;
+    const tgtCell=useSp?`<span style="color:var(--muted)">—</span>`:`${hd(tgt)}`;
+    const col=!est?null:est>cap?"#ef4444":est>tgt?"#d97706":"#22c55e";
     const estCell=useSp
       ?(a.sp_total?`${a.sp_total} SP`:`<span style="color:var(--muted)">—</span>`)
       :(est?`<span style="font-weight:600;color:${col}">${hd(est)}</span>`:`<span style="color:var(--muted)">—</span>`);
     const ovTag=a._overridden?`<span style="font-size:10px;color:#f59e0b;margin-left:4px" title="Capacity overridden locally">✎</span>`:'';
     const safeId=e((a.account_id||a.name).replace(/[^a-z0-9]/gi,'_'));
-    const editBtn=`<button onclick="nsEditCapacity(${JSON.stringify(a.account_id||a.name)},${JSON.stringify(a.name)},${cap})"
+    const editBtn=`<button class="ns-edit-btn"
+      data-aid="${e(a.account_id||a.name)}" data-name="${e(a.name)}" data-cap="${cap}"
       style="background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--muted);padding:1px 6px;font-size:11px"
       title="Edit availability">✎</button>`;
     return`<tr>
       <td>${nameCell}${ovTag}</td>
       <td style="text-align:center">${a.total}</td>
       <td style="text-align:center">${a.bugs}/${a.stories}/${a.tasks}</td>
-      <td style="text-align:center">${availCell}</td>
+      <td style="text-align:center">${capCell}</td>
+      <td style="text-align:center;color:var(--muted)">${tgtCell}</td>
       <td style="text-align:center">${estCell}</td>
       <td style="text-align:center">${noEstCell}</td>
       <td style="text-align:right">${editBtn}</td>
     </tr>`;
   }).join("");
 
+  const hasCapWebhook=!!PROJ_CAPACITY_UPDATE_WEBHOOK;
   const exportBtn=hasOverrides
-    ?`<button onclick="nsExportOverrides()" style="margin-left:12px;background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--muted);padding:2px 8px;font-size:11px">Copy JSON changes</button>
-      <button onclick="nsClearOverrides()" style="margin-left:6px;background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--muted);padding:2px 8px;font-size:11px">Clear overrides</button>`
+    ?`${hasCapWebhook
+        ?`<button class="ns-save-btn" onclick="nsSaveAllOverrides()" style="margin-left:12px;background:var(--accent,#1e40af);color:#fff;border:none;border-radius:4px;cursor:pointer;padding:2px 10px;font-size:11px">Save changes</button>`
+        :`<button onclick="nsExportOverrides()" style="margin-left:12px;background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--muted);padding:2px 8px;font-size:11px">Copy JSON changes</button>`}
+      <button onclick="nsClearOverrides()" style="margin-left:6px;background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--muted);padding:2px 8px;font-size:11px">Clear</button>`
     :'';
 
   const capTable=`<div class="section-label" style="margin-top:20px">Capacity by Assignee
@@ -1375,9 +1392,9 @@ function renderNextSprint(){
   </div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:8px">
     Estimated: <span style="color:#22c55e;font-weight:600">●</span> within target &nbsp;
-               <span style="color:#FCE300;font-weight:600">●</span> over target, within capacity &nbsp;
+               <span style="color:#d97706;font-weight:600">●</span> over target, within capacity &nbsp;
                <span style="color:#ef4444;font-weight:600">●</span> over capacity &nbsp;·&nbsp;
-               Availability = 70% of capacity (buffer for meetings/unplanned work)
+               Target = 70% of capacity, leaving buffer for meetings &amp; unplanned work
   </div>
   <table class="iss-table"><thead>${capHeader}</thead><tbody>${capRows}</tbody></table>`;
 
@@ -1422,26 +1439,81 @@ function renderNextSprint(){
   return header+capTable+issueTable;
 }
 
+function nsBindEditButtons(){
+  document.querySelectorAll('.ns-edit-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      nsEditCapacity(btn.dataset.aid, btn.dataset.name, parseFloat(btn.dataset.cap));
+    });
+  });
+}
+
+function nsSetPane(html){
+  const p=document.querySelector('[data-pane="nextsp"]');
+  if(p){p.innerHTML=html; nsBindEditButtons();}
+}
+
 function nsEditCapacity(accountId,name,currentCap){
-  const val=prompt(`Availability for ${name}\nEnter total sprint capacity in hours (current: ${currentCap}h).\nExample: 64 = 4 days/week × 8h × 2 weeks`,currentCap);
-  if(val===null)return;
-  const h=parseFloat(val);
-  if(isNaN(h)||h<=0){alert("Please enter a valid number of hours.");return;}
-  // Save locally for immediate preview
+  const currentD=currentCap/8;
+  const val=prompt(`Availability for ${name}\nEnter capacity as hours, days, or both — e.g. 64, 64h, 8d, or 4d5h.\nLeave blank to reset to default (80h / 10d).\nCurrent: ${currentCap}h / ${currentD%1===0?currentD:currentD.toFixed(1)}d`,currentCap+'h');
+  if(val===null)return; // cancelled
   const overrides=_nsLoadOverrides(AP);
-  overrides[accountId]=h;
+  if(val.trim()===''){
+    delete overrides[accountId];
+  } else {
+    // Accepts: 64 (hours), 64h, 8d, 4d5h, 4d 5h, 36.5h
+    // Strategy: if input ends with 'd' or contains 'd' → parse as days[+hours]
+    //           if input ends with 'h' or is bare number → parse as hours
+    const str=val.trim();
+    let h;
+    const dOnly=str.match(/^([\d.]+)\s*d$/i);
+    const dh=str.match(/^([\d.]+)\s*d\s*([\d.]+)\s*h$/i);
+    const hOnly=str.match(/^([\d.]+)\s*h?$/i);
+    if(dh){
+      h=parseFloat(dh[1])*8+parseFloat(dh[2]);
+    } else if(dOnly){
+      h=parseFloat(dOnly[1])*8;
+    } else if(hOnly){
+      h=parseFloat(hOnly[1]);
+    } else {
+      alert("Please enter a value like 64, 64h, 8d, or 4d5h — or leave blank to reset.");return;
+    }
+    if(isNaN(h)||h<=0){alert("Please enter a valid value like 64h, 8d, or 4d5h — or leave blank to reset.");return;}
+    overrides[accountId]=h;
+  }
   _nsSaveOverrides(AP,overrides);
-  document.querySelector('[data-pane="nextsp"]').innerHTML=renderNextSprint();
-  // Push to HA webhook if configured — HA will update team JSON and trigger a re-run
-  if(PROJ_CAPACITY_UPDATE_WEBHOOK){
+  nsSetPane(renderNextSprint());
+}
+
+function nsSaveAllOverrides(){
+  const overrides=_nsLoadOverrides(AP);
+  if(!PROJ_CAPACITY_UPDATE_WEBHOOK)return;
+  const ns=ALL_DATA[AP]?.next_sprint||null;
+  const stats=(ns?.assignee_stats||[]);
+  const entries=Object.entries(overrides);
+  if(!entries.length)return;
+  const btn=document.querySelector('.ns-save-btn');
+  if(btn){btn.disabled=true;btn.textContent='Saving…';}
+  let done=0;
+  entries.forEach(([accountId,capacity_h])=>{
+    const a=stats.find(s=>(s.account_id||s.name)===accountId)||{};
     fetch(PROJ_CAPACITY_UPDATE_WEBHOOK,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({project:AP,account_id:accountId,name:name,capacity_h:h}),
+      body:JSON.stringify({project:AP,account_id:accountId,name:a.name||accountId,capacity_h}),
     }).then(r=>{
       if(!r.ok)console.warn("Capacity webhook returned",r.status);
+      done++;
+      if(done===entries.length){
+        _nsMarkSaved(AP);
+        if(btn){btn.disabled=true;btn.textContent='Saved ✓';}
+        if(PROJ_REFRESH_DATA_WEBHOOK){
+          triggerRefreshWithBanner(PROJ_REFRESH_DATA_WEBHOOK,null,()=>{
+            console.warn("Capacity refresh webhook failed");
+          });
+        }
+      }
     }).catch(err=>console.warn("Capacity webhook error:",err));
-  }
+  });
 }
 
 function nsExportOverrides(){
@@ -1462,7 +1534,7 @@ function nsExportOverrides(){
 function nsClearOverrides(){
   if(!confirm("Clear all local capacity overrides for this project?"))return;
   localStorage.removeItem(_nsCapKey(AP));
-  document.querySelector('[data-pane="nextsp"]').innerHTML=renderNextSprint();
+  nsSetPane(renderNextSprint());
 }
 
 function renderTrends(){
