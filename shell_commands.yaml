@@ -29,3 +29,4 @@ jira_quarter_data: "python3 /config/python_scripts/quarters_report.py --data-onl
 jira_quarter_data_project: "python3 /config/python_scripts/quarters_report.py --project {{ project }} --data-only > /config/python_scripts/quarters_report.log 2>&1"
 write_refresh_time: "python3 -c \"import json,os; p='/config/www/quarters/data/last_refresh.json'; d=json.load(open(p)) if os.path.exists(p) else {}; d['{{ project }}']=str(__import__('subprocess').check_output(['date','-u','+%Y-%m-%dT%H:%M:%SZ']).decode().strip()); json.dump(d,open(p,'w'))\""
 write_refresh_time_all: "python3 -c \"import json,os,subprocess; p='/config/www/quarters/data/last_refresh.json'; ts=subprocess.check_output(['date','-u','+%Y-%m-%dT%H:%M:%SZ']).decode().strip(); json.dump({'dlk':ts,'nda':ts,'pem':ts},open(p,'w'))\""
+update_dashboard_capacity: "python3 /config/python_scripts/update_capacity.py '{{ project }}' '{{ account_id }}' '{{ name }}' '{{ capacity_h }}'"
