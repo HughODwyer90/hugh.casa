@@ -5797,11 +5797,10 @@
         - nda
         - pem
       sequence:
-      - action: script.jira_quarter_data_refresh
-        data:
-          project: '{{ trigger.id }}'
+      - action: script.jira_quarter_update_data
+        data: {}
     default:
-    - action: script.jira_quarter_data_refresh
+    - action: script.jira_quarter_update_data
       data: {}
   mode: single
 - id: '1781882216379'
@@ -5923,9 +5922,5 @@
     trigger: webhook
     local_only: true
   actions:
-  - action: script.dashboard_update_dev_capacity
-    data:
-      project: '{{ trigger.json.project }}'
-      account_id: '{{ trigger.json.account_id }}'
-      name: '{{ trigger.json.name }}'
-      capacity_h: '{{ trigger.json.capacity_h }}'
+  - action: script.jira_update_dev_capacity
+    data: {}
