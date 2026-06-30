@@ -1,5 +1,4 @@
 === Quarter Dashboard — Multi-Project ===
-Mode: DATA-ONLY (Claude notes unchanged)
 
 ####################################################
 # Project: DLK (board 136)
@@ -28,7 +27,7 @@ Project : DLK  |  Quarter: Q2 2026 (starts 2026-04-01)
 
 [2/4] Fetching KPIs from Jira (7 sprints)...
       Previous quarter last sprint: 3317 (ends 2026-03-16)
-  In-progress statuses (DLK): {'In Test', 'In Progress', 'PR Approved', 'Awaiting Review'}
+  In-progress statuses (DLK): {'Awaiting Review', 'In Progress', 'PR Approved', 'In Test'}
   Querying: project = DLK AND sprint in (3952, 4253, 4617, 4783, 4816, 5014, 5015)...
   Building sprint membership map (7 sprints, parallel)...
     Sprint DLK Sprint 94: 64 issues
@@ -44,12 +43,21 @@ Project : DLK  |  Quarter: Q2 2026 (starts 2026-04-01)
       Total: 192 | Done: 133 | Rollover: 43 | Cycle: 20.1d | Logged: 2178.4h | No-estimate: 15
       Developer roster unchanged (34 developers)
 
-[3/4] Skipping Claude notes (data-only run) — reusing saved notes...
-      Reused notes for 14 quarter key(s); sprint notes carried forward.
+[3/4] Generating notes via Claude...
+      KPI values unchanged — skipping API call, reusing existing notes.
+      Notes populated: total, completed, completion_rate, releases_shipped, oos_total, oos_open, type_split, avg_releases, rollover, cycle_time, assignee_workload, time_logged, estimate_accuracy, no_estimate
+      Generating sprint notes...
+        DLK Sprint 94: locked
+        DLK Sprint 95: locked
+        DLK Sprint 96: locked
+        DLK Sprint 97: locked
+        DLK Sprint 98: locked
+        DLK Sprint 99: locked
+        DLK Sprint 100: unchanged
 
 [4/4] Saving quarter data...
       Saved data: /config/www/dlk/data/Q2_2026.json
-      2026-06-30T15:50:11Z
+      2026-06-30T16:12:50Z
   Fetching next sprint for DLK...
       Next sprint: DLK Sprint 101 (36 issues)
 
@@ -71,7 +79,7 @@ Project : NDA  |  Quarter: Q2 2026 (starts 2026-04-01)
 
 [2/4] Fetching KPIs from Jira (7 sprints)...
       Previous quarter last sprint: 2812 (ends 2026-03-29)
-  In-progress statuses (NDA): {'Paused', 'Done', 'In Progress'}
+  In-progress statuses (NDA): {'Done', 'In Progress', 'Paused'}
   Querying: project = NDA AND sprint in (3749, 4386, 4518, 4882, 5349, 5518, 5585)...
   Building sprint membership map (7 sprints, parallel)...
     Sprint NDA Sprint 27: 37 issues
@@ -87,12 +95,14 @@ Project : NDA  |  Quarter: Q2 2026 (starts 2026-04-01)
       Total: 121 | Done: 100 | Rollover: 9 | Cycle: 14.5d | Logged: 760.5h | No-estimate: 28
       Developer roster unchanged (34 developers)
 
+[3/4] Notes are 144.2h old (limit: 168h) — reusing existing notes.
+
 [3/4] Skipping Claude notes (data-only run) — reusing saved notes...
       Reused notes for 14 quarter key(s); sprint notes carried forward.
 
 [4/4] Saving quarter data...
       Saved data: /config/www/nda/data/Q2_2026.json
-      2026-06-30T15:50:26Z
+      2026-06-30T16:13:05Z
   Fetching next sprint for NDA...
       Next sprint: NDA Sprint 34 (7 issues)
 
@@ -111,7 +121,7 @@ Project : PEM  |  Quarter: Q2 2026 (starts 2026-04-01)
       PE Sprint 42 - v1.8  [Current]  2026-05-26 → 2026-06-09
 
 [2/4] Fetching KPIs from Jira (5 sprints)...
-  In-progress statuses (PEM): {'In Progress', 'Ready for Deploy', 'QA', 'Ready for QA'}
+  In-progress statuses (PEM): {'Ready for QA', 'In Progress', 'Ready for Deploy', 'QA'}
   Querying: project = PEM AND sprint in (4220, 4353, 4584, 4981, 5081)...
   Building sprint membership map (5 sprints, parallel)...
     Sprint PE Sprint 38: 268 issues
@@ -124,12 +134,19 @@ Project : PEM  |  Quarter: Q2 2026 (starts 2026-04-01)
       Total: 500 | Done: 222 | Rollover: 581 | Cycle: 18.4d | SP: 67/267 | No-SP-est: 335
       Developer roster unchanged (34 developers)
 
-[3/4] Skipping Claude notes (data-only run) — reusing saved notes...
-      Reused notes for 15 quarter key(s); sprint notes carried forward.
+[3/4] Generating notes via Claude...
+      KPI values unchanged — skipping API call, reusing existing notes.
+      Notes populated: total, completed, completion_rate, releases_shipped, oos_total, oos_open, type_split, avg_releases, time_logged, estimate_accuracy, no_estimate, rollover, cycle_time, assignee_workload, sp_velocity
+      Generating sprint notes...
+        PE Sprint 38: locked
+        PE Sprint 39: locked
+        PE Sprint 40: locked
+        PE Sprint 41: locked
+        PE Sprint 42 - v1.8: unchanged
 
 [4/4] Saving quarter data...
       Saved data: /config/www/pem/data/Q2_2026.json
-      2026-06-30T15:50:41Z
+      2026-06-30T16:13:21Z
   Fetching next sprint for PEM...
       Next sprint: PE Sprint - QA (1 issues)
 
