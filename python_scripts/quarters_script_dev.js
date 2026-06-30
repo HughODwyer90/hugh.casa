@@ -99,10 +99,10 @@ function notesStaleNotice(notesGeneratedAt, dataAsOf){
       const diffD=Math.round(diffMs/86400000);
       const label=diffH<24?`~${diffH}h`:`~${diffD}d`;
       msg+=` Next AI refresh: in ${label} (${fmtTs(nextRun)}).`;
-    }else{
-      msg+=` Next AI refresh: due now.`;
     }
-  }else if(NOTES_REFRESH_TIME&&NOTES_REFRESH_TIME.tz){
+  }
+  if(!refreshHours||(new Date(nts.getTime()+refreshHours*3600000)<=new Date())){
+  if(NOTES_REFRESH_TIME&&NOTES_REFRESH_TIME.tz){
     try{
       const {hour,minute,tz}=NOTES_REFRESH_TIME;
       const min=minute||0;
@@ -116,7 +116,7 @@ function notesStaleNotice(notesGeneratedAt, dataAsOf){
       if(runUtc<=now) runUtc=new Date(runUtc.getTime()+86400000);
       msg+=` Next AI refresh: ${fmtTs(runUtc)}.`;
     }catch(_){}
-  }
+  }}
   return`<div class="alert alert-info" style="font-size:12px;opacity:0.85">ℹ ${msg}</div>`;
 }
 
