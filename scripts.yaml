@@ -730,9 +730,28 @@ occupancy_lights_with_scene_fallback:
   mode: single
 jira_quarter_update_data:
   alias: Jira Quarter Data Refresh
+  fields:
+    project:
+      description: Project key (dlk/nda/pem). Omit for all projects.
+      required: false
+      default: ''
   sequence:
-  - action: shell_command.jira_quarter_data_only
-    data: {}
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ project != '''' }}'
+      sequence:
+      - action: shell_command.jira_quarter_data_project
+        data:
+          project: '{{ project }}'
+      - action: shell_command.write_refresh_time
+        data:
+          project: '{{ project }}'
+    default:
+    - action: shell_command.jira_quarter_data
+      data: {}
+    - action: shell_command.write_refresh_time_all
+      data: {}
 jira_quarter_update:
   alias: Jira Quarter Update
   sequence:
@@ -740,4 +759,23 @@ jira_quarter_update:
     data: {}
   - action: shell_command.all_write_refresh_time
     data: {}
+  description: ''
+jira_update_dev_capacity:
+  alias: Jira Update Dev Capacity
+  fields:
+    project:
+      required: true
+    account_id:
+      required: true
+    name:
+      required: true
+    capacity_h:
+      required: true
+  sequence:
+  - action: shell_command.update_dashboard_capacity
+    data:
+      project: '{{ project }}'
+      account_id: '{{ account_id }}'
+      name: '{{ name }}'
+      capacity_h: '{{ capacity_h }}'
   description: ''
