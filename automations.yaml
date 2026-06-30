@@ -5909,3 +5909,15 @@
     target:
       entity_id: switch.grill
   mode: single
+- id: '1782827289090'
+  alias: Jira - Update Dev Capacity
+  description: ''
+  triggers:
+  - webhook_id: your-capacity-webhook-id
+    allowed_methods:
+    - POST
+    trigger: webhook
+  actions:
+  - data:
+      payload_file: '{{ trigger.json | to_json }}'
+    action: shell_command.update_dashboard_capacity
