@@ -5863,3 +5863,26 @@
       entity_id: input_boolean.charged_curtains_today
     action: input_boolean.turn_off
   mode: single
+- id: '1782812555624'
+  alias: Restore curtains after charging timeout/elevation drop
+  description: ''
+  triggers:
+  - trigger: numeric_state
+    entity_id: sensor.sun_elevation
+    below: 15
+  - trigger: state
+    entity_id: input_boolean.curtain_charge_started
+    to: 'on'
+    for: 02:00:00
+  conditions:
+  - condition: state
+    entity_id: input_boolean.curtain_charge_started
+    state: 'on'
+  actions:
+  - target:
+      entity_id: scene.curtains_open
+    action: scene.turn_on
+  - target:
+      entity_id: input_boolean.curtain_charge_started
+    action: input_boolean.turn_off
+  mode: single
