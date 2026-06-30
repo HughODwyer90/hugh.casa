@@ -5851,3 +5851,15 @@
         - action: REFRESH_DASHBOARD
           title: Refresh Now
   mode: single
+- id: '1782807998118'
+  alias: Reset curtain charge gate at midnight
+  description: Safety net so charged_curtains_today doesn't get stuck on if the main
+    automation's sequence is interrupted.
+  triggers:
+  - trigger: time
+    at: 00:00:00
+  actions:
+  - target:
+      entity_id: input_boolean.charged_curtains_today
+    action: input_boolean.turn_off
+  mode: single
