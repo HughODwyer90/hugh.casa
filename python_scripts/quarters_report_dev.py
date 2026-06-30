@@ -26,7 +26,7 @@ from secret_manager import SecretsManager
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 TESTING_MODE  = False   # Skip Claude API calls; preserve any existing notes
-FORCE_NOTES   = True  # Force regeneration of ALL notes even for backfill quarters
+FORCE_NOTES   = False  # Force regeneration of ALL notes even for backfill quarters
 PREVIEW_MODE  = True   # DEV: always on. Set to False when copying to live. — live page untouched
 ANTHROPIC_QUARTER_MODEL = "claude-sonnet-4-5"       # Update here when model is retired
 ANTHROPIC_SPRINT_MODEL = "claude-haiku-4-5-20251001"  # Lighter model for sprint-level notes
@@ -76,6 +76,8 @@ NOTES_REFRESH_TIME = {"hour": 17, "minute": 0, "tz": "Europe/Dublin"}
 # Comment it out again when done — the empty list above takes effect automatically.
 BACKFILL_QUARTERS = []
 #BACKFILL_QUARTERS = ["Q1 2024", "Q2 2024", "Q3 2024", "Q4 2024", "Q1 2025", "Q2 2025", "Q3 2025", "Q4 2025", "Q1 2026"]
+
+TOKEN_LOG_PATH = pathlib.Path(__file__).parent / "data" / "token_usage.log"
 
 # ---------------------------------------------------------------------------
 # Project configuration
@@ -1241,7 +1243,7 @@ def fetch_kpis(sprints, proj, ref=None, prev_sprint_id=None, prev_sprint_end=Non
 # Claude — generate narrative notes
 # ---------------------------------------------------------------------------
 
-def generate_notes(kpis, sprints, existing_notes=None, existing_kpis=None, proj_context=""):
+def generate_notes(kpis, sprints, existing_notes=None, existing_kpis=None, proj_context="", project_key=""):
     existing_notes = existing_notes or {}
     existing_kpis  = existing_kpis  or {}
     use_sp  = kpis.get("use_story_points", False)
@@ -1461,6 +1463,8 @@ KPI data:
     try:
         with urllib.request.urlopen(req) as resp:
             result = json.loads(resp.read().decode())
+        usage = result.get("usage", {})
+        _log_token_usage("quarter", project_key, kpis.get("quarter", ""), usage)
         text = result["content"][0]["text"].strip()
         if text.startswith("```"):
             text = "\n".join(text.split("\n")[1:])
@@ -1489,7 +1493,7 @@ _SPRINT_NOTE_DEPS = [
 ]
 
 def generate_sprint_notes(sprint_name, sprint_state, sp_kpis, existing_notes=None,
-                          existing_sp_kpis=None, proj_context="", use_oos=True):
+                          existing_sp_kpis=None, proj_context="", use_oos=True, project_key=""):
     """Generate AI narrative notes for a single sprint.
     Closed sprints with existing notes are locked permanently.
     Active sprints are only regenerated when the underlying KPI values change."""
@@ -1559,6 +1563,8 @@ Releases: {sp_kpis.get("releases_shipped",0)}"""
     try:
         with urllib.request.urlopen(req) as resp:
             result = json.loads(resp.read().decode())
+        usage = result.get("usage", {})
+        _log_token_usage("sprint", project_key, sprint_name, usage)
         text = result["content"][0]["text"].strip()
         if text.startswith("```"):
             text = "\n".join(text.split("\n")[1:]).rsplit("```", 1)[0]
@@ -1566,6 +1572,54 @@ Releases: {sp_kpis.get("releases_shipped",0)}"""
     except Exception as exc:
         print(f"      WARNING: sprint notes failed for {sprint_name} ({exc})")
         return existing_notes
+
+
+# ---------------------------------------------------------------------------
+# Token usage logging
+# ---------------------------------------------------------------------------
+
+_TOKEN_LOG_RETENTION_DAYS = 90
+
+def _log_token_usage(call_type, project_key, label, usage):
+    """Append a block to token_usage.log for a single API call, then trim entries older than 90 days."""
+    ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    block = (
+        f"[{ts}]\n"
+        f"  type    : {call_type}\n"
+        f"  project : {project_key}\n"
+        f"  label   : {label}\n"
+        f"  input   : {usage.get('input_tokens', 0):,}\n"
+        f"  output  : {usage.get('output_tokens', 0):,}\n"
+        f"  cache_read  : {usage.get('cache_read_input_tokens', 0):,}\n"
+        f"  cache_write : {usage.get('cache_creation_input_tokens', 0):,}\n"
+        f"\n"
+    )
+    TOKEN_LOG_PATH.parent.mkdir(exist_ok=True)
+    with open(TOKEN_LOG_PATH, "a", encoding="utf-8") as fh:
+        fh.write(block)
+
+    # Trim blocks older than retention window
+    try:
+        cutoff = datetime.now() - timedelta(days=_TOKEN_LOG_RETENTION_DAYS)
+        with open(TOKEN_LOG_PATH, "r", encoding="utf-8") as fh:
+            content = fh.read()
+        blocks = [b for b in content.split("\n\n") if b.strip()]
+        kept = []
+        for b in blocks:
+            first_line = b.strip().splitlines()[0]
+            if first_line.startswith("[") and first_line.endswith("]"):
+                try:
+                    block_dt = datetime.strptime(first_line[1:-1], "%Y-%m-%d %H:%M:%S")
+                    if block_dt >= cutoff:
+                        kept.append(b)
+                    continue
+                except ValueError:
+                    pass
+            kept.append(b)
+        with open(TOKEN_LOG_PATH, "w", encoding="utf-8") as fh:
+            fh.write("\n\n".join(reversed(kept)) + "\n")
+    except Exception:
+        pass  # Never let trimming break a run
 
 
 # ---------------------------------------------------------------------------
@@ -1939,7 +1993,8 @@ def _run_quarter(proj, ref=None, skip_notes=False):
             existing_notes = existing_saved.get("notes", {})
             existing_kpis  = existing_saved.get("kpis",  {})
         notes = generate_notes(kpis, sprints, existing_notes, existing_kpis,
-                               proj_context=proj.get("notes_context", ""))
+                               proj_context=proj.get("notes_context", ""),
+                               project_key=proj["key"])
         quarter_notes_generated = (notes != existing_notes)
         print(f"      Notes populated: {', '.join(notes.keys()) if notes else 'none (skipped)'}")
 
@@ -1958,7 +2013,8 @@ def _run_quarter(proj, ref=None, skip_notes=False):
             new_notes  = generate_sprint_notes(spd["sprint_name"], spd["sprint_state"], spd,
                                                prev_notes, prev_kpis,
                                                proj_context=proj.get("notes_context", ""),
-                                               use_oos=proj.get("use_oos", True))
+                                               use_oos=proj.get("use_oos", True),
+                                               project_key=proj["key"])
             spd["notes"] = new_notes
             locked    = spd["sprint_state"].lower() == "closed" and bool(prev_notes)
             unchanged = (not locked) and (new_notes is prev_notes or new_notes == prev_notes)
