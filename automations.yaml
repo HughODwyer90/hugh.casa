@@ -4187,7 +4187,7 @@
   description: 'Periodically checks during the day and, when sun elevation is high
     enough, moves curtains to optimise solar panel exposure. When home, only triggers
     if a battery is low and the TV is off. When away, charges regardless of battery
-    level. Restores position after sun drops or after a timeout.
+    level. Restore is handled by a separate automation.
 
     '
   triggers:
@@ -4233,20 +4233,9 @@
       - target:
           entity_id: input_boolean.charged_curtains_today
         action: input_boolean.turn_on
-      - wait_for_trigger:
-        - entity_id:
-          - sensor.sun_elevation
-          attribute: elevation
-          below: 15
-          trigger: numeric_state
-        timeout: 02:00:00
-        continue_on_timeout: true
       - target:
-          entity_id: scene.curtains_open
-        action: scene.turn_on
-      - target:
-          entity_id: input_boolean.charged_curtains_today
-        action: input_boolean.turn_off
+          entity_id: input_boolean.curtain_charge_started
+        action: input_boolean.turn_on
     default: []
   mode: restart
 - id: '1771032303153'
@@ -5885,4 +5874,38 @@
   - target:
       entity_id: input_boolean.curtain_charge_started
     action: input_boolean.turn_off
+  mode: single
+- id: '1782824828406'
+  alias: Grill - Warn then Auto Off
+  description: Warns if grill left on, auto-offs after 30 min total
+  triggers:
+  - entity_id: switch.grill
+    to: 'on'
+    for: 00:20:00
+    trigger: state
+  actions:
+  - action: notify.notifications
+    continue_on_error: true
+    data:
+      title: Grill Still On
+      message: Still on after 20 minutes. Tap to turn off, or it'll auto-off in 10
+        minutes.
+      data:
+        actions:
+        - action: TURN_OFF_GRILL
+          title: Turn Off Now
+        notification_icon: mdi:toaster-oven
+  - wait_for_trigger:
+    - event_type: mobile_app_notification_action
+      event_data:
+        action: TURN_OFF_GRILL
+      trigger: event
+    timeout: 00:10:00
+    continue_on_timeout: true
+  - condition: state
+    entity_id: switch.grill
+    state: 'on'
+  - action: switch.turn_off
+    target:
+      entity_id: switch.grill
   mode: single
