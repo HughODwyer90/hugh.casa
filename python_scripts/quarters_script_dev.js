@@ -29,7 +29,7 @@ const _lsTab =window._hsTab;
 // Active project state — updated by switchProject()
 let AP=PROJ_KEYS[0];
 let QS={}, PROJ_KEY="", PROJ_DISPLAY="", BOARD_ID="", PROJ_USE_SP=false, PROJ_USE_OOS=true;
-let PROJ_REFRESH_WEBHOOK="", PROJ_REFRESH_DATA_WEBHOOK="", PROJ_REFRESH_REQUEST_WEBHOOK="";
+let PROJ_REFRESH_WEBHOOK="", PROJ_REFRESH_DATA_WEBHOOK="", PROJ_REFRESH_REQUEST_WEBHOOK="", PROJ_CAPACITY_UPDATE_WEBHOOK="";
 const _refreshBtn=document.getElementById("refresh-btn");
 let ordered=[];
 let cur="";
@@ -55,6 +55,7 @@ function switchProject(p,skipRender){
   PROJ_REFRESH_WEBHOOK=pd.refresh_webhook||"";
   PROJ_REFRESH_DATA_WEBHOOK=pd.refresh_data_webhook||"";
   PROJ_REFRESH_REQUEST_WEBHOOK=pd.refresh_request_webhook||"";
+  PROJ_CAPACITY_UPDATE_WEBHOOK=pd.capacity_update_webhook||"";
   if(typeof updateRefreshBtn==="function")updateRefreshBtn();
   ordered=Object.keys(QS).sort((a,b)=>{
     const[qa,ya]=a.split(" ");const[qb,yb]=b.split(" ");
@@ -1008,6 +1009,7 @@ function render(qk,activeTab){
       })()}
     `),
     pane("trends",renderTrends()),
+    pane("nextsp",renderNextSprint()),
   ].join("");
 
   document.getElementById("dash").innerHTML=dashHtml;
@@ -1025,6 +1027,7 @@ function render(qk,activeTab){
     {id:"time",       label:PROJ_USE_SP?"Points":"Time"},
     {id:"team",       label:"Team"},
     {id:"trends",     label:"Trends"},
+    {id:"nextsp",     label:"Next Sprint"},
   ];
   document.getElementById("tabs-bar").innerHTML=tabDefs.map(t=>{
     const badge=t.cnt!==undefined?`<span class="tab-cnt ${t.cls}">${t.cnt}</span>`:"";
@@ -1269,6 +1272,197 @@ function trendNote(compVals,fmt,hi,lastIsWip,unit){
   const dir=d>0?'Up':'Down';
   const suffix=hi===null?'':(improving?' — trending well.':' — needs attention.');
   return`${dir} from ${fv} to ${lv} across ${span}.${suffix}`;
+}
+
+function _nsCapKey(projKey){return`ns_cap_${projKey}`;}
+function _nsLoadOverrides(projKey){
+  try{return JSON.parse(localStorage.getItem(_nsCapKey(projKey))||"{}");}catch(_){return{};}
+}
+function _nsSaveOverrides(projKey,overrides){
+  localStorage.setItem(_nsCapKey(projKey),JSON.stringify(overrides));
+}
+
+function renderNextSprint(){
+  const ns=ALL_DATA[AP]?.next_sprint||null;
+  const useSp=PROJ_USE_SP||false;
+  const jb=(Object.values(ALL_DATA[AP]?.qs||{})[0]?.kpis?.jira_base)||"";
+  const HPD=8;
+  function hd(h){const d=h/HPD;return`${h}h (${d%1===0?d:d.toFixed(1)}d)`;}
+  const overrides=_nsLoadOverrides(AP);
+
+  if(!ns||!ns.sprint_name){
+    return`<div class="pane-title">Next Sprint</div>
+      <div style="padding:32px 0;text-align:center;color:var(--muted)">No upcoming sprint found in Jira.</div>`;
+  }
+
+  const dateRange=(ns.start_date&&ns.end_date)
+    ?` &nbsp;·&nbsp; ${fmtDate(ns.start_date,true)} – ${fmtDate(ns.end_date,true)}`
+    :ns.start_date?` &nbsp;·&nbsp; starts ${fmtDate(ns.start_date,true)}`:"";
+  const header=`<div class="pane-title">Next Sprint: ${e(ns.sprint_name)}</div>
+    <div class="pane-desc">${ns.total_issues} issue${ns.total_issues!==1?"s":""} assigned${dateRange}.</div>`;
+
+  if(!ns.total_issues){
+    return header+`<div style="padding:24px 0;text-align:center;color:var(--muted)">Sprint exists but has no issues assigned yet.</div>`;
+  }
+
+  const stats=ns.assignee_stats||[];
+  const issues=ns.issues||[];
+
+  // Merge localStorage capacity overrides into stats
+  const statsEff=stats.map(a=>{
+    const ov=overrides[a.account_id||a.name];
+    if(ov!=null){
+      const cap=ov, tgt=Math.round(cap*0.7*10)/10;
+      return{...a,capacity_h:cap,target_h:tgt,_overridden:true};
+    }
+    return a;
+  });
+
+  const hasOverrides=Object.keys(overrides).length>0;
+
+  // Capacity table header
+  const capHeader=`<tr>
+    <th>Assignee</th>
+    <th style="text-align:center">Assigned</th>
+    <th style="text-align:center">Bugs / Stories / Tasks</th>
+    <th style="text-align:center">Availability</th>
+    <th style="text-align:center">Estimated</th>
+    <th style="text-align:center">No Estimate</th>
+    <th style="text-align:right;width:32px"></th>
+  </tr>`;
+
+  const capRows=statsEff.map(a=>{
+    const cap=a.capacity_h||80, tgt=a.target_h||Math.round(cap*0.7*10)/10;
+    const est=a.estimated_h||0;
+    const jql=a.account_id
+      ?`project = ${PROJ_KEY} AND sprint = ${ns.sprint_id} AND assignee = "${e(a.account_id)}" ORDER BY priority ASC`
+      :`project = ${PROJ_KEY} AND sprint = ${ns.sprint_id} AND assignee is EMPTY ORDER BY priority ASC`;
+    const nameCell=jb
+      ?`<a class="assignee-link" href="${e(jb+'/issues/?jql='+encodeURIComponent(jql))}" target="_blank">${e(a.name)}</a>`
+      :`<span style="font-weight:500">${e(a.name)}</span>`;
+    const noEstCell=a.no_estimate>0
+      ?`<span style="color:#ef4444;font-weight:600">${a.no_estimate}</span>`
+      :`<span style="color:var(--muted)">0</span>`;
+    const availCell=useSp?`<span style="color:var(--muted)">—</span>`
+      :`<span title="Target (70% of ${cap}h capacity)">${hd(tgt)}</span>`;
+    const col=!est?null:est>cap?"#ef4444":est>tgt?"#FCE300":"#22c55e";
+    const estCell=useSp
+      ?(a.sp_total?`${a.sp_total} SP`:`<span style="color:var(--muted)">—</span>`)
+      :(est?`<span style="font-weight:600;color:${col}">${hd(est)}</span>`:`<span style="color:var(--muted)">—</span>`);
+    const ovTag=a._overridden?`<span style="font-size:10px;color:#f59e0b;margin-left:4px" title="Capacity overridden locally">✎</span>`:'';
+    const safeId=e((a.account_id||a.name).replace(/[^a-z0-9]/gi,'_'));
+    const editBtn=`<button onclick="nsEditCapacity(${JSON.stringify(a.account_id||a.name)},${JSON.stringify(a.name)},${cap})"
+      style="background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--muted);padding:1px 6px;font-size:11px"
+      title="Edit availability">✎</button>`;
+    return`<tr>
+      <td>${nameCell}${ovTag}</td>
+      <td style="text-align:center">${a.total}</td>
+      <td style="text-align:center">${a.bugs}/${a.stories}/${a.tasks}</td>
+      <td style="text-align:center">${availCell}</td>
+      <td style="text-align:center">${estCell}</td>
+      <td style="text-align:center">${noEstCell}</td>
+      <td style="text-align:right">${editBtn}</td>
+    </tr>`;
+  }).join("");
+
+  const exportBtn=hasOverrides
+    ?`<button onclick="nsExportOverrides()" style="margin-left:12px;background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--muted);padding:2px 8px;font-size:11px">Copy JSON changes</button>
+      <button onclick="nsClearOverrides()" style="margin-left:6px;background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--muted);padding:2px 8px;font-size:11px">Clear overrides</button>`
+    :'';
+
+  const capTable=`<div class="section-label" style="margin-top:20px">Capacity by Assignee
+    ${exportBtn}
+  </div>
+  <div style="font-size:11px;color:var(--muted);margin-bottom:8px">
+    Estimated: <span style="color:#22c55e;font-weight:600">●</span> within target &nbsp;
+               <span style="color:#FCE300;font-weight:600">●</span> over target, within capacity &nbsp;
+               <span style="color:#ef4444;font-weight:600">●</span> over capacity &nbsp;·&nbsp;
+               Availability = 70% of capacity (buffer for meetings/unplanned work)
+  </div>
+  <table class="iss-table"><thead>${capHeader}</thead><tbody>${capRows}</tbody></table>`;
+
+  // Issues list — no-estimate first, then by assignee + priority
+  const priOrder={"Highest":0,"High":1,"Medium":2,"Low":3,"Lowest":4};
+  const sorted=[...issues].sort((a,b)=>{
+    const aNoEst=a.has_estimate?1:0,bNoEst=b.has_estimate?1:0;
+    if(aNoEst!==bNoEst)return aNoEst-bNoEst;
+    if(a.assignee<b.assignee)return -1;
+    if(a.assignee>b.assignee)return 1;
+    return (priOrder[a.priority]??5)-(priOrder[b.priority]??5);
+  });
+
+  const noEstCount=issues.filter(i=>!i.has_estimate).length;
+  const noEstBanner=noEstCount>0
+    ?`<div class="alert alert-warn" style="font-size:12px;margin-bottom:8px">⚠ ${noEstCount} issue${noEstCount!==1?"s":""} have no estimate — availability comparison above may be understated.</div>`
+    :"";
+
+  const issueCols=`<tr><th>Key</th><th>Summary</th><th>Type</th><th>Assignee</th><th>Priority</th><th style="text-align:center">${useSp?"SP":"Est."}</th></tr>`;
+  const issueRows=sorted.map(i=>{
+    const noEst=!i.has_estimate;
+    const rowStyle=noEst?` style="background:rgba(239,68,68,0.06)"`:`` ;
+    const priC=i.priority==="Highest"||i.priority==="High"?"color:#ef4444":i.priority==="Medium"?"color:#f59e0b":"color:var(--muted)";
+    const keyCell=jb?`<a href="${e(i.url)}" target="_blank" style="font-weight:600">${e(i.key)}</a>`:`<span style="font-weight:600">${e(i.key)}</span>`;
+    const estCell=useSp
+      ?(i.sp>0?`${i.sp} SP`:`<span style="color:#ef4444;font-weight:600">missing</span>`)
+      :(i.estimated_h>0?hd(i.estimated_h):`<span style="color:#ef4444;font-weight:600">missing</span>`);
+    return`<tr${rowStyle}>
+      <td>${keyCell}</td>
+      <td style="max-width:300px">${e(i.summary)}</td>
+      <td>${e(i.type)}</td>
+      <td>${e(i.assignee)}</td>
+      <td style="${priC}">${e(i.priority||"—")}</td>
+      <td style="text-align:center">${estCell}</td>
+    </tr>`;
+  }).join("");
+
+  const issueTable=`<div class="section-label" style="margin-top:28px">All Issues</div>
+    ${noEstBanner}
+    <table class="iss-table"><thead>${issueCols}</thead><tbody>${issueRows}</tbody></table>`;
+
+  return header+capTable+issueTable;
+}
+
+function nsEditCapacity(accountId,name,currentCap){
+  const val=prompt(`Availability for ${name}\nEnter total sprint capacity in hours (current: ${currentCap}h).\nExample: 64 = 4 days/week × 8h × 2 weeks`,currentCap);
+  if(val===null)return;
+  const h=parseFloat(val);
+  if(isNaN(h)||h<=0){alert("Please enter a valid number of hours.");return;}
+  // Save locally for immediate preview
+  const overrides=_nsLoadOverrides(AP);
+  overrides[accountId]=h;
+  _nsSaveOverrides(AP,overrides);
+  document.querySelector('[data-pane="nextsp"]').innerHTML=renderNextSprint();
+  // Push to HA webhook if configured — HA will update team JSON and trigger a re-run
+  if(PROJ_CAPACITY_UPDATE_WEBHOOK){
+    fetch(PROJ_CAPACITY_UPDATE_WEBHOOK,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({project:AP,account_id:accountId,name:name,capacity_h:h}),
+    }).then(r=>{
+      if(!r.ok)console.warn("Capacity webhook returned",r.status);
+    }).catch(err=>console.warn("Capacity webhook error:",err));
+  }
+}
+
+function nsExportOverrides(){
+  const overrides=_nsLoadOverrides(AP);
+  const ns=ALL_DATA[AP]?.next_sprint||null;
+  if(!ns)return;
+  const stats=ns.assignee_stats||[];
+  const lines=stats
+    .filter(a=>overrides[a.account_id||a.name]!=null)
+    .map(a=>{
+      const cap=overrides[a.account_id||a.name];
+      return`  // ${a.name}: set capacity_h to ${cap} (${cap/8}d)\n  "capacity_h": ${cap}`;
+    });
+  const msg=`Add "capacity_h" to each person's entry in the team JSON file:\n\n${lines.join("\n\n")}\n\nExample:\n"accountId": {"name": "Person", "capacity_h": ${Object.values(overrides)[0]||64}}`;
+  prompt("Copy these changes into your team JSON file, then re-run the script:",msg);
+}
+
+function nsClearOverrides(){
+  if(!confirm("Clear all local capacity overrides for this project?"))return;
+  localStorage.removeItem(_nsCapKey(AP));
+  document.querySelector('[data-pane="nextsp"]').innerHTML=renderNextSprint();
 }
 
 function renderTrends(){
