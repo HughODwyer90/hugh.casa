@@ -5871,11 +5871,16 @@
   mode: single
 - id: '1782824828406'
   alias: Grill - Warn then Auto Off
-  description: Warns if grill left on, auto-offs after 30 min total
+  description: Warns if grill left on, auto-offs after 20 min total
   triggers:
-  - entity_id: switch.grill
-    to: 'on'
-    for: 00:20:00
+  - entity_id:
+    - switch.grill
+    to:
+    - 'on'
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
     trigger: state
   actions:
   - action: notify.notifications
@@ -5894,7 +5899,11 @@
       event_data:
         action: TURN_OFF_GRILL
       trigger: event
-    timeout: 00:10:00
+    timeout:
+      hours: 0
+      minutes: 10
+      seconds: 0
+      milliseconds: 0
     continue_on_timeout: true
   - condition: state
     entity_id: switch.grill
