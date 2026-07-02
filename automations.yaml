@@ -5225,7 +5225,11 @@
     stays very high (post-shower) → reopen blind (failsafe)\n - Cooldown flag (input_boolean.blind_humidity_cooldown)
     blocks automation opens only\n - Manual open during cooldown clears the flag\n
     - switch.master_blind_plug mirrors blind state: on when open/opening, off when
-    closed/closing\n"
+    closed/closing\n - switch.master_blind_plug charging is skipped if sensor.master_blind_battery
+    is at or above 85%\n - Battery-full cutoff (turning off the plug once above 85%)
+    lives in a separate automation\n   (Master Bedroom Blind – Battery Full Cutoff)
+    to avoid mode: restart here cancelling\n   in-progress sequences, e.g. the tv_off
+    wait_for_trigger delay\n"
   triggers:
   - id: bed_occupied
     trigger: state
@@ -5340,6 +5344,9 @@
       - action: input_boolean.turn_off
         target:
           entity_id: input_boolean.blind_humidity_cooldown
+      - condition: numeric_state
+        entity_id: sensor.master_blind_battery
+        below: 85
       - action: switch.turn_on
         target:
           entity_id: switch.master_blind_plug
@@ -5350,6 +5357,9 @@
         entity_id: input_boolean.blind_humidity_cooldown
         state: 'off'
       sequence:
+      - condition: numeric_state
+        entity_id: sensor.master_blind_battery
+        below: 85
       - action: switch.turn_on
         target:
           entity_id: switch.master_blind_plug
@@ -5385,6 +5395,9 @@
       - action: cover.open_cover
         target:
           entity_id: cover.master_blind
+      - condition: numeric_state
+        entity_id: sensor.master_blind_battery
+        below: 85
       - action: switch.turn_on
         target:
           entity_id: switch.master_blind_plug
@@ -5415,6 +5428,9 @@
       - action: cover.open_cover
         target:
           entity_id: cover.master_blind
+      - condition: numeric_state
+        entity_id: sensor.master_blind_battery
+        below: 85
       - action: switch.turn_on
         target:
           entity_id: switch.master_blind_plug
@@ -5444,6 +5460,9 @@
       - action: cover.open_cover
         target:
           entity_id: cover.master_blind
+      - condition: numeric_state
+        entity_id: sensor.master_blind_battery
+        below: 85
       - action: switch.turn_on
         target:
           entity_id: switch.master_blind_plug
@@ -5468,6 +5487,9 @@
       - action: cover.open_cover
         target:
           entity_id: cover.master_blind
+      - condition: numeric_state
+        entity_id: sensor.master_blind_battery
+        below: 85
       - action: switch.turn_on
         target:
           entity_id: switch.master_blind_plug
@@ -5492,6 +5514,9 @@
       - action: cover.open_cover
         target:
           entity_id: cover.master_blind
+      - condition: numeric_state
+        entity_id: sensor.master_blind_battery
+        below: 85
       - action: switch.turn_on
         target:
           entity_id: switch.master_blind_plug
@@ -5934,3 +5959,32 @@
   actions:
   - action: script.jira_update_dev_capacity
     data: {}
+- id: '1782992125182'
+  alias: Master Bedroom Blind – Battery Full Cutoff
+  description: 'Turns off switch.master_blind_plug as soon as sensor.master_blind_battery
+
+    crosses above 85%, regardless of blind position. Split out from the main
+
+    Master Bedroom Blind – Basic Control automation because that one runs in
+
+    mode: restart, and a battery_full trigger firing mid-sequence (e.g. during
+
+    the tv_off wait_for_trigger delay) would cancel an in-progress open/close
+
+    action before it completed.
+
+    '
+  triggers:
+  - id: battery_full
+    trigger: numeric_state
+    entity_id: sensor.master_blind_battery
+    above: 85
+  conditions:
+  - condition: state
+    entity_id: switch.master_blind_plug
+    state: 'on'
+  actions:
+  - action: switch.turn_off
+    target:
+      entity_id: switch.master_blind_plug
+  mode: single
