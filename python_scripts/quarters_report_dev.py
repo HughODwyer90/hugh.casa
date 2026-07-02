@@ -2229,6 +2229,21 @@ def main():
                 result = _run_quarter(proj, ref, skip_notes=skip_notes)
                 if result:
                     proj_quarters = result  # load_all_quarters returns full set each time
+            if not proj_quarters and None in refs:
+                # The new calendar quarter has started but its first sprint hasn't yet —
+                # the real "current" sprint is still the previous quarter's last one, which
+                # keeps running for a week or two past the calendar boundary. Refresh that
+                # quarter live instead so KPIs/as_of keep moving until a Q-starting sprint exists.
+                prev_ref = current_quarter_start() - timedelta(days=1)
+                result = _run_quarter(proj, prev_ref, skip_notes=skip_notes)
+                if result:
+                    proj_quarters = result
+                    print(f"  Current quarter has no sprints yet — refreshed previous quarter instead.")
+            if not proj_quarters:
+                # Still nothing live — fall back to whatever's saved on disk instead of
+                # wiping the dashboard blank.
+                proj_quarters = load_all_quarters(proj)
+                print(f"  No live quarter data — loaded {len(proj_quarters)} saved quarter(s) instead.")
         _pkey = proj["key"].lower()
         # Fetch next sprint capacity (best-effort — None if no future sprint exists)
         print(f"  Fetching next sprint for {proj['key']}...")
