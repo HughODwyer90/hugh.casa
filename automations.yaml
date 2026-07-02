@@ -2887,6 +2887,9 @@
         entity_id: binary_sensor.bed_sensor
         state: 'off'
         for: 00:02:00
+      - condition: time
+        after: 06:00:00
+        before: '22:00:00'
       sequence:
       - action: scene.turn_on
         target:
@@ -2916,7 +2919,8 @@
             entity_id: binary_sensor.bed_sensor
             state: 'off'
           - condition: time
-            before: '23:00:00'
+            after: 06:00:00
+            before: '22:00:00'
           sequence:
           - action: scene.turn_on
             target:
@@ -3560,7 +3564,7 @@
   - choose:
     - conditions:
       - condition: time
-        after: '22:00:00'
+        after: '21:00:00'
         before: 09:00:00
       - condition: state
         entity_id: binary_sensor.bed_sensor
@@ -4830,7 +4834,7 @@
     minutes: /2
   conditions:
   - condition: time
-    after: '22:00:00'
+    after: '21:00:00'
     before: 09:00:00
   - condition: state
     entity_id: binary_sensor.bed_sensor
@@ -4887,7 +4891,7 @@
       state: 'on'
   - condition: time
     after: 09:00:00
-    before: '22:00:00'
+    before: '21:00:00'
   actions:
   - action: script.set_purifier_speed
     data:
@@ -5569,8 +5573,10 @@
   mode: restart
 - id: '1777524419985'
   alias: Hugh Room Lights Watchdog
-  description: Force Hugh room lights off if occupancy stays clear and any light remains
-    on
+  description: 'Protective layer: if the main lighting automation fails to turn lights
+    off, force Hugh room lights off when bed is occupied overnight.
+
+    '
   triggers:
   - trigger: time_pattern
     minutes: /2
@@ -5582,6 +5588,10 @@
     entity_id: input_boolean.bed_automation_enabled
     state:
     - 'on'
+  - condition: state
+    entity_id: binary_sensor.bed_sensor
+    state:
+    - 'on'
   actions:
   - variables:
       hugh_room_light_entities:
@@ -5590,22 +5600,9 @@
       any_hugh_room_light_on: "{{ expand(hugh_room_light_entities)\n  | selectattr('state',
         'eq', 'on')\n  | list\n  | count > 0 }}\n"
   - if:
-    - condition: state
-      entity_id: binary_sensor.bed_sensor
-      state:
-      - 'on'
     - condition: template
       value_template: '{{ any_hugh_room_light_on }}'
     then:
-    - variables:
-        any_hugh_room_light_on_after_delay: "{{ expand(hugh_room_light_entities)\n
-          \ | selectattr('state', 'eq', 'on')\n  | list\n  | count > 0 }}\n"
-    - condition: state
-      entity_id: binary_sensor.bed_sensor
-      state:
-      - 'on'
-    - condition: template
-      value_template: '{{ any_hugh_room_light_on_after_delay }}'
     - action: scene.turn_on
       target:
         entity_id:
@@ -5700,9 +5697,8 @@
         data:
           project: '{{ trigger.id }}'
     default:
-    - action: shell_command.jira_quarter
-      data: {}
-    - action: shell_command.write_refresh_time_all
+    - action: script.jira_quarter_update
+      metadata: {}
       data: {}
   mode: single
 - id: '1778701795657'
@@ -5854,9 +5850,14 @@
     entity_id: sensor.sun_elevation
     below: 15
   - trigger: state
-    entity_id: input_boolean.curtain_charge_started
-    to: 'on'
-    for: 02:00:00
+    entity_id:
+    - input_boolean.curtain_charge_started
+    to:
+    - 'on'
+    for:
+      hours: 4
+      minutes: 0
+      seconds: 0
   conditions:
   - condition: state
     entity_id: input_boolean.curtain_charge_started
@@ -5887,7 +5888,7 @@
     continue_on_error: true
     data:
       title: Grill Still On
-      message: Still on after 20 minutes. Tap to turn off, or it'll auto-off in 10
+      message: Still on after 10 minutes. Tap to turn off, or it'll auto-off in 10
         minutes.
       data:
         actions:
