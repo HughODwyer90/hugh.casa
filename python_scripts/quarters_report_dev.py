@@ -916,18 +916,43 @@ def _compute_per_sprint(sprints, all_issues, in_progress_statuses, proj,
     return per_sprint
 
 
-def fetch_worklogs_for_quarter(issues, qs_date, qe_date):
+def fetch_worklogs_for_quarter(issues, qs_date, qe_date, sprint_ranges=None, issue_sprint_ids_fn=None):
     """Fetch per-day worklog breakdowns for issues that have time logged.
     Returns {accountId: {name, days: {date_str: {issue_key: {s: seconds, t: summary}}}}}
-    Only hits the API for issues with timespent > 0 to minimise call count."""
+    Only hits the API for issues with timespent > 0 to minimise call count.
+
+    sprint_ranges/issue_sprint_ids_fn (optional): when given, an issue's worklog window
+    is the union of the actual start/end dates of the sprints (from this quarter's sprint
+    list) it belongs to, rather than the quarter's calendar boundary. This keeps worklogs
+    with the quarter a sprint is assigned to (via midpoint) even when that sprint runs past
+    the quarter's end date, instead of clipping them at the calendar boundary. Falls back
+    to the quarter's calendar dates for issues with no matching sprint."""
     headers  = _auth_header()
     logged   = [i for i in issues if (i["fields"].get("timespent") or 0) > 0]
     qs_str, qe_str = str(qs_date), str(qe_date)
     print(f"      Fetching worklogs for {len(logged)} issues "
           f"({len(issues) - len(logged)} skipped — no time logged)...")
+
+    def _issue_window(issue):
+        if not sprint_ranges or not issue_sprint_ids_fn:
+            return qs_str, qe_str
+        starts, ends = [], []
+        for sid in issue_sprint_ids_fn(issue):
+            rng = sprint_ranges.get(sid)
+            if not rng:
+                continue
+            s, e = rng
+            if s:
+                starts.append(s)
+            ends.append(e or str(date.today()))
+        if not starts:
+            return qs_str, qe_str
+        return min(starts), max(ends)
+
     def _fetch_issue_worklogs(issue):
         key     = issue["key"]
         summary = issue["fields"]["summary"][:80]
+        win_start, win_end = _issue_window(issue)
         entries = []
         try:
             start_at, worklogs = 0, []
@@ -946,7 +971,7 @@ def fetch_worklogs_for_quarter(issues, qs_date, qe_date):
             return entries
         for wl in worklogs:
             started = (wl.get("started") or "")[:10]
-            if not (qs_str <= started <= qe_str):
+            if not (win_start <= started <= win_end):
                 continue
             author = wl.get("author") or {}
             aid    = author.get("accountId", "")
@@ -1377,7 +1402,11 @@ def fetch_kpis(sprints, proj, ref=None, prev_sprint_id=None, prev_sprint_end=Non
     # Worklog data — only fetched when "fetch_worklogs": true in project config.
     # Adds one API call per issue that has timespent > 0.
     if proj.get("fetch_worklogs", False):
-        _result["worklog_by_person"] = fetch_worklogs_for_quarter(all_issues + excl_summ_issues, qs_date, qe_date)
+        _sprint_ranges = {str(s["id"]): (s.get("start_date"), s.get("end_date")) for s in sprints}
+        _result["worklog_by_person"] = fetch_worklogs_for_quarter(
+            all_issues + excl_summ_issues, qs_date, qe_date,
+            sprint_ranges=_sprint_ranges, issue_sprint_ids_fn=_issue_sprint_ids,
+        )
     else:
         _result["worklog_by_person"] = {}
     return _result
@@ -1777,7 +1806,7 @@ def ensure_dirs(proj):
     os.makedirs(DASHBOARD_OUTPUT_DIR, exist_ok=True)
 
 
-def save_quarter_data(kpis, notes, sprints, proj, notes_generated_at=None):
+def save_quarter_data(kpis, notes, sprints, proj, notes_generated_at=None, locked=False):
     key  = quarter_file_key(kpis["quarter"])
     path = os.path.join(proj["data_dir"], f"{key}.json")
     now  = datetime.now(timezone.utc).isoformat()
@@ -1788,6 +1817,7 @@ def save_quarter_data(kpis, notes, sprints, proj, notes_generated_at=None):
         "sprints":            sprints,
         "saved_at":           now,
         "notes_generated_at": notes_generated_at,
+        "locked":             locked,
     }
     with open(path, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2, default=str)
@@ -2067,9 +2097,33 @@ def _get_prev_sprint_id(proj, current_sprints):
     return best_id, (best_end or None)
 
 
-def _run_quarter(proj, ref=None, skip_notes=False):
+def _finalize_previous_quarter(proj, skip_notes=False):
+    """Called once the real current quarter is confirmed to have its own live sprint —
+    that means the immediately preceding calendar quarter is now definitively over (even
+    if its last sprint's dates ran past the calendar boundary). Give it one final notes
+    pass (to pick up any late worklogs/resolutions) and mark it locked so its notes are
+    never regenerated again."""
+    if skip_notes:
+        return  # data-only runs shouldn't trigger a Claude notes pass
+    prev_ref   = current_quarter_start() - timedelta(days=1)
+    prev_label = quarter_label(prev_ref)
+    path = os.path.join(proj["data_dir"], f"{quarter_file_key(prev_label)}.json")
+    if os.path.exists(path):
+        try:
+            if json.loads(open(path, encoding="utf-8").read()).get("locked"):
+                return  # already finalized
+        except Exception:
+            pass
+    print(f"\n  {prev_label} has ended — running final notes pass and locking...")
+    _run_quarter(proj, prev_ref, skip_notes=False, force_notes=True, lock_after=True)
+
+
+def _run_quarter(proj, ref=None, skip_notes=False, force_notes=False, lock_after=False):
     """Fetch, compute, and save data for one quarter of one project. ref=None = current quarter.
-    skip_notes=True reuses existing Claude notes without making any API calls."""
+    skip_notes=True reuses existing Claude notes without making any API calls.
+    force_notes=True bypasses the notes_refresh_hours throttle for this call only.
+    lock_after=True marks the saved quarter as locked once notes are generated, so it is
+    never regenerated on a future run (see _finalize_previous_quarter)."""
     global _ACTIVE_PROJECT_KEY, _ACTIVE_SP_FIELD
     _ACTIVE_PROJECT_KEY = proj["key"]
     _ACTIVE_SP_FIELD    = proj.get("story_points_field") or "customfield_10016"
@@ -2083,6 +2137,10 @@ def _run_quarter(proj, ref=None, skip_notes=False):
         print("      No sprints found — skipping.")
         return None
     sprints = classify_sprints(raw_sprints)
+    if ref is None:
+        # Confirms the real current quarter already has a live sprint of its own —
+        # the calendar quarter right before it can now be finalized and locked.
+        _finalize_previous_quarter(proj, skip_notes=skip_notes)
     for s in sprints:
         print(f"      {s['name']}  [{s['status_label']}]  {s['start_date']} → {s['end_date']}")
 
@@ -2109,10 +2167,18 @@ def _run_quarter(proj, ref=None, skip_notes=False):
         except Exception:
             pass
 
+    # A locked quarter's notes are frozen against routine/automatic runs, but an
+    # explicit force (--force-notes, or force_notes=True from a caller) still
+    # overrides it — that's the escape hatch for manually refreshing a past quarter.
+    # The quarter simply re-locks afterward (see the save at the end of this function).
+    quarter_already_locked = bool(existing_saved.get("locked"))
+    if quarter_already_locked and not FORCE_NOTES and not force_notes:
+        skip_notes = True
+
     # Per-project refresh interval: if notes were generated within the last
     # notes_refresh_hours hours, treat this run as data-only (skip_notes).
     _refresh_hours = proj.get("notes_refresh_hours")
-    if not skip_notes and not FORCE_NOTES and _refresh_hours and existing_saved.get("notes_generated_at"):
+    if not skip_notes and not FORCE_NOTES and not force_notes and _refresh_hours and existing_saved.get("notes_generated_at"):
         try:
             _last = datetime.fromisoformat(existing_saved["notes_generated_at"].replace("Z", "+00:00"))
             _age_h = (datetime.now(timezone.utc) - _last).total_seconds() / 3600
@@ -2133,7 +2199,7 @@ def _run_quarter(proj, ref=None, skip_notes=False):
         print("\n[3/4] Generating notes via Claude...")
         existing_notes = {}
         existing_kpis  = {}
-        if not FORCE_NOTES:
+        if not FORCE_NOTES and not force_notes:
             existing_notes = existing_saved.get("notes", {})
             existing_kpis  = existing_saved.get("kpis",  {})
         notes = generate_notes(kpis, sprints, existing_notes, existing_kpis,
@@ -2146,7 +2212,7 @@ def _run_quarter(proj, ref=None, skip_notes=False):
         print("      Generating sprint notes...")
         existing_per_sprint_notes = {}
         existing_per_sprint_kpis  = {}
-        if not FORCE_NOTES:
+        if not FORCE_NOTES and not force_notes:
             for sid, spd in existing_saved.get("kpis", {}).get("per_sprint", {}).items():
                 existing_per_sprint_notes[sid] = spd.get("notes", {})
                 existing_per_sprint_kpis[sid]  = spd
@@ -2168,7 +2234,11 @@ def _run_quarter(proj, ref=None, skip_notes=False):
         notes_generated_at = datetime.now(timezone.utc).isoformat()
 
     print("\n[4/4] Saving quarter data...")
-    save_quarter_data(kpis, notes, sprints, proj, notes_generated_at=notes_generated_at)
+    quarter_locked = lock_after or quarter_already_locked
+    save_quarter_data(kpis, notes, sprints, proj,
+                       notes_generated_at=notes_generated_at, locked=quarter_locked)
+    if lock_after and not quarter_already_locked:
+        print(f"      {kpis['quarter']} locked — notes will not be regenerated again.")
 
     all_quarters = load_all_quarters(proj)
     _enrich_past_quarters_with_carryovers(kpis, all_quarters, proj)
