@@ -729,44 +729,6 @@
     data:
       value: 1200
   mode: restart
-- id: '1705067814749'
-  alias: Hugh Room Fan Bed Indicator
-  description: Updates the indicator state based on the power state of the switch
-  trigger:
-  - trigger: state
-    entity_id:
-    - switch.hugh_room_plug_fan_bed
-    from: 'off'
-    to: 'on'
-  - trigger: state
-    entity_id:
-    - switch.hugh_room_plug_fan_bed
-    from: 'on'
-    to: 'off'
-  condition: []
-  action:
-  - choose:
-    - conditions:
-      - condition: state
-        state: 'on'
-        entity_id: switch.hugh_room_plug_fan_bed
-      sequence:
-      - action: select.select_option
-        data:
-          option: 'on'
-        target:
-          entity_id: select.hugh_room_plug_fan_bed_indicator_mode
-    - conditions:
-      - condition: state
-        state: 'off'
-        entity_id: switch.hugh_room_plug_fan_bed
-      sequence:
-      - action: select.select_option
-        data:
-          option: 'off'
-        target:
-          entity_id: select.hugh_room_plug_fan_bed_indicator_mode
-  mode: single
 - id: '1705114895538'
   alias: Hugh Room Bed Button Hold
   description: ''
