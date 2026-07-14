@@ -142,14 +142,19 @@ def _is_team_member(team_map, account_id, quarter_start_str, quarter_end_str=Non
 def _load_projects(filename="team_projects.json"):
     """Load project configuration from a JSON file beside this script.
     Each entry needs: key, display, board_id, team_file, reports_dir.
-    Optional: notes_context (injected into Claude prompts for project-specific guidance)."""
+    Optional: notes_context (injected into Claude prompts for project-specific guidance).
+    Optional: "enabled": false to skip a project without deleting its config entry."""
     p = pathlib.Path(__file__).with_name(filename)
     if not p.exists():
         raise FileNotFoundError(
             f"Project config not found: {p}\n"
             f"Create {filename} beside this script — see team_projects.json for the format."
         )
-    return json.loads(p.read_text(encoding="utf-8"))
+    all_projects = json.loads(p.read_text(encoding="utf-8"))
+    disabled = [p["key"] for p in all_projects if p.get("enabled", True) is False]
+    if disabled:
+        print(f"  Projects disabled via \"enabled\": false — skipping: {', '.join(disabled)}")
+    return [p for p in all_projects if p.get("enabled", True) is not False]
 
 PROJECTS = _load_projects("team_projects_test.json" if PREVIEW_MODE else "team_projects.json")
 
@@ -1416,11 +1421,9 @@ def fetch_kpis(sprints, proj, ref=None, prev_sprint_id=None, prev_sprint_end=Non
 # Claude — generate narrative notes
 # ---------------------------------------------------------------------------
 
-def generate_notes(kpis, sprints, existing_notes=None, existing_kpis=None, proj_context="", project_key=""):
-    existing_notes = existing_notes or {}
-    existing_kpis  = existing_kpis  or {}
-    use_sp  = kpis.get("use_story_points", False)
-    use_oos = kpis.get("use_oos", True)
+def _note_dependency_map(use_sp, use_oos):
+    """Which KPI fields drive each quarter-level note key. Shared by generate_notes()
+    and the --diagnose inspector so both use identical change-detection logic."""
     all_keys = [
         "total","completed","completion_rate","releases_shipped",
         *( ["oos_total","oos_open"] if use_oos else [] ),
@@ -1430,8 +1433,7 @@ def generate_notes(kpis, sprints, existing_notes=None, existing_kpis=None, proj_
         all_keys += ["sp_velocity", "no_estimate"]  # no_estimate = no story points
     else:
         all_keys += ["time_logged", "estimate_accuracy", "no_estimate"]
-    # Which KPI fields drive each note — if none changed, keep the existing note
-    _note_deps = {
+    note_deps = {
         "total":             ["total"],
         "completed":         ["completed"],
         "completion_rate":   ["completion_rate"],
@@ -1448,14 +1450,43 @@ def generate_notes(kpis, sprints, existing_notes=None, existing_kpis=None, proj_
         "cycle_time":        ["avg_cycle_days", "med_cycle_days"],
         "assignee_workload": ["assignee_stats"],
     }
-    def _kpi_changed(key):
-        if not existing_notes.get(key, "").strip():
-            return True  # no existing note — must generate
-        if not existing_kpis:
-            return True  # no previous data to compare against
-        return any(kpis.get(f) != existing_kpis.get(f) for f in _note_deps.get(key, []))
+    return all_keys, note_deps
 
-    missing_keys = [k for k in all_keys if _kpi_changed(k)]
+
+def _notes_change_report(kpis, existing_notes, existing_kpis):
+    """Per-key breakdown of whether a quarter-level note would regenerate, and why.
+    Used by generate_notes() and the --diagnose inspector so both stay in sync."""
+    existing_notes = existing_notes or {}
+    existing_kpis  = existing_kpis  or {}
+    use_sp  = kpis.get("use_story_points", False)
+    use_oos = kpis.get("use_oos", True)
+    all_keys, note_deps = _note_dependency_map(use_sp, use_oos)
+    report = []
+    for key in all_keys:
+        if not existing_notes.get(key, "").strip():
+            report.append({"key": key, "changed": True, "reason": "no existing note"})
+            continue
+        if not existing_kpis:
+            report.append({"key": key, "changed": True, "reason": "no previous KPI snapshot"})
+            continue
+        diffs = [f for f in note_deps.get(key, []) if kpis.get(f) != existing_kpis.get(f)]
+        if diffs:
+            detail = ", ".join(f"{f}: {existing_kpis.get(f)!r} -> {kpis.get(f)!r}" for f in diffs)
+            report.append({"key": key, "changed": True, "reason": detail})
+        else:
+            report.append({"key": key, "changed": False, "reason": "unchanged"})
+    return report
+
+
+def generate_notes(kpis, sprints, existing_notes=None, existing_kpis=None, proj_context="", project_key=""):
+    existing_notes = existing_notes or {}
+    existing_kpis  = existing_kpis  or {}
+    use_sp  = kpis.get("use_story_points", False)
+    use_oos = kpis.get("use_oos", True)
+    all_keys, _note_deps = _note_dependency_map(use_sp, use_oos)
+
+    report = _notes_change_report(kpis, existing_notes, existing_kpis)
+    missing_keys = [r["key"] for r in report if r["changed"]]
     if not missing_keys:
         print("      KPI values unchanged — skipping API call, reusing existing notes.")
         return existing_notes
@@ -1665,6 +1696,23 @@ _SPRINT_NOTE_DEPS = [
     "med_cycle_days", "avg_cycle_days", "releases_shipped",
 ]
 
+
+def _sprint_notes_change_report(sprint_state, sp_kpis, existing_notes, existing_sp_kpis):
+    """Whether a single sprint's notes would regenerate, and why. Used by
+    generate_sprint_notes() and the --diagnose inspector so both stay in sync."""
+    existing_notes   = existing_notes   or {}
+    existing_sp_kpis = existing_sp_kpis or {}
+    if sprint_state.lower() == "closed" and existing_notes:
+        return {"changed": False, "reason": "closed sprint — notes locked permanently"}
+    if not existing_notes:
+        return {"changed": True, "reason": "no existing note"}
+    diffs = [f for f in _SPRINT_NOTE_DEPS if sp_kpis.get(f) != existing_sp_kpis.get(f)]
+    if diffs:
+        detail = ", ".join(f"{f}: {existing_sp_kpis.get(f)!r} -> {sp_kpis.get(f)!r}" for f in diffs)
+        return {"changed": True, "reason": detail}
+    return {"changed": False, "reason": "unchanged"}
+
+
 def generate_sprint_notes(sprint_name, sprint_state, sp_kpis, existing_notes=None,
                           existing_sp_kpis=None, proj_context="", use_oos=True, project_key=""):
     """Generate AI narrative notes for a single sprint.
@@ -1673,12 +1721,8 @@ def generate_sprint_notes(sprint_name, sprint_state, sp_kpis, existing_notes=Non
     existing_notes    = existing_notes    or {}
     existing_sp_kpis  = existing_sp_kpis  or {}
 
-    # Lock once closed and notes exist
-    if sprint_state.lower() == "closed" and existing_notes:
-        return existing_notes
-
-    # Skip if notes exist and none of the input fields changed
-    if existing_notes and all(sp_kpis.get(f) == existing_sp_kpis.get(f) for f in _SPRINT_NOTE_DEPS):
+    _rep = _sprint_notes_change_report(sprint_state, sp_kpis, existing_notes, existing_sp_kpis)
+    if not _rep["changed"]:
         return existing_notes
 
     note_keys = ["completion_rate", *( ["oos_total"] if use_oos else [] ),
@@ -1988,16 +2032,17 @@ def generate_html_dashboard(all_projects_data):
         if src.exists():
             shutil.copy2(src, _assets_dir / asset)
 
-    # Always write the live page so data stays current for users
-    live_path = _out_dir / DASHBOARD_FILENAME
-    live_path.write_text(_render_html(all_projects_data, preview=False), encoding="utf-8")
-
-    # Also write the preview page when PREVIEW_MODE is on
+    # PREVIEW_MODE (dev): write ONLY the preview page — the live page must stay
+    # untouched, since the dev project config (team_projects_test.json) can be a
+    # subset of the real project list and would otherwise clobber live data.
     if PREVIEW_MODE:
         preview_path = _out_dir / DASHBOARD_PREVIEW_FILE
         preview_path.write_text(_render_html(all_projects_data, preview=True), encoding="utf-8")
         return str(preview_path)
 
+    # Live mode: write the real dashboard.
+    live_path = _out_dir / DASHBOARD_FILENAME
+    live_path.write_text(_render_html(all_projects_data, preview=False), encoding="utf-8")
     return str(live_path)
 
 
@@ -2095,6 +2140,73 @@ def _get_prev_sprint_id(proj, current_sprints):
         except Exception:
             pass
     return best_id, (best_end or None)
+
+
+def _diagnose_quarter(proj, ref=None):
+    """Read-only inspector for the notes pipeline. Fetches live sprints/KPIs from Jira
+    (needed for a real comparison) but never calls Claude and never writes/renders
+    anything, so it's safe to re-run repeatedly while troubleshooting stale notes.
+    Prints locked/throttle status plus a per-key old-value -> new-value diff showing
+    exactly which quarter- and sprint-level notes would regenerate on a real run."""
+    global _ACTIVE_PROJECT_KEY, _ACTIVE_SP_FIELD
+    _ACTIVE_PROJECT_KEY = proj["key"]
+    _ACTIVE_SP_FIELD    = proj.get("story_points_field") or "customfield_10016"
+
+    print(f"\n{'='*60}\nDIAGNOSE: {proj['display']} / {quarter_label(ref)}\n{'='*60}")
+    raw_sprints = fetch_sprints_in_quarter(proj, ref)
+    if not raw_sprints:
+        print("  No sprints found for this quarter — nothing to diagnose.")
+        return
+    sprints = classify_sprints(raw_sprints)
+    prev_sprint_id, prev_sprint_end = _get_prev_sprint_id(proj, sprints)
+    kpis = fetch_kpis(sprints, proj, ref, prev_sprint_id=prev_sprint_id, prev_sprint_end=prev_sprint_end)
+
+    existing_json_path = os.path.join(proj["data_dir"], f"{quarter_file_key(kpis['quarter'])}.json")
+    existing_saved = {}
+    if os.path.exists(existing_json_path):
+        try:
+            existing_saved = json.loads(open(existing_json_path, encoding="utf-8").read())
+        except Exception as exc:
+            print(f"  WARNING: could not read {existing_json_path}: {exc}")
+
+    locked = bool(existing_saved.get("locked"))
+    print(f"  locked: {locked}")
+    gen_at = existing_saved.get("notes_generated_at")
+    refresh_hours = proj.get("notes_refresh_hours")
+    if gen_at:
+        try:
+            last  = datetime.fromisoformat(gen_at.replace("Z", "+00:00"))
+            age_h = (datetime.now(timezone.utc) - last).total_seconds() / 3600
+            print(f"  notes_generated_at: {gen_at}  ({age_h:.1f}h ago)")
+            if refresh_hours:
+                if age_h < refresh_hours:
+                    print(f"  notes_refresh_hours: {refresh_hours}  -> THROTTLED — "
+                          f"{refresh_hours - age_h:.1f}h remaining before an unforced run would even attempt notes")
+                else:
+                    print(f"  notes_refresh_hours: {refresh_hours}  -> expired, an unforced run WOULD attempt notes")
+        except Exception as exc:
+            print(f"  notes_generated_at: {gen_at}  (unparsable: {exc})")
+    else:
+        print("  notes_generated_at: none on record")
+
+    if locked:
+        print("  -> Quarter is LOCKED. An unforced run will skip notes entirely regardless of the above.")
+
+    existing_notes = existing_saved.get("notes", {})
+    existing_kpis  = existing_saved.get("kpis", {})
+    print("\n  Quarter-level notes:")
+    for r in _notes_change_report(kpis, existing_notes, existing_kpis):
+        flag = "CHANGED  " if r["changed"] else "unchanged"
+        print(f"    {r['key']:<20} {flag}  {r['reason']}")
+
+    print("\n  Sprint-level notes:")
+    existing_per_sprint = existing_kpis.get("per_sprint", {})
+    for sid, spd in kpis["per_sprint"].items():
+        prev       = existing_per_sprint.get(sid, {})
+        prev_notes = prev.get("notes", {})
+        rep = _sprint_notes_change_report(spd["sprint_state"], spd, prev_notes, prev)
+        flag = "CHANGED  " if rep["changed"] else "unchanged"
+        print(f"    {spd['sprint_name']:<20} [{spd['sprint_state']:<8}] {flag}  {rep['reason']}")
 
 
 def _finalize_previous_quarter(proj, skip_notes=False):
@@ -2261,6 +2373,12 @@ def main():
         "--project", metavar="KEY",
         help="Run for a single project only (e.g. --project dlk). Other projects load from saved data."
     )
+    parser.add_argument(
+        "--diagnose", action="store_true",
+        help="Read-only: fetch live Jira data and print why quarter/sprint notes would or "
+             "wouldn't regenerate (locked/throttle/KPI-diff status) — no Claude calls, no "
+             "writes, no dashboard render. Combine with --project to target one project."
+    )
     args = parser.parse_args()
     skip_notes   = args.data_only
     force_notes  = args.force_notes
@@ -2270,6 +2388,18 @@ def main():
     global FORCE_NOTES
     if force_notes:
         FORCE_NOTES = True
+
+    if args.diagnose:
+        targets = [p for p in PROJECTS if not only_project or p["key"] == only_project]
+        if not targets:
+            print(f"No project matches --project {only_project!r}")
+            return
+        for proj in targets:
+            try:
+                _diagnose_quarter(proj, None)
+            except Exception as exc:
+                print(f"  DIAGNOSE FAILED for {proj['display']}: {exc}")
+        return
 
     print("=== Quarter Dashboard — Multi-Project ===")
     if only_project:
@@ -2349,10 +2479,11 @@ def main():
     if DASHBOARD_BASE_URL:
         live_url    = DASHBOARD_BASE_URL.rstrip("/") + "/" + DASHBOARD_FILENAME
         preview_url = DASHBOARD_BASE_URL.rstrip("/") + "/" + DASHBOARD_PREVIEW_FILE
-        print(f"\nDone. Live: {live_url}")
         if PREVIEW_MODE:
-            print(f"      Preview: {preview_url}")
-            print(f"      Both files updated — live page data is current.")
+            print(f"\nDone. Preview: {preview_url}")
+            print(f"      Live page NOT touched (PREVIEW_MODE=True): {live_url}")
+        else:
+            print(f"\nDone. Live: {live_url}")
     else:
         print(f"\nDone. Output: {path}")
 
