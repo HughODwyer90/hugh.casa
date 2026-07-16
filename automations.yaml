@@ -5928,3 +5928,20 @@
     target:
       entity_id: switch.master_blind_plug
   mode: single
+- id: '1784213709978'
+  alias: 'Hugh Room Desk Fan toggle '
+  description: ''
+  triggers:
+  - domain: mqtt
+    device_id: 105dad18f2a2a0ceab0b94b61060ee0d
+    type: action
+    subtype: down_hold
+    trigger: device
+  conditions: []
+  actions:
+  - action: switch.toggle
+    metadata: {}
+    target:
+      entity_id: switch.hugh_room_plug_fan_desk
+    data: {}
+  mode: single
