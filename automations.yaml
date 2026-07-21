@@ -5916,3 +5916,28 @@
       entity_id: switch.hugh_room_plug_fan_desk
     data: {}
   mode: single
+- id: '1784678319601'
+  alias: Send Renault connected services renewal email
+  triggers:
+  - at: 09:00:00
+    trigger: time
+  conditions:
+  - condition: template
+    value_template: '{{ now().strftime(''%m-%d'') == ''07-22'' }}'
+  actions:
+  - data:
+      title: Renault Connected Services
+      message: 'Hi,
+
+        My connected services is set to expire today, July 22nd. I''m just wondering
+        is it possible to renew them (specifically the option to be able to check
+        my remaining fuel, odometer, location, etc, from my phone)? I think it''s
+        the "Pack Smart Navigation".
+
+        My VIN is VF1RJA00465445426.
+
+        Thanks, Hugh O''Dwyer
+
+        '
+      target: hughodwyer90@gmail.com
+    action: notify.hugh_email
