@@ -1999,24 +1999,27 @@
     action: input_number.set_value
 - id: '1723126078057'
   alias: Renew Car Data Notification
-  description: Sends a notification to renew car data on the day it expires.
+  description: Sends a daily reminder with options to email Cedar Motors or mark as
+    renewed.
   triggers:
   - at: 00:10:00
     trigger: time
   conditions:
   - condition: template
-    value_template: '{{ now().date() == (states(''input_datetime.car_data_expiration'')
+    value_template: '{{ now().date() >= (states(''input_datetime.car_data_expiration'')
       | as_datetime).date() }}
 
       '
   actions:
-  - data:
+  - action: notify.notifications
+    data:
       message: Today is the day to renew your car data.
       data:
         actions:
+        - action: SEND_RENEWAL_EMAIL
+          title: Send Email
         - action: RENEWED_CAR
           title: Renewed
-    action: notify.notifications
   mode: single
 - id: '1724788680813'
   alias: IR Typhoon Blinds Control
@@ -5917,27 +5920,28 @@
     data: {}
   mode: single
 - id: '1784678319601'
-  alias: Send Renault connected services renewal email
+  alias: Send Car Data Renewal Email
+  description: Sends a query email to Cedar Motors about renewal.
   triggers:
-  - at: 09:00:00
-    trigger: time
-  conditions:
-  - condition: template
-    value_template: '{{ now().strftime(''%m-%d'') == ''07-22'' }}'
+  - event_type: mobile_app_notification_action
+    event_data:
+      action: SEND_RENEWAL_EMAIL
+    trigger: event
+  conditions: []
   actions:
-  - data:
+  - action: notify.hugh_email
+    data:
       title: Renault Connected Services
       message: 'Hi,
 
-        My connected services is set to expire today, July 22nd. I''m just wondering
-        is it possible to renew them (specifically the option to be able to check
-        my remaining fuel, odometer, location, etc, from my phone)? I think it''s
-        the "Pack Smart Navigation".
+        My connected services is set to expire today. I''m just wondering is it possible
+        to renew them (specifically the option to be able to check my remaining fuel,
+        odometer, location, etc, from my phone)? I think it''s the "Pack Smart Navigation".
 
         My VIN is VF1RJA00465445426.
 
         Thanks, Hugh O''Dwyer
 
         '
-      target: hughodwyer90@gmail.com
-    action: notify.hugh_email
+      target: customer.care@cedarmotors.ie
+  mode: single
