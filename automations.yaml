@@ -3401,10 +3401,9 @@
   mode: single
 - id: '1762130255049'
   alias: Hugh Room Purifier Unified Logic
-  description: 'Adjusts purifier speed based on air quality sensors, occupancy, and
-    time. Runs high when air quality is moderate or worse and room is unoccupied.
-    Pre-bed boost at 21:00 for 30 minutes if unoccupied. In bed at night, purifier
-    is always off.
+  description: 'Adjusts purifier speed based on occupancy and time. Runs high on pre-bed
+    boost at 21:00 for 30 minutes if unoccupied. In bed at night, purifier is always
+    off.
 
     '
   triggers:
@@ -3443,9 +3442,6 @@
   - trigger: time
     at: '21:00:00'
     id: pre_bed_boost
-  - trigger: state
-    entity_id: sensor.air_purifier_air_quality
-    id: air_quality_change
   conditions: []
   actions:
   - choose:
@@ -3495,30 +3491,6 @@
       - action: script.set_purifier_speed
         data:
           level: low
-    - conditions:
-      - condition: state
-        entity_id: input_boolean.hugh_room_occupied
-        state: 'off'
-      - condition: state
-        entity_id: binary_sensor.pc_status
-        state: 'off'
-      - condition: state
-        entity_id: binary_sensor.master_bedroom_tv_state
-        state: 'off'
-      - condition: not
-        conditions:
-        - condition: state
-          entity_id: media_player.master_bedroom_display_g
-          state: playing
-      - condition: state
-        entity_id: sensor.air_purifier_air_quality
-        state:
-        - moderate
-        - poor
-      sequence:
-      - action: script.set_purifier_speed
-        data:
-          level: high
   - action: script.set_purifier_speed
     data:
       level: low
