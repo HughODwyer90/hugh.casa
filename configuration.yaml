@@ -60,15 +60,6 @@ homeassistant:
     - "/config/text_files"
     - "/media/"
 
-http:
-  use_x_forwarded_for: true
-  trusted_proxies:
-    - 172.30.33.0/24
-    - 127.0.0.1
-    - 192.168.0.0/16
-  ip_ban_enabled: true
-  login_attempts_threshold: 5
-
 media_player:
   - platform: universal
     name: universal_player
@@ -84,4 +75,3 @@ yahoofinance:
   symbols:
     - VWCE.DE
   scan_interval: 600
-
