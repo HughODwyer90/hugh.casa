@@ -387,13 +387,13 @@ def fetch_next_sprint(proj):
     preferred  = next((b for b in boards if str(b["id"]) == str(proj["board_id"])), boards[0])
     board_id   = preferred["id"]
 
-    # Fetch future sprints
+    # Fetch future sprints. Deliberately NOT wrapped in a try/except here — a transient
+    # failure (rate limit, timeout, network blip) must not be silently mistaken for a
+    # genuinely empty "no future sprint" result. Let it propagate; the caller in main()
+    # already reports real failures distinctly ("Next sprint fetch failed: ...").
     params = urllib.parse.urlencode({"state": "future", "startAt": 0, "maxResults": 50})
     url    = f"{JIRA_BASE_URL}/rest/agile/1.0/board/{board_id}/sprint?{params}"
-    try:
-        data = http_get(url, headers)
-    except Exception:
-        return None
+    data   = http_get(url, headers)
     future = data.get("values", [])
     if not future:
         return None
@@ -423,7 +423,11 @@ def fetch_next_sprint(proj):
               f"timespent,timeoriginalestimate,{sp_field}")
     try:
         issues = jira_search(jql, fields=fields)
-    except Exception:
+    except Exception as exc:
+        # Degrade to an empty issue list rather than failing the whole next-sprint
+        # lookup, but print it — silently swallowing this would make a real fetch
+        # failure indistinguishable from "sprint genuinely has no issues yet."
+        print(f"      WARNING: next-sprint issue fetch failed for {sname} ({exc}) — showing 0 issues.")
         issues = []
 
     # Build per-assignee capacity
@@ -1478,7 +1482,15 @@ def _notes_change_report(kpis, existing_notes, existing_kpis):
     return report
 
 
-def generate_notes(kpis, sprints, existing_notes=None, existing_kpis=None, proj_context="", project_key=""):
+def generate_notes(kpis, sprints, existing_notes=None, existing_kpis=None, proj_context="",
+                   project_key="", pending_keys=None):
+    """Returns (notes_dict, unresolved_keys). unresolved_keys are keys that still need a
+    real Claude write attempt on the NEXT run — either because this call never got a
+    chance to attempt them, or because the attempt failed. Callers must persist
+    unresolved_keys and pass it back in as `pending_keys` next time: otherwise a single
+    transient API failure on the one day a KPI value changes permanently freezes that
+    note's text, since afterwards the saved KPI snapshot already reflects the new value
+    and the diff-based check never sees a difference again."""
     existing_notes = existing_notes or {}
     existing_kpis  = existing_kpis  or {}
     use_sp  = kpis.get("use_story_points", False)
@@ -1487,9 +1499,14 @@ def generate_notes(kpis, sprints, existing_notes=None, existing_kpis=None, proj_
 
     report = _notes_change_report(kpis, existing_notes, existing_kpis)
     missing_keys = [r["key"] for r in report if r["changed"]]
+    # Force-retry any keys that failed (or were never attempted) last time, even if the
+    # KPI diff alone would say "unchanged" now.
+    for k in (pending_keys or []):
+        if k in all_keys and k not in missing_keys:
+            missing_keys.append(k)
     if not missing_keys:
         print("      KPI values unchanged — skipping API call, reusing existing notes.")
-        return existing_notes
+        return existing_notes, []
 
     print(f"      Generating notes for {len(missing_keys)} key(s): {', '.join(missing_keys)}")
     current_sprint = next(
@@ -1511,7 +1528,7 @@ def generate_notes(kpis, sprints, existing_notes=None, existing_kpis=None, proj_
 
     if TESTING_MODE:
         print("      TESTING MODE — skipping Claude API call, preserving existing notes.")
-        return {**{k: "[test]" for k in all_keys}, **existing_notes}
+        return {**{k: "[test]" for k in all_keys}, **existing_notes}, []
 
     _all_guidance = {
         "total": (
@@ -1674,7 +1691,11 @@ KPI data:
             text = "\n".join(text.split("\n")[1:])
             text = text.rsplit("```", 1)[0]
         new_notes = json.loads(text.strip())
-        return {**existing_notes, **new_notes}
+        merged     = {**existing_notes, **new_notes}
+        unresolved = [k for k in missing_keys if k not in new_notes]
+        if unresolved:
+            print(f"      WARNING: Claude response missing key(s), will retry next run: {', '.join(unresolved)}")
+        return merged, unresolved
     except urllib.error.HTTPError as exc:
         body = ""
         try:
@@ -1685,10 +1706,12 @@ KPI data:
             detail = body[:300] if body else str(exc)
         print(f"      WARNING: Claude API error {exc.code} — {detail}")
         print(f"      Model in use: {ANTHROPIC_QUARTER_MODEL} — update ANTHROPIC_QUARTER_MODEL at top of script if retired.")
-        return existing_notes
+        print(f"      Will retry {len(missing_keys)} key(s) next run: {', '.join(missing_keys)}")
+        return existing_notes, missing_keys
     except Exception as exc:
         print(f"      WARNING: AI notes unavailable ({exc}) — continuing without notes.")
-        return existing_notes
+        print(f"      Will retry {len(missing_keys)} key(s) next run: {', '.join(missing_keys)}")
+        return existing_notes, missing_keys
 _SPRINT_NOTE_DEPS = [
     "total", "completed", "completion_rate",
     "bugs", "stories", "tasks", "bug_pct",
@@ -1702,6 +1725,11 @@ def _sprint_notes_change_report(sprint_state, sp_kpis, existing_notes, existing_
     generate_sprint_notes() and the --diagnose inspector so both stay in sync."""
     existing_notes   = existing_notes   or {}
     existing_sp_kpis = existing_sp_kpis or {}
+    # A previous attempt failed (API error) — retry regardless of KPI diff or closed-lock,
+    # otherwise a single transient failure freezes stale text permanently once the sprint
+    # closes and its KPI values stop moving.
+    if existing_sp_kpis.get("notes_failed"):
+        return {"changed": True, "reason": "retrying after a previous failed attempt"}
     if sprint_state.lower() == "closed" and existing_notes:
         return {"changed": False, "reason": "closed sprint — notes locked permanently"}
     if not existing_notes:
@@ -1715,21 +1743,22 @@ def _sprint_notes_change_report(sprint_state, sp_kpis, existing_notes, existing_
 
 def generate_sprint_notes(sprint_name, sprint_state, sp_kpis, existing_notes=None,
                           existing_sp_kpis=None, proj_context="", use_oos=True, project_key=""):
-    """Generate AI narrative notes for a single sprint.
-    Closed sprints with existing notes are locked permanently.
+    """Generate AI narrative notes for a single sprint. Returns (notes_dict, failed_bool).
+    Closed sprints with existing notes are locked permanently — unless the previous
+    attempt failed, in which case it gets retried once more before locking.
     Active sprints are only regenerated when the underlying KPI values change."""
     existing_notes    = existing_notes    or {}
     existing_sp_kpis  = existing_sp_kpis  or {}
 
     _rep = _sprint_notes_change_report(sprint_state, sp_kpis, existing_notes, existing_sp_kpis)
     if not _rep["changed"]:
-        return existing_notes
+        return existing_notes, False
 
     note_keys = ["completion_rate", *( ["oos_total"] if use_oos else [] ),
                  "rollover", "cycle_time", "type_split"]
 
     if TESTING_MODE:
-        return {**{k: "[test]" for k in note_keys}, **existing_notes}
+        return {**{k: "[test]" for k in note_keys}, **existing_notes}, False
 
     system_text = """\
 You are a technical product owner writing concise notes for a Jira sprint review card on a management dashboard.
@@ -1785,10 +1814,10 @@ Releases: {sp_kpis.get("releases_shipped",0)}"""
         text = result["content"][0]["text"].strip()
         if text.startswith("```"):
             text = "\n".join(text.split("\n")[1:]).rsplit("```", 1)[0]
-        return json.loads(text.strip())
+        return json.loads(text.strip()), False
     except Exception as exc:
-        print(f"      WARNING: sprint notes failed for {sprint_name} ({exc})")
-        return existing_notes
+        print(f"      WARNING: sprint notes failed for {sprint_name} ({exc}) — will retry next run")
+        return existing_notes, True
 
 
 # ---------------------------------------------------------------------------
@@ -1850,7 +1879,8 @@ def ensure_dirs(proj):
     os.makedirs(DASHBOARD_OUTPUT_DIR, exist_ok=True)
 
 
-def save_quarter_data(kpis, notes, sprints, proj, notes_generated_at=None, locked=False):
+def save_quarter_data(kpis, notes, sprints, proj, notes_generated_at=None, locked=False,
+                      pending_note_keys=None):
     key  = quarter_file_key(kpis["quarter"])
     path = os.path.join(proj["data_dir"], f"{key}.json")
     now  = datetime.now(timezone.utc).isoformat()
@@ -1862,6 +1892,10 @@ def save_quarter_data(kpis, notes, sprints, proj, notes_generated_at=None, locke
         "saved_at":           now,
         "notes_generated_at": notes_generated_at,
         "locked":             locked,
+        # Quarter-level note keys whose last Claude call failed — forced into next
+        # run's missing_keys regardless of KPI diff, so a transient failure doesn't
+        # permanently freeze stale text once the underlying KPI value stops moving.
+        "pending_note_keys":  pending_note_keys or [],
     }
     with open(path, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2, default=str)
@@ -2192,12 +2226,18 @@ def _diagnose_quarter(proj, ref=None):
     if locked:
         print("  -> Quarter is LOCKED. An unforced run will skip notes entirely regardless of the above.")
 
+    pending = existing_saved.get("pending_note_keys", [])
+    if pending:
+        print(f"  pending_note_keys (failed last attempt, forced to retry): {', '.join(pending)}")
+
     existing_notes = existing_saved.get("notes", {})
     existing_kpis  = existing_saved.get("kpis", {})
     print("\n  Quarter-level notes:")
     for r in _notes_change_report(kpis, existing_notes, existing_kpis):
-        flag = "CHANGED  " if r["changed"] else "unchanged"
-        print(f"    {r['key']:<20} {flag}  {r['reason']}")
+        forced = (not r["changed"]) and r["key"] in pending
+        flag = "CHANGED  " if (r["changed"] or forced) else "unchanged"
+        reason = r["reason"] if not forced else f"unchanged by KPI diff, but forced retry — {r['reason']}"
+        print(f"    {r['key']:<20} {flag}  {reason}")
 
     print("\n  Sprint-level notes:")
     existing_per_sprint = existing_kpis.get("per_sprint", {})
@@ -2304,21 +2344,28 @@ def _run_quarter(proj, ref=None, skip_notes=False, force_notes=False, lock_after
         print("\n[3/4] Skipping Claude notes (data-only run) — reusing saved notes...")
         notes = existing_saved.get("notes", {})
         notes_generated_at = existing_saved.get("notes_generated_at")
+        pending_note_keys  = existing_saved.get("pending_note_keys", [])
         for sid, spd in kpis["per_sprint"].items():
-            spd["notes"] = existing_saved.get("kpis", {}).get("per_sprint", {}).get(sid, {}).get("notes", {})
+            _prev_spd = existing_saved.get("kpis", {}).get("per_sprint", {}).get(sid, {})
+            spd["notes"]        = _prev_spd.get("notes", {})
+            spd["notes_failed"] = _prev_spd.get("notes_failed", False)
         print(f"      Reused notes for {len(notes)} quarter key(s); sprint notes carried forward.")
     else:
         print("\n[3/4] Generating notes via Claude...")
-        existing_notes = {}
-        existing_kpis  = {}
+        existing_notes      = {}
+        existing_kpis       = {}
+        existing_pending    = []
         if not FORCE_NOTES and not force_notes:
-            existing_notes = existing_saved.get("notes", {})
-            existing_kpis  = existing_saved.get("kpis",  {})
-        notes = generate_notes(kpis, sprints, existing_notes, existing_kpis,
+            existing_notes   = existing_saved.get("notes", {})
+            existing_kpis    = existing_saved.get("kpis",  {})
+            existing_pending = existing_saved.get("pending_note_keys", [])
+        notes, pending_note_keys = generate_notes(kpis, sprints, existing_notes, existing_kpis,
                                proj_context=proj.get("notes_context", ""),
-                               project_key=proj["key"])
+                               project_key=proj["key"], pending_keys=existing_pending)
         quarter_notes_generated = (notes != existing_notes)
         print(f"      Notes populated: {', '.join(notes.keys()) if notes else 'none (skipped)'}")
+        if pending_note_keys:
+            print(f"      Quarter key(s) still pending retry next run: {', '.join(pending_note_keys)}")
 
         # Sprint notes — only regenerated when KPI values change; closed sprints locked permanently
         print("      Generating sprint notes...")
@@ -2332,23 +2379,27 @@ def _run_quarter(proj, ref=None, skip_notes=False, force_notes=False, lock_after
         for sid, spd in kpis["per_sprint"].items():
             prev_notes = existing_per_sprint_notes.get(sid, {})
             prev_kpis  = existing_per_sprint_kpis.get(sid, {})
-            new_notes  = generate_sprint_notes(spd["sprint_name"], spd["sprint_state"], spd,
+            new_notes, sprint_failed = generate_sprint_notes(
+                                               spd["sprint_name"], spd["sprint_state"], spd,
                                                prev_notes, prev_kpis,
                                                proj_context=proj.get("notes_context", ""),
                                                use_oos=proj.get("use_oos", True),
                                                project_key=proj["key"])
-            spd["notes"] = new_notes
-            locked    = spd["sprint_state"].lower() == "closed" and bool(prev_notes)
-            unchanged = (not locked) and (new_notes is prev_notes or new_notes == prev_notes)
+            spd["notes"]        = new_notes
+            spd["notes_failed"] = sprint_failed
+            locked    = (not sprint_failed) and spd["sprint_state"].lower() == "closed" and bool(prev_notes)
+            unchanged = (not locked) and (not sprint_failed) and (new_notes is prev_notes or new_notes == prev_notes)
             if not locked and not unchanged:
                 any_sprint_generated = True
-            print(f"        {spd['sprint_name']}: {'locked' if locked else ('unchanged' if unchanged else 'generated')}")
+            status = "failed — will retry" if sprint_failed else ("locked" if locked else ("unchanged" if unchanged else "generated"))
+            print(f"        {spd['sprint_name']}: {status}")
         notes_generated_at = datetime.now(timezone.utc).isoformat()
 
     print("\n[4/4] Saving quarter data...")
     quarter_locked = lock_after or quarter_already_locked
     save_quarter_data(kpis, notes, sprints, proj,
-                       notes_generated_at=notes_generated_at, locked=quarter_locked)
+                       notes_generated_at=notes_generated_at, locked=quarter_locked,
+                       pending_note_keys=pending_note_keys)
     if lock_after and not quarter_already_locked:
         print(f"      {kpis['quarter']} locked — notes will not be regenerated again.")
 
@@ -2370,8 +2421,9 @@ def main():
         help="Force regeneration of all Claude notes even if KPI values are unchanged."
     )
     parser.add_argument(
-        "--project", metavar="KEY",
-        help="Run for a single project only (e.g. --project dlk). Other projects load from saved data."
+        "--project", metavar="KEY[,KEY...]",
+        help="Run for one or more projects only (e.g. --project dlk or --project dlk,nda). "
+             "Other projects load from saved data."
     )
     parser.add_argument(
         "--diagnose", action="store_true",
@@ -2380,9 +2432,11 @@ def main():
              "writes, no dashboard render. Combine with --project to target one project."
     )
     args = parser.parse_args()
-    skip_notes   = args.data_only
-    force_notes  = args.force_notes
-    only_project = args.project.upper() if args.project else None
+    skip_notes    = args.data_only
+    force_notes   = args.force_notes
+    # Comma/space-separated list of project keys, e.g. "dlk,nda" or "dlk, nda" -> {"DLK","NDA"}
+    only_projects = ({k.strip().upper() for k in args.project.replace(",", " ").split()}
+                     if args.project else None)
 
     # CLI --force-notes overrides the module-level constant
     global FORCE_NOTES
@@ -2390,9 +2444,9 @@ def main():
         FORCE_NOTES = True
 
     if args.diagnose:
-        targets = [p for p in PROJECTS if not only_project or p["key"] == only_project]
+        targets = [p for p in PROJECTS if not only_projects or p["key"] in only_projects]
         if not targets:
-            print(f"No project matches --project {only_project!r}")
+            print(f"No project matches --project {args.project!r}")
             return
         for proj in targets:
             try:
@@ -2401,9 +2455,15 @@ def main():
                 print(f"  DIAGNOSE FAILED for {proj['display']}: {exc}")
         return
 
+    if only_projects:
+        _known    = {p["key"] for p in PROJECTS}
+        _unknown  = only_projects - _known
+        if _unknown:
+            print(f"WARNING: --project key(s) not found in config, ignoring: {', '.join(sorted(_unknown))}")
+
     print("=== Quarter Dashboard — Multi-Project ===")
-    if only_project:
-        print(f"Mode: SINGLE PROJECT ({only_project})")
+    if only_projects:
+        print(f"Mode: SINGLE PROJECT ({', '.join(sorted(only_projects))})")
     if skip_notes:
         print("Mode: DATA-ONLY (Claude notes unchanged)")
     elif FORCE_NOTES:
@@ -2420,7 +2480,7 @@ def main():
         print(f"\n{'#'*52}")
         print(f"# Processing: {proj['display']}")
         proj_quarters = {}
-        if only_project and proj["key"] != only_project:
+        if only_projects and proj["key"] not in only_projects:
             # Not the target project — load saved data only, skip Jira/Claude calls
             proj_quarters = load_all_quarters(proj)
             print(f"  Skipped (not target project) — loaded {len(proj_quarters)} saved quarter(s).")
@@ -2448,7 +2508,7 @@ def main():
         # Fetch next sprint capacity (best-effort — None if no future sprint exists)
         print(f"  Fetching next sprint for {proj['key']}...")
         try:
-            _next_sprint = fetch_next_sprint(proj) if not (only_project and proj["key"] != only_project) else None
+            _next_sprint = fetch_next_sprint(proj) if not (only_projects and proj["key"] not in only_projects) else None
             if _next_sprint:
                 print(f"      Next sprint: {_next_sprint['sprint_name']} ({_next_sprint['total_issues']} issues)")
             else:
