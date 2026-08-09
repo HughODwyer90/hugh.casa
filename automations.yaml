@@ -4337,10 +4337,13 @@
   alias: Vacuum Apartment (Weekend - when I leave)
   description: Full apartment – Vac & Mop (single pass)
   triggers:
-  - trigger: state
+  - trigger: template
     id: leave_home
-    entity_id: group.household
-    from: home
+    value_template: "{{ expand('group.household')\n   | rejectattr('state', 'in',
+      ['home', 'home_parking_spot'])\n   | list | length == expand('group.household')
+      | list | length }}\n"
+    for:
+      minutes: 10
   - trigger: time
     id: weekend_fallback
     at: '12:00:00'
@@ -4350,10 +4353,9 @@
     - sat
     - sun
   - condition: template
-    value_template: "{% if trigger.id == 'leave_home' %}\n  {{ trigger.to_state is
-      not none and\n     trigger.to_state.state not in ['unknown', 'unavailable']
-      }}\n{% else %}\n  {{ states('group.household') not in ['home', 'unknown', 'unavailable']
-      }}\n{% endif %}\n"
+    value_template: "{{ trigger.id == 'leave_home' or\n   (expand('group.household')\n
+      \   | rejectattr('state', 'in', ['home', 'home_parking_spot'])\n    | list |
+      length == expand('group.household') | list | length) }}\n"
   - condition: state
     entity_id: input_boolean.vacuum_ran_today
     state: 'off'
@@ -4364,17 +4366,10 @@
     entity_id: vacuum.vacuum
     state: docked
   actions:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: leave_home
-      sequence:
-      - delay: 00:10:00
   - condition: template
-    value_template: '{{ states(''group.household'') not in [''home'', ''unknown'',
-      ''unavailable''] }}
-
-      '
+    value_template: "{{ expand('group.household')\n   | rejectattr('state', 'in',
+      ['home', 'home_parking_spot'])\n   | list | length == expand('group.household')
+      | list | length }}\n"
   - if:
     - condition: template
       value_template: '{{ states(''select.vacuum_cleangenius'') != ''routine_cleaning''
