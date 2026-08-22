@@ -4142,11 +4142,11 @@
     id: tv_off
   conditions:
   - condition: state
-    entity_id: group.household
-    state: home
-  - condition: state
     entity_id: vacuum.vacuum
     state: docked
+  - condition: time
+    after: 07:00:00
+    before: '22:00:00'
   actions:
   - choose:
     - conditions:
@@ -4168,6 +4168,9 @@
       - condition: state
         entity_id: input_boolean.vacuum_kitchen_living_pending
         state: 'on'
+      - condition: state
+        entity_id: group.household
+        state: home
       sequence: []
     - conditions: []
       sequence:
@@ -4337,25 +4340,28 @@
   alias: Vacuum Apartment (Weekend - when I leave)
   description: Full apartment – Vac & Mop (single pass)
   triggers:
-  - trigger: template
-    id: leave_home
-    value_template: "{{ expand('group.household')\n   | rejectattr('state', 'in',
-      ['home', 'home_parking_spot'])\n   | list | length == expand('group.household')
-      | list | length }}\n"
-    for:
-      minutes: 10
   - trigger: time
-    id: weekend_fallback
     at: '12:00:00'
+    id: weekend_fallback
+  - trigger: state
+    entity_id:
+    - group.household
+    from:
+    - home
+    to:
+    - not_home
+    id: leave
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
   conditions:
   - condition: time
     weekday:
     - sat
     - sun
-  - condition: template
-    value_template: "{{ trigger.id == 'leave_home' or\n   (expand('group.household')\n
-      \   | rejectattr('state', 'in', ['home', 'home_parking_spot'])\n    | list |
-      length == expand('group.household') | list | length) }}\n"
+    after: 07:00:00
+    before: '23:00:00'
   - condition: state
     entity_id: input_boolean.vacuum_ran_today
     state: 'off'
@@ -4363,13 +4369,21 @@
     entity_id: input_boolean.vacuum_ran_this_weekend
     state: 'off'
   - condition: state
+    entity_id: group.household
+    state: not_home
+  - condition: state
     entity_id: vacuum.vacuum
     state: docked
   actions:
-  - condition: template
-    value_template: "{{ expand('group.household')\n   | rejectattr('state', 'in',
-      ['home', 'home_parking_spot'])\n   | list | length == expand('group.household')
-      | list | length }}\n"
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: leave
+      sequence:
+      - delay: 00:10:00
+      - condition: state
+        entity_id: group.household
+        state: not_home
   - if:
     - condition: template
       value_template: '{{ states(''select.vacuum_cleangenius'') != ''routine_cleaning''
