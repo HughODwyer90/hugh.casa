@@ -2702,11 +2702,18 @@
       {{ lux < low or lux > high }}
 
       '
+  - id: periodic_recheck
+    trigger: time_pattern
+    minutes: /5
   - id: helper_change
     trigger: state
     entity_id:
     - input_number.hugh_room_lux_lower
     - input_number.hugh_room_lux_upper
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
   - id: dusk_time
     trigger: sun
     event: sunset
@@ -2790,6 +2797,23 @@
               entity_id: scene.hugh_room_all_lights_on
             data:
               transition: 1.5
+        - conditions:
+          - condition: or
+            conditions:
+            - condition: time
+              after: '22:00:00'
+            - condition: time
+              before: 06:00:00
+          - condition: state
+            entity_id: binary_sensor.bed_sensor
+            state: 'off'
+          sequence:
+          - action: light.turn_on
+            target:
+              entity_id: light.hugh_room_lamp
+            data:
+              brightness_pct: 80
+              transition: 1.5
     - conditions:
       - condition: trigger
         id: pc_on
@@ -2825,6 +2849,8 @@
         - condition: trigger
           id: brightness_check
         - condition: trigger
+          id: periodic_recheck
+        - condition: trigger
           id: helper_change
         - condition: trigger
           id: dusk_time
@@ -2846,6 +2872,27 @@
             target:
               entity_id: scene.hugh_room_all_lights_on
             data:
+              transition: 1.5
+        - conditions:
+          - condition: template
+            value_template: "{{ states('sensor.hugh_room_presence_illuminance') |
+              float(0)\n   < states('input_number.hugh_room_lux_lower') | float(0)
+              }}\n"
+          - condition: state
+            entity_id: binary_sensor.bed_sensor
+            state: 'off'
+          - condition: or
+            conditions:
+            - condition: time
+              after: '22:00:00'
+            - condition: time
+              before: 06:00:00
+          sequence:
+          - action: light.turn_on
+            target:
+              entity_id: light.hugh_room_lamp
+            data:
+              brightness_pct: 80
               transition: 1.5
         - conditions:
           - condition: template
@@ -5489,6 +5536,15 @@
     entity_id: binary_sensor.bed_sensor
     state:
     - 'on'
+  - condition: state
+    entity_id: input_boolean.wake_up_alarm_running
+    state: 'off'
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.pc_webcam_active
+      state:
+      - 'on'
   actions:
   - variables:
       hugh_room_light_entities:
