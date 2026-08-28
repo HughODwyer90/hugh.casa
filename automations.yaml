@@ -356,7 +356,7 @@
               entity_id: binary_sensor.pc_status
               state: 'on'
             - condition: state
-              entity_id: binary_sensor.master_bedroom_tv_state
+              entity_id: binary_sensor.hugh_room_tv_state
               state: 'on'
           sequence:
           - action: script.set_purifier_speed
@@ -582,12 +582,12 @@
         data:
           transition: 3
       - condition: template
-        value_template: '{{ states(''cover.master_blind'', ''current_position'') |
+        value_template: '{{ states(''cover.hugh_room_blind'', ''current_position'') |
           int > 20 }}'
       - action: cover.set_cover_position
         metadata: {}
         target:
-          entity_id: cover.master_blind
+          entity_id: cover.hugh_room_blind
         data:
           position: 0
     - conditions:
@@ -599,12 +599,12 @@
       - entity_id: light.hugh_room_lamp
         action: light.turn_off
       - condition: template
-        value_template: '{{ states(''cover.master_blind'', ''current_position'') |
+        value_template: '{{ states(''cover.hugh_room_blind'', ''current_position'') |
           int > 20 }}'
       - action: cover.set_cover_position
         metadata: {}
         target:
-          entity_id: cover.master_blind
+          entity_id: cover.hugh_room_blind
         data:
           position: 0
     - conditions:
@@ -997,12 +997,12 @@
       - condition: or
         conditions:
         - condition: state
-          entity_id: cover.master_blind
+          entity_id: cover.hugh_room_blind
           state:
           - Closed
           - closed
         - condition: state
-          entity_id: cover.master_blind
+          entity_id: cover.hugh_room_blind
           state:
           - Closed
           - closing
@@ -1010,24 +1010,24 @@
       - action: cover.open_cover
         metadata: {}
         target:
-          entity_id: cover.master_blind
+          entity_id: cover.hugh_room_blind
         data: {}
     - conditions:
       - condition: or
         conditions:
         - condition: state
-          entity_id: cover.master_blind
+          entity_id: cover.hugh_room_blind
           state:
           - open
         - condition: state
-          entity_id: cover.master_blind
+          entity_id: cover.hugh_room_blind
           state:
           - opening
       sequence:
       - action: cover.close_cover
         metadata: {}
         target:
-          entity_id: cover.master_blind
+          entity_id: cover.hugh_room_blind
         data: {}
   mode: single
 - id: '1709319124924'
@@ -1061,10 +1061,10 @@
     conditions:
     - condition: state
       state: 'off'
-      entity_id: binary_sensor.master_bedroom_tv_state
+      entity_id: binary_sensor.hugh_room_tv_state
     - condition: state
       state: unavailable
-      entity_id: binary_sensor.master_bedroom_tv_state
+      entity_id: binary_sensor.hugh_room_tv_state
   actions:
   - choose:
     - conditions:
@@ -1106,7 +1106,7 @@
     to: 'on'
   - trigger: state
     id: monitor
-    entity_id: binary_sensor.master_bedroom_tv_state
+    entity_id: binary_sensor.hugh_room_tv_state
     to: 'on'
   - trigger: state
     id: manual_off
@@ -1158,14 +1158,14 @@
       sequence:
       - if:
         - condition: state
-          entity_id: media_player.master_bedroom_display_g
+          entity_id: media_player.hugh_room_display_g
           state:
           - playing
         then:
         - action: media_player.media_stop
           target:
             entity_id:
-            - media_player.master_bedroom_display_g
+            - media_player.hugh_room_display_g
           data: {}
       - action: script.set_purifier_speed
         data:
@@ -1230,7 +1230,7 @@
     metadata: {}
     data: {}
     target:
-      entity_id: media_player.master_bedroom_display_g
+      entity_id: media_player.hugh_room_display_g
   mode: restart
 - id: '1713004095933'
   alias: Admin Home Assistant Restart
@@ -1422,7 +1422,7 @@
     entity_id: input_boolean.alarm_enabled
     state: 'on'
   - condition: state
-    entity_id: binary_sensor.master_bedroom_tv_state
+    entity_id: binary_sensor.hugh_room_tv_state
     state: 'off'
   actions:
   - choose:
@@ -1494,11 +1494,11 @@
   - choose:
     - conditions:
       - condition: state
-        entity_id: media_player.master_bedroom_display_g
+        entity_id: media_player.hugh_room_display_g
         state:
         - playing
       sequence:
-      - entity_id: media_player.master_bedroom_display_g
+      - entity_id: media_player.hugh_room_display_g
         action: media_player.media_stop
     default: []
   - target:
@@ -1519,7 +1519,7 @@
   - action: cover.set_cover_position
     metadata: {}
     target:
-      entity_id: cover.master_blind
+      entity_id: cover.hugh_room_blind
     data:
       position: 0
   - delay:
@@ -1591,7 +1591,7 @@
     entity_id:
     - media_player.hugh_room_speaker_g
     - media_player.hugh_room_speaker_2_g
-    - media_player.master_bedroom_display_g
+    - media_player.hugh_room_display_g
   actions:
   - condition: template
     value_template: '{{ state_attr(trigger.entity_id, ''volume_level'') | float !=
@@ -1601,7 +1601,7 @@
   - action: media_player.volume_set
     data_template:
       entity_id: '{% set changed_entity = trigger.entity_id %} {% set entities = [''media_player.hugh_room_speaker_g'',
-        ''media_player.hugh_room_speaker_2_g'', ''media_player.master_bedroom_display_g'']
+        ''media_player.hugh_room_speaker_2_g'', ''media_player.hugh_room_display_g'']
         %} {{ entities | reject(''equalto'', changed_entity) | list }}
 
         '
@@ -1760,14 +1760,14 @@
   alias: Redirect Spotify to MA Group (using working script)
   triggers:
   - entity_id:
-    - media_player.master_bedroom_display_g
+    - media_player.hugh_room_display_g
     - media_player.hugh_room_speaker_g
     - media_player.hugh_room_speaker_2_g
     to: playing
     trigger: state
   conditions:
   - condition: template
-    value_template: "{% set trio = [\n  'media_player.master_bedroom_display_g',\n
+    value_template: "{% set trio = [\n  'media_player.hugh_room_display_g',\n
       \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
       %} {{ (trio | select('is_state','playing') | list) | length == 1\n   and state_attr(trigger.entity_id,
       'app_name') == 'Spotify' }}\n"
@@ -2042,7 +2042,7 @@
       - action: cover.set_cover_position
         metadata: {}
         target:
-          entity_id: cover.master_blind
+          entity_id: cover.hugh_room_blind
         data:
           position: 0
     - conditions:
@@ -2053,7 +2053,7 @@
       - action: cover.set_cover_position
         metadata: {}
         target:
-          entity_id: cover.master_blind
+          entity_id: cover.hugh_room_blind
         data:
           position: 100
   mode: single
@@ -3212,10 +3212,10 @@
           - condition: or
             conditions:
             - condition: state
-              entity_id: binary_sensor.master_bedroom_tv_state
+              entity_id: binary_sensor.hugh_room_tv_state
               state: 'off'
             - condition: state
-              entity_id: binary_sensor.master_bedroom_tv_state
+              entity_id: binary_sensor.hugh_room_tv_state
               state: unavailable
         - condition: and
           conditions:
@@ -3233,10 +3233,10 @@
           - condition: or
             conditions:
             - condition: state
-              entity_id: binary_sensor.master_bedroom_tv_state
+              entity_id: binary_sensor.hugh_room_tv_state
               state: 'off'
             - condition: state
-              entity_id: binary_sensor.master_bedroom_tv_state
+              entity_id: binary_sensor.hugh_room_tv_state
               state: unavailable
         - condition: and
           conditions:
@@ -3251,10 +3251,10 @@
           - condition: or
             conditions:
             - condition: state
-              entity_id: binary_sensor.master_bedroom_tv_state
+              entity_id: binary_sensor.hugh_room_tv_state
               state: 'off'
             - condition: state
-              entity_id: binary_sensor.master_bedroom_tv_state
+              entity_id: binary_sensor.hugh_room_tv_state
               state: unavailable
       sequence:
       - action: input_boolean.turn_off
@@ -3420,19 +3420,19 @@
     for:
       seconds: 2
   - trigger: state
-    entity_id: binary_sensor.master_bedroom_tv_state
+    entity_id: binary_sensor.hugh_room_tv_state
     id: monitor_change
     for:
       seconds: 2
   - trigger: state
-    entity_id: media_player.master_bedroom_display_g
+    entity_id: media_player.hugh_room_display_g
     from:
     - playing
     id: music_stopped
     for:
       seconds: 5
   - trigger: state
-    entity_id: media_player.master_bedroom_display_g
+    entity_id: media_player.hugh_room_display_g
     to:
     - playing
     id: music_started
@@ -3479,12 +3479,12 @@
         entity_id: binary_sensor.pc_status
         state: 'off'
       - condition: state
-        entity_id: binary_sensor.master_bedroom_tv_state
+        entity_id: binary_sensor.hugh_room_tv_state
         state: 'off'
       - condition: not
         conditions:
         - condition: state
-          entity_id: media_player.master_bedroom_display_g
+          entity_id: media_player.hugh_room_display_g
           state: playing
       sequence:
       - action: script.set_purifier_speed
@@ -3536,13 +3536,13 @@
         data: {}
     - conditions:
       - condition: template
-        value_template: "{{ [\n  states('media_player.master_bedroom_display_g'),\n
+        value_template: "{{ [\n  states('media_player.hugh_room_display_g'),\n
           \ states('media_player.hugh_room_speaker_g'),\n  states('media_player.hugh_room_speaker_2_g')\n]
           | select('eq','playing') | list | length > 0 }}\n"
       sequence:
       - action: media_player.media_previous_track
         target:
-          entity_id: "{% set players = [\n  'media_player.master_bedroom_display_g',\n
+          entity_id: "{% set players = [\n  'media_player.hugh_room_display_g',\n
             \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
             %} {{ players | select('is_state','playing') | list | first }}\n"
         data: {}
@@ -3578,12 +3578,12 @@
         data: {}
     - conditions:
       - condition: template
-        value_template: "{{ [\n  states('media_player.master_bedroom_display_g'),\n
+        value_template: "{{ [\n  states('media_player.hugh_room_display_g'),\n
           \ states('media_player.hugh_room_speaker_g'),\n  states('media_player.hugh_room_speaker_2_g')\n]
           | select('eq','playing') | list | length > 0 }}\n"
       sequence:
       - target:
-          entity_id: "{% set players = [\n  'media_player.master_bedroom_display_g',\n
+          entity_id: "{% set players = [\n  'media_player.hugh_room_display_g',\n
             \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
             %} {{ players | select('is_state','playing') | list | first }}\n"
         action: media_player.media_next_track
@@ -3630,13 +3630,13 @@
         action: media_player.media_play
     - conditions:
       - condition: template
-        value_template: "{% set singles = [\n  'media_player.master_bedroom_display_g',\n
+        value_template: "{% set singles = [\n  'media_player.hugh_room_display_g',\n
           \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
           %} {{ (singles | select('is_state','playing') | list\n    + singles | select('is_state','buffering')
           | list) | length > 0 }}\n"
       sequence:
       - target:
-          entity_id: "{% set singles = [\n  'media_player.master_bedroom_display_g',\n
+          entity_id: "{% set singles = [\n  'media_player.hugh_room_display_g',\n
             \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
             %} {% set active = (singles | select('is_state','playing') | list\n                 +
             singles | select('is_state','buffering') | list) %}\n{{ active | first
@@ -3645,7 +3645,7 @@
         data: {}
     - conditions:
       - condition: template
-        value_template: "{% set singles = [\n  'media_player.master_bedroom_display_g',\n
+        value_template: "{% set singles = [\n  'media_player.hugh_room_display_g',\n
           \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
           %} {% set any_active = (singles | select('is_state','playing') | list\n
           \                   + singles | select('is_state','buffering') | list\n
@@ -3673,7 +3673,7 @@
         in ['playing','paused','buffering']\n    and state_attr('media_player.hugh_speaker_group','media_title')
         not in [none,'','unknown','unavailable']\n    and state_attr('media_player.hugh_speaker_group','media_title')
         != 'Music Assistant' %}\n  {% set ns.p = 'media_player.hugh_speaker_group'
-        %}\n{% endif %} {% if ns.p == '' %}\n  {% set singles = [\n    'media_player.master_bedroom_display_g',\n
+        %}\n{% endif %} {% if ns.p == '' %}\n  {% set singles = [\n    'media_player.hugh_room_display_g',\n
         \   'media_player.hugh_room_speaker_g',\n    'media_player.hugh_room_speaker_2_g'\n
         \ ] %}\n  {% for e in singles %}\n    {% if states(e) in ['playing','paused','buffering']\n
         \       and state_attr(e,'media_title') not in [none,'','unknown','unavailable']\n
@@ -3724,7 +3724,7 @@
   triggers:
   - trigger: state
     entity_id:
-    - binary_sensor.master_bedroom_tv_state
+    - binary_sensor.hugh_room_tv_state
     to:
     - 'on'
     for:
@@ -3733,12 +3733,12 @@
       seconds: 2
   conditions:
   - condition: template
-    value_template: "{{ [\n  'media_player.master_bedroom_display_g',\n  'media_player.hugh_room_speaker_g',\n
+    value_template: "{{ [\n  'media_player.hugh_room_display_g',\n  'media_player.hugh_room_speaker_g',\n
       \ 'media_player.hugh_room_speaker_2_g'\n] | select('is_state','playing') | list
       | count > 0 }}\n"
   actions:
   - variables:
-      active: "{{ [\n  'media_player.master_bedroom_display_g',\n  'media_player.hugh_room_speaker_g',\n
+      active: "{{ [\n  'media_player.hugh_room_display_g',\n  'media_player.hugh_room_speaker_g',\n
         \ 'media_player.hugh_room_speaker_2_g'\n] | select('is_state','playing') |
         list }}\n"
   - action: media_player.media_pause
@@ -4730,7 +4730,7 @@
     for:
       seconds: 10
   - trigger: state
-    entity_id: media_player.master_bedroom_display_g
+    entity_id: media_player.hugh_room_display_g
     to: playing
     for:
       seconds: 5
@@ -4740,7 +4740,7 @@
     for:
       seconds: 5
   - trigger: state
-    entity_id: binary_sensor.master_bedroom_tv_state
+    entity_id: binary_sensor.hugh_room_tv_state
     to: 'on'
     for:
       seconds: 5
@@ -4753,13 +4753,13 @@
   - condition: or
     conditions:
     - condition: state
-      entity_id: media_player.master_bedroom_display_g
+      entity_id: media_player.hugh_room_display_g
       state: playing
     - condition: state
       entity_id: binary_sensor.pc_status
       state: 'on'
     - condition: state
-      entity_id: binary_sensor.master_bedroom_tv_state
+      entity_id: binary_sensor.hugh_room_tv_state
       state: 'on'
   - condition: time
     after: 09:00:00
@@ -5087,7 +5087,7 @@
     default: []
   mode: restart
 - id: '1777042022647'
-  alias: Master Bedroom Blind – Basic Control
+  alias: hugh_room Bedroom Blind – Basic Control
   description: "Logic:\n - If bed becomes occupied after dark threshold, close blind\n
     - If TV turns on, close blind\n - If bathroom humidity rises quickly, close blind
     (with 5-min automation cooldown)\n - If TV turns off → wait → open if bed unoccupied\n
@@ -5096,10 +5096,10 @@
     - If I leave home during the day → open blind (if bed unoccupied)\n - If humidity
     stays very high (post-shower) → reopen blind (failsafe)\n - Cooldown flag (input_boolean.blind_humidity_cooldown)
     blocks automation opens only\n - Manual open during cooldown clears the flag\n
-    - switch.master_blind_plug mirrors blind state: on when open/opening, off when
-    closed/closing\n - switch.master_blind_plug charging is skipped if sensor.master_blind_battery
+    - switch.hugh_room_blind_plug mirrors blind state: on when open/opening, off when
+    closed/closing\n - switch.hugh_room_blind_plug charging is skipped if sensor.hugh_room_blind_battery
     is at or above 85%\n - Battery-full cutoff (turning off the plug once above 85%)
-    lives in a separate automation\n   (Master Bedroom Blind – Battery Full Cutoff)
+    lives in a separate automation\n   (hugh_room Bedroom Blind – Battery Full Cutoff)
     to avoid mode: restart here cancelling\n   in-progress sequences, e.g. the tv_off
     wait_for_trigger delay\n"
   triggers:
@@ -5114,11 +5114,11 @@
     for: 00:20:00
   - id: tv_on
     trigger: state
-    entity_id: media_player.master_bedroom_display
+    entity_id: media_player.hugh_room_display
     to: 'on'
   - id: tv_off
     trigger: state
-    entity_id: media_player.master_bedroom_display
+    entity_id: media_player.hugh_room_display
     to: 'off'
   - id: dark
     trigger: numeric_state
@@ -5142,11 +5142,11 @@
     to: not_home
   - id: blind_manually_opened
     trigger: state
-    entity_id: cover.master_blind
+    entity_id: cover.hugh_room_blind
     to: open
   - id: blind_manually_closed
     trigger: state
-    entity_id: cover.master_blind
+    entity_id: cover.hugh_room_blind
     to: closed
   actions:
   - choose:
@@ -5157,27 +5157,27 @@
         entity_id: sensor.sun_elevation
         below: -6
       - condition: template
-        value_template: '{{ state_attr(''cover.master_blind'', ''current_position'')
+        value_template: '{{ state_attr(''cover.hugh_room_blind'', ''current_position'')
           | int(0) > 20 }}
 
           '
       sequence:
       - action: cover.close_cover
         target:
-          entity_id: cover.master_blind
+          entity_id: cover.hugh_room_blind
       - action: switch.turn_off
         target:
-          entity_id: switch.master_blind_plug
+          entity_id: switch.hugh_room_blind_plug
     - conditions:
       - condition: trigger
         id: tv_on
       sequence:
       - action: cover.close_cover
         target:
-          entity_id: cover.master_blind
+          entity_id: cover.hugh_room_blind
       - action: switch.turn_off
         target:
-          entity_id: switch.master_blind_plug
+          entity_id: switch.hugh_room_blind_plug
     - conditions:
       - condition: trigger
         id: shower_humidity_rise
@@ -5188,17 +5188,17 @@
 
           '
       - condition: template
-        value_template: '{{ state_attr(''cover.master_blind'', ''current_position'')
+        value_template: '{{ state_attr(''cover.hugh_room_blind'', ''current_position'')
           | int(0) > 20 }}
 
           '
       sequence:
       - action: cover.close_cover
         target:
-          entity_id: cover.master_blind
+          entity_id: cover.hugh_room_blind
       - action: switch.turn_off
         target:
-          entity_id: switch.master_blind_plug
+          entity_id: switch.hugh_room_blind_plug
       - action: input_boolean.turn_on
         target:
           entity_id: input_boolean.blind_humidity_cooldown
@@ -5217,11 +5217,11 @@
         target:
           entity_id: input_boolean.blind_humidity_cooldown
       - condition: numeric_state
-        entity_id: sensor.master_blind_battery
+        entity_id: sensor.hugh_room_blind_battery
         below: 85
       - action: switch.turn_on
         target:
-          entity_id: switch.master_blind_plug
+          entity_id: switch.hugh_room_blind_plug
     - conditions:
       - condition: trigger
         id: blind_manually_opened
@@ -5230,18 +5230,18 @@
         state: 'off'
       sequence:
       - condition: numeric_state
-        entity_id: sensor.master_blind_battery
+        entity_id: sensor.hugh_room_blind_battery
         below: 85
       - action: switch.turn_on
         target:
-          entity_id: switch.master_blind_plug
+          entity_id: switch.hugh_room_blind_plug
     - conditions:
       - condition: trigger
         id: blind_manually_closed
       sequence:
       - action: switch.turn_off
         target:
-          entity_id: switch.master_blind_plug
+          entity_id: switch.hugh_room_blind_plug
     - conditions:
       - condition: trigger
         id: tv_off
@@ -5266,13 +5266,13 @@
         above: 5
       - action: cover.open_cover
         target:
-          entity_id: cover.master_blind
+          entity_id: cover.hugh_room_blind
       - condition: numeric_state
-        entity_id: sensor.master_blind_battery
+        entity_id: sensor.hugh_room_blind_battery
         below: 85
       - action: switch.turn_on
         target:
-          entity_id: switch.master_blind_plug
+          entity_id: switch.hugh_room_blind_plug
     - conditions:
       - condition: trigger
         id: bed_cleared_long
@@ -5292,30 +5292,30 @@
         entity_id: input_boolean.blind_humidity_cooldown
         state: 'off'
       - condition: template
-        value_template: '{{ state_attr(''cover.master_blind'', ''current_position'')
+        value_template: '{{ state_attr(''cover.hugh_room_blind'', ''current_position'')
           | int(0) < 90 }}
 
           '
       sequence:
       - action: cover.open_cover
         target:
-          entity_id: cover.master_blind
+          entity_id: cover.hugh_room_blind
       - condition: numeric_state
-        entity_id: sensor.master_blind_battery
+        entity_id: sensor.hugh_room_blind_battery
         below: 85
       - action: switch.turn_on
         target:
-          entity_id: switch.master_blind_plug
+          entity_id: switch.hugh_room_blind_plug
     - conditions:
       - condition: trigger
         id: dark
       sequence:
       - action: cover.close_cover
         target:
-          entity_id: cover.master_blind
+          entity_id: cover.hugh_room_blind
       - action: switch.turn_off
         target:
-          entity_id: switch.master_blind_plug
+          entity_id: switch.hugh_room_blind_plug
     - conditions:
       - condition: trigger
         id: morning_open
@@ -5331,13 +5331,13 @@
       sequence:
       - action: cover.open_cover
         target:
-          entity_id: cover.master_blind
+          entity_id: cover.hugh_room_blind
       - condition: numeric_state
-        entity_id: sensor.master_blind_battery
+        entity_id: sensor.hugh_room_blind_battery
         below: 85
       - action: switch.turn_on
         target:
-          entity_id: switch.master_blind_plug
+          entity_id: switch.hugh_room_blind_plug
     - conditions:
       - condition: trigger
         id: left_home
@@ -5351,20 +5351,20 @@
         entity_id: input_boolean.blind_humidity_cooldown
         state: 'off'
       - condition: template
-        value_template: '{{ state_attr(''cover.master_blind'', ''current_position'')
+        value_template: '{{ state_attr(''cover.hugh_room_blind'', ''current_position'')
           | int(0) < 90 }}
 
           '
       sequence:
       - action: cover.open_cover
         target:
-          entity_id: cover.master_blind
+          entity_id: cover.hugh_room_blind
       - condition: numeric_state
-        entity_id: sensor.master_blind_battery
+        entity_id: sensor.hugh_room_blind_battery
         below: 85
       - action: switch.turn_on
         target:
-          entity_id: switch.master_blind_plug
+          entity_id: switch.hugh_room_blind_plug
     - conditions:
       - condition: trigger
         id: humidity_stable_high
@@ -5375,7 +5375,7 @@
         entity_id: binary_sensor.bed_sensor
         state: 'off'
       - condition: template
-        value_template: '{{ state_attr(''cover.master_blind'', ''current_position'')
+        value_template: '{{ state_attr(''cover.hugh_room_blind'', ''current_position'')
           | int(0) < 90 }}
 
           '
@@ -5385,13 +5385,13 @@
           entity_id: input_boolean.blind_humidity_cooldown
       - action: cover.open_cover
         target:
-          entity_id: cover.master_blind
+          entity_id: cover.hugh_room_blind
       - condition: numeric_state
-        entity_id: sensor.master_blind_battery
+        entity_id: sensor.hugh_room_blind_battery
         below: 85
       - action: switch.turn_on
         target:
-          entity_id: switch.master_blind_plug
+          entity_id: switch.hugh_room_blind_plug
   mode: restart
 - id: '1777073053701'
   alias: Living Room Lights Watchdog - Off
@@ -5859,12 +5859,12 @@
   - action: script.jira_update_dev_capacity
     data: {}
 - id: '1782992125182'
-  alias: Master Bedroom Blind – Battery Full Cutoff
-  description: 'Turns off switch.master_blind_plug as soon as sensor.master_blind_battery
+  alias: hugh_room Bedroom Blind – Battery Full Cutoff
+  description: 'Turns off switch.hugh_room_blind_plug as soon as sensor.hugh_room_blind_battery
 
     crosses above 85%, regardless of blind position. Split out from the main
 
-    Master Bedroom Blind – Basic Control automation because that one runs in
+    hugh_room Bedroom Blind – Basic Control automation because that one runs in
 
     mode: restart, and a battery_full trigger firing mid-sequence (e.g. during
 
@@ -5876,16 +5876,16 @@
   triggers:
   - id: battery_full
     trigger: numeric_state
-    entity_id: sensor.master_blind_battery
+    entity_id: sensor.hugh_room_blind_battery
     above: 85
   conditions:
   - condition: state
-    entity_id: switch.master_blind_plug
+    entity_id: switch.hugh_room_blind_plug
     state: 'on'
   actions:
   - action: switch.turn_off
     target:
-      entity_id: switch.master_blind_plug
+      entity_id: switch.hugh_room_blind_plug
   mode: single
 - id: '1784213709978'
   alias: 'Hugh Room Desk Fan toggle '
