@@ -1589,7 +1589,7 @@
   triggers:
   - trigger: state
     entity_id:
-    - media_player.hugh_room_speaker_g
+    - media_player.hugh_room_speaker_2_2
     - media_player.hugh_room_speaker_2_g
     - media_player.hugh_room_display_g
   actions:
@@ -1600,11 +1600,9 @@
       '
   - action: media_player.volume_set
     data_template:
-      entity_id: '{% set changed_entity = trigger.entity_id %} {% set entities = [''media_player.hugh_room_speaker_g'',
+      entity_id: '{% set changed_entity = trigger.entity_id %} {% set entities = [''media_player.hugh_room_speaker_2_2'',
         ''media_player.hugh_room_speaker_2_g'', ''media_player.hugh_room_display_g'']
-        %} {{ entities | reject(''equalto'', changed_entity) | list }}
-
-        '
+        %} {{ entities | reject(''equalto'', changed_entity) | list }} '
       volume_level: '{{ state_attr(trigger.entity_id, ''volume_level'') }}'
   - action: input_number.set_value
     data_template:
@@ -1645,8 +1643,7 @@
       volume_level: '{{ states(''input_number.universal_player_volume'') | float /
         10 }}'
     target:
-      entity_id:
-      - media_player.hugh_room_speaker_g
+      entity_id: media_player.hugh_speaker_group_3
 - id: '1717798872586'
   alias: Control Playback Based on Volume
   description: Pause playback when volume is 0 or below 1, resume when volume increases
@@ -1663,14 +1660,13 @@
           '
       sequence:
       - condition: template
-        value_template: '{{ is_state(''media_player.hugh_room_speaker_g'', ''playing'')
+        value_template: '{{ is_state(''media_player.hugh_speaker_group_3'', ''playing'')
           }}
 
           '
       - action: media_player.media_pause
         target:
-          entity_id:
-          - media_player.hugh_room_speaker_g
+          entity_id: media_player.hugh_speaker_group_3
         data: {}
     - conditions:
       - condition: template
@@ -1680,14 +1676,13 @@
           '
       sequence:
       - condition: template
-        value_template: '{{ is_state(''media_player.hugh_room_speaker_g'', ''paused'')
+        value_template: '{{ is_state(''media_player.hugh_speaker_group_3'', ''paused'')
           }}
 
           '
       - action: media_player.media_play
         target:
-          entity_id:
-          - media_player.hugh_room_speaker_g
+          entity_id: media_player.hugh_speaker_group_3
         data: {}
 - id: '1718016208552'
   alias: Manage Work From Home Days
@@ -1761,13 +1756,13 @@
   triggers:
   - entity_id:
     - media_player.hugh_room_display_g
-    - media_player.hugh_room_speaker_g
+    - media_player.hugh_room_speaker_2_2
     - media_player.hugh_room_speaker_2_g
     to: playing
     trigger: state
   conditions:
   - condition: template
-    value_template: "{% set trio = [\n  'media_player.hugh_room_display_g',\n  'media_player.hugh_room_speaker_g',\n
+    value_template: "{% set trio = [\n  'media_player.hugh_room_display_g',\n  'media_player.hugh_room_speaker_2_2',\n
       \ 'media_player.hugh_room_speaker_2_g'\n] %} {{ (trio | select('is_state','playing')
       | list) | length == 1\n   and state_attr(trigger.entity_id, 'app_name') == 'Spotify'
       }}\n"
@@ -3556,16 +3551,16 @@
   - choose:
     - conditions:
       - condition: state
-        entity_id: media_player.hugh_speaker_group_2
+        entity_id: media_player.hugh_speaker_group_3
         state: playing
       sequence:
       - action: media_player.media_previous_track
         target:
-          entity_id: media_player.hugh_speaker_group_2
+          entity_id: media_player.hugh_speaker_group_3
         data: {}
     - conditions:
       - condition: state
-        entity_id: media_player.hugh_speaker_group_2
+        entity_id: media_player.hugh_speaker_group_3
         state: playing
       sequence:
       - action: media_player.media_previous_track
@@ -3574,23 +3569,23 @@
         data: {}
     - conditions:
       - condition: state
-        entity_id: media_player.hugh_speaker_group
+        entity_id: media_player.hugh_speaker_group_3
         state: playing
       sequence:
       - action: media_player.media_previous_track
         target:
-          entity_id: media_player.hugh_speaker_group
+          entity_id: media_player.hugh_speaker_group_3
         data: {}
     - conditions:
       - condition: template
-        value_template: "{{ [\n  states('media_player.hugh_room_display_g'),\n  states('media_player.hugh_room_speaker_g'),\n
+        value_template: "{{ [\n  states('media_player.hugh_room_display_g'),\n  states('media_player.hugh_room_speaker_2_2'),\n
           \ states('media_player.hugh_room_speaker_2_g')\n] | select('eq','playing')
           | list | length > 0 }}\n"
       sequence:
       - action: media_player.media_previous_track
         target:
           entity_id: "{% set players = [\n  'media_player.hugh_room_display_g',\n
-            \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
+            \ 'media_player.hugh_room_speaker_2_2',\n  'media_player.hugh_room_speaker_2_g'\n]
             %} {{ players | select('is_state','playing') | list | first }}\n"
         data: {}
   mode: single
@@ -3604,18 +3599,18 @@
   - choose:
     - conditions:
       - condition: state
-        entity_id: media_player.hugh_speaker_group_2
+        entity_id: media_player.hugh_speaker_group_3
         state:
         - playing
       sequence:
       - target:
           entity_id:
-          - media_player.hugh_speaker_group_2
+          - media_player.hugh_speaker_group_3
         action: media_player.media_next_track
         data: {}
     - conditions:
       - condition: state
-        entity_id: media_player.hugh_speaker_group_2
+        entity_id: media_player.hugh_speaker_group_3
         state:
         - playing
       sequence:
@@ -3625,13 +3620,13 @@
         data: {}
     - conditions:
       - condition: template
-        value_template: "{{ [\n  states('media_player.hugh_room_display_g'),\n  states('media_player.hugh_room_speaker_g'),\n
+        value_template: "{{ [\n  states('media_player.hugh_room_display_g'),\n  states('media_player.hugh_room_speaker_2_2'),\n
           \ states('media_player.hugh_room_speaker_2_g')\n] | select('eq','playing')
           | list | length > 0 }}\n"
       sequence:
       - target:
           entity_id: "{% set players = [\n  'media_player.hugh_room_display_g',\n
-            \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
+            \ 'media_player.hugh_room_speaker_2_2',\n  'media_player.hugh_room_speaker_2_g'\n]
             %} {{ players | select('is_state','playing') | list | first }}\n"
         action: media_player.media_next_track
   mode: single
@@ -3645,46 +3640,46 @@
   - choose:
     - conditions:
       - condition: state
-        entity_id: media_player.hugh_speaker_group
+        entity_id: media_player.hugh_speaker_group_3
         state: playing
       sequence:
       - target:
-          entity_id: media_player.hugh_speaker_group
+          entity_id: media_player.hugh_speaker_group_3
         action: media_player.media_pause
     - conditions:
       - condition: state
-        entity_id: media_player.hugh_speaker_group
+        entity_id: media_player.hugh_speaker_group_3
         state: paused
       sequence:
       - target:
-          entity_id: media_player.hugh_speaker_group
+          entity_id: media_player.hugh_speaker_group_3
         action: media_player.media_play
     - conditions:
       - condition: state
-        entity_id: media_player.hugh_speaker_group_2
+        entity_id: media_player.hugh_speaker_group_3
         state: playing
       sequence:
       - target:
-          entity_id: media_player.hugh_speaker_group_2
+          entity_id: media_player.hugh_speaker_group_3
         action: media_player.media_pause
     - conditions:
       - condition: state
-        entity_id: media_player.hugh_speaker_group_2
+        entity_id: media_player.hugh_speaker_group_3
         state: paused
       sequence:
       - target:
-          entity_id: media_player.hugh_speaker_group_2
+          entity_id: media_player.hugh_speaker_group_3
         action: media_player.media_play
     - conditions:
       - condition: template
         value_template: "{% set singles = [\n  'media_player.hugh_room_display_g',\n
-          \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
+          \ 'media_player.hugh_room_speaker_2_2',\n  'media_player.hugh_room_speaker_2_g'\n]
           %} {{ (singles | select('is_state','playing') | list\n    + singles | select('is_state','buffering')
           | list) | length > 0 }}\n"
       sequence:
       - target:
           entity_id: "{% set singles = [\n  'media_player.hugh_room_display_g',\n
-            \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
+            \ 'media_player.hugh_room_speaker_2_2',\n  'media_player.hugh_room_speaker_2_g'\n]
             %} {% set active = (singles | select('is_state','playing') | list\n                 +
             singles | select('is_state','buffering') | list) %}\n{{ active | first
             }}\n"
@@ -3693,12 +3688,12 @@
     - conditions:
       - condition: template
         value_template: "{% set singles = [\n  'media_player.hugh_room_display_g',\n
-          \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
+          \ 'media_player.hugh_room_speaker_2_2',\n  'media_player.hugh_room_speaker_2_g'\n]
           %} {% set any_active = (singles | select('is_state','playing') | list\n
           \                   + singles | select('is_state','buffering') | list\n
           \                   + singles | select('is_state','paused') | list) | length
-          > 0 %}\n{{ states('media_player.hugh_speaker_group') in ['off','idle','unknown','unavailable']\n
-          \  and states('media_player.hugh_speaker_group_2') in ['off','idle','unknown','unavailable']\n
+          > 0 %}\n{{ states('media_player.hugh_speaker_group_3') in ['off','idle','unknown','unavailable']\n
+          \  and states('media_player.hugh_speaker_group_3') in ['off','idle','unknown','unavailable']\n
           \  and not any_active }}\n"
       sequence:
       - action: script.play_spotify_playlist_2
@@ -3712,16 +3707,16 @@
     entity_id: input_button.favourite_current_song
   actions:
   - variables:
-      meta_entity: "{% set ns = namespace(p='') %} {% if states('media_player.hugh_speaker_group_2')
-        in ['playing','paused','buffering']\n    and state_attr('media_player.hugh_speaker_group_2','media_title')
-        not in [none,'','unknown','unavailable']\n    and state_attr('media_player.hugh_speaker_group_2','media_title')
-        != 'Music Assistant' %}\n  {% set ns.p = 'media_player.hugh_speaker_group_2'
-        %}\n{% endif %} {% if ns.p == '' and states('media_player.hugh_speaker_group')
+      meta_entity: "{% set ns = namespace(p='') %} {% if states('media_player.hugh_speaker_group_3')
+        in ['playing','paused','buffering']\n    and state_attr('media_player.hugh_speaker_group_3','media_title')
+        not in [none,'','unknown','unavailable']\n    and state_attr('media_player.hugh_speaker_group_3','media_title')
+        != 'Music Assistant' %}\n  {% set ns.p = 'media_player.hugh_speaker_group_3'
+        %}\n{% endif %} {% if ns.p == '' and states('media_player.hugh_speaker_group_3')
         in ['playing','paused','buffering']\n    and state_attr('media_player.hugh_speaker_group','media_title')
         not in [none,'','unknown','unavailable']\n    and state_attr('media_player.hugh_speaker_group','media_title')
         != 'Music Assistant' %}\n  {% set ns.p = 'media_player.hugh_speaker_group'
         %}\n{% endif %} {% if ns.p == '' %}\n  {% set singles = [\n    'media_player.hugh_room_display_g',\n
-        \   'media_player.hugh_room_speaker_g',\n    'media_player.hugh_room_speaker_2_g'\n
+        \   'media_player.hugh_room_speaker_2_2',\n    'media_player.hugh_room_speaker_2_g'\n
         \ ] %}\n  {% for e in singles %}\n    {% if states(e) in ['playing','paused','buffering']\n
         \       and state_attr(e,'media_title') not in [none,'','unknown','unavailable']\n
         \       and state_attr(e,'media_title') != 'Music Assistant' %}\n      {%
@@ -3734,7 +3729,7 @@
   - choose:
     - conditions:
       - condition: state
-        entity_id: media_player.hugh_speaker_group_2
+        entity_id: media_player.hugh_speaker_group_3
         state: playing
       sequence:
       - target:
@@ -3780,12 +3775,12 @@
       seconds: 2
   conditions:
   - condition: template
-    value_template: "{{ [\n  'media_player.hugh_room_display_g',\n  'media_player.hugh_room_speaker_g',\n
+    value_template: "{{ [\n  'media_player.hugh_room_display_g',\n  'media_player.hugh_room_speaker_2_2',\n
       \ 'media_player.hugh_room_speaker_2_g'\n] | select('is_state','playing') | list
       | count > 0 }}\n"
   actions:
   - variables:
-      active: "{{ [\n  'media_player.hugh_room_display_g',\n  'media_player.hugh_room_speaker_g',\n
+      active: "{{ [\n  'media_player.hugh_room_display_g',\n  'media_player.hugh_room_speaker_2_2',\n
         \ 'media_player.hugh_room_speaker_2_g'\n] | select('is_state','playing') |
         list }}\n"
   - action: media_player.media_pause
