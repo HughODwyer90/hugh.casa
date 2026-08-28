@@ -3712,9 +3712,9 @@
         not in [none,'','unknown','unavailable']\n    and state_attr('media_player.hugh_speaker_group_3','media_title')
         != 'Music Assistant' %}\n  {% set ns.p = 'media_player.hugh_speaker_group_3'
         %}\n{% endif %} {% if ns.p == '' and states('media_player.hugh_speaker_group_3')
-        in ['playing','paused','buffering']\n    and state_attr('media_player.hugh_speaker_group','media_title')
-        not in [none,'','unknown','unavailable']\n    and state_attr('media_player.hugh_speaker_group','media_title')
-        != 'Music Assistant' %}\n  {% set ns.p = 'media_player.hugh_speaker_group'
+        in ['playing','paused','buffering']\n    and state_attr('media_player.hugh_speaker_group_3','media_title')
+        not in [none,'','unknown','unavailable']\n    and state_attr('media_player.hugh_speaker_group_3','media_title')
+        != 'Music Assistant' %}\n  {% set ns.p = 'media_player.hugh_speaker_group_3'
         %}\n{% endif %} {% if ns.p == '' %}\n  {% set singles = [\n    'media_player.hugh_room_display_g',\n
         \   'media_player.hugh_room_speaker_2_2',\n    'media_player.hugh_room_speaker_2_g'\n
         \ ] %}\n  {% for e in singles %}\n    {% if states(e) in ['playing','paused','buffering']\n
@@ -3733,7 +3733,7 @@
         state: playing
       sequence:
       - target:
-          entity_id: button.hugh_speaker_group_favourite_current_song
+          entity_id: button.hugh_speaker_group_favourite_current_song_2
         action: button.press
   - data:
       title: Liked Song
