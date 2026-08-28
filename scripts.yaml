@@ -4,7 +4,7 @@ hugh_room_stereo_volume_up:
   - action: media_player.volume_up
     data: {}
     target:
-      entity_id: media_player.hugh_speaker_group_3
+      entity_id: media_player.hugh_room_speakers
   mode: single
   icon: mdi:volume-plus
 hugh_room_stereo_volume_down:
@@ -15,7 +15,7 @@ hugh_room_stereo_volume_down:
     enabled: true
     target:
       entity_id:
-      - media_player.hugh_speaker_group_3
+      - media_player.hugh_room_speakers
   mode: single
   icon: mdi:volume-minus
   description: ''
@@ -36,7 +36,7 @@ execute_alarm_actions:
   - delay:
       minutes: 5
   - variables:
-      alarm_player: media_player.hugh_speaker_group_2
+      alarm_player: media_player.hugh_room_speakers
       fallback_used: false
   - action: music_assistant.play_media
     target:
@@ -61,7 +61,7 @@ execute_alarm_actions:
           fallback_used: true
       - action: media_player.play_media
         target:
-          entity_id: media_player.hugh_speaker_group
+          entity_id: media_player.hugh_room_speakers
         data:
           media:
             media_content_id: media-source://radio_browser/6ee57601-3752-4031-8155-28f67ca9db43
@@ -69,7 +69,7 @@ execute_alarm_actions:
             metadata: {}
       - action: media_player.volume_set
         target:
-          entity_id: media_player.hugh_speaker_group
+          entity_id: media_player.hugh_room_speakers
         data:
           volume_level: 0.1
       - action: notify.notifications
@@ -677,7 +677,7 @@ recast_to_stereo_with_media:
       description: Spotify URI/track id
   sequence:
   - target:
-      entity_id: media_player.hugh_speaker_group_3
+      entity_id: media_player.hugh_room_speakers
     data:
       media_type: track
       media_id: '{{ media_id }}'
