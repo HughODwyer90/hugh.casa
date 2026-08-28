@@ -582,8 +582,8 @@
         data:
           transition: 3
       - condition: template
-        value_template: '{{ states(''cover.hugh_room_blind'', ''current_position'') |
-          int > 20 }}'
+        value_template: '{{ states(''cover.hugh_room_blind'', ''current_position'')
+          | int > 20 }}'
       - action: cover.set_cover_position
         metadata: {}
         target:
@@ -599,8 +599,8 @@
       - entity_id: light.hugh_room_lamp
         action: light.turn_off
       - condition: template
-        value_template: '{{ states(''cover.hugh_room_blind'', ''current_position'') |
-          int > 20 }}'
+        value_template: '{{ states(''cover.hugh_room_blind'', ''current_position'')
+          | int > 20 }}'
       - action: cover.set_cover_position
         metadata: {}
         target:
@@ -1767,10 +1767,10 @@
     trigger: state
   conditions:
   - condition: template
-    value_template: "{% set trio = [\n  'media_player.hugh_room_display_g',\n
-      \ 'media_player.hugh_room_speaker_g',\n  'media_player.hugh_room_speaker_2_g'\n]
-      %} {{ (trio | select('is_state','playing') | list) | length == 1\n   and state_attr(trigger.entity_id,
-      'app_name') == 'Spotify' }}\n"
+    value_template: "{% set trio = [\n  'media_player.hugh_room_display_g',\n  'media_player.hugh_room_speaker_g',\n
+      \ 'media_player.hugh_room_speaker_2_g'\n] %} {{ (trio | select('is_state','playing')
+      | list) | length == 1\n   and state_attr(trigger.entity_id, 'app_name') == 'Spotify'
+      }}\n"
   actions:
   - wait_template: "{{ state_attr('media_player.spotify_hugh', 'media_content_id')\n
       \  not in [none, '', 'unknown', 'unavailable'] }}\n"
@@ -3536,9 +3536,9 @@
         data: {}
     - conditions:
       - condition: template
-        value_template: "{{ [\n  states('media_player.hugh_room_display_g'),\n
-          \ states('media_player.hugh_room_speaker_g'),\n  states('media_player.hugh_room_speaker_2_g')\n]
-          | select('eq','playing') | list | length > 0 }}\n"
+        value_template: "{{ [\n  states('media_player.hugh_room_display_g'),\n  states('media_player.hugh_room_speaker_g'),\n
+          \ states('media_player.hugh_room_speaker_2_g')\n] | select('eq','playing')
+          | list | length > 0 }}\n"
       sequence:
       - action: media_player.media_previous_track
         target:
@@ -3578,9 +3578,9 @@
         data: {}
     - conditions:
       - condition: template
-        value_template: "{{ [\n  states('media_player.hugh_room_display_g'),\n
-          \ states('media_player.hugh_room_speaker_g'),\n  states('media_player.hugh_room_speaker_2_g')\n]
-          | select('eq','playing') | list | length > 0 }}\n"
+        value_template: "{{ [\n  states('media_player.hugh_room_display_g'),\n  states('media_player.hugh_room_speaker_g'),\n
+          \ states('media_player.hugh_room_speaker_2_g')\n] | select('eq','playing')
+          | list | length > 0 }}\n"
       sequence:
       - target:
           entity_id: "{% set players = [\n  'media_player.hugh_room_display_g',\n
@@ -5087,7 +5087,7 @@
     default: []
   mode: restart
 - id: '1777042022647'
-  alias: hugh_room Bedroom Blind – Basic Control
+  alias: Hugh Room Bedroom Blind – Basic Control
   description: "Logic:\n - If bed becomes occupied after dark threshold, close blind\n
     - If TV turns on, close blind\n - If bathroom humidity rises quickly, close blind
     (with 5-min automation cooldown)\n - If TV turns off → wait → open if bed unoccupied\n
@@ -5114,11 +5114,11 @@
     for: 00:20:00
   - id: tv_on
     trigger: state
-    entity_id: media_player.hugh_room_display
+    entity_id: media_player.hugh_room_display_g
     to: 'on'
   - id: tv_off
     trigger: state
-    entity_id: media_player.hugh_room_display
+    entity_id: media_player.hugh_room_display_g
     to: 'off'
   - id: dark
     trigger: numeric_state
