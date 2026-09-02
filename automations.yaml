@@ -2697,6 +2697,10 @@
       {{ lux < low or lux > high }}
 
       '
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
   - id: periodic_recheck
     trigger: time_pattern
     minutes: /5
@@ -2708,7 +2712,7 @@
     for:
       hours: 0
       minutes: 0
-      seconds: 30
+      seconds: 10
   - id: dusk_time
     trigger: sun
     event: sunset
@@ -3584,9 +3588,9 @@
       sequence:
       - action: media_player.media_previous_track
         target:
-          entity_id: "{% set players = [\n  'media_player.hugh_room_display_2',\n  'media_player.hugh_room_speaker_right_2',\n
-            \ 'media_player.hugh_room_speaker_left_2'\n] %} {{ players | select('is_state','playing')
-            | list | first }}\n"
+          entity_id: "{% set players = [\n  'media_player.hugh_room_display_2',\n
+            \ 'media_player.hugh_room_speaker_right_2',\n  'media_player.hugh_room_speaker_left_2'\n]
+            %} {{ players | select('is_state','playing') | list | first }}\n"
         data: {}
   mode: single
 - id: '1763117470810'
@@ -3625,9 +3629,9 @@
           | list | length > 0 }}\n"
       sequence:
       - target:
-          entity_id: "{% set players = [\n  'media_player.hugh_room_display_2',\n  'media_player.hugh_room_speaker_right_2',\n
-            \ 'media_player.hugh_room_speaker_left_2'\n] %} {{ players | select('is_state','playing')
-            | list | first }}\n"
+          entity_id: "{% set players = [\n  'media_player.hugh_room_display_2',\n
+            \ 'media_player.hugh_room_speaker_right_2',\n  'media_player.hugh_room_speaker_left_2'\n]
+            %} {{ players | select('is_state','playing') | list | first }}\n"
         action: media_player.media_next_track
   mode: single
 - id: '1763117507620'
@@ -3678,10 +3682,11 @@
           | list) | length > 0 }}\n"
       sequence:
       - target:
-          entity_id: "{% set singles = [\n  'media_player.hugh_room_display_2',\n  'media_player.hugh_room_speaker_right_2',\n
-            \ 'media_player.hugh_room_speaker_left_2'\n] %} {% set active = (singles
-            | select('is_state','playing') | list\n                 + singles | select('is_state','buffering')
-            | list) %}\n{{ active | first }}\n"
+          entity_id: "{% set singles = [\n  'media_player.hugh_room_display_2',\n
+            \ 'media_player.hugh_room_speaker_right_2',\n  'media_player.hugh_room_speaker_left_2'\n]
+            %} {% set active = (singles | select('is_state','playing') | list\n                 +
+            singles | select('is_state','buffering') | list) %}\n{{ active | first
+            }}\n"
         action: media_player.media_pause
         data: {}
     - conditions:
@@ -3775,8 +3780,8 @@
   conditions:
   - condition: template
     value_template: "{{ [\n  'media_player.hugh_room_display_2',\n  'media_player.hugh_room_speaker_right_2',\n
-      \ 'media_player.hugh_room_speaker_left_2'\n] | select('is_state','playing') |
-      list | count > 0 }}\n"
+      \ 'media_player.hugh_room_speaker_left_2'\n] | select('is_state','playing')
+      | list | count > 0 }}\n"
   actions:
   - variables:
       active: "{{ [\n  'media_player.hugh_room_display_2',\n  'media_player.hugh_room_speaker_right_2',\n
