@@ -180,7 +180,7 @@ def update_pl_leaders_sensor():
     league_top = goals[0] if goals else None
     lfc_top = fetch_lfc_top("goals")
 
-    state = "unavailable"
+    state = "No stats available"
     if league_top and lfc_top:
         if league_top["team"] in LIVERPOOL_NAMES:
             second = goals[1] if len(goals) > 1 else None
@@ -329,7 +329,7 @@ def update_ucl_leaders_sensor():
     top = goals[0] if goals else None
     lfc_top = fetch_ucl_lfc_top("goals")
 
-    state = "unavailable"
+    state = "No stats available"
     if top and lfc_top:
         if top["team"] in LIVERPOOL_NAMES:
             second = goals[1] if len(goals) > 1 else None
