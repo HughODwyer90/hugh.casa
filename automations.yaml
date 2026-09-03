@@ -2661,7 +2661,7 @@
   conditions:
   - condition: time
     weekday:
-    - mon
+    - tue
     - fri
   actions:
   - action: input_boolean.turn_off
@@ -2938,6 +2938,8 @@
     weekday:
     - sun
     - thu
+    - mon
+    - wed
   actions:
   - target:
       entity_id: input_boolean.wfh_tomorrow
