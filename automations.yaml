@@ -5987,19 +5987,3 @@
         '
       target: customer.care@cedarmotors.ie
   mode: single
-- id: '1788445675020'
-  alias: Force blind state refresh at limits
-  triggers:
-  - entity_id: cover.hugh_room_blind
-    attribute: current_position
-    above: 99
-    trigger: numeric_state
-  - entity_id: cover.hugh_room_blind
-    attribute: current_position
-    below: 1
-    trigger: numeric_state
-  actions:
-  - delay: 00:00:02
-  - target:
-      entity_id: cover.hugh_room_blind
-    action: cover.stop_cover
