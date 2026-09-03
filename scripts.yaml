@@ -138,11 +138,14 @@ execute_alarm_actions:
           - action: SNOOZE_ALARM
             title: Snooze Alarm
           notification_icon: mdi:alarm
-  - condition: device
-    device_id: dca746e9c202df41afab5511749cab7e
-    domain: cover
-    entity_id: 58cfa067197fc99bce6493ba99eed332
-    type: is_closed
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: cover.hugh_room_blind
+      state: closed
+    - condition: state
+      entity_id: cover.hugh_room_blind
+      state: closing
   - action: cover.set_cover_position
     metadata: {}
     target:
