@@ -5331,8 +5331,8 @@
           or is_holiday %}\n  {% set alarm = state_attr('input_datetime.weekend_wake_up_alarm',
           'timestamp') | int %}\n{% elif is_wfh %}\n  {% set alarm = state_attr('input_datetime.weekday_wfh_wake_up_alarm',
           'timestamp') | int %}\n{% else %}\n  {% set alarm = state_attr('input_datetime.weekday_wake_up_alarm',
-          'timestamp') | int %}\n{% endif %} {{ now().timestamp() % 86400 > alarm
-          }}\n"
+          'timestamp') | int %}\n{% endif %} {{ (now().timestamp() % 86400) > (alarm
+          % 86400) }}\n"
       - condition: numeric_state
         entity_id: sensor.sun_elevation
         above: 5
