@@ -5995,3 +5995,56 @@
         '
       target: customer.care@cedarmotors.ie
   mode: single
+- id: '1788897213032'
+  alias: Hugh Room Occupancy Watchdog
+  description: 'Protective layer: force occupancy off if bed, PC, and mmwave have
+    all genuinely reported ''off'' for a sustained period while occupancy is still
+    marked ''on''. Guards against a missed transition (e.g. mmwave dropping offline
+    while ''on'', or phone never registering not_home).
+
+    '
+  triggers:
+  - trigger: time_pattern
+    minutes: /15
+  conditions:
+  - condition: state
+    entity_id: input_boolean.hugh_room_occupied
+    state: 'on'
+  - condition: not
+    conditions:
+    - condition: time
+      after: 03:20:00
+      before: 03:40:00
+  - condition: state
+    entity_id: binary_sensor.bed_sensor
+    state: 'off'
+    for: 00:20:00
+  - condition: state
+    entity_id: binary_sensor.pc_status
+    state: 'off'
+    for: 00:20:00
+  - condition: state
+    entity_id: binary_sensor.hugh_room_presence_occupancy
+    state: 'off'
+    for: 00:20:00
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.hugh_room_tv_state
+      state: 'off'
+    - condition: state
+      entity_id: binary_sensor.hugh_room_tv_state
+      state: unavailable
+  actions:
+  - action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.hugh_room_occupied
+  - if:
+    - condition: state
+      entity_id: input_boolean.wake_up_alarm_running
+      state: 'on'
+    then:
+    - action: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.wake_up_alarm_running
+  mode: restart
