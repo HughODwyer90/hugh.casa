@@ -3943,9 +3943,10 @@
 - id: '1770554582964'
   alias: Living Room Curtains – Unified Control
   description: "Priority:\n 1) Manual button toggle (sets override for 2h)\n 2) TV
-    on -> daytime = partial close, night = full close (unless override)\n 3) TV off
-    + bright -> open (unless override)\n 4) Daytime starts -> partial close if TV
-    on, else open\n 5) Dark threshold crossing -> close (unless override)\n"
+    on -> daytime = glare-aware partial/full close, night = full close (unless override)\n
+    3) TV off + bright -> open (unless override)\n 4) Daytime starts -> glare-aware
+    partial/full close if TV on, else open\n 5) Dark threshold crossing -> close (unless
+    override)\n"
   triggers:
   - domain: mqtt
     device_id: 9f98b882a412e95e16f1addf1f9e8e27
@@ -4027,9 +4028,24 @@
         entity_id: sensor.sun_elevation
         above: 0
       sequence:
-      - action: scene.turn_on
-        target:
-          entity_id: scene.curtains_close_partial
+      - choose:
+        - conditions:
+          - condition: numeric_state
+            entity_id: sensor.sun_azimuth
+            above: 145
+            below: 180
+          - condition: numeric_state
+            entity_id: sensor.sun_elevation
+            above: 30
+            below: 50
+          sequence:
+          - action: scene.turn_on
+            target:
+              entity_id: scene.curtains_close
+        default:
+        - action: scene.turn_on
+          target:
+            entity_id: scene.curtains_close_partial
     - conditions:
       - condition: state
         entity_id: input_boolean.living_room_curtains_manual_override
@@ -4078,9 +4094,24 @@
             entity_id: binary_sensor.living_room_tv_state
             state: 'on'
           sequence:
-          - action: scene.turn_on
-            target:
-              entity_id: scene.curtains_close_partial
+          - choose:
+            - conditions:
+              - condition: numeric_state
+                entity_id: sensor.sun_azimuth
+                above: 145
+                below: 180
+              - condition: numeric_state
+                entity_id: sensor.sun_elevation
+                above: 30
+                below: 50
+              sequence:
+              - action: scene.turn_on
+                target:
+                  entity_id: scene.curtains_close
+            default:
+            - action: scene.turn_on
+              target:
+                entity_id: scene.curtains_close_partial
         default:
         - action: scene.turn_on
           target:
