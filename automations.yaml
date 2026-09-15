@@ -5170,17 +5170,20 @@
   description: "Logic:\n - If bed becomes occupied after dark threshold, close blind\n
     - If TV turns on, close blind\n - If bathroom humidity rises quickly, close blind
     (with 5-min automation cooldown)\n - If TV turns off → wait → open if bed unoccupied\n
-    - If sun elevation drops, close blind\n - Morning time → open if not in bed\n
-    - If bed unoccupied for 20 mins during day → open if closed (after alarm time)\n
-    - If I leave home during the day → open blind (if bed unoccupied)\n - If humidity
-    stays very high (post-shower) → reopen blind (failsafe)\n - Cooldown flag (input_boolean.blind_humidity_cooldown)
+    - If sun elevation drops, close blind\n - Morning time → open if not in bed (and
+    TV is off)\n - If bed unoccupied for 20 mins during day → open if closed (after
+    alarm time, and TV is off)\n - If I leave home during the day → open blind (if
+    bed unoccupied and TV is off)\n - If humidity stays very high (post-shower) →
+    reopen blind (failsafe, and TV is off)\n - Cooldown flag (input_boolean.blind_humidity_cooldown)
     blocks automation opens only\n - Manual open during cooldown clears the flag\n
     - switch.hugh_room_blind_plug mirrors blind state: on when open/opening, off when
     closed/closing\n - switch.hugh_room_blind_plug charging is skipped if sensor.hugh_room_blind_battery
     is at or above 85%\n - Battery-full cutoff (turning off the plug once above 85%)
     lives in a separate automation\n   (hugh_room Bedroom Blind – Battery Full Cutoff)
     to avoid mode: restart here cancelling\n   in-progress sequences, e.g. the tv_off
-    wait_for_trigger delay\n"
+    wait_for_trigger delay\n - All automation-driven \"open\" branches (bed_cleared_long,
+    morning_open, left_home,\n   humidity_stable_high) now require remote.hugh_room_tv
+    to be 'off', so the blind\n   doesn't re-open while the TV is on\n"
   triggers:
   - id: bed_occupied
     trigger: state
@@ -5363,6 +5366,9 @@
     - conditions:
       - condition: trigger
         id: bed_cleared_long
+      - condition: state
+        entity_id: remote.hugh_room_tv
+        state: 'off'
       - condition: template
         value_template: "{% set is_weekend = now().weekday() >= 5 %} {% set is_wfh
           = states('input_boolean.wfh_tomorrow') == 'on' %} {% set is_holiday = states('calendar.ireland')
@@ -5410,6 +5416,9 @@
         entity_id: binary_sensor.bed_sensor
         state: 'off'
       - condition: state
+        entity_id: remote.hugh_room_tv
+        state: 'off'
+      - condition: state
         entity_id: input_boolean.blind_humidity_cooldown
         state: 'off'
       - condition: numeric_state
@@ -5430,6 +5439,9 @@
         id: left_home
       - condition: state
         entity_id: binary_sensor.bed_sensor
+        state: 'off'
+      - condition: state
+        entity_id: remote.hugh_room_tv
         state: 'off'
       - condition: numeric_state
         entity_id: sensor.sun_elevation
@@ -5455,6 +5467,9 @@
     - conditions:
       - condition: trigger
         id: humidity_stable_high
+      - condition: state
+        entity_id: remote.hugh_room_tv
+        state: 'off'
       - condition: numeric_state
         entity_id: sensor.sun_elevation
         above: 5
