@@ -4532,8 +4532,10 @@
   alias: Kitchen Occupancy
   description: ''
   triggers:
-  - entity_id: binary_sensor.kitchen_epone_occupancy
+  - entity_id:
+    - binary_sensor.kitchen_epone_mmwave
     trigger: state
+  conditions: []
   actions:
   - data:
       occupancy_sensor: binary_sensor.kitchen_epone_occupancy
@@ -4734,8 +4736,10 @@
     remains on
   triggers:
   - trigger: state
-    entity_id: binary_sensor.kitchen_epone_occupancy
-    to: 'off'
+    entity_id:
+    - binary_sensor.kitchen_epone_occupancy
+    to:
+    - 'off'
   - trigger: time_pattern
     minutes: /2
   actions:
