@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Quarter Dashboard — multi-project HTML Dashboard generator
 Discovers sprints for the current quarter across configured projects, pulls live
@@ -751,7 +751,7 @@ def _issue_row(issue):
 
 def _compute_per_sprint(sprints, all_issues, in_progress_statuses, proj,
                         version_release_dates, issue_sprint_ids_fn,
-                        prev_q_sprint_id=None, prev_q_sprint_end=None,
+                        prev_q_sprint_id=None, prev_q_sprint_end=None, prev_q_sprint_name=None,
                         quarter_start_str=None, excl_issues=None):
     """Compute per-sprint KPIs and assignee stats for sprint-level filtering and trends."""
     _excl_done_sp_st  = set(proj.get("excluded_done_statuses", []))
@@ -768,6 +768,7 @@ def _compute_per_sprint(sprints, all_issues, in_progress_statuses, proj,
         return True
 
     per_sprint = {}
+    rollover_map = {}  # issue_key -> [{"sid": sprint_id_str, "into": name, "from": name}, ...]
     for sprint_idx, sprint in enumerate(sprints):
         sid = str(sprint["id"])
         # ID + end date of the sprint immediately before this one.
@@ -775,9 +776,11 @@ def _compute_per_sprint(sprints, all_issues, in_progress_statuses, proj,
         if sprint_idx > 0:
             prev_sid      = str(sprints[sprint_idx - 1]["id"])
             prev_end_date = sprints[sprint_idx - 1].get("end_date") or ""
+            prev_name     = sprints[sprint_idx - 1]["name"]
         else:
             prev_sid      = prev_q_sprint_id
             prev_end_date = prev_q_sprint_end or ""
+            prev_name     = prev_q_sprint_name
         s_issues = [i for i in all_issues if sid in issue_sprint_ids_fn(i)]
         if not s_issues:
             continue
@@ -803,7 +806,7 @@ def _compute_per_sprint(sprints, all_issues, in_progress_statuses, proj,
         # sprint AFTER the previous sprint ended.  If the current sprint was added before
         # the previous sprint closed, it was an early start (planned for this sprint),
         # not a rollover — exclude it.
-        s_rollover = 0
+        s_rollover_keys = []
         if prev_sid:
             for i in s_issues:
                 if prev_sid not in issue_sprint_ids_fn(i):
@@ -812,7 +815,14 @@ def _compute_per_sprint(sprints, all_issues, in_progress_statuses, proj,
                     added = _sprint_added_date(i, sid, sprint["name"])
                     if added and added < prev_end_date:
                         continue  # added to this sprint before prev closed → early start
-                s_rollover += 1
+                s_rollover_keys.append(i["key"])
+        s_rollover = len(s_rollover_keys)
+        for _k in s_rollover_keys:
+            rollover_map.setdefault(_k, []).append({
+                "sid":  sid,
+                "into": sprint["name"],
+                "from": prev_name or "",
+            })
         s_cycle = []
         for i in s_completed:
             rs = (i["fields"].get("resolutiondate") or "")[:10]
@@ -922,7 +932,7 @@ def _compute_per_sprint(sprints, all_issues, in_progress_statuses, proj,
             "assignee_stats":        s_assignee_stats,
             "excl_summary_stats":    s_excl_stats,
         }
-    return per_sprint
+    return per_sprint, rollover_map
 
 
 def fetch_worklogs_for_quarter(issues, qs_date, qe_date, sprint_ranges=None, issue_sprint_ids_fn=None):
@@ -1004,7 +1014,7 @@ def fetch_worklogs_for_quarter(issues, qs_date, qe_date, sprint_ranges=None, iss
     return by_person
 
 
-def fetch_kpis(sprints, proj, ref=None, prev_sprint_id=None, prev_sprint_end=None):
+def fetch_kpis(sprints, proj, ref=None, prev_sprint_id=None, prev_sprint_end=None, prev_sprint_name=None):
     project_key   = proj["key"]
     use_sp        = proj.get("use_story_points", False)
     sp_field      = proj.get("story_points_field") or "customfield_10016"
@@ -1388,11 +1398,12 @@ def fetch_kpis(sprints, proj, ref=None, prev_sprint_id=None, prev_sprint_end=Non
         "per_sprint":          "__PLACEHOLDER__",
         "excl_summary_stats":  excl_summary_stats,
     }
-    _per_sprint = _compute_per_sprint(sprints, all_issues, in_progress_statuses,
+    _per_sprint, _rollover_map = _compute_per_sprint(sprints, all_issues, in_progress_statuses,
                                       proj, version_release_dates,
                                       _issue_sprint_ids,
                                       prev_q_sprint_id=prev_sid_str,
                                       prev_q_sprint_end=prev_sprint_end,
+                                      prev_q_sprint_name=prev_sprint_name,
                                       quarter_start_str=str(qs_date),
                                       excl_issues=excl_summ_issues)
     _sp_velocity_avg = 0
@@ -1401,6 +1412,11 @@ def fetch_kpis(sprints, proj, ref=None, prev_sprint_id=None, prev_sprint_end=Non
                        if v["sprint_state"].lower() == "closed"]
         _sp_velocity_avg = round(sum(_closed_sps) / len(_closed_sps), 1) if _closed_sps else 0
     _result["per_sprint"]      = _per_sprint
+    # Tag each "all items" row with the sprint(s) it rolled over into, so the
+    # dashboard can mark rollover items directly in the All Items list instead
+    # of only surfacing the aggregate rollover_count KPI.
+    for _row in _result["issues"]["all"]:
+        _row["rollover_sprints"] = _rollover_map.get(_row["key"], [])
     _result["use_story_points"]   = use_sp
     _result["use_oos"]            = use_oos
     _excl_terms = proj.get("excluded_summary_contains", [])
@@ -2158,22 +2174,22 @@ def _enrich_past_quarters_with_carryovers(kpis, all_quarters, proj):
 
 
 def _get_prev_sprint_id(proj, current_sprints):
-    """Return (sprint_id, end_date_str) for the sprint immediately before this quarter,
-    or (None, None) if no saved data exists yet."""
+    """Return (sprint_id, end_date_str, name) for the sprint immediately before this
+    quarter, or (None, None, None) if no saved data exists yet."""
     if not current_sprints:
-        return None, None
+        return None, None, None
     first_start = current_sprints[0]["start_date"]
-    best_id, best_end = None, ""
+    best_id, best_end, best_name = None, "", None
     for f in glob.glob(os.path.join(proj["data_dir"], "Q*.json")):
         try:
             saved = json.loads(open(f, encoding="utf-8").read())
             for s in saved.get("sprints", []):
                 end = s.get("end_date") or ""
                 if end and end < first_start and end > best_end:
-                    best_end, best_id = end, s["id"]
+                    best_end, best_id, best_name = end, s["id"], s.get("name")
         except Exception:
             pass
-    return best_id, (best_end or None)
+    return best_id, (best_end or None), best_name
 
 
 def _diagnose_quarter(proj, ref=None):
@@ -2192,8 +2208,9 @@ def _diagnose_quarter(proj, ref=None):
         print("  No sprints found for this quarter — nothing to diagnose.")
         return
     sprints = classify_sprints(raw_sprints)
-    prev_sprint_id, prev_sprint_end = _get_prev_sprint_id(proj, sprints)
-    kpis = fetch_kpis(sprints, proj, ref, prev_sprint_id=prev_sprint_id, prev_sprint_end=prev_sprint_end)
+    prev_sprint_id, prev_sprint_end, prev_sprint_name = _get_prev_sprint_id(proj, sprints)
+    kpis = fetch_kpis(sprints, proj, ref, prev_sprint_id=prev_sprint_id, prev_sprint_end=prev_sprint_end,
+                       prev_sprint_name=prev_sprint_name)
 
     existing_json_path = os.path.join(proj["data_dir"], f"{quarter_file_key(kpis['quarter'])}.json")
     existing_saved = {}
@@ -2297,10 +2314,11 @@ def _run_quarter(proj, ref=None, skip_notes=False, force_notes=False, lock_after
         print(f"      {s['name']}  [{s['status_label']}]  {s['start_date']} → {s['end_date']}")
 
     print(f"\n[2/4] Fetching KPIs from Jira ({len(sprints)} sprints)...")
-    prev_sprint_id, prev_sprint_end = _get_prev_sprint_id(proj, sprints)
+    prev_sprint_id, prev_sprint_end, prev_sprint_name = _get_prev_sprint_id(proj, sprints)
     if prev_sprint_id:
         print(f"      Previous quarter last sprint: {prev_sprint_id} (ends {prev_sprint_end})")
-    kpis = fetch_kpis(sprints, proj, ref, prev_sprint_id=prev_sprint_id, prev_sprint_end=prev_sprint_end)
+    kpis = fetch_kpis(sprints, proj, ref, prev_sprint_id=prev_sprint_id, prev_sprint_end=prev_sprint_end,
+                       prev_sprint_name=prev_sprint_name)
     if proj.get("use_story_points"):
         print(f"      Total: {kpis['total']} | Done: {kpis['completed']} | "
               f"Rollover: {kpis['rollover_count']} | Cycle: {kpis['avg_cycle_days']}d | "
