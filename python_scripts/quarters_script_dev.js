@@ -548,9 +548,28 @@ function render(qk,activeTab){
   }};
 
   /* Column sets */
-  const allCols =issueCols([priCol,verCol,lblCol]);
+  /* All-items Key column — adds a ↻ icon for items that rolled over from a
+     previous sprint (scoped to the selected sprint, or any sprint this quarter). */
+  const rollKeyCol={h:"Key",r:r=>{
+    const lnk=`<a class="ik" href="${e(r.url)}" target="_blank">${e(r.key)}</a>`;
+    const events=rollEvents(r);
+    if(!events.length)return lnk;
+    const tip=`Rolled over — ${events.map(d=>d.from?`${d.from} → ${d.into}`:d.into).join(", ")}`;
+    return lnk+`<span class="ro" data-tip="${e(tip)}">&#x21bb;</span>`+rollBadge(r);
+  }};
+  const allCols =[rollKeyCol,...issueCols([priCol,verCol,lblCol]).slice(1)];
   const oosCols =issueCols([priCol,lblCol]);
   const relCols =issueCols([verCol,lblCol]);
+  /* Rollover tab — grouped by sprint, so "Rolled From" is the only extra column needed.
+     Key gets the ×N badge too, since the same item can appear in more than one group. */
+  const rollCols=[
+    {h:"Key",     r:r=>`<a class="ik" href="${e(r.url)}" target="_blank">${e(r.key)}</a>`+rollBadge(r)},
+    {h:"Type",    r:r=>`<span class="b ${tcls(r.type)}">${e(r.type)}</span>`},
+    {h:"Summary", r:r=>`<div class="is" title="${e(r.summary)}">${e(r.summary)}</div>`},
+    {h:"Assignee",r:r=>e(r.assignee)},
+    {h:"Rolled From",r:r=>r._into&&r._into.from?e(r._into.from):"—"},
+    {h:"Status",  r:r=>`<span class="b ${scls(r.status_cat)}">${e(r.status)}</span>`},
+  ];
   /* In Progress columns — Key cell includes ⓘ icon for cross-quarter carry-overs */
   const ipCols=[
     {h:"Key",r:r=>{
@@ -596,6 +615,19 @@ function render(qk,activeTab){
 
   /* Build all tab panes */
   function spF(rows){return activeSprint?rows.filter(r=>(r.sprint_ids||[]).includes(activeSprint)):rows;}
+  /* Rollover events for a row, scoped to the selected sprint (or all sprints this quarter). */
+  function rollEvents(r){
+    const rs=r.rollover_sprints||[];
+    return activeSprint?rs.filter(d=>d.sid===activeSprint):rs;
+  }
+  /* Badge for items that rolled over more than once this quarter, so it's visible
+     at a glance instead of requiring the reader to spot the same key in two places. */
+  function rollBadge(r){
+    const all=r.rollover_sprints||[];
+    if(all.length<2)return"";
+    const tip=`Rolled over ${all.length} times this quarter — ${all.map(d=>d.from?`${d.from} → ${d.into}`:d.into).join(", ")}`;
+    return`<span class="ro-multi" data-tip="${e(tip)}">×${all.length}</span>`;
+  }
   const ipRows      =spF(iss.in_progress||[]);
   const ipUnresolved=ipRows.filter(r=>!r.resolved_quarter);
   const ipCarried   =ipRows.filter(r=>!!r.resolved_quarter);
@@ -603,7 +635,21 @@ function render(qk,activeTab){
   const oosOpenRows=spF(iss.oos_open||[]);
   const oosAllRows =spF(iss.oos_all||[]);
   const relRows    =spF(iss.released||[]);
-  const allRows    =spF(iss.all||[]);
+  const allRows    =spF(iss.all||[]).map(r=>{
+    return rollEvents(r).length?{...r,_rowCls:(r._rowCls?r._rowCls+' rollover':'rollover')}:r;
+  });
+  /* Rollover tab — one row per (item, sprint) rollover event, grouped by the sprint
+     it rolled INTO so the report reads like a sprint-by-sprint carry-over log. */
+  const rollEventRows=(iss.all||[]).flatMap(r=>rollEvents(r).map(d=>({...r,_into:d})));
+  const rollGroups=[];
+  {
+    const bySid={};
+    for(const r of rollEventRows)(bySid[r._into.sid]=bySid[r._into.sid]||[]).push(r);
+    for(const s of (sprints||[]).slice().reverse()){
+      const sid=String(s.id);
+      if(bySid[sid])rollGroups.push({sid,name:s.name,rows:bySid[sid]});
+    }
+  }
   const exclSummRows=spF((iss.excluded_summary||[]).map(r=>({...r,_rowCls:(r._rowCls?r._rowCls+' excl-summary':'excl-summary')})));
   const exclKeys=new Set(exclSummRows.map(r=>r.key));
 
@@ -639,13 +685,13 @@ function render(qk,activeTab){
   const cycleC="blue";
   const sn=sp&&sp.notes?sp.notes:{};
   const cards=sp?[
-    {l:"Total Items",       v:K.total,                                                        c:"blue",  tip:"All tickets in this sprint."},
+    {l:"Total Items",       v:K.total,                                                        c:"blue",  tip:"All tickets in this sprint.", tab:"all"},
     {l:"Completed",         v:K.completed,                                                    c:"green", tip:"Tickets moved to Done in this sprint."},
     {l:"Completion Rate",   v:cr+"%",                                                         c:crC,     tip:"% of sprint tickets completed.", bar:cr, n:sn.completion_rate||""},
-    {l:"Releases",          v:K.releases_shipped||0,                                          c:"blue",  tip:"Fix versions released within this sprint date range."},
-    ...(PROJ_USE_OOS?[{l:"Out-of-Sprint",v:K.oos_total||0,c:"yellow",tip:"Tickets added to this sprint after it started.",n:sn.oos_total||""}]:[]),
+    {l:"Releases",          v:K.releases_shipped||0,                                          c:"blue",  tip:"Fix versions released within this sprint date range.", tab:"released"},
+    ...(PROJ_USE_OOS?[{l:"Out-of-Sprint",v:K.oos_total||0,c:"yellow",tip:"Tickets added to this sprint after it started.",n:sn.oos_total||"", tab:"oos"}]:[]),
     {l:"Bug / Story / Task",v:K.bugs+" / "+K.stories+" / "+K.tasks+" ("+K.bug_pct+"% bugs)", c:"blue",  tip:"Issue type breakdown for this sprint.",                n:sn.type_split||""},
-    {l:"Rollover",          v:K.rollover_count+" items ("+rollPct+"%)",                       c:rollC,   tip:"Items carried forward from an earlier sprint this quarter.", n:sn.rollover||""},
+    {l:"Rollover",          v:K.rollover_count+" items ("+rollPct+"%)",                       c:rollC,   tip:"Items carried forward from an earlier sprint this quarter.", n:sn.rollover||"", tab:"rollover"},
     {l:"Cycle Time",        v:(K.med_cycle_days||0)+"d median ("+(K.avg_cycle_days||0)+"d avg)", c:cycleC, tip:"Median days In Progress to Done for tickets completed this sprint.", n:sn.cycle_time||""},
     ...(PROJ_USE_SP?[
       {l:"SP Planned",    v:K.sp_total||0,     c:"blue",  tip:"Total story points committed to this sprint."},
@@ -659,19 +705,19 @@ function render(qk,activeTab){
        tip:"How close logged hours were to estimates for this sprint."},
     ]),
   ]:[
-    {l:"Total Items",           v:K.total,                                           n:notes.total,            c:"blue",   tip:"All tickets in scope across every sprint this quarter, regardless of status or type."},
+    {l:"Total Items",           v:K.total,                                           n:notes.total,            c:"blue",   tip:"All tickets in scope across every sprint this quarter, regardless of status or type.", tab:"all"},
     {l:"Completed / Released",  v:K.completed,                                       n:notes.completed,        c:"green",  tip:"Tickets moved to Done status this quarter. Compare against Total Items to gauge delivery."},
     {l:"Completion Rate",       v:cr+"%",                                            n:notes.completion_rate,  c:crC,      tip:"Percentage of in-scope tickets completed. 80%+ is healthy; 60—79% warrants a look at blockers; below 60% is a concern.",  bar:cr},
-    {l:"Releases Shipped",      v:kpis.releases_shipped,                             n:notes.releases_shipped, c:"blue",   tip:"Number of Jira fix versions released this quarter. Multiple releases indicate a healthy delivery cadence."},
+    {l:"Releases Shipped",      v:kpis.releases_shipped,                             n:notes.releases_shipped, c:"blue",   tip:"Number of Jira fix versions released this quarter. Multiple releases indicate a healthy delivery cadence.", tab:"released"},
     ...(PROJ_USE_OOS?[
-      {l:"Out-of-Sprint (total)", v:K.oos_total, n:notes.oos_total, c:"yellow", tip:"Tickets added to a sprint after it started — unplanned reactive work. High OOS (>20% of total) signals planning or scope issues."},
-      {l:"Open OOS Items",        v:oa,             n:notes.oos_open,  c:oosC,     tip:"Out-of-sprint tickets still unresolved. Any open OOS items are unplanned debt that should be closed or explicitly deferred."},
+      {l:"Out-of-Sprint (total)", v:K.oos_total, n:notes.oos_total, c:"yellow", tip:"Tickets added to a sprint after it started — unplanned reactive work. High OOS (>20% of total) signals planning or scope issues.", tab:"oos"},
+      {l:"Open OOS Items",        v:oa,             n:notes.oos_open,  c:oosC,     tip:"Out-of-sprint tickets still unresolved. Any open OOS items are unplanned debt that should be closed or explicitly deferred.", tab:"oosopen"},
     ]:[]),
     {l:"Bug / Story / Task",    v:`${K.bugs} / ${K.stories} / ${K.tasks} (${K.bug_pct}% bugs)`, n:notes.type_split, c:"blue", tip:"Breakdown of issue types in scope. A bug ratio above 40% signals quality concerns; a healthy quarter is mostly stories and tasks."},
     {l:"Releases / Sprint",     v:`${kpis.med_releases_per_sprint} median (${kpis.avg_releases_per_sprint} avg)`, n:notes.avg_releases, c:"blue", tip:"Median releases per closed sprint — more reliable than the mean when one sprint has an unusually large batch. Healthy cadence varies by team type.",
-     xn:(()=>{const med=kpis.med_releases_per_sprint||0,avg=kpis.avg_releases_per_sprint||0;return(avg>med*1.5&&avg-med>0.5)?`⚠ Average is skewed — at least one sprint had an unusually high release count (${avg} avg vs ${med} median).`:""})()},
+     xn:(()=>{const med=kpis.med_releases_per_sprint||0,avg=kpis.avg_releases_per_sprint||0;return(avg>med*1.5&&avg-med>0.5)?`⚠ Average is skewed — at least one sprint had an unusually high release count (${avg} avg vs ${med} median).`:""})(), tab:"released"},
     {l:"Sprint Rollover",       v:K.rollover_count+" items ("+rollPct+"%)",       n:notes.rollover,         c:rollC,    tip:"Tickets carried from a closed sprint without completing. Note: an item rolling across multiple sprints within the quarter may be counted more than once.",
-     xn:K.rollover_count>0?"⚠ Count may include items that rolled across multiple sprints within this quarter — actual unique items could be lower.":""},
+     xn:K.rollover_count>0?"⚠ Count may include items that rolled across multiple sprints within this quarter — actual unique items could be lower.":"", tab:"rollover"},
     {l:"Cycle Time",            v:`${K.med_cycle_days||0}d median (${K.avg_cycle_days||0}d avg)`,         n:notes.cycle_time,   c:cycleC,   tip:"Median calendar days from In Progress to Done — more reliable than the mean when a small number of long-running tickets inflate the average. Under 3d excellent; 3—7d normal; over 7d investigate blockers.",
      xn:(()=>{const med=K.med_cycle_days||0,avg=K.avg_cycle_days||0;return(avg>med*1.5&&avg-med>2)?`⚠ Average skewed by long-running outlier tickets (${avg}d avg vs ${med}d median) — median is the more representative figure.`:""})()},
     ...(PROJ_USE_SP?[
@@ -683,7 +729,8 @@ function render(qk,activeTab){
     ]:[]),
   ];
   const kpiHtml=`<div class="kpi-grid">${cards.map(c=>`
-    <div class="kpi-card ${c.c}">
+    <div class="kpi-card ${c.c}${c.tab?" kpi-clickable":""}"${c.tab?` onclick="showTab('${c.tab}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showTab('${c.tab}')}" role="button" tabindex="0" data-tip="Click to view the ${e(c.l)} report"`:""}>
+      ${c.tab?`<span class="kpi-goto">View report &#x2192;</span>`:""}
       <div class="kl">${e(c.l)}${c.tip?`<span class="trend-info" data-tip="${e(c.tip)}" style="margin-left:4px">&#x2139;</span>`:""}</div>
       <div class="kv">${e(String(c.v))}</div>
       ${c.bar!==undefined?`<div class="kpi-bar"><div class="kpi-bar-fill" style="width:${Math.min(c.bar,100)}%"></div></div>`:""}
@@ -748,6 +795,14 @@ function render(qk,activeTab){
       ${isCurrentQ?`<div class="pane-desc">Items currently being worked on across all sprints this quarter.${ipCarriedIn.length>0?` Coloured &#x2139; marks ${ipCarriedIn.length} item${ipCarriedIn.length>1?"s":""}  carried over from a previous quarter.`:""}</div>`:""}
       ${mkTable(ipCols,isCurrentQ?ipAll:ipAll.map(r=>r._rowCls==='resolved-carried'?r:{...r,_rowCls:r._rowCls||''}),jUrl(base+" AND statusCategory != Done ORDER BY status ASC, assignee ASC"))}
     `;})()),
+    pane("rollover",`
+      <div class="pane-title">Rollover <span class="tab-cnt ${rollEventRows.length===0?"clear":rollPct<20?"warn":"urgent"}">${rollEventRows.length}</span></div>
+      <div class="pane-desc">Items carried forward from an earlier sprint without completing${activeSprint&&sp?`, into ${e(sp.sprint_name)}`:" this quarter"}. Grouped by the sprint each item rolled into — an item that rolls across multiple sprints appears in more than one group.</div>
+      ${rollGroups.length?rollGroups.map(g=>`
+        <div class="section-label" style="margin-top:20px">${e(g.name)} <span class="tab-cnt">${g.rows.length}</span></div>
+        ${mkTable(rollCols,g.rows,jUrl(`project = ${PROJ_KEY} AND key in (${g.rows.map(r=>r.key).join(",")}) ORDER BY key ASC`))}
+      `).join(""):'<div class="nodata">No rollover items 🎉</div>'}
+    `),
     ...(PROJ_USE_OOS?[
     pane("oosopen",`
       ${oosAlert}
@@ -769,7 +824,7 @@ function render(qk,activeTab){
     `),
     pane("all",`
       <div class="pane-title">All Items <span class="tab-cnt">${allRows.length+(showExclOn?exclSummRows.length:0)}</span></div>
-      <div class="pane-desc">Every issue in scope across all ${e(qk)} sprints.</div>
+      <div class="pane-desc">Every issue in scope across all ${e(qk)} sprints.${allRows.some(r=>r._rowCls&&r._rowCls.includes('rollover'))?` <span class="ro" style="margin-left:0;margin-right:4px">&#x21bb;</span> marks items that rolled over from a previous sprint${activeSprint?" into this sprint":" this quarter"} — see the <a href="javascript:void(0)" onclick="showTab('rollover')">Rollover tab</a> for the full breakdown.`:""}</div>
       ${mkTable(allCols,showExclOn?allRows.concat(exclSummRows):allRows,jUrl(base+" ORDER BY sprint ASC, status ASC"))}
     `),
     pane("time",`
@@ -1012,6 +1067,7 @@ function render(qk,activeTab){
   const tabDefs=[
     {id:"overview",   label:"Overview"},
     {id:"inprogress", label:"In Progress",   cnt:ipRows.length+(showExclOn?exclIpRows.length:0),    cls:!isCurrentQ&&ipUnresolved.length>0?"warn":""},
+    {id:"rollover",   label:"Rollover",      cnt:rollEventRows.length,   cls:rollEventRows.length===0?"clear":rollPct<20?"warn":"urgent"},
     ...(PROJ_USE_OOS?[
       {id:"oosopen",label:"Open OOS",      cnt:oa+(showExclOn?exclOosOpen.length:0),               cls:isCurrentQ?(oa>2?"urgent":oa>0?"warn":"clear"):""},
       {id:"oos",    label:"Out-of-Sprint", cnt:oosAllRows.length+(showExclOn?exclOosAll.length:0),cls:""},
