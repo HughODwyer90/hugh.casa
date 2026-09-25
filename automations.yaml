@@ -4533,7 +4533,7 @@
   description: ''
   triggers:
   - entity_id:
-    - binary_sensor.kitchen_epone_mmwave
+    - binary_sensor.kitchen_presence
     trigger: state
   conditions: []
   actions:
@@ -4737,7 +4737,7 @@
   triggers:
   - trigger: state
     entity_id:
-    - binary_sensor.kitchen_epone_occupancy
+    - binary_sensor.kitchen_presence
     to:
     - 'off'
   - trigger: time_pattern
@@ -4751,8 +4751,9 @@
         'eq', 'on')\n  | list\n  | count > 0 }}\n"
   - if:
     - condition: state
-      entity_id: binary_sensor.kitchen_epone_occupancy
-      state: 'off'
+      entity_id: binary_sensor.kitchen_presence
+      state:
+      - 'off'
     - condition: template
       value_template: '{{ any_kitchen_light_on }}'
     then:
@@ -4762,8 +4763,9 @@
         any_kitchen_light_on_after_delay: "{{ expand(kitchen_light_entities)\n  |
           selectattr('state', 'eq', 'on')\n  | list\n  | count > 0 }}\n"
     - condition: state
-      entity_id: binary_sensor.kitchen_epone_occupancy
-      state: 'off'
+      entity_id: binary_sensor.kitchen_presence
+      state:
+      - 'off'
     - condition: template
       value_template: '{{ any_kitchen_light_on_after_delay }}'
     - action: scene.turn_on
