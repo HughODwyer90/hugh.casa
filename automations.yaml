@@ -4535,10 +4535,13 @@
   - entity_id:
     - binary_sensor.kitchen_presence
     trigger: state
+    to:
+    - 'on'
+    - 'off'
   conditions: []
   actions:
   - data:
-      occupancy_sensor: binary_sensor.kitchen_epone_occupancy
+      occupancy_sensor: binary_sensor.kitchen_presence
       target_light: light.kitchen_lights
       on_scene: "{% if 1 <= now().hour < 7 %}\n  scene.kitchen_lights_2_kitchen_lights_night\n{%
         else %}\n  scene.kitchen_lights_0_kitchen_lights_on\n{% endif %}"
@@ -4693,8 +4696,9 @@
   actions:
   - delay: 00:00:05
   - condition: state
-    entity_id: binary_sensor.kitchen_epone_occupancy
-    state: 'on'
+    entity_id: binary_sensor.kitchen_presence
+    state:
+    - 'on'
   - condition: template
     value_template: "{% if 1 <= now().hour < 7 %}\n  {{ is_state('light.kitchen_cabinet',
       'on') }}\n{% else %}\n  {{ is_state('light.kitchen_lights', 'on') }}\n{% endif
