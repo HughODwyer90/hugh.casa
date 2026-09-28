@@ -2955,8 +2955,9 @@
   conditions:
   - condition: template
     value_template: '{% set sender = states(''input_text.payslip_sender'') | lower
-      %} {% set from_addr = trigger.event.data.from | lower %} {% set subject = trigger.event.data.subject
-      | lower %} {{ ''payslip'' in subject or sender in from_addr }}
+      | trim %} {% set from_addr = trigger.event.data.from | lower %} {% set subject
+      = trigger.event.data.subject | lower %} {{ ''payslip'' in subject or (sender
+      != '''' and sender in from_addr) }}
 
       '
   actions:
@@ -2966,8 +2967,8 @@
       message: Your payslip email has arrived.
       data:
         notification_icon: mdi:currency-eur
-        clickAction: https://mail.google.com/mail/u/0/#inbox
         tag: payslip_notification
+        clickAction: app://com.google.android.gm
   mode: single
 - id: '1757190365144'
   alias: Renew TV Subscription Notification
