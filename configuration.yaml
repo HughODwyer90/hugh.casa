@@ -26,6 +26,9 @@ recorder:
   auto_purge: true
   commit_interval: 30
   exclude:
+    entity_globs:
+      - sensor.tfi_gtfs_stop_*
+
     entities:
       - switch.zigbee2mqtt_bridge_permit_join
       - select.zigbee2mqtt_bridge_log_level
@@ -36,7 +39,6 @@ recorder:
       - sensor.datamars_activewindow
       - sensor.date_time_iso
       - sensor.next_alarm_in
-      - sensor.tfi_gtfs_stop_*
 
 logger:
   default: warning
