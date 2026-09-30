@@ -6109,19 +6109,47 @@
   alias: Gym Occupancy
   description: ''
   triggers:
-  - trigger: door.opened
-    target:
-      entity_id: binary_sensor.gym_door_contact
-    options:
-      behavior: each
-      for: 00:00:00
+  - trigger: state
+    entity_id:
+    - binary_sensor.gym_door_contact
+    id: Occupancy On
+    from:
+    - 'off'
+    to:
+    - 'on'
+  - trigger: state
+    entity_id:
+    - binary_sensor.gym_door_contact
+    id: Occupancy Off
+    from:
+    - 'on'
+    to:
+    - 'off'
   conditions: []
   actions:
-  - action: switch.turn_on
-    metadata: {}
-    target:
-      entity_id:
-      - switch.gym_lights
-      - switch.gym_fan
-    data: {}
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Occupancy On
+      sequence:
+      - action: switch.turn_on
+        metadata: {}
+        target:
+          entity_id:
+          - switch.gym_lights
+          - switch.gym_fan
+        data: {}
+    - conditions:
+      - condition: trigger
+        id:
+        - Occupancy Off
+      sequence:
+      - action: switch.turn_off
+        metadata: {}
+        target:
+          entity_id:
+          - switch.gym_fan
+          - switch.gym_lights
+        data: {}
   mode: single
