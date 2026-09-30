@@ -6106,6 +6106,51 @@
         entity_id: input_boolean.wake_up_alarm_running
   mode: restart
 - id: '1790790400897'
+  alias: Gym Occupancy Watchdog
+  description: Re-applies the gym scene if devices don't match the door state
+  triggers:
+  - trigger: time_pattern
+    seconds: /5
+  conditions:
+  - condition: template
+    value_template: '{{ (now() - states.binary_sensor.gym_door_contact.last_changed).total_seconds()
+      > 5 }}
+
+      '
+  actions:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.gym_door_contact
+        state: 'on'
+      - condition: template
+        value_template: "{{ expand(state_attr('scene.gym_1_gym_on', 'entity_id') or
+          [])\n   | selectattr('state', 'eq', 'off') | list | count > 0 }}\n"
+      sequence:
+      - action: scene.turn_on
+        target:
+          entity_id: scene.gym_1_gym_on
+      - action: logbook.log
+        data:
+          name: Gym watchdog
+          message: Devices out of sync, re-applied Gym On
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.gym_door_contact
+        state: 'off'
+      - condition: template
+        value_template: "{{ expand(state_attr('scene.gym_0_gym_off', 'entity_id')
+          or [])\n   | selectattr('state', 'eq', 'on') | list | count > 0 }}\n"
+      sequence:
+      - action: scene.turn_on
+        target:
+          entity_id: scene.gym_0_gym_off
+      - action: logbook.log
+        data:
+          name: Gym watchdog
+          message: Devices out of sync, re-applied Gym Off
+  mode: single
+- id: '1790791911507'
   alias: Gym Occupancy
   description: ''
   triggers:
@@ -6113,16 +6158,12 @@
     entity_id:
     - binary_sensor.gym_door_contact
     id: Occupancy On
-    from:
-    - 'off'
     to:
     - 'on'
   - trigger: state
     entity_id:
     - binary_sensor.gym_door_contact
     id: Occupancy Off
-    from:
-    - 'on'
     to:
     - 'off'
   conditions: []
@@ -6133,23 +6174,19 @@
         id:
         - Occupancy On
       sequence:
-      - action: switch.turn_on
+      - action: scene.turn_on
         metadata: {}
         target:
-          entity_id:
-          - switch.gym_lights
-          - switch.gym_fan
+          entity_id: scene.gym_1_gym_on
         data: {}
     - conditions:
       - condition: trigger
         id:
         - Occupancy Off
       sequence:
-      - action: switch.turn_off
+      - action: scene.turn_on
         metadata: {}
         target:
-          entity_id:
-          - switch.gym_fan
-          - switch.gym_lights
+          entity_id: scene.gym_0_gym_off
         data: {}
-  mode: single
+  mode: restart
