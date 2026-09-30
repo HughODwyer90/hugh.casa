@@ -6105,3 +6105,23 @@
       target:
         entity_id: input_boolean.wake_up_alarm_running
   mode: restart
+- id: '1790790400897'
+  alias: Gym Occupancy
+  description: ''
+  triggers:
+  - trigger: door.opened
+    target:
+      entity_id: binary_sensor.gym_door_contact
+    options:
+      behavior: each
+      for: 00:00:00
+  conditions: []
+  actions:
+  - action: switch.turn_on
+    metadata: {}
+    target:
+      entity_id:
+      - switch.gym_lights
+      - switch.gym_fan
+    data: {}
+  mode: single
