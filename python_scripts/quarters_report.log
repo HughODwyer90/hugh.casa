@@ -1,0 +1,77 @@
+  Projects disabled via "enabled": false — skipping: PEM
+=== Quarter Dashboard — Multi-Project ===
+Mode: DATA-ONLY (Claude notes unchanged)
+
+####################################################
+# Project: DLK (board 136)
+
+####################################################
+# Project: NDA (board 459)
+
+####################################################
+# Processing: DLK
+
+====================================================
+Project : DLK  |  Quarter: Q4 2026 (starts 2026-10-01)
+
+[1/4] Discovering sprints...
+      Using board: DLK board (id=136)
+      DLK Sprint 107  [Current]  2026-09-28 → 2026-10-11
+
+[2/4] Fetching KPIs from Jira (1 sprints)...
+      Previous quarter last sprint: 5184 (ends 2026-09-14)
+  In-progress statuses (DLK): {'In Progress', 'In Test', 'Awaiting Review', 'PR Approved'}
+  Querying: project = DLK AND sprint in (6834)...
+  Building sprint membership map (1 sprints, parallel)...
+    Sprint DLK Sprint 107: 86 issues
+    Sprint prev-quarter 5184: 50 issues (rollover check)
+      Fetching worklogs for 56 issues (30 skipped — no time logged)...
+      Worklog data: 8 people with logged time
+      Total: 77 | Done: 1 | Rollover: 0 | Cycle: 53.0d | Logged: 834.5h | No-estimate: 7
+      Developer roster unchanged (38 developers)
+
+[3/4] Skipping Claude notes (data-only run) — reusing saved notes...
+      Reused notes for 0 quarter key(s); sprint notes carried forward.
+
+[4/4] Saving quarter data...
+      Saved data: /config/www/dlk/data/Q4_2026.json
+      2026-10-01T09:20:05Z
+  Fetching next sprint for DLK...
+      Next sprint: DLK Sprint 108 (33 issues)
+
+####################################################
+# Processing: NDA
+
+====================================================
+Project : NDA  |  Quarter: Q4 2026 (starts 2026-10-01)
+
+[1/4] Discovering sprints...
+      Using board: NDA board (id=459)
+      NDA Sprint 40  [Current]  2026-09-28 → 2026-10-11
+
+[2/4] Fetching KPIs from Jira (1 sprints)...
+      Previous quarter last sprint: 7927 (ends 2026-09-27)
+  In-progress statuses (NDA): {'Paused', 'Done', 'In Progress'}
+  Querying: project = NDA AND sprint in (7931)...
+  Building sprint membership map (1 sprints, parallel)...
+    Sprint NDA Sprint 40: 35 issues
+    Sprint prev-quarter 7927: 20 issues (rollover check)
+      Fetching worklogs for 9 issues (26 skipped — no time logged)...
+      Worklog data: 1 people with logged time
+      Total: 35 | Done: 1 | Rollover: 0 | Cycle: 12.0d | Logged: 170.0h | No-estimate: 10
+      Developer roster unchanged (38 developers)
+
+[3/4] Skipping Claude notes (data-only run) — reusing saved notes...
+      Reused notes for 0 quarter key(s); sprint notes carried forward.
+
+[4/4] Saving quarter data...
+      Saved data: /config/www/nda/data/Q4_2026.json
+      2026-10-01T09:20:11Z
+  Fetching next sprint for NDA...
+      No future sprint found.
+
+====================================================
+Building combined HTML dashboard...
+Dashboard: /config/www/quarters/index.html
+
+Done. Live: https://hugh.casa/local/quarters/index.html
