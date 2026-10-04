@@ -896,18 +896,18 @@
         "entity_id": "script.update_entities_html",
         "state": "on",
         "attributes": {
-            "last_triggered": "2026-10-04T15:15:33.882647+00:00",
+            "last_triggered": "2026-10-04T15:16:42.065942+00:00",
             "mode": "single",
             "current": 1,
             "icon": "mdi:git",
             "friendly_name": "Github Backup"
         },
-        "last_changed": "2026-10-04T15:15:33.882667+00:00",
-        "last_reported": "2026-10-04T15:15:33.882667+00:00",
-        "last_updated": "2026-10-04T15:15:33.882667+00:00",
+        "last_changed": "2026-10-04T15:16:42.065957+00:00",
+        "last_reported": "2026-10-04T15:16:42.065957+00:00",
+        "last_updated": "2026-10-04T15:16:42.065957+00:00",
         "context": {
-            "id": "01M43QR4BTQJ2BR2ZJX9SK86AY",
-            "parent_id": "01M43QR4BS9CGG2JH7XG1VVB27",
+            "id": "01M43QT6YHAV0Y7FJ3W69P7W4G",
+            "parent_id": "01M43QT6YGDBNQVG932KWCPTV5",
             "user_id": null
         }
     },
@@ -3353,7 +3353,7 @@
             "manual_control_brightness": [],
             "manual_control_color": [],
             "brightness_pct": 100,
-            "color_temp_kelvin": 3670,
+            "color_temp_kelvin": 3665,
             "color_temp_mired": 272,
             "rgb_color": [
                 255,
@@ -3368,17 +3368,17 @@
                 26.538,
                 40.784
             ],
-            "sun_position": 0.745726052190414,
+            "sun_position": 0.7412700313118747,
             "force_rgb_color": false,
             "autoreset_time_remaining": {},
             "icon": "mdi:theme-light-dark",
             "friendly_name": "Adaptive Lighting: Bathroom"
         },
         "last_changed": "2026-10-04T15:02:00.846200+00:00",
-        "last_reported": "2026-10-04T15:14:44.771764+00:00",
-        "last_updated": "2026-10-04T15:14:44.771764+00:00",
+        "last_reported": "2026-10-04T15:16:15.275630+00:00",
+        "last_updated": "2026-10-04T15:16:15.275630+00:00",
         "context": {
-            "id": "01M43QPMD3AAHSP1APZ79RX27X",
+            "id": "01M43QSCSBEHRJC8V3M77Y2KHM",
             "parent_id": null,
             "user_id": null
         }
@@ -3715,16 +3715,16 @@
     },
     {
         "entity_id": "sensor.date_time_iso",
-        "state": "2026-10-04T16:15:00",
+        "state": "2026-10-04T16:16:00",
         "attributes": {
             "icon": "mdi:calendar-clock",
             "friendly_name": "Date & Time (ISO)"
         },
-        "last_changed": "2026-10-04T15:15:00.001573+00:00",
-        "last_reported": "2026-10-04T15:15:00.002489+00:00",
-        "last_updated": "2026-10-04T15:15:00.001573+00:00",
+        "last_changed": "2026-10-04T15:16:00.000740+00:00",
+        "last_reported": "2026-10-04T15:16:00.001014+00:00",
+        "last_updated": "2026-10-04T15:16:00.000740+00:00",
         "context": {
-            "id": "01M43QQ391Z03PZ4JR2KVRZGN2",
+            "id": "01M43QRXW0BW0Q2NXBWVRQ55M7",
             "parent_id": null,
             "user_id": null
         }
@@ -5312,36 +5312,43 @@
     },
     {
         "entity_id": "sensor.last_updated",
-        "state": "2026-10-04T15:04:14+00:00",
+        "state": "2026-10-04T15:15:38+00:00",
         "attributes": {
             "device_class": "timestamp",
             "icon": "mdi:calendar-clock",
             "friendly_name": "Last Updated"
         },
-        "last_changed": "2026-10-04T15:04:14.702775+00:00",
-        "last_reported": "2026-10-04T15:04:14.702968+00:00",
-        "last_updated": "2026-10-04T15:04:14.702775+00:00",
+        "last_changed": "2026-10-04T15:15:38.963538+00:00",
+        "last_reported": "2026-10-04T15:15:38.963698+00:00",
+        "last_updated": "2026-10-04T15:15:38.963538+00:00",
         "context": {
-            "id": "01M43Q3D3EF43ZJN20WW2P8XQD",
+            "id": "01M43QR9AKK1CTWHPC9NJJR4ZR",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.missing_entities",
-        "state": "0",
+        "state": "1",
         "attributes": {
             "state_class": "measurement",
-            "entities": [],
+            "entities": [
+                {
+                    "id": "binary_sensor.gym_door_contact",
+                    "state": "missing",
+                    "friendly_name": "",
+                    "occurrences": "automations.yaml:6116,6124,6139,6159,6165"
+                }
+            ],
             "unit_of_measurement": "items",
             "icon": "mdi:shield-half-full",
             "friendly_name": "Missing Entities"
         },
-        "last_changed": "2026-10-04T15:04:14.703044+00:00",
-        "last_reported": "2026-10-04T15:04:14.703408+00:00",
-        "last_updated": "2026-10-04T15:04:14.703044+00:00",
+        "last_changed": "2026-10-04T15:15:38.963744+00:00",
+        "last_reported": "2026-10-04T15:15:38.964217+00:00",
+        "last_updated": "2026-10-04T15:15:38.963744+00:00",
         "context": {
-            "id": "01M43Q3D3F9FWGPRJV9J0V69RW",
+            "id": "01M43QR9AK6RWSETTH00NRZVBQ",
             "parent_id": null,
             "user_id": null
         }
@@ -5932,13 +5939,13 @@
             "source_entity_id": "",
             "device_name": "Gym Door",
             "device_class": "battery",
-            "friendly_name": "Gym Door Battery low"
+            "friendly_name": "0x00158d008bbea6f1 Battery low"
         },
         "last_changed": "2026-10-04T15:02:16.866737+00:00",
-        "last_reported": "2026-10-04T15:03:42.166270+00:00",
-        "last_updated": "2026-10-04T15:03:42.165980+00:00",
+        "last_reported": "2026-10-04T15:16:42.062754+00:00",
+        "last_updated": "2026-10-04T15:16:42.062754+00:00",
         "context": {
-            "id": "01M43Q2DAN1KC1VDBF0N51CN7F",
+            "id": "01M43QT6YEGQC9WHVF8NGJ73TS",
             "parent_id": null,
             "user_id": null
         }
@@ -6232,13 +6239,13 @@
         "entity_id": "button.gym_door_battery_replaced",
         "state": "unknown",
         "attributes": {
-            "friendly_name": "Gym Door Battery replaced"
+            "friendly_name": "0x00158d008bbea6f1 Battery replaced"
         },
         "last_changed": "2026-10-04T15:02:05.857595+00:00",
-        "last_reported": "2026-10-04T15:02:05.857595+00:00",
-        "last_updated": "2026-10-04T15:02:05.857595+00:00",
+        "last_reported": "2026-10-04T15:16:42.062805+00:00",
+        "last_updated": "2026-10-04T15:16:42.062805+00:00",
         "context": {
-            "id": "01M43PZF91D6AQ3H96TH824VKK",
+            "id": "01M43QT6YEG9ECWGEAX95X90K5",
             "parent_id": null,
             "user_id": null
         }
@@ -7361,13 +7368,13 @@
             "battery_quantity": 1,
             "battery_type": "CR1632",
             "note": "",
-            "friendly_name": "Gym Door Battery type"
+            "friendly_name": "0x00158d008bbea6f1 Battery type"
         },
         "last_changed": "2026-10-04T15:02:05.874629+00:00",
-        "last_reported": "2026-10-04T15:02:05.875135+00:00",
-        "last_updated": "2026-10-04T15:02:05.874629+00:00",
+        "last_reported": "2026-10-04T15:16:42.062854+00:00",
+        "last_updated": "2026-10-04T15:16:42.062854+00:00",
         "context": {
-            "id": "01M43PZF9JF9V65JC4CAHWSRDN",
+            "id": "01M43QT6YE0728DMHPNQJAPPJK",
             "parent_id": null,
             "user_id": null
         }
@@ -7377,13 +7384,13 @@
         "state": "2026-09-30T17:33:40+00:00",
         "attributes": {
             "device_class": "timestamp",
-            "friendly_name": "Gym Door Battery last replaced"
+            "friendly_name": "0x00158d008bbea6f1 Battery last replaced"
         },
         "last_changed": "2026-10-04T15:02:05.874774+00:00",
-        "last_reported": "2026-10-04T15:02:05.875156+00:00",
-        "last_updated": "2026-10-04T15:02:05.874774+00:00",
+        "last_reported": "2026-10-04T15:16:42.062900+00:00",
+        "last_updated": "2026-10-04T15:16:42.062900+00:00",
         "context": {
-            "id": "01M43PZF9JRMYZNBTPWA1WZESR",
+            "id": "01M43QT6YE66WRFRSMFB4MR2ZF",
             "parent_id": null,
             "user_id": null
         }
@@ -7408,13 +7415,13 @@
             "device_name": "Gym Door",
             "unit_of_measurement": "%",
             "device_class": "battery",
-            "friendly_name": "Gym Door Battery+"
+            "friendly_name": "0x00158d008bbea6f1 Battery+"
         },
         "last_changed": "2026-10-04T15:15:33.881955+00:00",
-        "last_reported": "2026-10-04T15:15:33.881955+00:00",
-        "last_updated": "2026-10-04T15:15:33.881955+00:00",
+        "last_reported": "2026-10-04T15:16:42.062987+00:00",
+        "last_updated": "2026-10-04T15:16:42.062987+00:00",
         "context": {
-            "id": "01M43QR4BSFGZSVVRPTRZ7TENX",
+            "id": "01M43QT6YE2ZYFW5MFDEWRR0VD",
             "parent_id": null,
             "user_id": null
         }
@@ -8116,17 +8123,17 @@
     },
     {
         "entity_id": "sensor.next_alarm_in",
-        "state": "15h 30m",
+        "state": "15h 29m",
         "attributes": {
             "next_alarm_at": "2026-10-05 07:45:00+01:00",
             "icon": "mdi:alarm",
             "friendly_name": "Next Alarm In"
         },
-        "last_changed": "2026-10-04T15:15:00.430662+00:00",
-        "last_reported": "2026-10-04T15:15:00.430662+00:00",
-        "last_updated": "2026-10-04T15:15:00.430662+00:00",
+        "last_changed": "2026-10-04T15:16:00.430267+00:00",
+        "last_reported": "2026-10-04T15:16:00.430267+00:00",
+        "last_updated": "2026-10-04T15:16:00.430267+00:00",
         "context": {
-            "id": "01M43QQ3PE1VV129AZZ3NXTF34",
+            "id": "01M43QRY9ESJZSNSZ7K698A3EQ",
             "parent_id": null,
             "user_id": null
         }
@@ -8247,19 +8254,26 @@
     },
     {
         "entity_id": "sensor.missing_entities_mirror",
-        "state": "0",
+        "state": "1",
         "attributes": {
             "state_class": "measurement",
-            "entities": [],
+            "entities": [
+                {
+                    "id": "binary_sensor.gym_door_contact",
+                    "state": "missing",
+                    "friendly_name": "",
+                    "occurrences": "automations.yaml:6116,6124,6139,6159,6165"
+                }
+            ],
             "report": null,
             "icon": "mdi:alert-circle-outline",
             "friendly_name": "Missing Entities"
         },
-        "last_changed": "2026-10-04T15:04:14.703264+00:00",
-        "last_reported": "2026-10-04T15:04:14.703264+00:00",
-        "last_updated": "2026-10-04T15:04:14.703264+00:00",
+        "last_changed": "2026-10-04T15:15:38.964061+00:00",
+        "last_reported": "2026-10-04T15:15:38.964061+00:00",
+        "last_updated": "2026-10-04T15:15:38.964061+00:00",
         "context": {
-            "id": "01M43Q3D3F9FWGPRJV9J0V69RW",
+            "id": "01M43QR9AK6RWSETTH00NRZVBQ",
             "parent_id": null,
             "user_id": null
         }
@@ -8403,18 +8417,18 @@
     },
     {
         "entity_id": "sensor.total_sensors_count",
-        "state": "1416",
+        "state": "1420",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "sensors",
             "icon": "mdi:counter",
             "friendly_name": "Total Entities"
         },
-        "last_changed": "2026-10-04T15:15:34.010755+00:00",
-        "last_reported": "2026-10-04T15:15:34.010755+00:00",
-        "last_updated": "2026-10-04T15:15:34.010755+00:00",
+        "last_changed": "2026-10-04T15:16:42.124488+00:00",
+        "last_reported": "2026-10-04T15:16:42.124488+00:00",
+        "last_updated": "2026-10-04T15:16:42.124488+00:00",
         "context": {
-            "id": "01M43QR4FTXVSBJS656KZZD0QS",
+            "id": "01M43QT70B2YMWK4VJ9AEM1BT8",
             "parent_id": null,
             "user_id": null
         }
@@ -8774,7 +8788,7 @@
             "stop_code": 244891,
             "stop_name": "Woodhill Villas",
             "direction": "\u2192 City",
-            "distance_m": 123,
+            "distance_m": 121,
             "nearest_overall_code": 244891,
             "latitude": 51.90234,
             "longitude": -8.435429,
@@ -8782,10 +8796,10 @@
             "friendly_name": "Bus Stop"
         },
         "last_changed": "2026-10-04T15:02:06.221931+00:00",
-        "last_reported": "2026-10-04T15:12:36.671623+00:00",
-        "last_updated": "2026-10-04T15:12:36.671623+00:00",
+        "last_reported": "2026-10-04T15:15:36.735172+00:00",
+        "last_updated": "2026-10-04T15:15:36.735172+00:00",
         "context": {
-            "id": "01M43QJQ9VJHETYF6MJMSHQQZ5",
+            "id": "01M43QR74WSACCW1RSYS4S68AE",
             "parent_id": null,
             "user_id": null
         }
@@ -9162,54 +9176,54 @@
     },
     {
         "entity_id": "sensor.living_room_eppro_temperature",
-        "state": "22.6727294921875",
+        "state": "22.6567077636719",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
             "device_class": "temperature",
             "friendly_name": "Temperature"
         },
-        "last_changed": "2026-10-04T15:15:11.682255+00:00",
-        "last_reported": "2026-10-04T15:15:11.682255+00:00",
-        "last_updated": "2026-10-04T15:15:11.682255+00:00",
+        "last_changed": "2026-10-04T15:16:41.682142+00:00",
+        "last_reported": "2026-10-04T15:16:41.682142+00:00",
+        "last_updated": "2026-10-04T15:16:41.682142+00:00",
         "context": {
-            "id": "01M43QQEP2T9DK4DV33GGNN22F",
+            "id": "01M43QT6JJER4HRKA84BRMC0E4",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.living_room_eppro_humidity",
-        "state": "30.6671142578125",
+        "state": "30.670166015625",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "%",
             "device_class": "humidity",
             "friendly_name": "Humidity"
         },
-        "last_changed": "2026-10-04T15:15:11.683039+00:00",
-        "last_reported": "2026-10-04T15:15:11.683039+00:00",
-        "last_updated": "2026-10-04T15:15:11.683039+00:00",
+        "last_changed": "2026-10-04T15:16:11.694866+00:00",
+        "last_reported": "2026-10-04T15:16:11.694866+00:00",
+        "last_updated": "2026-10-04T15:16:11.694866+00:00",
         "context": {
-            "id": "01M43QQEP35D2F20FEWDK0FBMM",
+            "id": "01M43QS99ECAD0AWK9RHVVJ095",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.living_room_eppro_illuminance",
-        "state": "32.5984230041504",
+        "state": "32.8248023986816",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "lx",
             "device_class": "illuminance",
             "friendly_name": "Lux"
         },
-        "last_changed": "2026-10-04T15:15:33.996021+00:00",
-        "last_reported": "2026-10-04T15:15:33.996021+00:00",
-        "last_updated": "2026-10-04T15:15:33.996021+00:00",
+        "last_changed": "2026-10-04T15:16:36.041046+00:00",
+        "last_reported": "2026-10-04T15:16:36.041046+00:00",
+        "last_updated": "2026-10-04T15:16:36.041046+00:00",
         "context": {
-            "id": "01M43QR4FCGV0ZC6SWYM4PRPWY",
+            "id": "01M43QT129KAYR0HZZJDRZ64QW",
             "parent_id": null,
             "user_id": null
         }
@@ -10423,42 +10437,42 @@
     },
     {
         "entity_id": "sensor.bed_presence_wifi_signal_db",
-        "state": "-56.0",
+        "state": "-57.0",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "dBm",
             "device_class": "signal_strength",
             "friendly_name": "Bed Presence WiFi Signal dB"
         },
-        "last_changed": "2026-10-04T15:15:00.917543+00:00",
-        "last_reported": "2026-10-04T15:15:00.917543+00:00",
-        "last_updated": "2026-10-04T15:15:00.917543+00:00",
+        "last_changed": "2026-10-04T15:16:00.915776+00:00",
+        "last_reported": "2026-10-04T15:16:00.915776+00:00",
+        "last_updated": "2026-10-04T15:16:00.915776+00:00",
         "context": {
-            "id": "01M43QQ45NTCDKH55RSNA5P41A",
+            "id": "01M43QRYRKA03EE2392662XEFE",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.bed_presence_wifi_signal_percent",
-        "state": "88.0",
+        "state": "86.0",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "%",
             "friendly_name": "Bed Presence WiFi Signal Percent"
         },
-        "last_changed": "2026-10-04T15:15:00.916973+00:00",
-        "last_reported": "2026-10-04T15:15:00.916973+00:00",
-        "last_updated": "2026-10-04T15:15:00.916973+00:00",
+        "last_changed": "2026-10-04T15:16:00.915603+00:00",
+        "last_reported": "2026-10-04T15:16:00.915603+00:00",
+        "last_updated": "2026-10-04T15:16:00.915603+00:00",
         "context": {
-            "id": "01M43QQ45MWC7862MDB2ZR3E5N",
+            "id": "01M43QRYRKWRMVY1BYNCMNS3A8",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.bed_presence_uptime",
-        "state": "2.42642596209491",
+        "state": "2.42712040653935",
         "attributes": {
             "state_class": "total_increasing",
             "unit_of_measurement": "d",
@@ -10466,11 +10480,11 @@
             "icon": "mdi:timer-outline",
             "friendly_name": "Bed Presence Uptime"
         },
-        "last_changed": "2026-10-04T15:15:00.090903+00:00",
-        "last_reported": "2026-10-04T15:15:00.090903+00:00",
-        "last_updated": "2026-10-04T15:15:00.090903+00:00",
+        "last_changed": "2026-10-04T15:16:00.096201+00:00",
+        "last_reported": "2026-10-04T15:16:00.096201+00:00",
+        "last_updated": "2026-10-04T15:16:00.096201+00:00",
         "context": {
-            "id": "01M43QQ3BTYXPGSWG8SY5CMQKV",
+            "id": "01M43QRXZ06K9E0B5RN944T6W7",
             "parent_id": null,
             "user_id": null
         }
@@ -10495,18 +10509,18 @@
     },
     {
         "entity_id": "sensor.bed_presence_right_pressure",
-        "state": "2.55184197425842",
+        "state": "2.64271306991577",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "%",
             "icon": "mdi:gauge",
             "friendly_name": "Bed Presence Right Pressure"
         },
-        "last_changed": "2026-10-04T15:13:29.173500+00:00",
-        "last_reported": "2026-10-04T15:13:29.173500+00:00",
-        "last_updated": "2026-10-04T15:13:29.173500+00:00",
+        "last_changed": "2026-10-04T15:16:29.179281+00:00",
+        "last_reported": "2026-10-04T15:16:29.179281+00:00",
+        "last_updated": "2026-10-04T15:16:29.179281+00:00",
         "context": {
-            "id": "01M43QMAJNMA5MMHQHMZ7P0YNX",
+            "id": "01M43QSTBVBPE8Z27B0AQJPSAP",
             "parent_id": null,
             "user_id": null
         }
@@ -10878,54 +10892,54 @@
     },
     {
         "entity_id": "sensor.kitchen_epone_temperature",
-        "state": "23.0684299468994",
+        "state": "23.044397354126",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
             "device_class": "temperature",
             "friendly_name": "Temperature"
         },
-        "last_changed": "2026-10-04T15:15:24.891562+00:00",
-        "last_reported": "2026-10-04T15:15:24.891562+00:00",
-        "last_updated": "2026-10-04T15:15:24.891562+00:00",
+        "last_changed": "2026-10-04T15:16:24.898897+00:00",
+        "last_reported": "2026-10-04T15:16:24.898897+00:00",
+        "last_updated": "2026-10-04T15:16:24.898897+00:00",
         "context": {
-            "id": "01M43QQVJVJ3DAW7EHX7H9K47H",
+            "id": "01M43QSP62RBDD7MZF1G49MR19",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.kitchen_epone_humidity",
-        "state": "38.1588745117188",
+        "state": "38.1390380859375",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "%",
             "device_class": "humidity",
             "friendly_name": "Humidity"
         },
-        "last_changed": "2026-10-04T15:15:24.891804+00:00",
-        "last_reported": "2026-10-04T15:15:24.891804+00:00",
-        "last_updated": "2026-10-04T15:15:24.891804+00:00",
+        "last_changed": "2026-10-04T15:16:24.899691+00:00",
+        "last_reported": "2026-10-04T15:16:24.899691+00:00",
+        "last_updated": "2026-10-04T15:16:24.899691+00:00",
         "context": {
-            "id": "01M43QQVJVHHN1KH30JM3CR2S2",
+            "id": "01M43QSP63X1M1QQ74FMA9TMX8",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.kitchen_epone_illuminance",
-        "state": "4.04790353775024",
+        "state": "4.23466491699219",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "lx",
             "device_class": "illuminance",
             "friendly_name": "Kitchen EPOne Illuminance"
         },
-        "last_changed": "2026-10-04T15:13:51.387567+00:00",
-        "last_reported": "2026-10-04T15:13:51.387567+00:00",
-        "last_updated": "2026-10-04T15:13:51.387567+00:00",
+        "last_changed": "2026-10-04T15:16:27.373705+00:00",
+        "last_reported": "2026-10-04T15:16:27.373705+00:00",
+        "last_updated": "2026-10-04T15:16:27.373705+00:00",
         "context": {
-            "id": "01M43QN08V9TZ503JMN5RXK91Z",
+            "id": "01M43QSRKDZ2HX5YWRED95PQ6P",
             "parent_id": null,
             "user_id": null
         }
@@ -11019,16 +11033,16 @@
     },
     {
         "entity_id": "binary_sensor.kitchen_epone_occupancy",
-        "state": "on",
+        "state": "off",
         "attributes": {
             "device_class": "occupancy",
             "friendly_name": "Occupancy"
         },
-        "last_changed": "2026-10-04T15:14:36.987188+00:00",
-        "last_reported": "2026-10-04T15:14:36.987188+00:00",
-        "last_updated": "2026-10-04T15:14:36.987188+00:00",
+        "last_changed": "2026-10-04T15:15:38.115855+00:00",
+        "last_reported": "2026-10-04T15:15:38.115855+00:00",
+        "last_updated": "2026-10-04T15:15:38.115855+00:00",
         "context": {
-            "id": "01M43QPCSVTJZC04R69ZQVYSAE",
+            "id": "01M43QR8G31ZKYENDWKKH2MNPN",
             "parent_id": null,
             "user_id": null
         }
@@ -11513,18 +11527,18 @@
     },
     {
         "entity_id": "sensor.console_presence_illuminance",
-        "state": "49.3503875732422",
+        "state": "60.8956642150879",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "lx",
             "device_class": "illuminance",
             "friendly_name": "Console Presence Illuminance"
         },
-        "last_changed": "2026-10-04T15:15:05.340756+00:00",
-        "last_reported": "2026-10-04T15:15:05.340756+00:00",
-        "last_updated": "2026-10-04T15:15:05.340756+00:00",
+        "last_changed": "2026-10-04T15:16:41.371639+00:00",
+        "last_reported": "2026-10-04T15:16:41.371639+00:00",
+        "last_updated": "2026-10-04T15:16:41.371639+00:00",
         "context": {
-            "id": "01M43QQ8FW67B3H92KR3T0CVCM",
+            "id": "01M43QT68V1KKC3GXPYS8RD6DM",
             "parent_id": null,
             "user_id": null
         }
@@ -12534,54 +12548,54 @@
     },
     {
         "entity_id": "sensor.hugh_room_presence_temperature",
-        "state": "15.4168090820312",
+        "state": "15.4301605224609",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u00b0C",
             "device_class": "temperature",
             "friendly_name": "Temperature"
         },
-        "last_changed": "2026-10-04T15:15:30.304813+00:00",
-        "last_reported": "2026-10-04T15:15:30.304813+00:00",
-        "last_updated": "2026-10-04T15:15:30.304813+00:00",
+        "last_changed": "2026-10-04T15:16:40.295636+00:00",
+        "last_reported": "2026-10-04T15:16:40.295636+00:00",
+        "last_updated": "2026-10-04T15:16:40.295636+00:00",
         "context": {
-            "id": "01M43QR0W07PH7BGPR2VXPDR0V",
+            "id": "01M43QT5770N898T0NHPVS8MVX",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.hugh_room_presence_humidity",
-        "state": "59.6798706054688",
+        "state": "59.7927856445312",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "%",
             "device_class": "humidity",
             "friendly_name": "Humidity"
         },
-        "last_changed": "2026-10-04T15:15:30.305584+00:00",
-        "last_reported": "2026-10-04T15:15:30.305584+00:00",
-        "last_updated": "2026-10-04T15:15:30.305584+00:00",
+        "last_changed": "2026-10-04T15:16:40.295873+00:00",
+        "last_reported": "2026-10-04T15:16:40.295873+00:00",
+        "last_updated": "2026-10-04T15:16:40.295873+00:00",
         "context": {
-            "id": "01M43QR0W1PXHNPKT7M7VFGJEP",
+            "id": "01M43QT577T2NZ82RP4KZ0PNS4",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.hugh_room_presence_illuminance",
-        "state": "3.86114168167114",
+        "state": "4.04790353775024",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "lx",
             "device_class": "illuminance",
             "friendly_name": "Lux"
         },
-        "last_changed": "2026-10-04T15:15:15.254679+00:00",
-        "last_reported": "2026-10-04T15:15:15.254679+00:00",
-        "last_updated": "2026-10-04T15:15:15.254679+00:00",
+        "last_changed": "2026-10-04T15:16:41.264589+00:00",
+        "last_reported": "2026-10-04T15:16:41.264589+00:00",
+        "last_updated": "2026-10-04T15:16:41.264589+00:00",
         "context": {
-            "id": "01M43QQJ5PC0YGT86K47S2CVRS",
+            "id": "01M43QT65GDXXF6J5ZJD7KB824",
             "parent_id": null,
             "user_id": null
         }
@@ -14682,17 +14696,17 @@
         "state": "on",
         "attributes": {
             "id": "1734951741728",
-            "last_triggered": "2026-10-04T15:15:33.882453+00:00",
+            "last_triggered": "2026-10-04T15:16:42.065767+00:00",
             "mode": "single",
             "current": 1,
             "friendly_name": "Git Backup"
         },
         "last_changed": "2026-10-04T15:02:06.557270+00:00",
-        "last_reported": "2026-10-04T15:15:33.882473+00:00",
-        "last_updated": "2026-10-04T15:15:33.882473+00:00",
+        "last_reported": "2026-10-04T15:16:42.065786+00:00",
+        "last_updated": "2026-10-04T15:16:42.065786+00:00",
         "context": {
-            "id": "01M43QR4BTQJ2BR2ZJX9SK86AY",
-            "parent_id": "01M43QR4BS9CGG2JH7XG1VVB27",
+            "id": "01M43QT6YHAV0Y7FJ3W69P7W4G",
+            "parent_id": "01M43QT6YGDBNQVG932KWCPTV5",
             "user_id": null
         }
     },
@@ -15518,16 +15532,16 @@
         "state": "on",
         "attributes": {
             "id": "1774058190777",
-            "last_triggered": "2026-10-04T15:14:00.094648+00:00",
+            "last_triggered": "2026-10-04T15:16:00.094197+00:00",
             "mode": "restart",
             "current": 0,
             "friendly_name": "Kitchen Occupancy Watchdog"
         },
         "last_changed": "2026-10-04T15:02:06.561396+00:00",
-        "last_reported": "2026-10-04T15:14:00.095170+00:00",
-        "last_updated": "2026-10-04T15:14:00.095170+00:00",
+        "last_reported": "2026-10-04T15:16:00.094724+00:00",
+        "last_updated": "2026-10-04T15:16:00.094724+00:00",
         "context": {
-            "id": "01M43QN8RYWBGFR7WP6E6X2SZB",
+            "id": "01M43QRXYYGCKCNCG73FACQ3DG",
             "parent_id": null,
             "user_id": null
         }
@@ -16578,22 +16592,6 @@
         "last_updated": "2026-10-04T15:03:42.177985+00:00",
         "context": {
             "id": "01M43Q2DB19B7JG2VW2PGTPM60",
-            "parent_id": null,
-            "user_id": null
-        }
-    },
-    {
-        "entity_id": "button.gym_door_identify",
-        "state": "unknown",
-        "attributes": {
-            "device_class": "identify",
-            "friendly_name": "Gym Door Identify"
-        },
-        "last_changed": "2026-10-04T15:03:42.167057+00:00",
-        "last_reported": "2026-10-04T15:03:42.167057+00:00",
-        "last_updated": "2026-10-04T15:03:42.167057+00:00",
-        "context": {
-            "id": "01M43Q2DAQV8VE2VCJWT13DJGW",
             "parent_id": null,
             "user_id": null
         }
@@ -20397,18 +20395,18 @@
     },
     {
         "entity_id": "sensor.utility_motion_illuminance",
-        "state": "65",
+        "state": "53",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "lx",
             "device_class": "illuminance",
             "friendly_name": "Lux"
         },
-        "last_changed": "2026-10-04T15:09:35.017192+00:00",
-        "last_reported": "2026-10-04T15:09:35.017192+00:00",
-        "last_updated": "2026-10-04T15:09:35.017192+00:00",
+        "last_changed": "2026-10-04T15:15:35.707715+00:00",
+        "last_reported": "2026-10-04T15:15:35.707715+00:00",
+        "last_updated": "2026-10-04T15:15:35.707715+00:00",
         "context": {
-            "id": "01M43QD5X9ZTTECE3ZF5JTYPQF",
+            "id": "01M43QR64VVXZAWS680YDDY5FN",
             "parent_id": null,
             "user_id": null
         }
@@ -20847,18 +20845,18 @@
     },
     {
         "entity_id": "sensor.pc_plug_voltage",
-        "state": "231",
+        "state": "233",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "V",
             "device_class": "voltage",
             "friendly_name": "PC Plug Voltage"
         },
-        "last_changed": "2026-10-04T15:15:15.747354+00:00",
-        "last_reported": "2026-10-04T15:15:15.747354+00:00",
-        "last_updated": "2026-10-04T15:15:15.747354+00:00",
+        "last_changed": "2026-10-04T15:15:45.905825+00:00",
+        "last_reported": "2026-10-04T15:15:45.905825+00:00",
+        "last_updated": "2026-10-04T15:15:45.905825+00:00",
         "context": {
-            "id": "01M43QQJN3GN6Q8S08JGBKXCDZ",
+            "id": "01M43QRG3HVYJ10J69CVVGWQ0A",
             "parent_id": null,
             "user_id": null
         }
@@ -20901,36 +20899,36 @@
     },
     {
         "entity_id": "sensor.hugh_room_plug_blanket_current",
-        "state": "0",
+        "state": "0.01",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "A",
             "device_class": "current",
             "friendly_name": "Hugh Room Plug Blanket Current"
         },
-        "last_changed": "2026-10-04T15:14:44.403786+00:00",
-        "last_reported": "2026-10-04T15:14:44.403786+00:00",
-        "last_updated": "2026-10-04T15:14:44.403786+00:00",
+        "last_changed": "2026-10-04T15:15:44.544561+00:00",
+        "last_reported": "2026-10-04T15:15:44.544561+00:00",
+        "last_updated": "2026-10-04T15:15:44.544561+00:00",
         "context": {
-            "id": "01M43QPM1KD8E20TTK1DAH93EJ",
+            "id": "01M43QRES07MRNECY88GH55M4X",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.hugh_room_plug_blanket_voltage",
-        "state": "233",
+        "state": "234",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "V",
             "device_class": "voltage",
             "friendly_name": "Hugh Room Plug Blanket Voltage"
         },
-        "last_changed": "2026-10-04T15:11:43.972967+00:00",
-        "last_reported": "2026-10-04T15:11:43.972967+00:00",
-        "last_updated": "2026-10-04T15:11:43.972967+00:00",
+        "last_changed": "2026-10-04T15:15:44.544108+00:00",
+        "last_reported": "2026-10-04T15:15:44.544108+00:00",
+        "last_updated": "2026-10-04T15:15:44.544108+00:00",
         "context": {
-            "id": "01M43QH3V443SEZGE2VTD0K64H",
+            "id": "01M43QRES0T8GWQHKNMPYCKF4N",
             "parent_id": null,
             "user_id": null
         }
@@ -21275,18 +21273,18 @@
     },
     {
         "entity_id": "sensor.hugh_room_plug_fan_desk_voltage",
-        "state": "233",
+        "state": "234",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "V",
             "device_class": "voltage",
             "friendly_name": "Hugh Room Plug Fan Desk Voltage"
         },
-        "last_changed": "2026-10-04T15:12:44.382339+00:00",
-        "last_reported": "2026-10-04T15:12:44.382339+00:00",
-        "last_updated": "2026-10-04T15:12:44.382339+00:00",
+        "last_changed": "2026-10-04T15:15:44.890444+00:00",
+        "last_reported": "2026-10-04T15:15:44.890444+00:00",
+        "last_updated": "2026-10-04T15:15:44.890444+00:00",
         "context": {
-            "id": "01M43QJYTY15KJW6GA684G6T5D",
+            "id": "01M43QRF3TNMHN7D3XMXF1ZPA4",
             "parent_id": null,
             "user_id": null
         }
@@ -21962,11 +21960,11 @@
             "icon": "mdi:human-greeting-proximity",
             "friendly_name": "Zigbee2MQTT Bridge Permit join"
         },
-        "last_changed": "2026-10-04T15:15:11.979449+00:00",
-        "last_reported": "2026-10-04T15:15:11.979449+00:00",
-        "last_updated": "2026-10-04T15:15:11.979449+00:00",
+        "last_changed": "2026-10-04T15:15:46.228824+00:00",
+        "last_reported": "2026-10-04T15:15:46.228824+00:00",
+        "last_updated": "2026-10-04T15:15:46.228824+00:00",
         "context": {
-            "id": "01M43QQEZBNGT2APS9T4NBXT1K",
+            "id": "01M43QRGDMBNSK1KFF0CH09FZ1",
             "parent_id": null,
             "user_id": null
         }
@@ -22719,7 +22717,7 @@
     },
     {
         "entity_id": "event.repair",
-        "state": "2026-10-02T07:59:35.570+00:00",
+        "state": "2026-10-04T15:15:36.941+00:00",
         "attributes": {
             "event_types": [
                 "create",
@@ -22727,15 +22725,15 @@
                 "update"
             ],
             "event_type": "create",
-            "domain": "hacs",
-            "issue_id": "restart_required_605635573_tags/v5.7.0",
+            "domain": "spook",
+            "issue_id": "automation_unknown_entity_references_automation.gym_occupancy_2_4c1e8ba8",
             "friendly_name": "Repairs"
         },
-        "last_changed": "2026-10-04T15:02:07.244882+00:00",
-        "last_reported": "2026-10-04T15:02:07.244882+00:00",
-        "last_updated": "2026-10-04T15:02:07.244882+00:00",
+        "last_changed": "2026-10-04T15:15:36.940922+00:00",
+        "last_reported": "2026-10-04T15:15:37.263191+00:00",
+        "last_updated": "2026-10-04T15:15:36.940922+00:00",
         "context": {
-            "id": "01M43PZGMCXFFSPZAC6X4R07MF",
+            "id": "01M43QR7BCMNAY2D4TG3X0R3RR",
             "parent_id": null,
             "user_id": null
         }
@@ -22810,34 +22808,34 @@
     },
     {
         "entity_id": "sensor.binary_sensors",
-        "state": "89",
+        "state": "88",
         "attributes": {
             "state_class": "total",
             "icon": "mdi:numeric-10",
             "friendly_name": "Home Assistant Binary sensors"
         },
-        "last_changed": "2026-10-04T15:02:14.584939+00:00",
-        "last_reported": "2026-10-04T15:02:37.272389+00:00",
-        "last_updated": "2026-10-04T15:02:14.584939+00:00",
+        "last_changed": "2026-10-04T15:15:37.294689+00:00",
+        "last_reported": "2026-10-04T15:15:39.180626+00:00",
+        "last_updated": "2026-10-04T15:15:37.294689+00:00",
         "context": {
-            "id": "01M43PZQSR704BKGJFAVS0E4T9",
+            "id": "01M43QR7PEXC44X1P7P8EAGQ9R",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.buttons",
-        "state": "92",
+        "state": "91",
         "attributes": {
             "state_class": "total",
             "icon": "mdi:gesture-tap",
             "friendly_name": "Home Assistant Buttons"
         },
-        "last_changed": "2026-10-04T15:02:14.585075+00:00",
-        "last_reported": "2026-10-04T15:02:37.272480+00:00",
-        "last_updated": "2026-10-04T15:02:14.585075+00:00",
+        "last_changed": "2026-10-04T15:15:37.295134+00:00",
+        "last_reported": "2026-10-04T15:15:39.180654+00:00",
+        "last_updated": "2026-10-04T15:15:37.295134+00:00",
         "context": {
-            "id": "01M43PZQSSNN4XXQ13Z7FVD5NB",
+            "id": "01M43QR7PFRNWHXAJA1VK2TDQA",
             "parent_id": null,
             "user_id": null
         }
@@ -22997,17 +22995,17 @@
     },
     {
         "entity_id": "sensor.entities",
-        "state": "1420",
+        "state": "1415",
         "attributes": {
             "state_class": "total",
             "icon": "mdi:counter",
             "friendly_name": "Home Assistant Entities"
         },
-        "last_changed": "2026-10-04T15:02:28.341775+00:00",
-        "last_reported": "2026-10-04T15:02:37.273320+00:00",
-        "last_updated": "2026-10-04T15:02:28.341775+00:00",
+        "last_changed": "2026-10-04T15:15:37.296244+00:00",
+        "last_reported": "2026-10-04T15:15:39.180858+00:00",
+        "last_updated": "2026-10-04T15:15:37.296244+00:00",
         "context": {
-            "id": "01M43Q057NCMZ68SREZN3CT153",
+            "id": "01M43QR7PG355QB5ANRHD1T4Z6",
             "parent_id": null,
             "user_id": null
         }
@@ -23388,17 +23386,17 @@
     },
     {
         "entity_id": "sensor.sensors",
-        "state": "527",
+        "state": "524",
         "attributes": {
             "state_class": "total",
             "icon": "mdi:eye",
             "friendly_name": "Home Assistant Sensors"
         },
-        "last_changed": "2026-10-04T15:02:28.342441+00:00",
-        "last_reported": "2026-10-04T15:02:37.274844+00:00",
-        "last_updated": "2026-10-04T15:02:28.342441+00:00",
+        "last_changed": "2026-10-04T15:15:37.298269+00:00",
+        "last_reported": "2026-10-04T15:15:39.181284+00:00",
+        "last_updated": "2026-10-04T15:15:37.298269+00:00",
         "context": {
-            "id": "01M43Q057PSTATCVGMMZXNVEFG",
+            "id": "01M43QR7PJWXS6KJXDR3B3J29B",
             "parent_id": null,
             "user_id": null
         }
@@ -23643,36 +23641,36 @@
     },
     {
         "entity_id": "sensor.issues",
-        "state": "0",
+        "state": "2",
         "attributes": {
             "state_class": "total",
             "unit_of_measurement": "issues",
             "icon": "mdi:wrench",
             "friendly_name": "Repairs Total"
         },
-        "last_changed": "2026-10-04T15:02:07.270772+00:00",
-        "last_reported": "2026-10-04T15:02:09.584507+00:00",
-        "last_updated": "2026-10-04T15:02:07.270772+00:00",
+        "last_changed": "2026-10-04T15:15:36.943219+00:00",
+        "last_reported": "2026-10-04T15:15:37.299633+00:00",
+        "last_updated": "2026-10-04T15:15:36.943219+00:00",
         "context": {
-            "id": "01M43PZGN6P0J6WT0R30RCP3YT",
+            "id": "01M43QR7BFVD4RV22RFCT6HXAP",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.active_issues",
-        "state": "0",
+        "state": "2",
         "attributes": {
             "state_class": "total",
             "unit_of_measurement": "issues",
             "icon": "mdi:wrench-check",
             "friendly_name": "Repairs Active"
         },
-        "last_changed": "2026-10-04T15:02:07.270956+00:00",
-        "last_reported": "2026-10-04T15:02:09.584558+00:00",
-        "last_updated": "2026-10-04T15:02:07.270956+00:00",
+        "last_changed": "2026-10-04T15:15:36.943261+00:00",
+        "last_reported": "2026-10-04T15:15:37.299724+00:00",
+        "last_updated": "2026-10-04T15:15:36.943261+00:00",
         "context": {
-            "id": "01M43PZGN6QW7G8BF47T860F2B",
+            "id": "01M43QR7BFYPQGNBRMRK15HJ2H",
             "parent_id": null,
             "user_id": null
         }
@@ -24954,25 +24952,25 @@
     },
     {
         "entity_id": "sensor.snake_plant_signal_strength",
-        "state": "-73",
+        "state": "-86",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "dBm",
             "device_class": "signal_strength",
             "friendly_name": "Snake Plant Signal Strength"
         },
-        "last_changed": "2026-10-04T15:15:16.207982+00:00",
-        "last_reported": "2026-10-04T15:15:16.207982+00:00",
-        "last_updated": "2026-10-04T15:15:16.207982+00:00",
+        "last_changed": "2026-10-04T15:16:30.102083+00:00",
+        "last_reported": "2026-10-04T15:16:30.102083+00:00",
+        "last_updated": "2026-10-04T15:16:30.102083+00:00",
         "context": {
-            "id": "01M43QQK3FBMSNAECXXC1CCP8P",
+            "id": "01M43QSV8P2M06AK2D83AVK3AC",
             "parent_id": null,
             "user_id": null
         }
     },
     {
         "entity_id": "sensor.snake_plant_illuminance",
-        "state": "442",
+        "state": "472",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "lx",
@@ -24980,11 +24978,11 @@
             "icon": "mdi:brightness-7",
             "friendly_name": "Lux"
         },
-        "last_changed": "2026-10-04T15:14:31.124821+00:00",
-        "last_reported": "2026-10-04T15:14:31.124821+00:00",
-        "last_updated": "2026-10-04T15:14:31.124821+00:00",
+        "last_changed": "2026-10-04T15:16:30.102537+00:00",
+        "last_reported": "2026-10-04T15:16:30.102537+00:00",
+        "last_updated": "2026-10-04T15:16:30.102537+00:00",
         "context": {
-            "id": "01M43QP72M1ZZSJN3EC3ZG2J93",
+            "id": "01M43QSV8P48VGN53DWJ1GQN1T",
             "parent_id": null,
             "user_id": null
         }
@@ -25009,18 +25007,18 @@
     },
     {
         "entity_id": "sensor.snake_plant_conductivity",
-        "state": "313",
+        "state": "312",
         "attributes": {
             "state_class": "measurement",
             "unit_of_measurement": "\u03bcS/cm",
             "device_class": "conductivity",
             "friendly_name": "Soil Conductivity"
         },
-        "last_changed": "2026-10-04T15:13:31.054634+00:00",
-        "last_reported": "2026-10-04T15:13:31.054634+00:00",
-        "last_updated": "2026-10-04T15:13:31.054634+00:00",
+        "last_changed": "2026-10-04T15:16:13.103784+00:00",
+        "last_reported": "2026-10-04T15:16:13.103784+00:00",
+        "last_updated": "2026-10-04T15:16:13.103784+00:00",
         "context": {
-            "id": "01M43QMCDEP8MZ9BQ3VZD21WDE",
+            "id": "01M43QSANF6SZGD03VRX72ZNS3",
             "parent_id": null,
             "user_id": null
         }
@@ -27314,7 +27312,7 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "Glyntown",
-                    "real_time_arrival": "2026-10-04T16:16:17",
+                    "real_time_arrival": "2026-10-04T16:18:24",
                     "route": "214",
                     "scheduled_arrival": "2026-10-04T16:25:30"
                 },
@@ -27364,10 +27362,10 @@
             "stop_name": "Marwood Close"
         },
         "last_changed": "2026-10-04T15:02:13.145106+00:00",
-        "last_reported": "2026-10-04T15:13:58.409812+00:00",
-        "last_updated": "2026-10-04T15:13:58.409812+00:00",
+        "last_reported": "2026-10-04T15:15:55.205421+00:00",
+        "last_updated": "2026-10-04T15:15:55.205421+00:00",
         "context": {
-            "id": "01M43QN749DE5M47J4HQTAZVXW",
+            "id": "01M43QRS65KF175MMVHVM2E2B5",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -27455,13 +27453,6 @@
             "arrivals": [
                 {
                     "agency": "Bus \u00c9ireann",
-                    "headsign": "University Hospital",
-                    "real_time_arrival": "2026-10-04T16:15:30",
-                    "route": "214",
-                    "scheduled_arrival": "2026-10-04T16:15:30"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
                     "headsign": "Cork",
                     "real_time_arrival": "2026-10-04T16:23:00",
                     "route": "31",
@@ -27499,10 +27490,10 @@
             "stop_name": "Ashington"
         },
         "last_changed": "2026-10-04T15:02:13.518535+00:00",
-        "last_reported": "2026-10-04T15:02:13.518535+00:00",
-        "last_updated": "2026-10-04T15:02:13.518535+00:00",
+        "last_reported": "2026-10-04T15:15:55.432242+00:00",
+        "last_updated": "2026-10-04T15:15:55.432242+00:00",
         "context": {
-            "id": "01M43PZPREVXHN49VF7EAG681R",
+            "id": "01M43QRSD8YRG7HWD93XNATH5M",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -27512,13 +27503,6 @@
         "state": "OK",
         "attributes": {
             "arrivals": [
-                {
-                    "agency": "Bus \u00c9ireann",
-                    "headsign": "University Hospital",
-                    "real_time_arrival": "2026-10-04T16:16:00",
-                    "route": "214",
-                    "scheduled_arrival": "2026-10-04T16:16:00"
-                },
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "Cork",
@@ -27558,10 +27542,10 @@
             "stop_name": "Glanmire Coll"
         },
         "last_changed": "2026-10-04T15:02:13.628318+00:00",
-        "last_reported": "2026-10-04T15:02:13.628318+00:00",
-        "last_updated": "2026-10-04T15:02:13.628318+00:00",
+        "last_reported": "2026-10-04T15:16:34.522915+00:00",
+        "last_updated": "2026-10-04T15:16:34.522915+00:00",
         "context": {
-            "id": "01M43PZPVWC8HT25Q7X6YKST18",
+            "id": "01M43QSZJT9A820W1KT5M9A8A9",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -27653,6 +27637,13 @@
                 },
                 {
                     "agency": "Bus \u00c9ireann",
+                    "headsign": "Cork",
+                    "real_time_arrival": "2026-10-04T16:43:02",
+                    "route": "245",
+                    "scheduled_arrival": "2026-10-04T16:33:30"
+                },
+                {
+                    "agency": "Bus \u00c9ireann",
                     "headsign": "University Hospital",
                     "real_time_arrival": "2026-10-04T16:49:30",
                     "route": "214",
@@ -27664,13 +27655,6 @@
                     "real_time_arrival": "2026-10-04T17:19:30",
                     "route": "214",
                     "scheduled_arrival": "2026-10-04T17:19:30"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
-                    "headsign": "Cork",
-                    "real_time_arrival": "2026-10-04T17:33:45",
-                    "route": "245",
-                    "scheduled_arrival": "2026-10-04T16:33:30"
                 },
                 {
                     "agency": "Bus \u00c9ireann",
@@ -27690,10 +27674,10 @@
             "stop_name": "Glanmire SC"
         },
         "last_changed": "2026-10-04T15:02:13.888494+00:00",
-        "last_reported": "2026-10-04T15:13:58.912343+00:00",
-        "last_updated": "2026-10-04T15:13:58.912343+00:00",
+        "last_reported": "2026-10-04T15:15:55.706847+00:00",
+        "last_updated": "2026-10-04T15:15:55.706847+00:00",
         "context": {
-            "id": "01M43QN7M0PN3M3BA5PVGPQ53N",
+            "id": "01M43QRSNTZ1Z14YNXQ4JFABCD",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -27726,6 +27710,13 @@
                 },
                 {
                     "agency": "Bus \u00c9ireann",
+                    "headsign": "Cork",
+                    "real_time_arrival": "2026-10-04T16:43:32",
+                    "route": "245",
+                    "scheduled_arrival": "2026-10-04T16:34:00"
+                },
+                {
+                    "agency": "Bus \u00c9ireann",
                     "headsign": "University Hospital",
                     "real_time_arrival": "2026-10-04T16:50:30",
                     "route": "214",
@@ -27737,13 +27728,6 @@
                     "real_time_arrival": "2026-10-04T17:20:30",
                     "route": "214",
                     "scheduled_arrival": "2026-10-04T17:20:30"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
-                    "headsign": "Cork",
-                    "real_time_arrival": "2026-10-04T17:34:15",
-                    "route": "245",
-                    "scheduled_arrival": "2026-10-04T16:34:00"
                 },
                 {
                     "agency": "Bus \u00c9ireann",
@@ -27763,10 +27747,10 @@
             "stop_name": "Riverstown"
         },
         "last_changed": "2026-10-04T15:02:14.027565+00:00",
-        "last_reported": "2026-10-04T15:13:59.019164+00:00",
-        "last_updated": "2026-10-04T15:13:59.019164+00:00",
+        "last_reported": "2026-10-04T15:15:55.811697+00:00",
+        "last_updated": "2026-10-04T15:15:55.811697+00:00",
         "context": {
-            "id": "01M43QN7QBVKZV908JEWQBM4CD",
+            "id": "01M43QRSS3DWWQZ8P4767D99DG",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -27799,6 +27783,13 @@
                 },
                 {
                     "agency": "Bus \u00c9ireann",
+                    "headsign": "Cork",
+                    "real_time_arrival": "2026-10-04T16:44:02",
+                    "route": "245",
+                    "scheduled_arrival": "2026-10-04T16:34:30"
+                },
+                {
+                    "agency": "Bus \u00c9ireann",
                     "headsign": "University Hospital",
                     "real_time_arrival": "2026-10-04T16:53:00",
                     "route": "214",
@@ -27813,13 +27804,6 @@
                 },
                 {
                     "agency": "Bus \u00c9ireann",
-                    "headsign": "Cork",
-                    "real_time_arrival": "2026-10-04T17:34:45",
-                    "route": "245",
-                    "scheduled_arrival": "2026-10-04T16:34:30"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
                     "headsign": "University Hospital",
                     "real_time_arrival": "2026-10-04T17:53:00",
                     "route": "214",
@@ -27829,10 +27813,10 @@
             "stop_name": "Glanmire Lwr"
         },
         "last_changed": "2026-10-04T15:02:14.152603+00:00",
-        "last_reported": "2026-10-04T15:13:59.127362+00:00",
-        "last_updated": "2026-10-04T15:13:59.127362+00:00",
+        "last_reported": "2026-10-04T15:15:55.921898+00:00",
+        "last_updated": "2026-10-04T15:15:55.921898+00:00",
         "context": {
-            "id": "01M43QN7TQ4TB2RFSY7GNVSZAP",
+            "id": "01M43QRSWH65K4XW4FB5PW8HBC",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -27865,6 +27849,13 @@
                 },
                 {
                     "agency": "Bus \u00c9ireann",
+                    "headsign": "Cork",
+                    "real_time_arrival": "2026-10-04T16:45:02",
+                    "route": "245",
+                    "scheduled_arrival": "2026-10-04T16:35:30"
+                },
+                {
+                    "agency": "Bus \u00c9ireann",
                     "headsign": "University Hospital",
                     "real_time_arrival": "2026-10-04T16:54:00",
                     "route": "214",
@@ -27879,13 +27870,6 @@
                 },
                 {
                     "agency": "Bus \u00c9ireann",
-                    "headsign": "Cork",
-                    "real_time_arrival": "2026-10-04T17:35:45",
-                    "route": "245",
-                    "scheduled_arrival": "2026-10-04T16:35:30"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
                     "headsign": "University Hospital",
                     "real_time_arrival": "2026-10-04T17:54:00",
                     "route": "214",
@@ -27895,10 +27879,10 @@
             "stop_name": "Glen Mervyn Hse"
         },
         "last_changed": "2026-10-04T15:02:14.274393+00:00",
-        "last_reported": "2026-10-04T15:13:59.235389+00:00",
-        "last_updated": "2026-10-04T15:13:59.235389+00:00",
+        "last_reported": "2026-10-04T15:15:56.026953+00:00",
+        "last_updated": "2026-10-04T15:15:56.026953+00:00",
         "context": {
-            "id": "01M43QN7Y3KZJ2B97E2DMDG1DP",
+            "id": "01M43QRSZT3TVVF8GC9N2M33TX",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -27938,6 +27922,13 @@
                 },
                 {
                     "agency": "Bus \u00c9ireann",
+                    "headsign": "Cork",
+                    "real_time_arrival": "2026-10-04T16:49:02",
+                    "route": "245",
+                    "scheduled_arrival": "2026-10-04T16:39:30"
+                },
+                {
+                    "agency": "Bus \u00c9ireann",
                     "headsign": "University Hospital",
                     "real_time_arrival": "2026-10-04T16:59:00",
                     "route": "214",
@@ -27946,7 +27937,7 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "Cork",
-                    "real_time_arrival": "2026-10-04T17:01:56",
+                    "real_time_arrival": "2026-10-04T17:06:50",
                     "route": "260",
                     "scheduled_arrival": "2026-10-04T17:02:00"
                 },
@@ -27966,13 +27957,6 @@
                 },
                 {
                     "agency": "Bus \u00c9ireann",
-                    "headsign": "Cork",
-                    "real_time_arrival": "2026-10-04T17:39:45",
-                    "route": "245",
-                    "scheduled_arrival": "2026-10-04T16:39:30"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
                     "headsign": "University Hospital",
                     "real_time_arrival": "2026-10-04T17:59:00",
                     "route": "214",
@@ -27982,10 +27966,10 @@
             "stop_name": "Tivoli Gardens"
         },
         "last_changed": "2026-10-04T15:02:14.427072+00:00",
-        "last_reported": "2026-10-04T15:13:59.365155+00:00",
-        "last_updated": "2026-10-04T15:13:59.365155+00:00",
+        "last_reported": "2026-10-04T15:15:56.157177+00:00",
+        "last_updated": "2026-10-04T15:15:56.157177+00:00",
         "context": {
-            "id": "01M43QN825ENNB3NQSHMEATTTQ",
+            "id": "01M43QRT3XG4ZB0DR75KVQ08N5",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -28115,6 +28099,13 @@
                 },
                 {
                     "agency": "Bus \u00c9ireann",
+                    "headsign": "Cork",
+                    "real_time_arrival": "2026-10-04T16:50:02",
+                    "route": "245",
+                    "scheduled_arrival": "2026-10-04T16:40:30"
+                },
+                {
+                    "agency": "Bus \u00c9ireann",
                     "headsign": "University Hospital",
                     "real_time_arrival": "2026-10-04T17:00:30",
                     "route": "214",
@@ -28126,22 +28117,15 @@
                     "real_time_arrival": "2026-10-04T17:30:30",
                     "route": "214",
                     "scheduled_arrival": "2026-10-04T17:30:30"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
-                    "headsign": "Cork",
-                    "real_time_arrival": "2026-10-04T17:40:45",
-                    "route": "245",
-                    "scheduled_arrival": "2026-10-04T16:40:30"
                 }
             ],
             "stop_name": "Bellvue Villas"
         },
         "last_changed": "2026-10-04T15:02:14.725437+00:00",
-        "last_reported": "2026-10-04T15:13:59.623034+00:00",
-        "last_updated": "2026-10-04T15:13:59.623034+00:00",
+        "last_reported": "2026-10-04T15:15:56.422466+00:00",
+        "last_updated": "2026-10-04T15:15:56.422466+00:00",
         "context": {
-            "id": "01M43QN8A6TX7WTJZE54RT8WWB",
+            "id": "01M43QRTC6ZA5Q8E119XSB5TRW",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -28226,6 +28210,13 @@
                 },
                 {
                     "agency": "Bus \u00c9ireann",
+                    "headsign": "Cork",
+                    "real_time_arrival": "2026-10-04T16:51:02",
+                    "route": "245",
+                    "scheduled_arrival": "2026-10-04T16:41:30"
+                },
+                {
+                    "agency": "Bus \u00c9ireann",
                     "headsign": "University Hospital",
                     "real_time_arrival": "2026-10-04T17:01:30",
                     "route": "214",
@@ -28234,7 +28225,7 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "Cork",
-                    "real_time_arrival": "2026-10-04T17:03:56",
+                    "real_time_arrival": "2026-10-04T17:08:50",
                     "route": "260",
                     "scheduled_arrival": "2026-10-04T17:04:00"
                 },
@@ -28251,22 +28242,15 @@
                     "real_time_arrival": "2026-10-04T17:31:30",
                     "route": "214",
                     "scheduled_arrival": "2026-10-04T17:31:30"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
-                    "headsign": "Cork",
-                    "real_time_arrival": "2026-10-04T17:41:45",
-                    "route": "245",
-                    "scheduled_arrival": "2026-10-04T16:41:30"
                 }
             ],
             "stop_name": "Water Street"
         },
         "last_changed": "2026-10-04T15:02:14.962414+00:00",
-        "last_reported": "2026-10-04T15:13:59.848438+00:00",
-        "last_updated": "2026-10-04T15:13:59.848438+00:00",
+        "last_reported": "2026-10-04T15:15:56.658218+00:00",
+        "last_updated": "2026-10-04T15:15:56.658218+00:00",
         "context": {
-            "id": "01M43QN8H8DZ7JW7BEJ8BM4844",
+            "id": "01M43QRTKJDY6B4NXYW3FC2GNW",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -28286,7 +28270,7 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "Kent Train Station",
-                    "real_time_arrival": "2026-10-04T16:16:56",
+                    "real_time_arrival": "2026-10-04T16:18:05",
                     "route": "205",
                     "scheduled_arrival": "2026-10-04T16:12:30"
                 },
@@ -28307,7 +28291,7 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "Kent Train Station",
-                    "real_time_arrival": "2026-10-04T16:31:26",
+                    "real_time_arrival": "2026-10-04T16:32:28",
                     "route": "212",
                     "scheduled_arrival": "2026-10-04T16:25:30"
                 },
@@ -28441,10 +28425,10 @@
             "stop_name": "Kent Station"
         },
         "last_changed": "2026-10-04T15:02:15.298989+00:00",
-        "last_reported": "2026-10-04T15:15:18.054205+00:00",
-        "last_updated": "2026-10-04T15:15:18.054205+00:00",
+        "last_reported": "2026-10-04T15:15:56.987314+00:00",
+        "last_updated": "2026-10-04T15:15:56.987314+00:00",
         "context": {
-            "id": "01M43QQMX6KJ5B9Q90NSG9Y49A",
+            "id": "01M43QRTXVPMJQ8252N39NYQHW",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -28543,13 +28527,6 @@
                 },
                 {
                     "agency": "Bus \u00c9ireann",
-                    "headsign": "MTU",
-                    "real_time_arrival": "2026-10-04T16:21:07",
-                    "route": "205",
-                    "scheduled_arrival": "2026-10-04T16:20:00"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
                     "headsign": "Mahon Pt. S.C.",
                     "real_time_arrival": "2026-10-04T16:22:00",
                     "route": "215",
@@ -28561,6 +28538,13 @@
                     "real_time_arrival": "2026-10-04T16:23:06",
                     "route": "215",
                     "scheduled_arrival": "2026-10-04T16:24:30"
+                },
+                {
+                    "agency": "Bus \u00c9ireann",
+                    "headsign": "MTU",
+                    "real_time_arrival": "2026-10-04T16:23:28",
+                    "route": "205",
+                    "scheduled_arrival": "2026-10-04T16:20:00"
                 },
                 {
                     "agency": "Bus \u00c9ireann",
@@ -28677,18 +28661,18 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "",
-                    "real_time_arrival": "2026-10-04T17:58:57",
-                    "route": "215",
-                    "scheduled_arrival": "2026-10-04T17:58:57"
+                    "real_time_arrival": "2026-10-04T18:11:30",
+                    "route": "203",
+                    "scheduled_arrival": "2026-10-04T18:11:30"
                 }
             ],
             "stop_name": "St Patrick's Street"
         },
         "last_changed": "2026-10-04T15:02:15.743627+00:00",
-        "last_reported": "2026-10-04T15:14:00.642913+00:00",
-        "last_updated": "2026-10-04T15:14:00.642913+00:00",
+        "last_reported": "2026-10-04T15:15:57.409706+00:00",
+        "last_updated": "2026-10-04T15:15:57.409706+00:00",
         "context": {
-            "id": "01M43QN9A2F5TP0ETT2JYYHF3D",
+            "id": "01M43QRVB1J785H5P4NFGS7518",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -28736,7 +28720,7 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "MTU",
-                    "real_time_arrival": "2026-10-04T16:25:37",
+                    "real_time_arrival": "2026-10-04T16:27:58",
                     "route": "205",
                     "scheduled_arrival": "2026-10-04T16:24:30"
                 },
@@ -28883,18 +28867,18 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "",
-                    "real_time_arrival": "2026-10-04T18:02:30",
-                    "route": "215",
-                    "scheduled_arrival": "2026-10-04T18:02:30"
+                    "real_time_arrival": "2026-10-04T18:17:00",
+                    "route": "203",
+                    "scheduled_arrival": "2026-10-04T18:17:00"
                 }
             ],
             "stop_name": "Daunt's Square"
         },
         "last_changed": "2026-10-04T15:02:16.177677+00:00",
-        "last_reported": "2026-10-04T15:14:01.048665+00:00",
-        "last_updated": "2026-10-04T15:14:01.048665+00:00",
+        "last_reported": "2026-10-04T15:15:57.798739+00:00",
+        "last_updated": "2026-10-04T15:15:57.798739+00:00",
         "context": {
-            "id": "01M43QN9PRCXDEYVT3T4P9RJFA",
+            "id": "01M43QRVQ6GRZ365ADKVFTVEPD",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -30364,7 +30348,7 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "Monkstown",
-                    "real_time_arrival": "2026-10-04T16:20:00",
+                    "real_time_arrival": "2026-10-04T16:22:02",
                     "route": "216",
                     "scheduled_arrival": "2026-10-04T16:42:30"
                 },
@@ -30400,10 +30384,10 @@
             "stop_name": "Noonan Road"
         },
         "last_changed": "2026-10-04T15:02:19.525431+00:00",
-        "last_reported": "2026-10-04T15:14:04.093455+00:00",
-        "last_updated": "2026-10-04T15:14:04.093455+00:00",
+        "last_reported": "2026-10-04T15:16:00.821506+00:00",
+        "last_updated": "2026-10-04T15:16:00.821506+00:00",
         "context": {
-            "id": "01M43QNCNXWFG5QCXYB7B1TYRP",
+            "id": "01M43QRYNN6VV883E680JJ5SWK",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -30415,15 +30399,8 @@
             "arrivals": [
                 {
                     "agency": "Bus \u00c9ireann",
-                    "headsign": "Glyntown",
-                    "real_time_arrival": "2026-10-04T16:15:03",
-                    "route": "214",
-                    "scheduled_arrival": "2026-10-04T16:15:30"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
                     "headsign": "Monkstown",
-                    "real_time_arrival": "2026-10-04T16:22:00",
+                    "real_time_arrival": "2026-10-04T16:24:02",
                     "route": "216",
                     "scheduled_arrival": "2026-10-04T16:44:30"
                 },
@@ -30459,10 +30436,10 @@
             "stop_name": "St Fin Barre's Cath"
         },
         "last_changed": "2026-10-04T15:02:19.638082+00:00",
-        "last_reported": "2026-10-04T15:14:04.200495+00:00",
-        "last_updated": "2026-10-04T15:14:04.200495+00:00",
+        "last_reported": "2026-10-04T15:16:00.928027+00:00",
+        "last_updated": "2026-10-04T15:16:00.928027+00:00",
         "context": {
-            "id": "01M43QNCS89AYH8GKF7BK79CES",
+            "id": "01M43QRYS0TM8Q998EPBWQFE26",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -30474,15 +30451,8 @@
             "arrivals": [
                 {
                     "agency": "Bus \u00c9ireann",
-                    "headsign": "Glyntown",
-                    "real_time_arrival": "2026-10-04T16:15:33",
-                    "route": "214",
-                    "scheduled_arrival": "2026-10-04T16:16:00"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
                     "headsign": "Monkstown",
-                    "real_time_arrival": "2026-10-04T16:22:30",
+                    "real_time_arrival": "2026-10-04T16:24:32",
                     "route": "216",
                     "scheduled_arrival": "2026-10-04T16:45:00"
                 },
@@ -30518,10 +30488,10 @@
             "stop_name": "Wandesford Quay"
         },
         "last_changed": "2026-10-04T15:02:19.749228+00:00",
-        "last_reported": "2026-10-04T15:14:04.305997+00:00",
-        "last_updated": "2026-10-04T15:14:04.305997+00:00",
+        "last_reported": "2026-10-04T15:16:01.037584+00:00",
+        "last_updated": "2026-10-04T15:16:01.037584+00:00",
         "context": {
-            "id": "01M43QNCWH1GC1M47M498TCF7T",
+            "id": "01M43QRYWD3M08B982B8BZAFXE",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -30534,7 +30504,7 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "Lotabeg",
-                    "real_time_arrival": "2026-10-04T16:17:54",
+                    "real_time_arrival": "2026-10-04T16:16:21",
                     "route": "208",
                     "scheduled_arrival": "2026-10-04T16:23:00"
                 },
@@ -30548,7 +30518,7 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "Ballyvolane",
-                    "real_time_arrival": "2026-10-04T16:23:58",
+                    "real_time_arrival": "2026-10-04T16:30:19",
                     "route": "207",
                     "scheduled_arrival": "2026-10-04T16:32:30"
                 },
@@ -30572,13 +30542,6 @@
                     "real_time_arrival": null,
                     "route": "203",
                     "scheduled_arrival": "2026-10-04T16:42:00"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
-                    "headsign": "",
-                    "real_time_arrival": "2026-10-04T16:45:26",
-                    "route": "208",
-                    "scheduled_arrival": "2026-10-04T16:45:26"
                 },
                 {
                     "agency": "Bus \u00c9ireann",
@@ -30638,6 +30601,13 @@
                 },
                 {
                     "agency": "Bus \u00c9ireann",
+                    "headsign": "",
+                    "real_time_arrival": "2026-10-04T17:22:49",
+                    "route": "203",
+                    "scheduled_arrival": "2026-10-04T17:22:49"
+                },
+                {
+                    "agency": "Bus \u00c9ireann",
                     "headsign": "Ballyvolane",
                     "real_time_arrival": "2026-10-04T17:33:30",
                     "route": "207",
@@ -30682,10 +30652,10 @@
             "stop_name": "Daunt's Square"
         },
         "last_changed": "2026-10-04T15:02:20.094224+00:00",
-        "last_reported": "2026-10-04T15:14:04.614791+00:00",
-        "last_updated": "2026-10-04T15:14:04.614791+00:00",
+        "last_reported": "2026-10-04T15:16:01.361398+00:00",
+        "last_updated": "2026-10-04T15:16:01.361398+00:00",
         "context": {
-            "id": "01M43QND6653J3GJECWRF4W0D2",
+            "id": "01M43QRZ6HCX2RNXT81J8G49XC",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -30732,6 +30702,13 @@
                 },
                 {
                     "agency": "Bus \u00c9ireann",
+                    "headsign": "",
+                    "real_time_arrival": "2026-10-04T17:24:19",
+                    "route": "203",
+                    "scheduled_arrival": "2026-10-04T17:24:19"
+                },
+                {
+                    "agency": "Bus \u00c9ireann",
                     "headsign": "Farranree",
                     "real_time_arrival": null,
                     "route": "203",
@@ -30748,10 +30725,10 @@
             "stop_name": "St Patrick's Street"
         },
         "last_changed": "2026-10-04T15:02:20.229655+00:00",
-        "last_reported": "2026-10-04T15:14:43.585685+00:00",
-        "last_updated": "2026-10-04T15:14:43.585685+00:00",
+        "last_reported": "2026-10-04T15:16:01.490645+00:00",
+        "last_updated": "2026-10-04T15:16:01.490645+00:00",
         "context": {
-            "id": "01M43QPK81WQJSPMA5SASQSYM8",
+            "id": "01M43QRZAJTDC5Y8M41K74GX4M",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -30771,7 +30748,7 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "Lotabeg",
-                    "real_time_arrival": "2026-10-04T16:26:24",
+                    "real_time_arrival": "2026-10-04T16:24:51",
                     "route": "208",
                     "scheduled_arrival": "2026-10-04T16:31:30"
                 },
@@ -30785,7 +30762,7 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "Ballyvolane",
-                    "real_time_arrival": "2026-10-04T16:29:58",
+                    "real_time_arrival": "2026-10-04T16:36:19",
                     "route": "207",
                     "scheduled_arrival": "2026-10-04T16:38:30"
                 },
@@ -30905,10 +30882,10 @@
             "stop_name": "MacCurtain Street"
         },
         "last_changed": "2026-10-04T15:02:20.546732+00:00",
-        "last_reported": "2026-10-04T15:14:05.034498+00:00",
-        "last_updated": "2026-10-04T15:14:05.034498+00:00",
+        "last_reported": "2026-10-04T15:16:01.790905+00:00",
+        "last_updated": "2026-10-04T15:16:01.790905+00:00",
         "context": {
-            "id": "01M43QNDKADVK9XDMEDJJKF6WK",
+            "id": "01M43QRZKY04K3ESM7X8N7PB2C",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -31159,13 +31136,6 @@
                 },
                 {
                     "agency": "Bus \u00c9ireann",
-                    "headsign": "",
-                    "real_time_arrival": "2026-10-04T17:04:30",
-                    "route": "245",
-                    "scheduled_arrival": "2026-10-04T17:04:30"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
                     "headsign": "Glyntown",
                     "real_time_arrival": "2026-10-04T17:06:30",
                     "route": "214",
@@ -31189,10 +31159,10 @@
             "stop_name": "Bellvue Villas"
         },
         "last_changed": "2026-10-04T15:02:21.115374+00:00",
-        "last_reported": "2026-10-04T15:07:35.812342+00:00",
-        "last_updated": "2026-10-04T15:07:35.812342+00:00",
+        "last_reported": "2026-10-04T15:16:02.324327+00:00",
+        "last_updated": "2026-10-04T15:16:02.324327+00:00",
         "context": {
-            "id": "01M43Q9HG4WKR2CR73RX0HKMB7",
+            "id": "01M43QS04MKZ2W6MF5PEM8TAD9",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -31315,13 +31285,6 @@
                 },
                 {
                     "agency": "Bus \u00c9ireann",
-                    "headsign": "",
-                    "real_time_arrival": "2026-10-04T17:05:30",
-                    "route": "245",
-                    "scheduled_arrival": "2026-10-04T17:05:30"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
                     "headsign": "Glyntown",
                     "real_time_arrival": "2026-10-04T17:08:30",
                     "route": "214",
@@ -31352,10 +31315,10 @@
             "stop_name": "Tivoli Gardens"
         },
         "last_changed": "2026-10-04T15:02:21.471207+00:00",
-        "last_reported": "2026-10-04T15:08:53.941307+00:00",
-        "last_updated": "2026-10-04T15:08:53.941307+00:00",
+        "last_reported": "2026-10-04T15:16:02.645346+00:00",
+        "last_updated": "2026-10-04T15:16:02.645346+00:00",
         "context": {
-            "id": "01M43QBXSNV3KMK9639VBBJ6YJ",
+            "id": "01M43QS0EN4GZNGJEVJXA4XENJ",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -31382,13 +31345,6 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "Clonmel",
-                    "real_time_arrival": "2026-10-04T17:07:00",
-                    "route": "245",
-                    "scheduled_arrival": "2026-10-04T17:07:00"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
-                    "headsign": "",
                     "real_time_arrival": "2026-10-04T17:07:00",
                     "route": "245",
                     "scheduled_arrival": "2026-10-04T17:07:00"
@@ -31425,10 +31381,10 @@
             "stop_name": "Lotamore House"
         },
         "last_changed": "2026-10-04T15:02:21.641240+00:00",
-        "last_reported": "2026-10-04T15:10:12.470714+00:00",
-        "last_updated": "2026-10-04T15:10:12.470714+00:00",
+        "last_reported": "2026-10-04T15:16:02.796670+00:00",
+        "last_updated": "2026-10-04T15:16:02.796670+00:00",
         "context": {
-            "id": "01M43QEAFPC725QZDRPKXTX7QC",
+            "id": "01M43QS0KCPTM7Z86NH9HR5NKB",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -31448,13 +31404,6 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "Clonmel",
-                    "real_time_arrival": "2026-10-04T17:08:30",
-                    "route": "245",
-                    "scheduled_arrival": "2026-10-04T17:08:30"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
-                    "headsign": "",
                     "real_time_arrival": "2026-10-04T17:08:30",
                     "route": "245",
                     "scheduled_arrival": "2026-10-04T17:08:30"
@@ -31484,10 +31433,10 @@
             "stop_name": "Glen Mervyn Hse"
         },
         "last_changed": "2026-10-04T15:02:21.760491+00:00",
-        "last_reported": "2026-10-04T15:12:48.165606+00:00",
-        "last_updated": "2026-10-04T15:12:48.165606+00:00",
+        "last_reported": "2026-10-04T15:16:02.906549+00:00",
+        "last_updated": "2026-10-04T15:16:02.906549+00:00",
         "context": {
-            "id": "01M43QK2H5YC728PW9FDABKN46",
+            "id": "01M43QS0PT7AP43JMRPFW2NX3B",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -31507,13 +31456,6 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "Clonmel",
-                    "real_time_arrival": "2026-10-04T17:09:00",
-                    "route": "245",
-                    "scheduled_arrival": "2026-10-04T17:09:00"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
-                    "headsign": "",
                     "real_time_arrival": "2026-10-04T17:09:00",
                     "route": "245",
                     "scheduled_arrival": "2026-10-04T17:09:00"
@@ -31543,10 +31485,10 @@
             "stop_name": "Glanmire Lwr"
         },
         "last_changed": "2026-10-04T15:02:21.885339+00:00",
-        "last_reported": "2026-10-04T15:13:27.209581+00:00",
-        "last_updated": "2026-10-04T15:13:27.209581+00:00",
+        "last_reported": "2026-10-04T15:16:03.017809+00:00",
+        "last_updated": "2026-10-04T15:16:03.017809+00:00",
         "context": {
-            "id": "01M43QM8N9051NPM8XK7QZ1PRM",
+            "id": "01M43QS0T9PRVTNTZSXJ30W03V",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -31559,13 +31501,6 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "Glyntown",
-                    "real_time_arrival": null,
-                    "route": "214",
-                    "scheduled_arrival": "2026-10-04T16:15:30"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
-                    "headsign": "Glyntown",
                     "real_time_arrival": "2026-10-04T16:45:03",
                     "route": "214",
                     "scheduled_arrival": "2026-10-04T16:45:30"
@@ -31573,13 +31508,6 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "Clonmel",
-                    "real_time_arrival": "2026-10-04T17:11:30",
-                    "route": "245",
-                    "scheduled_arrival": "2026-10-04T17:11:30"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
-                    "headsign": "",
                     "real_time_arrival": "2026-10-04T17:11:30",
                     "route": "245",
                     "scheduled_arrival": "2026-10-04T17:11:30"
@@ -31609,10 +31537,10 @@
             "stop_name": "Riverstown"
         },
         "last_changed": "2026-10-04T15:02:21.996588+00:00",
-        "last_reported": "2026-10-04T15:07:36.617398+00:00",
-        "last_updated": "2026-10-04T15:07:36.617398+00:00",
+        "last_reported": "2026-10-04T15:16:03.125500+00:00",
+        "last_updated": "2026-10-04T15:16:03.125500+00:00",
         "context": {
-            "id": "01M43Q9J99QXTYC3K5D0KR7XGJ",
+            "id": "01M43QS0XNBH57T3X6KCBZ7F6B",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -31826,7 +31754,7 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "Glyntown",
-                    "real_time_arrival": "2026-10-04T16:13:17",
+                    "real_time_arrival": "2026-10-04T16:15:24",
                     "route": "214",
                     "scheduled_arrival": "2026-10-04T16:22:30"
                 },
@@ -31855,10 +31783,10 @@
             "stop_name": "Marwood Close"
         },
         "last_changed": "2026-10-04T15:02:22.412694+00:00",
-        "last_reported": "2026-10-04T15:14:06.750758+00:00",
-        "last_updated": "2026-10-04T15:14:06.750758+00:00",
+        "last_reported": "2026-10-04T15:16:03.508113+00:00",
+        "last_updated": "2026-10-04T15:16:03.508113+00:00",
         "context": {
-            "id": "01M43QNF8YYS7GE013CRVC282S",
+            "id": "01M43QS19MSYSYHXYTWSM5MJQX",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -31955,9 +31883,9 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "Cork",
-                    "real_time_arrival": "2026-10-04T17:08:56",
-                    "route": "260",
-                    "scheduled_arrival": "2026-10-04T17:09:00"
+                    "real_time_arrival": "2026-10-04T17:01:02",
+                    "route": "245",
+                    "scheduled_arrival": "2026-10-04T16:51:30"
                 },
                 {
                     "agency": "Bus \u00c9ireann",
@@ -31965,6 +31893,13 @@
                     "real_time_arrival": "2026-10-04T17:10:00",
                     "route": "31",
                     "scheduled_arrival": "2026-10-04T17:10:00"
+                },
+                {
+                    "agency": "Bus \u00c9ireann",
+                    "headsign": "Cork",
+                    "real_time_arrival": "2026-10-04T17:13:50",
+                    "route": "260",
+                    "scheduled_arrival": "2026-10-04T17:09:00"
                 },
                 {
                     "agency": "Bus \u00c9ireann",
@@ -31989,6 +31924,13 @@
                 },
                 {
                     "agency": "Bus \u00c9ireann",
+                    "headsign": "Cork",
+                    "real_time_arrival": "2026-10-04T17:29:47",
+                    "route": "40",
+                    "scheduled_arrival": "2026-10-04T17:15:00"
+                },
+                {
+                    "agency": "Bus \u00c9ireann",
                     "headsign": "Macroom",
                     "real_time_arrival": null,
                     "route": "233",
@@ -32000,13 +31942,6 @@
                     "real_time_arrival": "2026-10-04T17:30:00",
                     "route": "40",
                     "scheduled_arrival": "2026-10-04T17:30:00"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
-                    "headsign": "Cork",
-                    "real_time_arrival": "2026-10-04T17:30:41",
-                    "route": "40",
-                    "scheduled_arrival": "2026-10-04T17:15:00"
                 },
                 {
                     "agency": "Bus \u00c9ireann",
@@ -32039,13 +31974,6 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "Cork",
-                    "real_time_arrival": "2026-10-04T17:47:06",
-                    "route": "40",
-                    "scheduled_arrival": "2026-10-04T17:45:00"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
-                    "headsign": "Cork",
                     "real_time_arrival": "2026-10-04T17:49:35",
                     "route": "245X",
                     "scheduled_arrival": "2026-10-04T17:50:00"
@@ -32053,18 +31981,18 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "Cork",
-                    "real_time_arrival": "2026-10-04T17:51:45",
-                    "route": "245",
-                    "scheduled_arrival": "2026-10-04T16:51:30"
+                    "real_time_arrival": "2026-10-04T17:50:08",
+                    "route": "40",
+                    "scheduled_arrival": "2026-10-04T17:45:00"
                 }
             ],
             "stop_name": "Cork Bus Stn"
         },
         "last_changed": "2026-10-04T15:02:22.880894+00:00",
-        "last_reported": "2026-10-04T15:15:24.913151+00:00",
-        "last_updated": "2026-10-04T15:15:24.913151+00:00",
+        "last_reported": "2026-10-04T15:16:03.921817+00:00",
+        "last_updated": "2026-10-04T15:16:03.921817+00:00",
         "context": {
-            "id": "01M43QQVKHXA8S1V64MF6G1AKF",
+            "id": "01M43QS1PHY4QAD2B6DA9BX4J7",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
         }
@@ -32180,13 +32108,6 @@
                 {
                     "agency": "Bus \u00c9ireann",
                     "headsign": "Knockraha",
-                    "real_time_arrival": "2026-10-04T16:16:21",
-                    "route": "31",
-                    "scheduled_arrival": "2026-10-04T16:09:30"
-                },
-                {
-                    "agency": "Bus \u00c9ireann",
-                    "headsign": "Knockraha",
                     "real_time_arrival": "2026-10-04T17:39:30",
                     "route": "31",
                     "scheduled_arrival": "2026-10-04T17:39:30"
@@ -32195,12 +32116,98 @@
             "stop_name": "Knockraha"
         },
         "last_changed": "2026-10-04T15:02:23.057532+00:00",
-        "last_reported": "2026-10-04T15:14:07.317496+00:00",
-        "last_updated": "2026-10-04T15:14:07.317496+00:00",
+        "last_reported": "2026-10-04T15:16:04.079984+00:00",
+        "last_updated": "2026-10-04T15:16:04.079984+00:00",
         "context": {
-            "id": "01M43QNFTN0RTMTG527151ADEE",
+            "id": "01M43QS1VF4SJE3ES8CE65PAKC",
             "parent_id": null,
             "user_id": "80b02a2cb1ca400fbe52bb769bd5043f"
+        }
+    },
+    {
+        "entity_id": "sensor.0x00158d008bbea6f1_battery",
+        "state": "unknown",
+        "attributes": {
+            "state_class": "measurement",
+            "unit_of_measurement": "%",
+            "device_class": "battery",
+            "friendly_name": "0x00158d008bbea6f1 Battery"
+        },
+        "last_changed": "2026-10-04T15:16:42.226857+00:00",
+        "last_reported": "2026-10-04T15:16:42.226857+00:00",
+        "last_updated": "2026-10-04T15:16:42.226857+00:00",
+        "context": {
+            "id": "01M43QT73J7D0P0FZHG8890XF8",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "binary_sensor.0x00158d008bbea6f1_contact",
+        "state": "unknown",
+        "attributes": {
+            "device_class": "door",
+            "friendly_name": "0x00158d008bbea6f1"
+        },
+        "last_changed": "2026-10-04T15:16:42.227085+00:00",
+        "last_reported": "2026-10-04T15:16:42.227085+00:00",
+        "last_updated": "2026-10-04T15:16:42.227085+00:00",
+        "context": {
+            "id": "01M43QT73KZB5EX5ZAQXWSC9FZ",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.0x00158d008bbea6f1_device_temperature",
+        "state": "unknown",
+        "attributes": {
+            "state_class": "measurement",
+            "unit_of_measurement": "\u00b0C",
+            "device_class": "temperature",
+            "friendly_name": "0x00158d008bbea6f1 Temperature"
+        },
+        "last_changed": "2026-10-04T15:16:42.227397+00:00",
+        "last_reported": "2026-10-04T15:16:42.227397+00:00",
+        "last_updated": "2026-10-04T15:16:42.227397+00:00",
+        "context": {
+            "id": "01M43QT73K6X376KW76TZ6P16Q",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.0x00158d008bbea6f1_voltage",
+        "state": "unknown",
+        "attributes": {
+            "state_class": "measurement",
+            "unit_of_measurement": "mV",
+            "device_class": "voltage",
+            "friendly_name": "0x00158d008bbea6f1 Voltage"
+        },
+        "last_changed": "2026-10-04T15:16:42.227239+00:00",
+        "last_reported": "2026-10-04T15:16:42.227239+00:00",
+        "last_updated": "2026-10-04T15:16:42.227239+00:00",
+        "context": {
+            "id": "01M43QT73KTM4050VZ14EE62KF",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "button.0x00158d008bbea6f1_identify",
+        "state": "unknown",
+        "attributes": {
+            "device_class": "identify",
+            "friendly_name": "0x00158d008bbea6f1 Identify"
+        },
+        "last_changed": "2026-10-04T15:16:42.227322+00:00",
+        "last_reported": "2026-10-04T15:16:42.227322+00:00",
+        "last_updated": "2026-10-04T15:16:42.227322+00:00",
+        "context": {
+            "id": "01M43QT73KG0JQZNPHS52G3YEP",
+            "parent_id": null,
+            "user_id": null
         }
     }
 ]
