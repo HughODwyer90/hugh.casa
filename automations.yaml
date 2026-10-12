@@ -1000,11 +1000,6 @@
           entity_id: cover.hugh_room_blind
           state:
           - Closed
-          - closed
-        - condition: state
-          entity_id: cover.hugh_room_blind
-          state:
-          - Closed
           - closing
       sequence:
       - action: cover.open_cover
@@ -1019,9 +1014,6 @@
           entity_id: cover.hugh_room_blind
           state:
           - open
-        - condition: state
-          entity_id: cover.hugh_room_blind
-          state:
           - opening
       sequence:
       - action: cover.close_cover
