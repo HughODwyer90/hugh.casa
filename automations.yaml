@@ -1088,10 +1088,9 @@
   mode: single
 - id: '1710203141837'
   alias: Alarm Dismiss
-  description: 'Dismisses the wake-up alarm when triggered by phone action, rug press,
-    PC turning on, monitor turning on, or when the alarm toggle is manually turned
-    off. Stops media, clears the alarm flag, and adjusts lighting and purifier speed
-    as appropriate.
+  description: 'Dismisses the wake-up alarm when triggered by phone action, PC turning
+    on, monitor turning on, or when the alarm toggle is manually turned off. Stops
+    media, clears the alarm flag, and adjusts lighting and purifier speed as appropriate.
 
     '
   triggers:
@@ -1119,7 +1118,6 @@
       - condition: trigger
         id:
         - phone
-        - rug
         - pc
         - monitor
       - condition: state
@@ -3186,10 +3184,10 @@
   mode: single
 - id: '1760189837022'
   alias: Hugh Room Occupancy Control
-  description: "Toggles room occupancy using rug, bed, PC, phone presence, and mmwave
-    sensor. - If unoccupied → occupied. - If occupied → unoccupied (and stops alarm
-    if running),\n  but ignores rug, phone, or mmwave triggers while bed, PC, or monitor
-    are on.\n- Skips during 03:20–03:40 maintenance window.\n"
+  description: "Toggles room occupancy using bed, PC, phone presence, and mmwave sensor.
+    - If unoccupied → occupied. - If occupied → unoccupied (and stops alarm if running),\n
+    \ but ignores phone, or mmwave triggers while bed, PC, or monitor are on.\n- Skips
+    during 03:20–03:40 maintenance window.\n"
   triggers:
   - trigger: state
     entity_id: binary_sensor.bed_sensor
@@ -3226,8 +3224,6 @@
       - condition: or
         conditions:
         - condition: trigger
-          id: rug_press
-        - condition: trigger
           id: bed_on
         - condition: trigger
           id: pc_on
@@ -3250,8 +3246,6 @@
         conditions:
         - condition: and
           conditions:
-          - condition: trigger
-            id: rug_press
           - condition: state
             entity_id: binary_sensor.bed_sensor
             state: 'off'
