@@ -6093,14 +6093,14 @@
   mode: restart
 - id: '1790790400897'
   alias: Gym Occupancy Watchdog
-  description: Re-applies the gym scene if devices don't match the door state
+  description: Re-applies the gym state if devices don't match the door state
   triggers:
   - trigger: time_pattern
     seconds: /5
   conditions:
   - condition: template
     value_template: '{{ (now() - states.binary_sensor.gym_door_contact.last_changed).total_seconds()
-      > 5 }}
+      > 60 }}
 
       '
   actions:
@@ -6126,15 +6126,18 @@
         state: 'off'
       - condition: template
         value_template: "{{ expand(state_attr('scene.gym_0_gym_off', 'entity_id')
-          or [])\n   | selectattr('state', 'eq', 'on') | list | count > 0 }}\n"
+          or [])\n   | rejectattr('entity_id', 'search', 'gym_fan')\n   | selectattr('state',
+          'eq', 'on') | list | count > 0 }}\n"
       sequence:
-      - action: scene.turn_on
+      - action: homeassistant.turn_off
         target:
-          entity_id: scene.gym_0_gym_off
+          entity_id: "{{ expand(state_attr('scene.gym_0_gym_off', 'entity_id') or
+            [])\n   | rejectattr('entity_id', 'search', 'gym_fan')\n   | selectattr('state',
+            'eq', 'on')\n   | map(attribute='entity_id') | list }}\n"
       - action: logbook.log
         data:
           name: Gym watchdog
-          message: Devices out of sync, re-applied Gym Off
+          message: Devices out of sync, turned off stray Gym devices
   mode: single
 - id: '1790791911507'
   alias: Gym Occupancy
