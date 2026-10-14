@@ -6180,6 +6180,17 @@
         target:
           entity_id: scene.gym_0_gym_off
         data: {}
+      - action: switch.turn_on
+        metadata: {}
+        target:
+          entity_id: switch.gym_fan
+        data: {}
+      - action: number.set_value
+        metadata: {}
+        target:
+          entity_id: number.gym_fan_countdown_to_turn_off
+        data:
+          value: '1800'
   mode: restart
 - id: '1791973177748'
   alias: Gym Fan Switch Countdown Reset
