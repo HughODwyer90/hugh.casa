@@ -14,19 +14,34 @@ secrets = SecretsManager()
 HOME_ASSISTANT_URL = "http://homeassistant.local:8123"
 ACCESS_TOKEN = secrets["ha_access_token"]
 
-ENTITY_QTY = "input_number.ibkr_vwce_quantity"
-ENTITY_COST = "input_number.ibkr_vwce_cost_basis"
 ENTITY_UPDATED = "input_datetime.ibkr_last_update"
 
-YAHOO_PRICE_ENTITY = "sensor.yahoofinance_vwce_de"
+# One entry per holding: IBKR symbol -> HA entities
+HOLDINGS = {
+    "VWCE": {
+        "qty": "input_number.ibkr_vwce_quantity",
+        "cost": "input_number.ibkr_vwce_cost_basis",
+        "price": "sensor.yahoofinance_vwce_de",
+    },
+    "RBOT": {
+        "qty": "input_number.ibkr_rbot_quantity",
+        "cost": "input_number.ibkr_rbot_cost_basis",
+        "price": "sensor.yahoofinance_rbot_mi",
+    },
+    "URNU": {
+        "qty": "input_number.ibkr_urnu_quantity",
+        "cost": "input_number.ibkr_urnu_cost_basis",
+        "price": "sensor.yahoofinance_urnu_mi",
+    },
+}
 
 IBKR_TOKEN = secrets["ibkr_flex_token"]
 IBKR_QUERY_ID = secrets["ibkr_flex_query_id"]
 
 POLL_SECONDS = 3600
 
-SEND_REQUEST_URL = "https://gdcdyn.interactivebrokers.com/Universal/servlet/FlexStatementService.SendRequest"
-GET_STATEMENT_URL = "https://gdcdyn.interactivebrokers.com/Universal/servlet/FlexStatementService.GetStatement"
+SEND_REQUEST_URL = "https://ndcdyn.interactivebrokers.com/AccountManagement/FlexWebService/SendRequest"
+GET_STATEMENT_URL = "https://ndcdyn.interactivebrokers.com/AccountManagement/FlexWebService/GetStatement"
 
 # Tolerances to avoid tiny floating-point rewrites
 QTY_EPSILON = 0.00001
@@ -143,15 +158,31 @@ def get_flex_xml() -> str:
         "v": 3
     }
 
-    r = requests.get(SEND_REQUEST_URL, params=params, timeout=30)
-    r.raise_for_status()
+    # IBKR temporary errors: 1001 (could not generate), 1018 (too many requests),
+    # 1019 (generation in progress). Retry these a few times before giving up.
+    RETRYABLE = {"1001", "1018", "1019"}
+    attempts = 5
 
-    root = ET.fromstring(r.text)
-    status = (root.findtext("Status") or "").lower()
+    for attempt in range(1, attempts + 1):
+        r = requests.get(SEND_REQUEST_URL, params=params, timeout=30)
+        r.raise_for_status()
 
-    if status != "success":
+        root = ET.fromstring(r.text)
+        status = (root.findtext("Status") or "").lower()
+
+        if status == "success":
+            break
+
         code = root.findtext("ErrorCode")
         msg = root.findtext("ErrorMessage")
+
+        if code in RETRYABLE and attempt < attempts:
+            wait = 30 * attempt
+            print(f"Flex request failed ({code} - {msg}), retrying in {wait}s "
+                  f"[{attempt}/{attempts}]")
+            time.sleep(wait)
+            continue
+
         raise RuntimeError(f"Flex request failed: {code} - {msg}")
 
     ref = root.findtext("ReferenceCode")
@@ -175,115 +206,92 @@ def get_flex_xml() -> str:
 
 
 # ======================
-# MAIN PARSER
+# PER-HOLDING UPDATE
 # ======================
 
-def update_vwce_from_flex():
+def update_holding(symbol: str, entities: dict, pos):
+    print(f"===== {symbol} =====")
+    print("HOME ASSISTANT (before)")
+    print(fmt_entity(entities["qty"]))
+    print(fmt_entity(entities["cost"]))
+    print("")
+
+    if pos is None:
+        # Not held yet (e.g. URNU before its first buy) or fully sold
+        print(f"No {symbol} position found, setting to 0")
+        set_input_number_if_changed(entities["qty"], 0.0, QTY_EPSILON)
+        set_input_number_if_changed(entities["cost"], 0.0, MONEY_EPSILON)
+        print("")
+        return
+
+    qty = round(float(pos.attrib.get("position", 0) or 0), 4)
+    mark_price = round(float(pos.attrib.get("markPrice", 0) or 0), 2)
+    position_value = round(float(pos.attrib.get("positionValue", 0) or 0), 2)
+    cost_basis_money = round(float(pos.attrib.get("costBasisMoney", 0) or 0), 2)
+    unrealized = round(float(pos.attrib.get("fifoPnlUnrealized", 0) or 0), 2)
+
+    set_input_number_if_changed(entities["qty"], qty, QTY_EPSILON)
+    set_input_number_if_changed(entities["cost"], cost_basis_money, MONEY_EPSILON)
+
+    print("")
+    print("IBKR FLEX RESULT")
+    print("----------------------------")
+    print("Shares:", qty)
+    print("Mark Price (IBKR): €", mark_price)
+    print("Position Value: €", position_value)
+    print("Cost Basis: €", cost_basis_money)
+    print("Unrealized P/L: €", unrealized)
+    print("----------------------------")
+
+    yahoo_price = get_ha_float(entities["price"])
+    if yahoo_price > 0:
+        live_value = round(qty * yahoo_price, 2)
+        live_profit = round(live_value - cost_basis_money, 2)
+        print("LIVE (Yahoo): price €", yahoo_price,
+              "| value €", live_value,
+              "| profit €", live_profit)
+    else:
+        print(f"Yahoo price sensor unavailable ({entities['price']})")
+    print("")
+
+
+# ======================
+# MAIN
+# ======================
+
+def update_from_flex():
     xml = get_flex_xml()
     root = ET.fromstring(xml)
 
     stmt = root.find(".//FlexStatement")
     when_generated = stmt.attrib.get("whenGenerated") if stmt is not None else ""
 
-    dt_obj = None
-    date_str = None
-    time_str = None
-
+    dt_obj = date_str = time_str = None
     if when_generated:
         date_str, time_str, dt_obj = parse_ibkr_time(when_generated)
 
-    pos = next(
-        (p for p in root.findall(".//OpenPosition") if p.attrib.get("symbol") == "VWCE"),
-        None
-    )
+    positions = {p.attrib.get("symbol"): p for p in root.findall(".//OpenPosition")}
 
-    print("HOME ASSISTANT (before)")
-    print(fmt_entity(ENTITY_QTY))
-    print(fmt_entity(ENTITY_COST))
-    print(fmt_entity(ENTITY_UPDATED))
-    print("")
+    unknown = set(positions) - set(HOLDINGS)
+    if unknown:
+        print(f"Note: Flex has positions not tracked in HOLDINGS: {', '.join(sorted(unknown))}")
+        print("")
 
-    if pos is None:
-        print("No VWCE position found")
-
-        set_input_number_if_changed(ENTITY_QTY, 0.0, QTY_EPSILON)
-        set_input_number_if_changed(ENTITY_COST, 0.0, MONEY_EPSILON)
-
-        if date_str and time_str:
-            set_input_datetime_if_changed(ENTITY_UPDATED, date_str, time_str)
-
-        return
-
-    # ======================
-    # PARSE FLEX VALUES
-    # ======================
-
-    # Keep quantity at 4 decimals if that matches your holdings precision.
-    # If IBKR ever gives more and you want to preserve it, increase this.
-    qty = round(float(pos.attrib.get("position", 0) or 0), 4)
-
-    # Money values at 2 decimals
-    mark_price = round(float(pos.attrib.get("markPrice", 0) or 0), 2)
-    position_value = round(float(pos.attrib.get("positionValue", 0) or 0), 2)
-    cost_basis_money = round(float(pos.attrib.get("costBasisMoney", 0) or 0), 2)
-    unrealized = round(float(pos.attrib.get("fifoPnlUnrealized", 0) or 0), 2)
-
-    # ======================
-    # UPDATE HA
-    # ======================
-
-    set_input_number_if_changed(ENTITY_QTY, qty, QTY_EPSILON)
-    set_input_number_if_changed(ENTITY_COST, cost_basis_money, MONEY_EPSILON)
+    for symbol, entities in HOLDINGS.items():
+        try:
+            update_holding(symbol, entities, positions.get(symbol))
+        except Exception as e:
+            # One failing holding shouldn't stop the others
+            print(f"Error updating {symbol}: {e}")
+            print("")
 
     if date_str and time_str:
         set_input_datetime_if_changed(ENTITY_UPDATED, date_str, time_str)
 
-    print("")
-    print("HOME ASSISTANT (after)")
-    print(fmt_entity(ENTITY_QTY))
-    print(fmt_entity(ENTITY_COST))
-    print(fmt_entity(ENTITY_UPDATED))
-    print("")
-
-    # ======================
-    # FLEX OUTPUT
-    # ======================
-
-    print("IBKR FLEX RESULT")
-    print("----------------------------")
-    print("Symbol:", "VWCE")
-    print("Shares:", qty)
-    print("Mark Price (IBKR): €", mark_price)
-    print("Position Value: €", position_value)
-    print("Cost Basis: €", cost_basis_money)
-    print("Unrealized P/L: €", unrealized)
     print(
         "Report Generated (Irish Time):",
         dt_obj.strftime("%Y-%m-%d %H:%M:%S") if dt_obj else "unknown"
     )
-    print("----------------------------")
-    print("")
-
-    # ======================
-    # LIVE PRICE CHECK
-    # ======================
-
-    yahoo_price = get_ha_float(YAHOO_PRICE_ENTITY)
-
-    if yahoo_price > 0:
-        live_value = round(qty * yahoo_price, 2)
-        live_profit = round(live_value - cost_basis_money, 2)
-
-        print("LIVE VALUE (via Yahoo Finance)")
-        print("----------------------------")
-        print("Yahoo Price: €", yahoo_price)
-        print("Value (qty * price): €", live_value)
-        print("Profit (value - cost): €", live_profit)
-        print("----------------------------")
-        print("")
-    else:
-        print("Yahoo price sensor unavailable")
-        print("")
 
 
 # ======================
@@ -291,9 +299,9 @@ def update_vwce_from_flex():
 # ======================
 
 if __name__ == "__main__":
-    update_vwce_from_flex()
+    update_from_flex()
 
     # continuous mode if desired
     # while True:
-    #     update_vwce_from_flex()
+    #     update_from_flex()
     #     time.sleep(POLL_SECONDS)
