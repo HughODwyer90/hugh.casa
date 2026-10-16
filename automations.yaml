@@ -1909,16 +1909,17 @@
   mode: single
 - id: '1722698935828'
   alias: Start Car Moving on Bluetooth Connect
-  trigger:
+  triggers:
   - trigger: state
     entity_id:
     - binary_sensor.hugh_phone_android_auto
-    to: 'on'
-  condition:
+    to:
+    - 'on'
+  conditions:
   - condition: state
     entity_id: input_boolean.car_moving
     state: 'off'
-  action:
+  actions:
   - action: input_boolean.turn_on
     entity_id: input_boolean.car_moving
   - action: input_datetime.set_datetime
