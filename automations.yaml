@@ -6092,54 +6092,6 @@
       target:
         entity_id: input_boolean.wake_up_alarm_running
   mode: restart
-- id: '1790790400897'
-  alias: Gym Occupancy Watchdog
-  description: Re-applies the gym state if devices don't match the door state
-  triggers:
-  - trigger: time_pattern
-    seconds: /5
-  conditions:
-  - condition: template
-    value_template: '{{ (now() - states.binary_sensor.gym_door_contact.last_changed).total_seconds()
-      > 60 }}
-
-      '
-  actions:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.gym_door_contact
-        state: 'on'
-      - condition: template
-        value_template: "{{ expand(state_attr('scene.gym_1_gym_on', 'entity_id') or
-          [])\n   | selectattr('state', 'eq', 'off') | list | count > 0 }}\n"
-      sequence:
-      - action: scene.turn_on
-        target:
-          entity_id: scene.gym_1_gym_on
-      - action: logbook.log
-        data:
-          name: Gym watchdog
-          message: Devices out of sync, re-applied Gym On
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.gym_door_contact
-        state: 'off'
-      - condition: template
-        value_template: "{{ expand(state_attr('scene.gym_0_gym_off', 'entity_id')
-          or [])\n   | rejectattr('entity_id', 'search', 'gym_fan')\n   | selectattr('state',
-          'eq', 'on') | list | count > 0 }}\n"
-      sequence:
-      - action: homeassistant.turn_off
-        target:
-          entity_id: "{{ expand(state_attr('scene.gym_0_gym_off', 'entity_id') or
-            [])\n   | rejectattr('entity_id', 'search', 'gym_fan')\n   | selectattr('state',
-            'eq', 'on')\n   | map(attribute='entity_id') | list }}\n"
-      - action: logbook.log
-        data:
-          name: Gym watchdog
-          message: Devices out of sync, turned off stray Gym devices
-  mode: single
 - id: '1790791911507'
   alias: Gym Occupancy
   description: Door opening or mmWave presence starts or resumes a visit; mmWave clearing
