@@ -6142,8 +6142,9 @@
   mode: single
 - id: '1790791911507'
   alias: Gym Occupancy
-  description: Door opening = entry, zone occupancy clearing = exit. Fan ventilates
-    for 30 min after visits of 5 min or more.
+  description: Door opening = entry, zone occupancy clearing (30 s) = exit. Presence
+    shortly after a clear with no door activity = false clear, lights restored. Fan
+    ventilates for 30 min after visits of 5 min or more.
   triggers:
   - trigger: state
     entity_id: binary_sensor.gym_door_contact
@@ -6154,6 +6155,8 @@
     entity_id: binary_sensor.gym_motion_occupancy_1
     from: 'on'
     to: 'off'
+    for:
+      seconds: 30
     id: exit
   - trigger: state
     entity_id: binary_sensor.gym_door_contact
@@ -6162,6 +6165,11 @@
     for:
       minutes: 2
     id: door_fallback
+  - trigger: state
+    entity_id: binary_sensor.gym_motion_occupancy_1
+    from: 'off'
+    to: 'on'
+    id: presence
   conditions: []
   actions:
   - choose:
@@ -6169,6 +6177,43 @@
       - condition: trigger
         id: entry
       sequence:
+      - if:
+        - condition: state
+          entity_id: switch.gym_lights
+          state: 'off'
+        then:
+        - action: input_datetime.set_datetime
+          target:
+            entity_id: input_datetime.gym_entered
+          data:
+            timestamp: '{{ now().timestamp() }}'
+      - action: script.turn_off
+        target:
+          entity_id: script.gym_ventilate
+      - action: scene.turn_on
+        target:
+          entity_id: scene.gym_1_gym_on
+      - action: switch.turn_off
+        target:
+          entity_id: switch.gym_fan
+    - conditions:
+      - condition: trigger
+        id: presence
+      - condition: state
+        entity_id: switch.gym_lights
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.gym_door_contact
+        state: 'off'
+      - condition: template
+        value_template: "{% set lights_off = states.switch.gym_lights.last_changed
+          %} {% set door = states.binary_sensor.gym_door_contact.last_changed %} {{
+          now() - lights_off < timedelta(minutes=3)\n   and lights_off - door > timedelta(minutes=2)
+          }}\n"
+      sequence:
+      - action: script.turn_off
+        target:
+          entity_id: script.gym_ventilate
       - action: scene.turn_on
         target:
           entity_id: scene.gym_1_gym_on
@@ -6192,12 +6237,10 @@
         state: 'on'
       sequence:
       - variables:
-          visit_minutes: '{% set entered = states.switch.gym_lights.last_changed %}
-            {% set door = states.binary_sensor.gym_door_contact %} {% set left = now()
-            if door.state == ''on'' else door.last_changed %} {{ ((left - entered).total_seconds()
-            / 60) | round(1) }}
-
-            '
+          visit_minutes: "{% set entered = state_attr('input_datetime.gym_entered',
+            'timestamp') | float(0) %} {% set door = states.binary_sensor.gym_door_contact
+            %} {% set left = now().timestamp() if door.state == 'on'\n   else as_timestamp(door.last_changed)
+            %}\n{{ ((left - entered) / 60) | round(1) }}\n"
       - action: scene.turn_on
         target:
           entity_id: scene.gym_0_gym_off
@@ -6205,19 +6248,9 @@
         - condition: template
           value_template: '{{ visit_minutes | float(0) >= 5 }}'
         then:
-        - delay:
-            seconds: 5
-        - action: switch.turn_on
+        - action: script.turn_on
           target:
-            entity_id: switch.gym_fan
-        - wait_template: '{{ is_state(''switch.gym_fan'', ''on'') }}'
-          timeout:
-            seconds: 10
-        - action: number.set_value
-          target:
-            entity_id: number.gym_fan_countdown_to_turn_off
-          data:
-            value: 1800
+            entity_id: script.gym_ventilate
   mode: restart
 - id: '1791973177748'
   alias: Gym Fan Switch Countdown Reset
