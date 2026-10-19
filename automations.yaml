@@ -6143,8 +6143,9 @@
 - id: '1790791911507'
   alias: Gym Occupancy
   description: Door opening = entry, zone occupancy clearing (30 s) = exit. Presence
-    shortly after a clear with no door activity = false clear, lights restored. Fan
-    runs during visits, then for 30 min after visits of 5 min or more.
+    within 3 min of a clear = false clear, lights restored. Presence with the door
+    open and lights off = new visit. Fan runs during visits, then for 30 min after
+    visits of 5 min or more.
   triggers:
   - trigger: state
     entity_id: binary_sensor.gym_door_contact
@@ -6207,15 +6208,41 @@
       - condition: state
         entity_id: switch.gym_lights
         state: 'off'
-      - condition: state
-        entity_id: binary_sensor.gym_door_contact
-        state: 'off'
       - condition: template
         value_template: "{% set lights_off = states.switch.gym_lights.last_changed
-          %} {% set door = states.binary_sensor.gym_door_contact.last_changed %} {{
-          now() - lights_off < timedelta(minutes=3)\n   and lights_off - door > timedelta(minutes=2)
-          }}\n"
+          %} {% set door = states.binary_sensor.gym_door_contact %} {{ now() - lights_off
+          < timedelta(minutes=3)\n   and (door.state == 'on'\n        or lights_off
+          - door.last_changed > timedelta(minutes=2)) }}\n"
       sequence:
+      - action: scene.turn_on
+        target:
+          entity_id: scene.gym_1_gym_on
+      - action: switch.turn_on
+        target:
+          entity_id: switch.gym_fan
+      - wait_template: '{{ is_state(''switch.gym_fan'', ''on'') }}'
+        timeout:
+          seconds: 10
+      - action: number.set_value
+        target:
+          entity_id: number.gym_fan_countdown_to_turn_off
+        data:
+          value: 0
+    - conditions:
+      - condition: trigger
+        id: presence
+      - condition: state
+        entity_id: switch.gym_lights
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.gym_door_contact
+        state: 'on'
+      sequence:
+      - action: input_datetime.set_datetime
+        target:
+          entity_id: input_datetime.gym_entered
+        data:
+          timestamp: '{{ now().timestamp() }}'
       - action: scene.turn_on
         target:
           entity_id: scene.gym_1_gym_on
