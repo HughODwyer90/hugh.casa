@@ -6214,3 +6214,60 @@
     data:
       value: '0'
   mode: single
+- id: '1792496710374'
+  alias: Gym Watchdog
+  description: Safety net for Gym Occupancy. Turns the gym off if lights are on, the
+    door is closed and mmWave has not been on for 10 min. Also turns off a fan left
+    running more than 40 min after the lights went off.
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.gym_motion_occupancy_1
+    to: 'off'
+    for:
+      minutes: 10
+    id: clear
+  - trigger: time_pattern
+    minutes: /5
+    id: sweep
+  - trigger: homeassistant
+    event: start
+    id: startup
+  conditions:
+  - condition: template
+    value_template: "{{ not is_state('binary_sensor.gym_motion_occupancy_1', 'on')\n
+      \  and now() - states.binary_sensor.gym_motion_occupancy_1.last_changed\n       >
+      timedelta(minutes=10)\n   and is_state('binary_sensor.gym_door_contact', 'off')
+      }}\n"
+  actions:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: switch.gym_lights
+        state: 'on'
+      sequence:
+      - action: scene.turn_on
+        target:
+          entity_id: scene.gym_0_gym_off
+      - action: persistent_notification.create
+        data:
+          title: Gym watchdog
+          message: 'Gym turned off at {{ now().strftime(''%H:%M'') }}. Trigger: {{
+            trigger.id }}. mmWave was {{ states(''binary_sensor.gym_motion_occupancy_1'')
+            }} since {{ as_local(states.binary_sensor.gym_motion_occupancy_1.last_changed).strftime(''%H:%M'')
+            }}.
+
+            '
+    - conditions:
+      - condition: state
+        entity_id: switch.gym_lights
+        state: 'off'
+      - condition: state
+        entity_id: switch.gym_fan
+        state: 'on'
+        for:
+          minutes: 40
+      sequence:
+      - action: switch.turn_off
+        target:
+          entity_id: switch.gym_fan
+  mode: single
