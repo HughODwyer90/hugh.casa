@@ -4531,7 +4531,7 @@
   - data:
       occupancy_sensor: binary_sensor.kitchen_presence
       target_light: light.kitchen_lights
-      on_scene: "{% if 1 <= now().hour < 7 %}\n  scene.kitchen_lights_2_kitchen_lights_night\n{%
+      on_scene: "{% if 1 <= now().hour < 5 %}\n  scene.kitchen_lights_2_kitchen_lights_night\n{%
         else %}\n  scene.kitchen_lights_0_kitchen_lights_on\n{% endif %}"
       off_scene: scene.kitchen_lights_1_kitchen_lights_off
       brightness_pct: 100
