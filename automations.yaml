@@ -684,8 +684,8 @@
   - condition: or
     conditions:
     - condition: numeric_state
-      entity_id: sensor.snake_plant_temperature
-      below: 15
+      entity_id: sensor.hugh_room_presence_temperature
+      below: 17
     - condition: template
       value_template: '{{ now().month in [10, 11, 12, 1, 2] }}'
     - condition: numeric_state
