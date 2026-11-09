@@ -1026,7 +1026,7 @@
         "modified_at": 1791644538.408486,
         "title": "Music Assistant",
         "source": "zeroconf",
-        "state": "loaded",
+        "state": "setup_retry",
         "supports_options": false,
         "supports_remove_device": true,
         "supports_unload": true,
@@ -1035,10 +1035,12 @@
         "pref_disable_new_entities": false,
         "pref_disable_polling": false,
         "disabled_by": null,
-        "reason": null,
-        "error_reason_translation_domain": null,
-        "error_reason_translation_key": null,
-        "error_reason_translation_placeholders": null,
+        "reason": "The Music Assistant app is not running yet",
+        "error_reason_translation_domain": "music_assistant",
+        "error_reason_translation_key": "app_not_running",
+        "error_reason_translation_placeholders": {
+            "app": "Music Assistant"
+        },
         "num_subentries": 0
     },
     {
@@ -1493,7 +1495,7 @@
         "created_at": 1771029440.572144,
         "entry_id": "01KHCS9A1WCF400KV2RA58EMMF",
         "domain": "dreame_vacuum",
-        "modified_at": 1794262118.294823,
+        "modified_at": 1794262730.947259,
         "title": "Vacuum",
         "source": "user",
         "state": "loaded",
