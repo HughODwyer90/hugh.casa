@@ -2663,16 +2663,25 @@
   mode: single
 - id: '1752569710433'
   alias: Z2M Update Devices
-  description: ''
+  description: Install pending Zigbee2MQTT updates one at a time
   triggers:
-  - entity_id:
+  - trigger: state
+    entity_id:
     - input_button.update_z2m_devices
-    trigger: state
+    not_from:
+    - unavailable
   conditions: []
   actions:
-  - action: shell_command.run_z2m_update_sequence
-    metadata: {}
-    data: {}
+  - repeat:
+      for_each: "{{ integration_entities('mqtt') | select('match', 'update\\.')\n
+        \  | select('is_state', 'on') | list }}\n"
+      sequence:
+      - action: update.install
+        target:
+          entity_id: '{{ repeat.item }}'
+        continue_on_error: true
+      - wait_template: '{{ is_state(repeat.item, ''off'') }}'
+        timeout: 00:30:00
   mode: single
 - id: '1754898110296'
   alias: Hugh Room Lights & PC Logic
