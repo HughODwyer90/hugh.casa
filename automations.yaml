@@ -6328,3 +6328,26 @@
         target:
           entity_id: scene.gym_0_gym_off
   mode: restart
+- id: '1794260543208'
+  alias: Gym hotspot
+  description: Toggle phone hotspot via MacroDroid when the gym is occupied
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.gym_occupied
+    to: 'on'
+    id: 'on'
+  - trigger: state
+    entity_id: binary_sensor.gym_presence
+    to: 'off'
+    for: 00:05:00
+    id: 'off'
+  conditions: []
+  actions:
+  - action: notify.notifications
+    data:
+      message: command_broadcast_intent
+      data:
+        intent_package_name: com.arlosoft.macrodroid
+        intent_action: '{{ ''hugh.HOTSPOT_ON'' if trigger.id == ''on'' else ''hugh.HOTSPOT_OFF''
+          }}'
+  mode: restart
