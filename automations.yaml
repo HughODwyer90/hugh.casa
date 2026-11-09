@@ -6300,18 +6300,31 @@
   mode: single
 - id: '1794240361311'
   alias: Gym Manual Toggle
-  description: ''
+  description: Turn gym scenes on/off with the gym switch
   triggers:
-  - trigger: switch.turned_on
-    target:
-      entity_id: switch.gym
-    options:
-      for: 00:00:00
+  - trigger: state
+    entity_id: switch.gym_wall
+    to: 'on'
+    id: gym_on
+  - trigger: state
+    entity_id: switch.gym_wall
+    to: 'off'
+    id: gym_off
   conditions: []
   actions:
-  - action: scene.turn_on
-    metadata: {}
-    target:
-      entity_id: scene.gym_1_gym_on
-    data: {}
-  mode: single
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: gym_on
+      sequence:
+      - action: scene.turn_on
+        target:
+          entity_id: scene.gym_1_gym_on
+    - conditions:
+      - condition: trigger
+        id: gym_off
+      sequence:
+      - action: scene.turn_on
+        target:
+          entity_id: scene.gym_0_gym_off
+  mode: restart
