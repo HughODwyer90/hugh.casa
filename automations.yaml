@@ -6399,14 +6399,24 @@
         target:
           entity_id: '{{ next_ent if busy else q_ent }}'
         data:
-          value: '{{ updated | trim }}'
+          value: '{{ updated | string | trim }}'
       - if:
         - condition: template
           value_template: '{{ not busy }}'
         then:
-        - action: '{{ ''timer.start'' if updated | trim else ''timer.cancel'' }}'
-          target:
-            entity_id: '{{ timer_ent }}'
+        - if:
+          - condition: template
+            value_template: '{{ updated | string | trim != '''' }}'
+          then:
+          - action: timer.start
+            target:
+              entity_id: '{{ timer_ent }}'
+            data:
+              duration: '{{ collect_time }}'
+          else:
+          - action: timer.cancel
+            target:
+              entity_id: '{{ timer_ent }}'
     - conditions:
       - condition: trigger
         id: collect_done
@@ -6440,6 +6450,8 @@
       - action: timer.start
         target:
           entity_id: '{{ timer_ent }}'
+        data:
+          duration: '{{ collect_time }}'
   mode: queued
   max: 20
   variables:
@@ -6448,6 +6460,7 @@
     q_ent: input_text.vacuum_room_queue
     next_ent: input_text.vacuum_next_queue
     timer_ent: timer.vacuum_room_collect
+    collect_time: 00:00:30
     busy: '{{ states(''vacuum.vacuum'') in [''cleaning'', ''paused'', ''returning'']
       }}'
     queue: '{{ states(q_ent).split('','') | map(''trim'') | reject(''in'', ['''',
