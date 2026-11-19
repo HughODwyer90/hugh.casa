@@ -6359,7 +6359,8 @@
   alias: NFC – Room clean queue
   description: 'Scans while docked are collected for 30s then cleaned as one job.
     Scans while busy go to a next-run list that starts once docked. Scanning a queued
-    room again removes it. Tag names are case-insensitive.
+    room again removes it. Tag names are case-insensitive. A leftover queue with no
+    timer running is discarded.
 
     '
   triggers:
@@ -6383,15 +6384,18 @@
         id: tag
       sequence:
       - variables:
-          tag_name: "{{ states.tag\n   | selectattr('attributes.tag_id', 'eq', trigger.event.data.tag_id)\n
-            \  | map(attribute='name') | first | default('') | lower | trim }}\n"
+          tag_name: "{% set id = trigger.event.data.tag_id %} {% set ev_name = trigger.event.data.name
+            | default('') %} {% set ent_name = states.tag\n     | selectattr('attributes.tag_id',
+            'defined')\n     | selectattr('attributes.tag_id', 'eq', id)\n     | map(attribute='name')
+            | first | default('') %}\n{{ (ev_name or ent_name or '') | lower | trim
+            }}\n"
           segs: "{% set ns = namespace(v='') %} {% for k, v in room_map.items() if
             k | lower | trim == tag_name %}\n  {% set ns.v = v %}\n{% endfor %} {{
             (ns.v | string).split(',') | map('trim') | reject('eq', '') | list }}\n"
       - condition: template
         value_template: '{{ tag_name != '''' and segs | count > 0 }}'
       - variables:
-          current: '{{ next_q if busy else queue }}'
+          current: '{{ next_q if busy else (queue if collecting else []) }}'
           updated: "{% if segs | reject('in', current) | list | count == 0 %}\n  {{
             current | reject('in', segs) | join(',') }}\n{% else %}\n  {{ (current
             + (segs | reject('in', current) | list)) | join(',') }}\n{% endif %}\n"
@@ -6420,12 +6424,15 @@
     - conditions:
       - condition: trigger
         id: collect_done
-      - condition: template
-        value_template: '{{ queue | count > 0 }}'
       sequence:
-      - action: script.vacuum_clean_rooms
-        data:
-          segments: '{{ queue | join('','') }}'
+      - if:
+        - condition: template
+          value_template: '{{ queue | count > 0 }}'
+        then:
+        - action: script.vacuum_clean_rooms
+          continue_on_error: true
+          data:
+            segments: '{{ queue | join('','') }}'
       - action: input_text.set_value
         target:
           entity_id: '{{ q_ent }}'
@@ -6463,6 +6470,7 @@
     collect_time: 00:00:30
     busy: '{{ states(''vacuum.vacuum'') in [''cleaning'', ''paused'', ''returning'']
       }}'
+    collecting: '{{ is_state(timer_ent, ''active'') }}'
     queue: '{{ states(q_ent).split('','') | map(''trim'') | reject(''in'', ['''',
       ''unknown'']) | list }}'
     next_q: '{{ states(next_ent).split('','') | map(''trim'') | reject(''in'', ['''',
