@@ -6359,7 +6359,7 @@
   alias: NFC – Room clean queue
   description: 'Scans while docked are collected for 30s then cleaned as one job.
     Scans while busy go to a next-run list that starts once docked. Scanning a queued
-    room again removes it.
+    room again removes it. Tag names are case-insensitive.
 
     '
   triggers:
@@ -6384,12 +6384,13 @@
       sequence:
       - variables:
           tag_name: "{{ states.tag\n   | selectattr('attributes.tag_id', 'eq', trigger.event.data.tag_id)\n
-            \  | map(attribute='name') | first | default('') }}\n"
+            \  | map(attribute='name') | first | default('') | lower | trim }}\n"
+          segs: "{% set ns = namespace(v='') %} {% for k, v in room_map.items() if
+            k | lower | trim == tag_name %}\n  {% set ns.v = v %}\n{% endfor %} {{
+            (ns.v | string).split(',') | map('trim') | reject('eq', '') | list }}\n"
       - condition: template
-        value_template: '{{ tag_name in room_map }}'
+        value_template: '{{ tag_name != '''' and segs | count > 0 }}'
       - variables:
-          segs: '{{ room_map[tag_name].split('','') | map(''trim'') | reject(''eq'',
-            '''') | list }}'
           current: '{{ next_q if busy else queue }}'
           updated: "{% if segs | reject('in', current) | list | count == 0 %}\n  {{
             current | reject('in', segs) | join(',') }}\n{% else %}\n  {{ (current
@@ -6443,7 +6444,7 @@
   max: 20
   variables:
     room_map:
-      Kitchen: '3'
+      kitchen: '3'
     q_ent: input_text.vacuum_room_queue
     next_ent: input_text.vacuum_next_queue
     timer_ent: timer.vacuum_room_collect
