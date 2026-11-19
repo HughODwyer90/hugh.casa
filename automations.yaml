@@ -6355,3 +6355,101 @@
         intent_action: '{{ ''hugh.HOTSPOT_ON'' if trigger.id == ''on'' else ''hugh.HOTSPOT_OFF''
           }}'
   mode: restart
+- id: '1795106973870'
+  alias: NFC – Room clean queue
+  description: 'Scans while docked are collected for 30s then cleaned as one job.
+    Scans while busy go to a next-run list that starts once docked. Scanning a queued
+    room again removes it.
+
+    '
+  triggers:
+  - trigger: event
+    event_type: tag_scanned
+    id: tag
+  - trigger: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.vacuum_room_collect
+    id: collect_done
+  - trigger: state
+    entity_id: vacuum.vacuum
+    to: docked
+    for: 00:02:00
+    id: docked
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: tag
+      sequence:
+      - variables:
+          tag_name: "{{ states.tag\n   | selectattr('attributes.tag_id', 'eq', trigger.event.data.tag_id)\n
+            \  | map(attribute='name') | first | default('') }}\n"
+      - condition: template
+        value_template: '{{ tag_name in room_map }}'
+      - variables:
+          segs: '{{ room_map[tag_name].split('','') | map(''trim'') | reject(''eq'',
+            '''') | list }}'
+          current: '{{ next_q if busy else queue }}'
+          updated: "{% if segs | reject('in', current) | list | count == 0 %}\n  {{
+            current | reject('in', segs) | join(',') }}\n{% else %}\n  {{ (current
+            + (segs | reject('in', current) | list)) | join(',') }}\n{% endif %}\n"
+      - action: input_text.set_value
+        target:
+          entity_id: '{{ next_ent if busy else q_ent }}'
+        data:
+          value: '{{ updated | trim }}'
+      - if:
+        - condition: template
+          value_template: '{{ not busy }}'
+        then:
+        - action: '{{ ''timer.start'' if updated | trim else ''timer.cancel'' }}'
+          target:
+            entity_id: '{{ timer_ent }}'
+    - conditions:
+      - condition: trigger
+        id: collect_done
+      - condition: template
+        value_template: '{{ queue | count > 0 }}'
+      sequence:
+      - action: script.vacuum_clean_rooms
+        data:
+          segments: '{{ queue | join('','') }}'
+      - action: input_text.set_value
+        target:
+          entity_id: '{{ q_ent }}'
+        data:
+          value: ''
+    - conditions:
+      - condition: trigger
+        id: docked
+      - condition: template
+        value_template: '{{ next_q | count > 0 }}'
+      sequence:
+      - action: input_text.set_value
+        target:
+          entity_id: '{{ q_ent }}'
+        data:
+          value: '{{ next_q | join('','') }}'
+      - action: input_text.set_value
+        target:
+          entity_id: '{{ next_ent }}'
+        data:
+          value: ''
+      - action: timer.start
+        target:
+          entity_id: '{{ timer_ent }}'
+  mode: queued
+  max: 20
+  variables:
+    room_map:
+      Kitchen: '3'
+    q_ent: input_text.vacuum_room_queue
+    next_ent: input_text.vacuum_next_queue
+    timer_ent: timer.vacuum_room_collect
+    busy: '{{ states(''vacuum.vacuum'') in [''cleaning'', ''paused'', ''returning'']
+      }}'
+    queue: '{{ states(q_ent).split('','') | map(''trim'') | reject(''in'', ['''',
+      ''unknown'']) | list }}'
+    next_q: '{{ states(next_ent).split('','') | map(''trim'') | reject(''in'', ['''',
+      ''unknown'']) | list }}'
