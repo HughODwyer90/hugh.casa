@@ -783,3 +783,71 @@ jira_update_dev_capacity:
       name: '{{ name }}'
       capacity_h: '{{ capacity_h }}'
   description: ''
+vacuum_clean_room_s:
+  alias: Vacuum – Clean room(s)
+  description: Cleans the given room segments using CleanGenius routine cleaning.
+  mode: single
+  icon: mdi:robot-vacuum
+  fields:
+    segments:
+      name: Room segment ID(s)
+      description: Single ID or comma-separated, e.g. "3" or "3, 5"
+      required: true
+      example: '3'
+      selector:
+        text:
+    cg_mode:
+      name: CleanGenius mode
+      default: vacuum_and_mop
+      selector:
+        select:
+          custom_value: true
+          options:
+          - vacuum_and_mop
+          - mop_after_vacuum
+  variables:
+    vac: vacuum.vacuum
+    seg_list: '{{ (segments | string).split('','') | map(''trim'') | reject(''eq'',
+      '''') | map(''int'') | list }}'
+    settings:
+    - entity: select.vacuum_cleangenius
+      option: routine_cleaning
+    - entity: select.vacuum_cleangenius_mode
+      option: '{{ cg_mode | default(''vacuum_and_mop'') }}'
+  sequence:
+  - condition: template
+    value_template: '{{ states(vac) in [''docked'', ''idle''] and seg_list | count
+      > 0 }}'
+  - repeat:
+      for_each: '{{ settings }}'
+      sequence:
+      - variables:
+          ent: '{{ repeat.item.entity }}'
+          opt: '{{ repeat.item.option }}'
+      - if:
+        - condition: template
+          value_template: '{{ not is_state(ent, opt) }}'
+        then:
+        - repeat:
+            sequence:
+            - action: select.select_option
+              target:
+                entity_id: '{{ ent }}'
+              data:
+                option: '{{ opt }}'
+            - delay: 00:00:02
+            until:
+            - condition: template
+              value_template: '{{ is_state(ent, opt) or repeat.index >= 3 }}'
+      - if:
+        - condition: template
+          value_template: '{{ not is_state(ent, opt) }}'
+        then:
+        - stop: Could not set {{ ent }} to {{ opt }}
+          error: true
+  - delay: 00:00:02
+  - action: dreame_vacuum.vacuum_clean_segment
+    target:
+      entity_id: '{{ vac }}'
+    data:
+      segments: '{{ seg_list }}'
