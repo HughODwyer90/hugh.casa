@@ -6429,10 +6429,10 @@
         - condition: template
           value_template: '{{ queue | count > 0 }}'
         then:
-        - action: script.vacuum_clean_rooms
+        - action: script.vacuum_clean_room_s
           continue_on_error: true
           data:
-            segments: '{{ queue | join('','') }}'
+            cg_mode: vacuum_and_mop
       - action: input_text.set_value
         target:
           entity_id: '{{ q_ent }}'
