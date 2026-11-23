@@ -394,6 +394,11 @@
       target:
         entity_id: light.hugh_room_lamp
       data: {}
+    - action: button.press
+      metadata: {}
+      target:
+        entity_id: button.zigbee2mqtt_bridge_restart
+      data: {}
   mode: single
 - id: '1702818164083'
   alias: Living Room Lights – Occupancy + TV
@@ -6126,7 +6131,12 @@
     for:
       seconds: 30
     id: exit
-  conditions: []
+  conditions:
+  - condition: not
+    conditions:
+    - condition: time
+      after: 03:00:00
+      before: 04:00:00
   actions:
   - variables:
       lights_off: '{{ is_state(''switch.gym_lights'', ''off'') }}'
