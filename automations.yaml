@@ -6439,7 +6439,7 @@
         - condition: template
           value_template: '{{ queue | count > 0 }}'
         then:
-        - action: script.vacuum_clean_room_s
+        - action: script.vacuum_clean_rooms
           continue_on_error: true
           data:
             cg_mode: vacuum_and_mop
