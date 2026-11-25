@@ -6365,8 +6365,8 @@
         intent_action: '{{ ''hugh.HOTSPOT_ON'' if trigger.id == ''on'' else ''hugh.HOTSPOT_OFF''
           }}'
   mode: restart
-- id: '1795106973870'
-  alias: NFC – Room clean queue
+- id: '1795621517886'
+  alias: NFC – Vacuum clean queue
   description: 'Scans while docked are collected for 30s then cleaned as one job.
     Scans while busy go to a next-run list that starts once docked. Scanning a queued
     room again removes it. Tag names are case-insensitive. A leftover queue with no
@@ -6483,5 +6483,5 @@
     collecting: '{{ is_state(timer_ent, ''active'') }}'
     queue: '{{ states(q_ent).split('','') | map(''trim'') | reject(''in'', ['''',
       ''unknown'']) | list }}'
-    next_q: '{{ states(next_ent).split('','') | map(''trim'') | reject(''in'', ['''',
-      ''unknown'']) | list }}'
+    next_q: "{{ states(next_ent).split(',') | map('trim') | reject('in', ['', 'unknown'])
+      | list }}\n                "
